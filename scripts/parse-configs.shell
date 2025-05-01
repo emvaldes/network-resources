@@ -1,0 +1,315 @@
+#!/usr/bin/env bash
+
+# File: scripts/parse-configs.shell
+# Purpose: Parse a single IP and output to reports/<ip>.json
+
+set -euo pipefail;
+# set -x;
+
+## POSIX locale standard
+export LC_ALL=C;
+
+## Temp-dir and automatic clean-up on exit
+TMP_DIR="$( mktemp -d )";
+trap 'rm -rf "$TMP_DIR"' EXIT;
+
+#------------------------------------------------------------------------------#
+
+function validate_address () {
+    ## IP Address (CIDR-aware) regex:
+    local ip_cidr_regex='^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})(/([0-9]{1,2}))?$';
+    if [[ "${target_address}" =~ ${ip_cidr_regex} ]]; then
+            # Normalize each segment and validate
+            local -a segments=(
+              "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "${BASH_REMATCH[3]}" "${BASH_REMATCH[4]}"
+            );
+            local cidr="${BASH_REMATCH[6]:-}";
+            ## Validate CIDR before building target_address
+            if [[ -n "${cidr}" ]]; then
+              if ! [[ "${cidr}" =~ ^[0-9]+$ ]] || (( cidr < 0 || cidr > 32 )); then
+                [[ "${debug}" == true ]] && \
+                   echo -e "Error: Invalid CIDR mask '/${cidr}' in ${target_address}\n";
+                return 3;
+              fi;
+            fi;
+            for i in "${!segments[@]}"; do
+              segment="$(
+                echo -e "${segments[$i]}" | sed -E 's/^[[:space:]]*0*([0-9]+)[[:space:]]*$/\1/'
+              )";
+              if ! [[ "${segment}" =~ ^[0-9]+$ ]] || (( segment < 0 || segment > 255 )); then
+                [[ "${debug}" == true ]] && \
+                   echo -e "Error: Invalid IP segment after normalization (${segment}) in ${target_address}\n";
+                return 4;
+              fi;
+              segments[$i]="${segment}";
+            done; local segments="${segments[*]}";
+            # Reconstruct normalized IP with CIDR (only if valid)
+            # local fixed_address="${segments[0]}.${segments[1]}.${segments[2]}.${segments[3]}";
+            local fixed_address="${segments// /.}";
+            [[ -n "${cidr}" ]] && fixed_address+="/${cidr}";
+            if [[ "${target_address}" != "${fixed_address}" ]]; then
+                [[ "${verbose}" == true ]] && \
+                   echo -e "Warning: IP address was corrected to '${fixed_address}'\n";
+                target_address="${fixed_address}";
+              else  [[ "${verbose}" == true ]] && \
+                       echo -e "\n${target_index:-}Valid IP Address: ${target_address}";
+            fi;
+            ## Prompt only if valid CIDR and not /32
+            if [[ -n "${cidr}" && "${cidr}" -lt 32 ]]; then
+              # [[ "${verbose}" == true ]] && \
+              #    echo -e "Notice: CIDR block detected: /${cidr}";
+              local confirmation='';
+              read -t 3 -p "Proceed with CIDR block [ /${cidr} ]? (type 'n' to abort): " confirmation || true;
+              echo -e;
+              if [[ "${confirmation}" =~ ^(N|n)$ ]]; then
+                      [[ "${verbose}" == true ]] && \
+                         echo -e "Skipping CIDR block: ${target_address}\n";
+                      return 5;
+                elif [[ -z "${confirmation}" ]]; then
+                      [[ "${verbose}" == true ]] && \
+                         echo -e "Auto-continue with CIDR block: ${target_address}\n";
+                else  [[ "${verbose}" == true ]] && \
+                         echo -e "Proceeding with CIDR block: ${target_address}\n";
+              fi;
+            fi;
+      else  [[ "${debug}" == true ]] && \
+               echo -e "Error: Invalid IP or CIDR format: ${target_address}\n";
+            return 6;
+    fi;
+    return 0;
+}; alias validate-address='validate_address';
+
+#------------------------------------------------------------------------------#
+
+function display_help () {
+    local script_filename="$( basename ${script_name} )";
+    echo -e "
+    Usage: ${script_filename} [OPTIONS]
+
+    Options:
+    -c, --configs      Target Configuration files's path (default: ./configs)
+    -x, --file-ext     List of configuration file's extensions (config, conf, cnf)
+    -n, --index        Padded job index for display (passed by controlling script)
+    -i, --ip-addr      Target IP address to be found in network configurations
+    -m, --matrix       Business Units/Client ID Translation-Matrix (matrix.json)
+    -r, --reports      Generated Reports folder (store JSON configurations)
+
+    --help             Show this help message and exit
+    --debug            Enable debug mode with trace output
+    --dry-run          Print actions without executing them
+    --verbose          Enable verbose output
+
+    Examples:
+    ${script_filename} --ip-addr='1.2.3.4/24' ;
+    ${script_filename} --file-ext='config, conf, cnf' ;
+    ${script_filename} --reports='reports' ;
+    ${script_filename} --matrix='matrix.json' ;
+    ";
+    return 0;
+  }; alias display-help='display_help';
+
+#------------------------------------------------------------------------------#
+
+function main () {
+    ## tracking_process ${FUNCNAME} "${@}";
+    declare -a file_extensions=();
+    oIFS="${IFS}";
+    for xitem in "${@}"; do
+      IFS='=' read -r key value <<< "$(
+        echo -e "${xitem}" | sed -e '1s|^\(-\)\{1,\}||'
+      )"; #echo -e "\nxitem: '${xitem}'\nkey: '${key}'\t->\tvalue: '${value}'";
+      [[ $key =~ ^(configs|c)$ ]] && local configs_dirpath="${value}";
+      [[ $key =~ ^(file-ext|x)$ ]] && file_extensions+=(
+        $( echo -e "${value}" | tr ':,;\n ' '\n' )
+      );
+      [[ $key =~ ^(index|n)$ ]] && local target_index="${value}";
+      [[ $key =~ ^(ip-addr|i)$ ]] && local target_address="${value}";
+      [[ $key =~ ^(matrix|m)$ ]] && local matrix_filename="${value}";
+      [[ $key =~ ^(reports|r)$ ]] && local reports_folder="${value}";
+      #### ---------------------------------------------------------------------
+      [[ $key == "help" ]] && local script_helper=true;
+      [[ $key == "debug" ]] && export debug=true;
+      [[ $key == "dry-run" ]] && local dry_run=true;
+      [[ $key == "verbose" ]] && export verbose=true;
+    done; IFS="${oIFS}";
+    #### -----------------------------------------------------------------------
+    [[ -z ${debug:-} ]] && export debug=false;
+    [[ -z ${verbose:-} ]] && export verbose=false;
+
+    #### -----------------------------------------------------------------------
+    if [[ ${script_helper:-} == true ]]; then
+      display_help;
+      exit 0;
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Target Configurations (file-extensions):
+    if [[ -z ${file_extensions+x} || ${#file_extensions[@]} -eq 0 ]]; then
+      declare -a file_extensions=( config conf cnf );
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Processing Custom/Default the Target Configurations (source):
+    local configs_dirpath="${configs_dirpath:-configs}";
+    if [[ ! -d "${configs_dirpath}" ]]; then
+            [[ "${verbose}" == true ]] && \
+               echo -e "Project Source Configurations path not found: ${configs_dirpath}";
+            return 1;
+      else  ## Build config file list once, globally scoped
+            declare -ga source_configs=();
+            local -a find_cmd=( find "$configs_dirpath" -type f \( );
+            for ext in "${file_extensions[@]}"; do
+              find_cmd+=( -iname "*.${ext}" -o );
+            done;
+            unset 'find_cmd[-1]';  # Remove trailing -o
+            find_cmd+=( \) );
+            mapfile -t source_configs < <( "${find_cmd[@]}" | sort );
+            if [[ "${debug}" == true ]]; then
+              echo -e "\nSource Configuration files:\n";
+              for cfg in "${source_configs[@]}"; do
+                echo -e "  - ${cfg}";
+              done;
+            fi;
+    fi;
+
+    #### -----------------------------------------------------------------------
+    [[ -z ${target_index:-} ]] && target_index='';
+
+    #### -----------------------------------------------------------------------
+    ## Target IP Address (required):
+    if [[ -z "${target_address:-}" ]]; then
+            [[ "${debug}" == true ]] && \
+               echo -e "Error: No IP address provided.\n";
+            return 2;
+      else  target_address="$(
+              echo -e "${target_address}" | sed -E 's/[[:space:]]+//g' | tr -d '\r'
+            )";
+            ## Validating Target-Address (IP/CIDR):
+            validate_address;
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Processing Custom/Default the Translation-Matrix (source):
+    local matrix_filename="${matrix_filename:-matrix.json}";
+    if [[ ! -f "${matrix_filename}" ]]; then
+            [[ "${verbose}" == true ]] && \
+               echo -e "Project Source Matrix-Configs file not found: ${matrix_filename}";
+            return 7;
+      elif  ! jq -e 'length > 0' "${matrix_filename}" &>/dev/null; then
+            [[ "${verbose}" == true ]] && \
+               echo "Matrix file is missing, invalid, or empty: ${matrix_filename}";
+            return 8;
+      else  local matrix_configs="$( cat "${matrix_filename}" )";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Custom/Default reports folder:
+    local reports_folder="${reports_folder:-reports}";
+    mkdir -p "${reports_folder}";
+
+    #### -----------------------------------------------------------------------
+    ## Search/Extract (listing) all matching configurations:
+    declare -gA matched_configs=();
+    declare -ga matched_configs_order=();  # Preserves config file order
+    declare -gA matched_blocks_byfile=();
+    local search_ip="${target_address%%/*}";
+    local divisor="$(
+      date +%s%N | base64 | tr -dc 'a-zA-Z0-9'
+    )";
+    for cfg_file in "${source_configs[@]}"; do
+      if grep -qF "${search_ip}" "${cfg_file}"; then
+        matched_configs["${cfg_file}"]=true;
+        matched_configs_order+=( "${cfg_file}" );
+        local content="$(sed 's/!/\n/g' "${cfg_file}")";
+        local serialized="";
+        while IFS= read -r line || [[ -n "$line" ]]; do
+          serialized+="${line}${divisor}";
+        done <<< "${content}";
+        serialized="$(
+          sed -E "s/${divisor}([^ ])/\\n\1/g; s/${divisor}$//" <<< "${serialized}"
+        )";
+        while IFS= read -r object; do
+          if grep -qF "${search_ip}" <<< "${object}"; then
+            matched_blocks_byfile["${cfg_file}"]+="${object}"$'\n';
+          fi;
+        done <<< "${serialized}";
+      fi;
+    done;
+
+    #### -----------------------------------------------------------------------
+    ## Initialize empty JSON with matched config files (no objects yet):
+    local tmp_json="${TMP_DIR}/partial.json";
+    jq -n --arg ip "$target_address" \
+          --argjson files "$(
+            printf '%s\n' "${matched_configs_order[@]}" | jq -R . | jq -s '.'
+          )" '{
+                target: $ip,
+                configs: ($files | map({ config: ., objects: [] }))
+              }' > "${tmp_json}";
+
+    #### -----------------------------------------------------------------------
+    # ## Listing matching resources (optional)
+    # if [[ "${verbose}" == true ]]; then
+    #   for cfg_file in "${matched_configs_order[@]}"; do
+    #     echo -e "\nConfig: ${cfg_file}\n";
+    #     while IFS= read -r matched_object; do
+    #       restored="$(
+    #         sed "s/${divisor}/\n/g" <<< "${matched_object}" | sed '/^[[:space:]]*$/d'
+    #       )";
+    #       if [[ -n "${restored//[[:space:]]/}" ]]; then
+    #         echo -e "${restored}\n";
+    #       fi;
+    #     done <<< "${matched_blocks_byfile[$cfg_file]}";
+    #   done;
+    # fi;
+
+    #### -----------------------------------------------------------------------
+    ## Listing matching resources (optional) + write to reports
+    mkdir -p ${reports_folder}/{lists,json};
+    local list_outfile="${reports_folder}/lists/${search_ip}.list";
+    local json_outfile="${reports_folder}/json/${search_ip}.json";
+    echo -e > "${list_outfile}";  # prepend newline at the top
+
+    for cfg_file in "${matched_configs_order[@]}"; do
+      local first_block=true;
+      while IFS= read -r matched_object; do
+        restored="$(
+          sed "s/${divisor}/\n/g" <<< "${matched_object}" | sed '/^[[:space:]]*$/d'
+        )";
+        if [[ -n "${restored//[[:space:]]/}" ]]; then
+          if [[ "${first_block}" == true ]]; then
+            echo -e "Config: ${cfg_file}\n" >> "${list_outfile}";
+            [[ "${verbose}" == true ]] && echo -e "\nConfig: ${cfg_file}\n";
+            first_block=false;
+          fi;
+          echo -e "${restored}\n" >> "${list_outfile}";
+          [[ "${verbose}" == true ]] && echo -e "${restored}\n";
+        fi;
+      done <<< "${matched_blocks_byfile[$cfg_file]}";
+    done;
+
+    #### -----------------------------------------------------------------------
+    ## Final output JSON object:
+    cp "${tmp_json}" "${json_outfile}";
+    [[ "${verbose}" == true ]] && jq . "${json_outfile}";
+    echo -e;
+
+    return 0;
+}; alias parse-configs='main';
+
+#------------------------------------------------------------------------------#
+
+local_state_dir=".local";
+mkdir -p "${local_state_dir}";
+
+declare -gA matched_blocks_byfile=();
+export script_name="${0}";
+
+if [[ ${#@} -ge 1 && "${1,,}" =~ ^-*(h|help)$ ]]; then
+        main --help ;
+  else  # echo -e;
+        main "${@}";
+        # echo -e "Done.\n";
+fi;
+
+unset verbose debug;
