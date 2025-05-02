@@ -3,6 +3,8 @@
 # File: scripts/parse-listings.shell
 # Purpose: Parse a set of IPs listings and output to reports/<ip>.json
 
+# Wwarning: Requires Bash version 4.0 or higher
+
 set -euo pipefail;
 # set -x;
 
@@ -11,13 +13,17 @@ export LC_ALL=C;
 
 ## Temp-dir and automatic clean-up on exit
 export TMP_DIR="$( mktemp -d )";
-# trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT;
+trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT;
+
+#------------------------------------------------------------------------------#
+
+source ./scripts/devops-functions.shell;
 
 #------------------------------------------------------------------------------#
 
 function display_help () {
     local script_filename="$( basename ${script_name} )";
-    echo -e "
+    print "
     Usage: ${script_filename} [OPTIONS]
 
     Options:
@@ -53,7 +59,7 @@ function main () {
         echo -e "${xitem}" | sed -e '1s|^\(-\)\{1,\}||'
       )"; #echo -e "\nxitem: '${xitem}'\nkey: '${key}'\t->\tvalue: '${value}'";
       [[ $key =~ ^(file-ext|x)$ ]] && file_extensions+=(
-        $( echo -e "${value}" | tr ':,;\n ' '\n' )
+        $( print "${value}" | tr ':,;\n ' '\n' )
       );
       [[ $key =~ ^(interval|l)$ ]] && local delaying_factor="${value}";
       [[ $key =~ ^(ips-list|i)$ ]] && local listing_filename="${value}";
@@ -73,6 +79,7 @@ function main () {
     #### -----------------------------------------------------------------------
     [[ -z ${debug:-} ]] && debug=false;
     [[ -z ${verbose:-} ]] && verbose=false;
+
     #### -----------------------------------------------------------------------
     if [[ ${script_helper:-} == true ]]; then
       display_help;
@@ -85,10 +92,10 @@ function main () {
     ## Processing Custom/Default the Translation-Matrix (source):
     [[ -z "${matrix_filename:-}" ]] && matrix_filename="matrix.json";
     if [[ ! -f "${matrix_filename}" ]]; then
-            echo -e "Project Source Matrix-Configs file not found: ${matrix_filename}";
+            error_message "Project Source Matrix-Configs file not found: ${matrix_filename}";
             return 1;
       elif  ! jq -e 'length > 0' "${matrix_filename}" &>/dev/null; then
-            echo "Matrix file is missing, invalid, or empty: ${matrix_filename}";
+            error_message "Matrix file is missing, invalid, or empty: ${matrix_filename}";
             return 2;
       else  local matrix_configs="$( cat "${matrix_filename}" )";
     fi;
@@ -97,13 +104,13 @@ function main () {
     mkdir -p "${reports_folder}";
     ## Processing Target Addresses Listing (default: ips.list)
     if [[ ! -f "${listing_filename}" ]]; then
-            echo -e "Project Target IP-listing file not found: ${listing_filename}";
+            error_message "Project Target IP-listing file not found: ${listing_filename}";
             return 3;
       else  mapfile -t target_listing < <(
               grep -v '^\s*$' "${listing_filename}" | tr -d '\r' | sort -u
             );
             if [[ ${#target_listing[@]} -eq 0 ]]; then
-              echo -e "No IP addresses to process.\n";
+              error_message "No IP addresses to process.\n";
               return 4;
             fi;
     fi;
@@ -118,7 +125,8 @@ function main () {
         for (( i = 0; i < available_slots && ip_index < total_ips; i++ )); do
           ip_addr="${target_listing[ip_index++]}";
           padded_index="$( printf "%0${#total_ips}d" "${ip_index}" )";
-          [[ "${debug}" == true ]] && echo -e "[POOL] Launching job (${ip_addr})[$ip_index] ...";
+          [[ "${debug}" == true ]] && \
+             error_message "[POOL] Launching job (${ip_addr})[$ip_index] ...";
           (
             execute=(
               ./scripts/parse-configs.shell
@@ -126,7 +134,7 @@ function main () {
               --index="(${padded_index}) "
               --matrix="${matrix_filename}"
               --reports="${reports_folder}"
-              --file-ext="$( IFS=,; echo "${file_extensions[*]}" )"
+              --file-ext="$( IFS=,; print "${file_extensions[*]}" )"
             );
             [[ "${verbose}" == true ]] && execute+=( --verbose );
             [[ "${debug}" == true ]] && execute+=( --debug );
@@ -147,11 +155,11 @@ local_state_dir=".local";
 mkdir -p "${local_state_dir}";
 
 export script_name="${0}";
+
 if [[ ${#@} -ge 1 && "${1,,}" =~ ^-*(h|help)$ ]]; then
         main --help ;
-  else  # echo -e;
-        main "${@}";
-        # echo -e "Done.\n";
+  else  main "${@}";
+        # newline; print "Done."; newline 2;
 fi;
 
 #------------------------------------------------------------------------------#
@@ -172,7 +180,7 @@ fi;
 #       --ip-addr="${ip_addr}" \
 #       --matrix="${matrix_filename}" \
 #       --reports="${reports_folder}" \
-#       --file-ext="$( IFS=,; echo "${file_extensions[*]}" )" \
+#       --file-ext="$( IFS=,; pritn "${file_extensions[*]}" )" \
 #       ${verbose:+--verbose} \
 #       ${debug:+--debug};
 #   ) &
