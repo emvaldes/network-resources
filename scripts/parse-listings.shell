@@ -20,6 +20,36 @@ trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT;
 source ./scripts/devops-tools.shell;
 
 #------------------------------------------------------------------------------#
+# Generate CSV output from reports/master.json
+function generate_csvoutput () {
+  local input_json="${reports_folder}/master.json";
+  local output_csv="${reports_folder}/master.csv";
+
+  if [[ ! -f "${input_json}" ]]; then
+    error_message "Missing ${input_json}, cannot generate CSV.";
+    return 1;
+  fi;
+  {
+    echo "target,config,type,name,description,caption";
+    jq -r '
+      .[] as $entry
+      | $entry.configs[]
+      | .config as $cfg
+      | .objects[]
+      | [
+          $entry.target,
+          $cfg,
+          (.type // "none" | tostring | select(length > 0) // "none"),
+          (.name // "none" | tostring | select(length > 0) // "none"),
+          (.description // "none" | tostring | select(length > 0) // "none"),
+          (.caption // "none" | tostring | select(length > 0) // "none")
+        ]
+      | @csv
+    ' "${input_json}"
+  } > "${output_csv}";
+}
+
+#------------------------------------------------------------------------------#
 
 function display_help () {
     local script_filename="$( basename ${script_name} )";
@@ -164,6 +194,8 @@ function main () {
         jq -s '.' "${json_files[@]}" > "${master_json}";
       fi;
     fi;
+    ## Generating ./reports/master.json into CSV output
+    generate_csvoutput ;
 
     #### -----------------------------------------------------------------------
     return 0;
