@@ -1,0 +1,182 @@
+#!/usr/bin/env bash
+
+# File: scripts/parse-listings.shell
+# Purpose: Parse a set of IPs listings and output to reports/<ip>.json
+
+set -euo pipefail;
+# set -x;
+
+## POSIX locale standard
+export LC_ALL=C;
+
+## Temp-dir and automatic clean-up on exit
+export TMP_DIR="$( mktemp -d )";
+# trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT;
+
+#------------------------------------------------------------------------------#
+
+function display_help () {
+    local script_filename="$( basename ${script_name} )";
+    echo -e "
+    Usage: ${script_filename} [OPTIONS]
+
+    Options:
+    -x, --file-ext     List of configuration file's extensions (config, conf, cnf)
+    -l, --interval     Interval (in seconds) between job dispatch checks [default: 0.1]
+    -i, --ips-list     File containing list of target IP addresses
+    -j, --jobs         Count of Concurrent Jobs to be launched in parallel.
+    -m, --matrix       Business Units/Client ID Translation-Matrix (matrix.json)
+    -r, --reports      Generated Reports folder (store JSON configurations)
+
+    --help             Show this help message and exit
+    --debug            Enable debug mode with trace output
+    --dry-run          Print actions without executing them
+    --verbose          Enable verbose output
+
+    Examples:
+    ${script_filename} --ips-list='ips.list' ;
+    ${script_filename} --file-ext='config, conf, cnf' ;
+    ${script_filename} --reports='reports' ;
+    ${script_filename} --matrix='matrix.json' ;
+    ";
+    return 0;
+  }; alias display-help='display_help';
+
+#------------------------------------------------------------------------------#
+
+function main () {
+    ## tracking_process ${FUNCNAME} "${@}";
+    declare -a file_extensions=();
+    oIFS="${IFS}";
+    for xitem in "${@}"; do
+      IFS='=' read -r key value <<< "$(
+        echo -e "${xitem}" | sed -e '1s|^\(-\)\{1,\}||'
+      )"; #echo -e "\nxitem: '${xitem}'\nkey: '${key}'\t->\tvalue: '${value}'";
+      [[ $key =~ ^(file-ext|x)$ ]] && file_extensions+=(
+        $( echo -e "${value}" | tr ':,;\n ' '\n' )
+      );
+      [[ $key =~ ^(interval|l)$ ]] && local delaying_factor="${value}";
+      [[ $key =~ ^(ips-list|i)$ ]] && local listing_filename="${value}";
+      [[ $key =~ ^(jobs|j)$ ]] && local parallel_threads="${value}";
+      [[ $key =~ ^(matrix|m)$ ]] && local matrix_filename="${value}";
+      [[ $key =~ ^(reports|r)$ ]] && local reports_folder="${value}";
+      #### ---------------------------------------------------------------------
+      [[ $key == "help" ]] && local script_helper=true;
+      [[ $key == "debug" ]] && local debug=true;
+      [[ $key == "dry-run" ]] && local dry_run=true;
+      [[ $key == "verbose" ]] && local verbose=true;
+    done; IFS="${oIFS}";
+    #### -----------------------------------------------------------------------
+    [[ -z ${delaying_factor:-} ]] && delaying_factor="0.05";
+    [[ -z ${listing_filename:-} ]] && listing_filename="ips.list";
+    [[ -z ${parallel_threads:-} ]] && parallel_threads=100;
+    #### -----------------------------------------------------------------------
+    [[ -z ${debug:-} ]] && debug=false;
+    [[ -z ${verbose:-} ]] && verbose=false;
+    #### -----------------------------------------------------------------------
+    if [[ ${script_helper:-} == true ]]; then
+      display_help;
+      exit 0;
+    fi;
+    ## Target Configurations (file-extensions):
+    if [[ -z ${file_extensions+x} || ${#file_extensions[@]} -eq 0 ]]; then
+      declare -a file_extensions=( config conf cnf );
+    fi;
+    ## Processing Custom/Default the Translation-Matrix (source):
+    [[ -z "${matrix_filename:-}" ]] && matrix_filename="matrix.json";
+    if [[ ! -f "${matrix_filename}" ]]; then
+            echo -e "Project Source Matrix-Configs file not found: ${matrix_filename}";
+            return 1;
+      elif  ! jq -e 'length > 0' "${matrix_filename}" &>/dev/null; then
+            echo "Matrix file is missing, invalid, or empty: ${matrix_filename}";
+            return 2;
+      else  local matrix_configs="$( cat "${matrix_filename}" )";
+    fi;
+    ## Custom/Default reports folder:
+    local reports_folder="${reports_folder:-reports}";
+    mkdir -p "${reports_folder}";
+    ## Processing Target Addresses Listing (default: ips.list)
+    if [[ ! -f "${listing_filename}" ]]; then
+            echo -e "Project Target IP-listing file not found: ${listing_filename}";
+            return 3;
+      else  mapfile -t target_listing < <(
+              grep -v '^\s*$' "${listing_filename}" | tr -d '\r' | sort -u
+            );
+            if [[ ${#target_listing[@]} -eq 0 ]]; then
+              echo -e "No IP addresses to process.\n";
+              return 4;
+            fi;
+    fi;
+    #### -----------------------------------------------------------------------
+
+    ip_index=0;
+    total_ips=${#target_listing[@]};
+    while (( ip_index < total_ips )); do
+      running_jobs=$( jobs -rp | wc -l );
+      available_slots=$(( parallel_threads - running_jobs ));
+      if (( available_slots > 0 )); then
+        for (( i = 0; i < available_slots && ip_index < total_ips; i++ )); do
+          ip_addr="${target_listing[ip_index++]}";
+          padded_index="$( printf "%0${#total_ips}d" "${ip_index}" )";
+          [[ "${debug}" == true ]] && echo -e "[POOL] Launching job (${ip_addr})[$ip_index] ...";
+          (
+            execute=(
+              ./scripts/parse-configs.shell
+              --ip-addr="${ip_addr}"
+              --index="(${padded_index}) "
+              --matrix="${matrix_filename}"
+              --reports="${reports_folder}"
+              --file-ext="$( IFS=,; echo "${file_extensions[*]}" )"
+            );
+            [[ "${verbose}" == true ]] && execute+=( --verbose );
+            [[ "${debug}" == true ]] && execute+=( --debug );
+            "${execute[@]}";
+          ) &
+        done;
+      fi;
+      sleep ${delaying_factor};
+    done; wait;
+
+    #### -----------------------------------------------------------------------
+    return 0;
+}; alias parse-listings='main';
+
+#------------------------------------------------------------------------------#
+
+local_state_dir=".local";
+mkdir -p "${local_state_dir}";
+
+export script_name="${0}";
+if [[ ${#@} -ge 1 && "${1,,}" =~ ^-*(h|help)$ ]]; then
+        main --help ;
+  else  # echo -e;
+        main "${@}";
+        # echo -e "Done.\n";
+fi;
+
+#------------------------------------------------------------------------------#
+
+## Alternative implementation (evaluation-purpose):
+
+# function parallel_jobs () {
+#   while [[ $( jobs -rp | wc -l ) -ge ${parallel_threads} ]]; do
+#     ## controlled delay (100 milliseconds) between checks
+#     sleep 0.1;
+#   done;
+# }; alias parallel-jobs='parallel_jobs';
+
+# for ip_addr in "${target_listing[@]}"; do
+#   parallel_jobs;
+#   (
+#     ./scripts/parse-configs.shell \
+#       --ip-addr="${ip_addr}" \
+#       --matrix="${matrix_filename}" \
+#       --reports="${reports_folder}" \
+#       --file-ext="$( IFS=,; echo "${file_extensions[*]}" )" \
+#       ${verbose:+--verbose} \
+#       ${debug:+--debug};
+#   ) &
+# done; wait;
+
+## A random set of IPs can be dynamically generated:
+## shuf -n 1000 -i 167772160-184549375 | awk '{printf "%d.%d.%d.%d\n", int($1/16777216)%256, int($1/65536)%256, int($1/256)%256, $1%256}' > random.list
