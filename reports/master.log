@@ -1,0 +1,163 @@
+
+(08) Valid IP Address: 172.31.255.254
+
+Config: configs/misc/switch.conf
+
+interface Vlan1
+ ip address 172.31.255.254 255.255.255.0
+
+{
+  "target": "172.31.255.254",
+  "configs": [
+    {
+      "config": "configs/misc/switch.conf",
+      "objects": [
+        {
+          "type": "",
+          "name": false,
+          "description": false,
+          "caption": null
+        }
+      ]
+    }
+  ]
+}
+
+(10) Valid IP Address: 192.168.1.10
+
+Config: configs/cisco/fw1.conf
+
+object network Server-192-168-1-10
+ host 192.168.1.10
+ description Main Application Server
+
+{
+  "target": "192.168.1.10",
+  "configs": [
+    {
+      "config": "configs/cisco/fw1.conf",
+      "objects": [
+        {
+          "type": "",
+          "name": false,
+          "description": false,
+          "caption": null
+        }
+      ]
+    }
+  ]
+}
+
+(15) Valid IP Address: 203.0.113.25
+
+Config: configs/cisco/fw1.conf
+
+object network External-203-0-113-25
+ host 203.0.113.25
+
+{
+  "target": "203.0.113.25",
+  "configs": [
+    {
+      "config": "configs/cisco/fw1.conf",
+      "objects": [
+        {
+          "type": "",
+          "name": false,
+          "description": false,
+          "caption": null
+        }
+      ]
+    }
+  ]
+}
+
+(02) Valid IP Address: 10.0.1.2
+
+Config: configs/cisco/fw1.conf
+
+object-group network BU1-NETWORK
+ description Corporate HQ Subnets
+ network-object host 10.0.0.1
+ network-object host 10.0.1.2
+ network-object 192.168.1.0 255.255.255.0
+
+Config: configs/misc/switch.conf
+
+interface Vlan2
+ ip address 10.0.1.2 255.255.255.0
+
+{
+  "target": "10.0.1.2",
+  "configs": [
+    {
+      "config": "configs/cisco/fw1.conf",
+      "objects": [
+        {
+          "type": "",
+          "name": false,
+          "description": false,
+          "caption": null
+        }
+      ]
+    },
+    {
+      "config": "configs/misc/switch.conf",
+      "objects": [
+        {
+          "type": "",
+          "name": false,
+          "description": false,
+          "caption": null
+        }
+      ]
+    }
+  ]
+}
+
+(01) Valid IP Address: 10.0.0.1
+
+Config: configs/cisco/fw1.conf
+
+object-group network BU1-NETWORK
+ description Corporate HQ Subnets
+ network-object host 10.0.0.1
+ network-object host 10.0.1.2
+ network-object 192.168.1.0 255.255.255.0
+
+access-list OUTSIDE extended permit ip host 10.0.0.1 any
+
+Config: configs/misc/switch.conf
+
+object-group network SOME-THING
+  description Local Office Subnets
+  network-object host 10.0.0.1
+  network-object 192.168.12.0 255.255.255.0
+
+{
+  "target": "10.0.0.1",
+  "configs": [
+    {
+      "config": "configs/cisco/fw1.conf",
+      "objects": [
+        {
+          "type": "",
+          "name": false,
+          "description": false,
+          "caption": null
+        }
+      ]
+    },
+    {
+      "config": "configs/misc/switch.conf",
+      "objects": [
+        {
+          "type": "",
+          "name": false,
+          "description": false,
+          "caption": null
+        }
+      ]
+    }
+  ]
+}

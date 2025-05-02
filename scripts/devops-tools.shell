@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+# File: scripts/devops-tools.shell
+# Purpose: Sharing common features across scripts.
+
+# Prevent re-sourcing and ensure one-time initialization
+if [[ -n "${__DEVOPS_TOOLS_SOURCED:-}" ]]; then return 0; fi;
+readonly __DEVOPS_TOOLS_SOURCED=1;
+
+# Require Bash 4.0+ for associative array support (only runs once)
+if [[ "${BASH_VERSINFO[0]}" -lt 4 ]]; then
+  echo "Error: Bash 4.0 or newer is required. Current version: ${BASH_VERSINFO[*]}";
+  exit 1;
+fi;
+
+# POSIX locale standard
+export LC_ALL=C;
+
+#------------------------------------------------------------------------------#
+# Output Utilities
+
+# Print a message without newline unless specified
+function print () {
+  [[ -n ${1:-} ]] && echo -en "${1}" || return 0;
+};
+
+# Print N newlines (default: 1)
+function newline () {
+  local count="${1:-1}";
+  for ((i = 0; i < count; i++)); do echo; done;
+};
+
+# Print an error message in consistent format
+function error_message () {
+  [[ -n ${1:-} ]] && local message="${1}" || return 0;
+  print "\nError: ${message}"; newline;
+}; alias error-message='error_message'
+
+#------------------------------------------------------------------------------#
+# Timestamped Logging Utilities
+
+function log_info () {
+  [[ -n ${1:-} ]] || return 0;
+  print "[INFO]  $(date '+%Y-%m-%d %H:%M:%S') - ${1}"; newline;
+}; alias log-info='log_info';
+
+function log_warn () {
+  [[ -n ${1:-} ]] || return 0;
+  print "[WARN]  $(date '+%Y-%m-%d %H:%M:%S') - ${1}" >&2; newline;
+}; alias log-warn='log_warn';
+
+function log_error () {
+  [[ -n ${1:-} ]] || return 0;
+  print "[ERROR] $(date '+%Y-%m-%d %H:%M:%S') - ${1}" >&2; newline;
+}; alias log-error='log_error';
+
+# Exit script with error message and exit code
+function exit_error () {
+  local msg="${1:-Unspecified fatal error}";
+  local code="${2:-1}";
+  log_error "${msg}";
+  exit "${code}";
+}; alias exit-error='exit_error';

@@ -17,7 +17,7 @@ trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT;
 
 #------------------------------------------------------------------------------#
 
-source ./scripts/devops-functions.shell;
+source ./scripts/devops-tools.shell;
 
 #------------------------------------------------------------------------------#
 
@@ -243,12 +243,12 @@ function main () {
     #### -----------------------------------------------------------------------
     ## Skip output generation if no matching configs found
     if [[ ${#matched_configs_order[@]} -eq 0 ]]; then
-            [[ "${verbose}" == true ]] && \
-               print "No configuration files matched IP: ${target_address}"; newline;
-            return 0;
-      else  [[ "${verbose}" == true ]] && \
-               print "${target_index:-}Valid IP Address: ${target_address}"; newline;
+      # [[ "${debug}" == true ]] && \
+      #    newline; print "No configuration files matched IP: ${target_address}"; newline 2;
+      return 0;
     fi;
+    # [[ "${verbose}" == true ]] && \
+       newline; print "${target_index:-}Valid IP Address: ${target_address}"; newline 2;
 
     #### -----------------------------------------------------------------------
     ## Initialize empty JSON with matched config files (no objects yet):
@@ -276,6 +276,7 @@ function main () {
     mkdir -p ${reports_folder}/{lists,json};
     local list_outfile="${reports_folder}/lists/${search_ip}.list";
     local json_outfile="${reports_folder}/json/${search_ip}.json";
+    # : > "${list_outfile}";  # truly empty file
     print > "${list_outfile}";  # prepend newline at the top
     for cfg_file in "${matched_configs_order[@]}"; do
       local first_block=true;

@@ -17,7 +17,7 @@ trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT;
 
 #------------------------------------------------------------------------------#
 
-source ./scripts/devops-functions.shell;
+source ./scripts/devops-tools.shell;
 
 #------------------------------------------------------------------------------#
 
@@ -102,6 +102,8 @@ function main () {
     ## Custom/Default reports folder:
     local reports_folder="${reports_folder:-reports}";
     mkdir -p "${reports_folder}";
+    ## Initializing the master.log file
+    : > "${reports_folder}/master.log";
     ## Processing Target Addresses Listing (default: ips.list)
     if [[ ! -f "${listing_filename}" ]]; then
             error_message "Project Target IP-listing file not found: ${listing_filename}";
@@ -128,6 +130,7 @@ function main () {
           [[ "${debug}" == true ]] && \
              error_message "[POOL] Launching job (${ip_addr})[$ip_index] ...";
           (
+            #### ---------------------------------------------------------------
             execute=(
               ./scripts/parse-configs.shell
               --ip-addr="${ip_addr}"
@@ -138,12 +141,29 @@ function main () {
             );
             [[ "${verbose}" == true ]] && execute+=( --verbose );
             [[ "${debug}" == true ]] && execute+=( --debug );
-            "${execute[@]}";
+            #### ---------------------------------------------------------------
+            output="$("${execute[@]}")";
+            if [[ -n "${output//[[:space:]]/}" ]]; then
+              printf "%s\n" "$output";
+              printf "%s\n" "$output" >> "${reports_folder}/master.log";
+            fi;
+            #### ---------------------------------------------------------------
           ) &
         done;
       fi;
       sleep ${delaying_factor};
     done; wait;
+
+    #### -----------------------------------------------------------------------
+    #### Aggregate all JSON outputs into one master.json
+    local json_dir="${reports_folder}/json";
+    local master_json="${reports_folder}/master.json";
+    if [[ -d "${json_dir}" ]]; then
+      mapfile -t json_files < <( find "${json_dir}" -type f -name '*.json' | sort );
+      if (( ${#json_files[@]} > 0 )); then
+        jq -s '.' "${json_files[@]}" > "${master_json}";
+      fi;
+    fi;
 
     #### -----------------------------------------------------------------------
     return 0;
