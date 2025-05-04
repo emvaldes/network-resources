@@ -31,12 +31,12 @@ Source Configuration files:
   - configs/cisco/fw1.cfg
   - configs/misc/switch.conf
 
-Source Configuration files:
-  - configs/cisco/fw1.cfg
-  - configs/misc/switch.conf
 
 Source Configuration files:
+Source Configuration files:
   - configs/cisco/fw1.cfg
+  - configs/cisco/fw1.cfg
+  - configs/misc/switch.conf
   - configs/misc/switch.conf
 
 Source Configuration files:
@@ -55,14 +55,7 @@ interface Vlan1
   "configs": [
     {
       "config": "configs/misc/switch.conf",
-      "objects": [
-        {
-          "type": "",
-          "name": false,
-          "description": false,
-          "caption": null
-        }
-      ]
+      "objects": []
     }
   ]
 }
@@ -86,9 +79,9 @@ object network Server-192-168-1-10
       "config": "configs/cisco/fw1.cfg",
       "objects": [
         {
-          "type": "",
+          "type": "object network Server-192-168-1-10",
           "name": false,
-          "description": false,
+          "description": "Main Application Server",
           "caption": null
         }
       ]
@@ -112,14 +105,7 @@ object network External-203-0-113-25
   "configs": [
     {
       "config": "configs/cisco/fw1.cfg",
-      "objects": [
-        {
-          "type": "",
-          "name": false,
-          "description": false,
-          "caption": null
-        }
-      ]
+      "objects": []
     }
   ]
 }
@@ -132,89 +118,82 @@ Source Configuration files:
 
 Config: configs/cisco/fw1.cfg
 
-Source Configuration files:
-
-  - configs/cisco/fw1.cfg
 object-group network BU1-NETWORK
-  - configs/misc/switch.conf
  description Corporate HQ Subnets
-
  network-object host 10.0.0.1
-(01) Valid IP Address: 10.0.0.1
  network-object host 10.0.1.2
-
  network-object 192.168.1.0 255.255.255.0
+
+Config: configs/misc/switch.conf
+
+interface Vlan2
+ ip address 10.0.1.2 255.255.255.0
+
+{
+  "target": "10.0.1.2",
+  "configs": [
+    {
+      "config": "configs/cisco/fw1.cfg",
+      "objects": [
+        {
+          "type": "object-group network BU1-NETWORK",
+          "name": false,
+          "description": "Corporate HQ Subnets",
+          "caption": null
+        }
+      ]
+    },
+    {
+      "config": "configs/misc/switch.conf",
+      "objects": []
+    }
+  ]
+}
+
+Source Configuration files:
+  - configs/cisco/fw1.cfg
+  - configs/misc/switch.conf
+
+(01) Valid IP Address: 10.0.0.1
+
 Config: configs/cisco/fw1.cfg
 
-
-Config: configs/misc/switch.conf
 object-group network BU1-NETWORK
-
  description Corporate HQ Subnets
-interface Vlan2
  network-object host 10.0.0.1
- ip address 10.0.1.2 255.255.255.0
  network-object host 10.0.1.2
-
  network-object 192.168.1.0 255.255.255.0
-{
 
-  "target": "10.0.1.2",
 access-list OUTSIDE extended permit ip host 10.0.0.1 any
-  "configs": [
 
-    {
 Config: configs/misc/switch.conf
-      "config": "configs/cisco/fw1.cfg",
 
-      "objects": [
 object-group network SOME-THING
-        {
   description Local Office Subnets
-          "type": "",
   network-object host 10.0.0.1
-          "name": false,
   network-object 192.168.12.0 255.255.255.0
-          "description": false,
 
-          "caption": null
 {
-        }
   "target": "10.0.0.1",
-      ]
   "configs": [
-    },
-    {
     {
       "config": "configs/cisco/fw1.cfg",
-      "config": "configs/misc/switch.conf",
-      "objects": [
       "objects": [
         {
-        {
-          "type": "",
-          "type": "",
+          "type": "object-group network BU1-NETWORK",
           "name": false,
-          "name": false,
-          "description": false,
-          "description": false,
-          "caption": null
+          "description": "Corporate HQ Subnets",
           "caption": null
         }
-        }
-      ]
       ]
     },
-    }
     {
-  ]
       "config": "configs/misc/switch.conf",
-}
       "objects": [
         {
-          "type": "",
+          "type": "object-group network SOME-THING",
           "name": false,
-          "description": false,
+          "description": "Local Office Subnets",
           "caption": null
         }
       ]

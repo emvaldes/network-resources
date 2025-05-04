@@ -22,32 +22,32 @@ source ./scripts/devops-tools.shell;
 #------------------------------------------------------------------------------#
 # Generate CSV output from reports/reports.json
 function generate_csvoutput () {
-  local input_json="${reports_folder}/reports.json";
-  local output_csv="${reports_folder}/reports.csv";
-
-  if [[ ! -f "${input_json}" ]]; then
-    error_message "Missing ${input_json}, cannot generate CSV.";
-    return 1;
-  fi;
-  {
-    echo "target,config,type,name,description,caption";
-    jq -r '
-      .[] as $entry
-      | $entry.configs[]
-      | .config as $cfg
-      | .objects[]
-      | [
-          $entry.target,
-          $cfg,
-          (.type // "none" | tostring | select(length > 0) // "none"),
-          (.name // "none" | tostring | select(length > 0) // "none"),
-          (.description // "none" | tostring | select(length > 0) // "none"),
-          (.caption // "none" | tostring | select(length > 0) // "none")
-        ]
-      | @csv
-    ' "${input_json}"
-  } > "${output_csv}";
-}
+    local input_json="${reports_folder}/reports.json";
+    local output_csv="${reports_folder}/reports.csv";
+    if [[ ! -f "${input_json}" ]]; then
+      error_message "Missing ${input_json}, cannot generate CSV.";
+      return 1;
+    fi;
+    {
+      echo "target,config,type,name,description,caption";
+      jq -r '
+        .[] as $entry
+        | $entry.configs[]
+        | .config as $cfg
+        | .objects[]
+        | [
+            $entry.target,
+            $cfg,
+            (.type // "none" | tostring | select(length > 0) // "none"),
+            (.name // "none" | tostring | select(length > 0) // "none"),
+            (.description // "none" | tostring | select(length > 0) // "none"),
+            (.caption // "none" | tostring | select(length > 0) // "none")
+          ]
+        | @csv
+      ' "${input_json}";
+    } > "${output_csv}";
+    return 0;
+}; alias generate-csvoutput='generate_csvoutput';
 
 #------------------------------------------------------------------------------#
 

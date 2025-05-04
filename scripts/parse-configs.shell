@@ -21,6 +21,120 @@ source ./scripts/devops-tools.shell;
 
 #------------------------------------------------------------------------------#
 
+# function generate_objects () {
+#     local ip_address="${1}";
+#     local outfile="${2}";
+#     local -a configs=();
+#     for cfg_file in "${matched_configs_order[@]}"; do
+#       local object_block="${matched_blocks_byfile[${cfg_file}]}";
+#       ## Normalize block content by decoding escaped sequences and removing artifacts
+#       local clean_block="$(
+#         echo "${object_block}" | LC_ALL=C tr -cd '\11\12\15\40-\176'
+#       )";
+#       local first_line="$(
+#         head -n1 <<< "${clean_block}" | \
+#         sed -E 's/^[[:space:]]*//'
+#       )";
+#       local desc_line="$(
+#         grep -i 'description' <<< "${clean_block}" | \
+#         sed -E 's/^[[:space:]]*//' | head -n1
+#       )";
+#       local type_val="";
+#       [[ -n "${first_line}" ]] && type_val="${first_line}";
+#       local desc_val=null;
+#       [[ -n "${desc_line}" ]] && desc_val="$(
+#         sed -E 's/^[^"]*"?description"?[[:space:]]*//I' <<< "${desc_line}" | \
+#         sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
+#       )";
+#       configs+=("$(
+#         jq -n \
+#            --arg cfg "${cfg_file}" \
+#            --arg type "${type_val}" \
+#            --arg desc "${desc_val}" \
+#            '{
+#              config: $cfg,
+#              objects: [
+#                {
+#                  type: $type,
+#                  name: false,
+#                  description: ($desc | select(. != "" and . != "null")),
+#                  caption: null
+#                }
+#              ]
+#            }'
+#       )");
+#     done;
+#     jq -n --arg ip "${ip_address}" \
+#           --argjson cfgs "[ $(
+#             IFS=,; echo "${configs[*]}"
+#           ) ]" \
+#       '{ target: $ip, configs: $cfgs }' > "${outfile}";
+#     return 0;
+# }; alias generate-objects='generate_objects';
+
+function generate_objects () {
+  local ip_address="${1}";
+  local outfile="${2}";
+  local -a configs=();
+
+  for cfg_file in "${matched_configs_order[@]}"; do
+    local raw="${matched_blocks_byfile[${cfg_file}]}";
+
+    # Deserialize block using encoded delimiter
+    local restored="$( sed "s/${divisor}/\n/g" <<< "${raw}" )";
+
+    # Read deserialized block into array line-by-line
+    local -a lines=();
+    while IFS= read -r line || [[ -n "${line}" ]]; do
+      [[ -n "${line//[[:space:]]/}" ]] && lines+=( "${line}" );
+    done <<< "${restored}";
+
+    # First non-empty line is the type
+    local type_val="${lines[0]:-}";
+    type_val="$( sed -E 's/^[[:space:]]*//' <<< "${type_val}" )";
+
+    # Search for line starting with 'description'
+    local desc_val=null;
+    for entry in "${lines[@]}"; do
+      if [[ "${entry,,}" =~ ^[[:space:]]*description ]]; then
+        desc_val="$(
+          sed -E 's/^[^"]*"?description"?[[:space:]]*//I' <<< "${entry}" | \
+          sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
+        )";
+        break;
+      fi;
+    done;
+
+    # Construct JSON block
+    configs+=("$(
+      jq -n \
+         --arg cfg "${cfg_file}" \
+         --arg type "${type_val}" \
+         --arg desc "${desc_val}" \
+         '{
+           config: $cfg,
+           objects: [
+             {
+               type: $type,
+               name: false,
+               description: ($desc | select(. != "" and . != "null")),
+               caption: null
+             }
+           ]
+         }'
+    )");
+  done;
+
+  jq -n --arg ip "${ip_address}" \
+        --argjson cfgs "[ $(
+          IFS=,; echo "${configs[*]}"
+        ) ]" \
+    '{ target: $ip, configs: $cfgs }' > "${outfile}";
+  return 0;
+}; alias generate-objects='generate_objects';
+
+#------------------------------------------------------------------------------#
+
 function validate_address () {
     ## IP Address (CIDR-aware) regex:
     local ip_cidr_regex='^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})(/([0-9]{1,2}))?$';
@@ -252,24 +366,27 @@ function main () {
 
     #### -----------------------------------------------------------------------
     ## Initialize empty JSON with matched config files (no objects yet):
+    # local tmp_json="${TMP_DIR}/partial.json";
+    # jq -n --arg ip "$target_address" \
+    #       --argjson files "$(
+    #         printf '%s\n' "${matched_configs_order[@]}" | jq -R . | jq -s '.'
+    #       )" '{
+    #             target: $ip,
+    #             configs: ($files | map({
+    #               config: .,
+    #               objects: [
+    #                 {
+    #                   type: "",
+    #                   name: false,
+    #                   description: false,
+    #                   caption: null
+    #                 }
+    #               ]
+    #             }))
+    #           }' > "${tmp_json}";
+    ## Generate enriched JSON from matched_blocks_byfile[]
     local tmp_json="${TMP_DIR}/partial.json";
-    jq -n --arg ip "$target_address" \
-          --argjson files "$(
-            printf '%s\n' "${matched_configs_order[@]}" | jq -R . | jq -s '.'
-          )" '{
-                target: $ip,
-                configs: ($files | map({
-                  config: .,
-                  objects: [
-                    {
-                      type: "",
-                      name: false,
-                      description: false,
-                      caption: null
-                    }
-                  ]
-                }))
-              }' > "${tmp_json}";
+    generate_objects "${target_address}" "${tmp_json}";
 
     #### -----------------------------------------------------------------------
     ## Listing matching resources (optional) + write to reports
