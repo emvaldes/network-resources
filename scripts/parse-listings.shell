@@ -178,7 +178,9 @@ function main () {
               --index="(${padded_index}) "
               --matrix="${matrix_filename}"
               --reports="${reports_folder}"
-              --file-ext="$( IFS=,; print "${file_extensions[*]}" )"
+              --file-ext="$(
+                IFS=,; print "${file_extensions[*]}"
+              )"
             );
             [[ "${verbose}" == true ]] && execute+=( --verbose );
             [[ "${debug}" == true ]] && execute+=( --debug );
