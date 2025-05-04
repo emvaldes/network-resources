@@ -31,12 +31,12 @@ Source Configuration files:
   - configs/cisco/fw1.cfg
   - configs/misc/switch.conf
 
-Source Configuration files:
-  - configs/cisco/fw1.cfg
-  - configs/misc/switch.conf
 
 Source Configuration files:
+Source Configuration files:
   - configs/cisco/fw1.cfg
+  - configs/cisco/fw1.cfg
+  - configs/misc/switch.conf
   - configs/misc/switch.conf
 
 Source Configuration files:
@@ -55,7 +55,14 @@ interface Vlan1
   "configs": [
     {
       "config": "configs/misc/switch.conf",
-      "objects": []
+      "objects": [
+        {
+          "object": "interface Vlan1",
+          "entry": "ip address 172.31.255.254 255.255.255.0",
+          "description": false,
+          "caption": "switch.conf"
+        }
+      ]
     }
   ]
 }
@@ -105,7 +112,14 @@ object network External-203-0-113-25
   "configs": [
     {
       "config": "configs/cisco/fw1.cfg",
-      "objects": []
+      "objects": [
+        {
+          "object": "object network External-203-0-113-25",
+          "entry": "host 203.0.113.25",
+          "description": false,
+          "caption": "fw1.cfg"
+        }
+      ]
     }
   ]
 }
@@ -145,7 +159,14 @@ interface Vlan2
     },
     {
       "config": "configs/misc/switch.conf",
-      "objects": []
+      "objects": [
+        {
+          "object": "interface Vlan2",
+          "entry": "ip address 10.0.1.2 255.255.255.0",
+          "description": false,
+          "caption": "switch.conf"
+        }
+      ]
     }
   ]
 }
@@ -184,6 +205,12 @@ object-group network SOME-THING
           "entry": "network-object host 10.0.0.1",
           "description": "Corporate HQ Subnets",
           "caption": "Identified Matching Entries"
+        },
+        {
+          "object": "access-list OUTSIDE extended permit ip host 10.0.0.1 any",
+          "entry": false,
+          "description": false,
+          "caption": "fw1.cfg"
         }
       ]
     },

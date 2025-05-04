@@ -25,16 +25,26 @@ function generate_objects () {
     local ip_address="${1}";
     local outfile="${2}";
     local -a configs=();
+
+    # Iterate over the ordered list of matched configuration files
     for cfg_file in "${matched_configs_order[@]}"; do
       local blocks="${matched_blocks_byfile[${cfg_file}]}";
       local -a objects=();
+
+      # Deserialize and clean each matched block
       while IFS= read -r block; do
         local restored="$( sed "s/${divisor}/\n/g" <<< "${block}" | sed '/^[[:space:]]*$/d' )";
+
+        # Parse lines from the restored block
         local -a lines=();
         while IFS= read -r line || [[ -n "${line}" ]]; do
           lines+=( "${line}" );
         done <<< "${restored}";
+
+        # Normalize the first line as the object type
         local object_val="$( sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//' <<< "${lines[0]:-}" )";
+
+        # Identify the specific line where the IP appears
         local entry_val=null;
         for entry in "${lines[@]}"; do
           if grep -Eq "\b${ip_address//./\\.}\b" <<< "${entry}"; then
@@ -42,6 +52,8 @@ function generate_objects () {
             break;
           fi;
         done;
+
+        # Extract optional description
         local desc_val=null;
         for entry in "${lines[@]}"; do
           if [[ "${entry,,}" =~ ^[[:space:]]*description ]]; then
@@ -52,23 +64,46 @@ function generate_objects () {
             break;
           fi;
         done;
+
+        # Determine caption: either description or config filename fallback
+        local caption_val="Identified Matching Entries";
+        if [[ "${desc_val}" == null || -z "${desc_val}" ]]; then
+          caption_val="$( basename "${cfg_file}" )";
+        fi
+
+        # Skip if no match was found in this block
+        if [[ "${entry_val}" == null || -z "${entry_val}" ]]; then
+          continue;
+        fi
+
+        # For single-line blocks, suppress 'entry' field (set to false)
+        local entry_final="\"${entry_val}\"";
+        if (( ${#lines[@]} == 1 )); then
+          entry_final="false";
+        fi
+
+        # Construct the object JSON and add to list
         objects+=("$(
           jq -n \
             --arg object "${object_val}" \
-            --arg entry "${entry_val}" \
+            --argjson entry "${entry_final}" \
             --arg desc "${desc_val}" \
+            --arg caption "${caption_val}" \
             '{
               object: $object,
-              entry: ($entry | select(. != "" and . != "null")),
-              description: ($desc | select(. != "" and . != "null")),
-              caption: "Identified Matching Entries"
+              entry: $entry,
+              description: ($desc | select(. != "" and . != "null") // false),
+              caption: $caption
             }'
         )");
       done <<< "${blocks}";
+
+      # Consolidate objects for the config block
       local objs_json="[]";
       if (( ${#objects[@]} > 0 )); then
         objs_json="$( jq -s . <<< "${objects[*]}" )";
       fi
+
       configs+=("$(
         jq -n \
           --arg cfg "${cfg_file}" \
@@ -76,14 +111,18 @@ function generate_objects () {
           '{ config: $cfg, objects: $objs }'
       )");
     done;
+
+    # Final wrap for the target IP
     local cfgs_json="[]";
     if (( ${#configs[@]} > 0 )); then
       cfgs_json="$( jq -s . <<< "${configs[*]}" )";
     fi
+
     jq -n \
       --arg ip "${ip_address}" \
       --argjson cfgs "${cfgs_json}" \
       '{ target: $ip, configs: $cfgs }' > "${outfile}";
+
     return 0;
 }; alias generate-objects='generate_objects';
 
