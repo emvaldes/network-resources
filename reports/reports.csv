@@ -1,9 +1,9 @@
-target,config,type,name,description,caption
-"10.0.0.1","configs/cisco/fw1.cfg","none","none","Corporate HQ Subnets","Identified Matching Entries"
-"10.0.0.1","configs/cisco/fw1.cfg","none","none","none","fw1.cfg"
-"10.0.0.1","configs/misc/switch.conf","none","none","Local Office Subnets","Identified Matching Entries"
-"10.0.1.2","configs/cisco/fw1.cfg","none","none","Corporate HQ Subnets","Identified Matching Entries"
-"10.0.1.2","configs/misc/switch.conf","none","none","none","switch.conf"
-"172.31.255.254","configs/misc/switch.conf","none","none","none","switch.conf"
-"192.168.1.10","configs/cisco/fw1.cfg","none","none","Main Application Server","Identified Matching Entries"
-"203.0.113.25","configs/cisco/fw1.cfg","none","none","none","fw1.cfg"
+target,config,object,entry,description,caption
+"10.0.0.1","configs/cisco/fw1.cfg","object-group network BU1-NETWORK","network-object host 10.0.0.1","Corporate HQ Subnets","Identified Matching Entries"
+"10.0.0.1","configs/cisco/fw1.cfg","access-list OUTSIDE extended permit ip host 10.0.0.1 any","none","none","fw1.cfg"
+"10.0.0.1","configs/misc/switch.conf","object-group network SOME-THING","network-object host 10.0.0.1","Local Office Subnets","Identified Matching Entries"
+"10.0.1.2","configs/cisco/fw1.cfg","object-group network BU1-NETWORK","network-object host 10.0.1.2","Corporate HQ Subnets","Identified Matching Entries"
+"10.0.1.2","configs/misc/switch.conf","interface Vlan2","ip address 10.0.1.2 255.255.255.0","none","switch.conf"
+"172.31.255.254","configs/misc/switch.conf","interface Vlan1","ip address 172.31.255.254 255.255.255.0","none","switch.conf"
+"192.168.1.10","configs/cisco/fw1.cfg","object network Server-192-168-1-10","host 192.168.1.10","Main Application Server","Identified Matching Entries"
+"203.0.113.25","configs/cisco/fw1.cfg","object network External-203-0-113-25","host 203.0.113.25","none","fw1.cfg"

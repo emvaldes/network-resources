@@ -29,7 +29,7 @@ function generate_csvoutput () {
       return 1;
     fi;
     {
-      echo "target,config,type,name,description,caption";
+      echo "target,config,object,entry,description,caption";
       jq -r '
         .[] as $entry
         | $entry.configs[]
@@ -38,8 +38,8 @@ function generate_csvoutput () {
         | [
             $entry.target,
             $cfg,
-            (.type // "none" | tostring | select(length > 0) // "none"),
-            (.name // "none" | tostring | select(length > 0) // "none"),
+            (.object // "none" | tostring | select(length > 0) // "none"),
+            (.entry // "none" | tostring | select(length > 0) // "none"),
             (.description // "none" | tostring | select(length > 0) // "none"),
             (.caption // "none" | tostring | select(length > 0) // "none")
           ]
