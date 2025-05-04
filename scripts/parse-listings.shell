@@ -30,14 +30,14 @@ function generate_csvoutput () {
     fi;
     {
       echo "target,config,object,entry,description,caption";
-      jq -r '
+      jq -r --arg configs_dirpath "${configs_dirpath}" '
         .[] as $entry
         | $entry.configs[]
         | .config as $cfg
         | .objects[]
         | [
             $entry.target,
-            $cfg,
+            ($cfg | sub("^" + $configs_dirpath + "/"; "")),
             (.object // "none" | tostring | select(length > 0) // "none"),
             (.entry // "none" | tostring | select(length > 0) // "none"),
             (.description // "none" | tostring | select(length > 0) // "none"),
@@ -46,6 +46,15 @@ function generate_csvoutput () {
         | @csv
       ' "${input_json}";
     } > "${output_csv}";
+    if
+    if [[ "${verbose}" == true ]]; then
+      if [[ -s "${output_csv}" ]]; then
+        newline;
+        print "CSV Report Summary (tabulated):";
+        newline;
+        column -t -s, "${output_csv}" | less -SFX;
+      fi;
+    fi;
     return 0;
 }; alias generate-csvoutput='generate_csvoutput';
 
@@ -150,11 +159,12 @@ function main () {
             if [[ ${#target_listing[@]} -eq 0 ]]; then
                     error_message "No IP addresses to process.\n";
                     return 4;
-              else  [[ "${verbose}" == true ]] && \
-                       newline; print "IPS/CIDR Blocks: "; newline;
-                       for target in "${target_listing[@]}"; do
-                         print "  - ${target}"; newline;
-                       done; newline;
+              else  if [[ "${verbose}" == true ]]; then
+                      newline; print "IPS/CIDR Blocks: "; newline;
+                      for target in "${target_listing[@]}"; do
+                        print "  - ${target}"; newline;
+                      done; newline;
+                    fi;
             fi;
     fi;
     #### -----------------------------------------------------------------------
