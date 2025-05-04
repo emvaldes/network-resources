@@ -65,22 +65,34 @@ function generate_objects () {
           fi;
         done;
 
-        # Determine caption: either description or config filename fallback
-        local caption_val="Identified Matching Entries";
-        if [[ "${desc_val}" == null || -z "${desc_val}" ]]; then
-          caption_val="$( basename "${cfg_file}" )";
-        fi
+        # Resolve caption dynamically from matrix
+        local caption_val="";
+        caption_val="$(
+          jq -r --arg desc "${desc_val}" '.[] | select(.match[]? | test($desc)) | .caption' \
+            <<< "${matrix_configs}" | head -n1
+        )";
+        if [[ -z "${caption_val}" || "${caption_val}" == null ]]; then
+          caption_val="$(
+            jq -r --arg obj "${object_val}" '.[] | select(.match[]? | test($obj)) | .caption' \
+              <<< "${matrix_configs}" | head -n1
+          )";
+        fi;
+        if [[ -z "${caption_val}" || "${caption_val}" == null ]]; then
+          caption_val="$(
+            sed -E "s|^${configs_dirpath}/||" <<< "${cfg_file}"
+          )";
+        fi;
 
         # Skip if no match was found in this block
         if [[ "${entry_val}" == null || -z "${entry_val}" ]]; then
           continue;
-        fi
+        fi;
 
         # For single-line blocks, suppress 'entry' field (set to false)
         local entry_final="\"${entry_val}\"";
         if (( ${#lines[@]} == 1 )); then
           entry_final="false";
-        fi
+        fi;
 
         # Construct the object JSON and add to list
         objects+=("$(
@@ -102,7 +114,7 @@ function generate_objects () {
       local objs_json="[]";
       if (( ${#objects[@]} > 0 )); then
         objs_json="$( jq -s . <<< "${objects[*]}" )";
-      fi
+      fi;
 
       configs+=("$(
         jq -n \
@@ -116,7 +128,7 @@ function generate_objects () {
     local cfgs_json="[]";
     if (( ${#configs[@]} > 0 )); then
       cfgs_json="$( jq -s . <<< "${configs[*]}" )";
-    fi
+    fi;
 
     jq -n \
       --arg ip "${ip_address}" \
