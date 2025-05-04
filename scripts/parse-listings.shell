@@ -20,10 +20,10 @@ trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT;
 source ./scripts/devops-tools.shell;
 
 #------------------------------------------------------------------------------#
-# Generate CSV output from reports/master.json
+# Generate CSV output from reports/reports.json
 function generate_csvoutput () {
-  local input_json="${reports_folder}/master.json";
-  local output_csv="${reports_folder}/master.csv";
+  local input_json="${reports_folder}/reports.json";
+  local output_csv="${reports_folder}/reports.csv";
 
   if [[ ! -f "${input_json}" ]]; then
     error_message "Missing ${input_json}, cannot generate CSV.";
@@ -57,7 +57,8 @@ function display_help () {
     Usage: ${script_filename} [OPTIONS]
 
     Options:
-    -x, --file-ext     List of configuration file's extensions (config, conf, cnf)
+    -c, --configs      Target Configuration files's path (default: ./configs)
+    -x, --file-ext     List of configuration file's extensions (cfg, conf, etc.)
     -l, --interval     Interval (in seconds) between job dispatch checks [default: 0.1]
     -i, --ips-list     File containing list of target IP addresses
     -j, --jobs         Count of Concurrent Jobs to be launched in parallel.
@@ -71,7 +72,7 @@ function display_help () {
 
     Examples:
     ${script_filename} --ips-list='ips.list' ;
-    ${script_filename} --file-ext='config, conf, cnf' ;
+    ${script_filename} --file-ext='cfg, conf, cnf' ;
     ${script_filename} --reports='reports' ;
     ${script_filename} --matrix='matrix.json' ;
     ";
@@ -88,6 +89,7 @@ function main () {
       IFS='=' read -r key value <<< "$(
         echo -e "${xitem}" | sed -e '1s|^\(-\)\{1,\}||'
       )"; #echo -e "\nxitem: '${xitem}'\nkey: '${key}'\t->\tvalue: '${value}'";
+      [[ $key =~ ^(configs|c)$ ]] && local configs_dirpath="${value}";
       [[ $key =~ ^(file-ext|x)$ ]] && file_extensions+=(
         $( print "${value}" | tr ':,;\n ' '\n' )
       );
@@ -117,7 +119,7 @@ function main () {
     fi;
     ## Target Configurations (file-extensions):
     if [[ -z ${file_extensions+x} || ${#file_extensions[@]} -eq 0 ]]; then
-      declare -a file_extensions=( config conf cnf );
+      declare -a file_extensions=( cfg conf cnf );
     fi;
     ## Processing Custom/Default the Translation-Matrix (source):
     [[ -z "${matrix_filename:-}" ]] && matrix_filename="matrix.json";
@@ -129,21 +131,30 @@ function main () {
             return 2;
       else  local matrix_configs="$( cat "${matrix_filename}" )";
     fi;
+    ## Custom/Default configs folder:
+    local configs_dirpath="${configs_dirpath:-configs}";
     ## Custom/Default reports folder:
     local reports_folder="${reports_folder:-reports}";
     mkdir -p "${reports_folder}";
-    ## Initializing the master.log file
-    : > "${reports_folder}/master.log";
+    ## Initializing the log file
+    : > "${reports_folder}/reports.log";
     ## Processing Target Addresses Listing (default: ips.list)
     if [[ ! -f "${listing_filename}" ]]; then
             error_message "Project Target IP-listing file not found: ${listing_filename}";
             return 3;
-      else  mapfile -t target_listing < <(
-              grep -v '^\s*$' "${listing_filename}" | tr -d '\r' | sort -u
-            );
+      else  ## Sort a list numerically, not lexicographically
+            mapfile -t target_listing < <(
+              grep -v '^\s*$' "${listing_filename}" | tr -d '\r' |
+              sort -t . -k1,1n -k2,2n -k3,3n -k4,4n
+            )
             if [[ ${#target_listing[@]} -eq 0 ]]; then
-              error_message "No IP addresses to process.\n";
-              return 4;
+                    error_message "No IP addresses to process.\n";
+                    return 4;
+              else  [[ "${verbose}" == true ]] && \
+                       newline; print "IPS/CIDR Blocks: "; newline;
+                       for target in "${target_listing[@]}"; do
+                         print "  - ${target}"; newline;
+                       done; newline;
             fi;
     fi;
     #### -----------------------------------------------------------------------
@@ -158,7 +169,7 @@ function main () {
           ip_addr="${target_listing[ip_index++]}";
           padded_index="$( printf "%0${#total_ips}d" "${ip_index}" )";
           [[ "${debug}" == true ]] && \
-             error_message "[POOL] Launching job (${ip_addr})[$ip_index] ...";
+             print "[POOL] Launching job (${ip_addr})[$ip_index] ..."; newline;
           (
             #### ---------------------------------------------------------------
             execute=(
@@ -175,7 +186,7 @@ function main () {
             output="$("${execute[@]}")";
             if [[ -n "${output//[[:space:]]/}" ]]; then
               printf "%s\n" "$output";
-              printf "%s\n" "$output" >> "${reports_folder}/master.log";
+              printf "%s\n" "$output" >> "${reports_folder}/reports.log";
             fi;
             #### ---------------------------------------------------------------
           ) &
@@ -185,16 +196,16 @@ function main () {
     done; wait;
 
     #### -----------------------------------------------------------------------
-    #### Aggregate all JSON outputs into one master.json
+    #### Aggregate all JSON outputs into one reports.json
     local json_dir="${reports_folder}/json";
-    local master_json="${reports_folder}/master.json";
+    local master_json="${reports_folder}/reports.json";
     if [[ -d "${json_dir}" ]]; then
       mapfile -t json_files < <( find "${json_dir}" -type f -name '*.json' | sort );
       if (( ${#json_files[@]} > 0 )); then
         jq -s '.' "${json_files[@]}" > "${master_json}";
       fi;
     fi;
-    ## Generating ./reports/master.json into CSV output
+    ## Generating ./reports/reports.json into CSV output
     generate_csvoutput ;
 
     #### -----------------------------------------------------------------------
@@ -240,3 +251,24 @@ fi;
 
 ## A random set of IPs can be dynamically generated:
 ## shuf -n 1000 -i 167772160-184549375 | awk '{printf "%d.%d.%d.%d\n", int($1/16777216)%256, int($1/65536)%256, int($1/256)%256, $1%256}' > random.list
+
+## Unable to sort properly
+# mapfile -t target_listing < <(
+#   grep -v '^\s*$' "${listing_filename}" | tr -d '\r' | sort -u
+# );
+
+## Source: A.I.A. code.
+# mapfile -t target_listing < <(
+#   grep -v '^\s*$' "${listing_filename}" | tr -d '\r' |
+#   awk 'function ip2int(ip, o) {
+#       split(ip, o, ".");
+#       return (o[1]*256*256*256) + (o[2]*256*256) + (o[3]*256) + o[4];
+#     };
+#     {
+#       key = $0;
+#       if ($0 ~ /^[0-9]+(\.[0-9]+){3}$/) {
+#         printf "%010d %s\n", ip2int($0), key;
+#       } else { print "9999999999 " key; }
+#     }
+#   ' | sort -n | cut -d' ' -f2-
+# );

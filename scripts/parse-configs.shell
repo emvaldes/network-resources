@@ -92,7 +92,7 @@ function display_help () {
 
     Options:
     -c, --configs      Target Configuration files's path (default: ./configs)
-    -x, --file-ext     List of configuration file's extensions (config, conf, cnf)
+    -x, --file-ext     List of configuration file's extensions (cfg, conf, cnf)
     -n, --index        Padded job index for display (passed by controlling script)
     -i, --ip-addr      Target IP address to be found in network configurations
     -m, --matrix       Business Units/Client ID Translation-Matrix (matrix.json)
@@ -105,7 +105,7 @@ function display_help () {
 
     Examples:
     ${script_filename} --ip-addr='1.2.3.4/24' ;
-    ${script_filename} --file-ext='config, conf, cnf' ;
+    ${script_filename} --file-ext='cfg, conf, cnf' ;
     ${script_filename} --reports='reports' ;
     ${script_filename} --matrix='matrix.json' ;
     ";
@@ -149,7 +149,7 @@ function main () {
     #### -----------------------------------------------------------------------
     ## Target Configurations (file-extensions):
     if [[ -z ${file_extensions+x} || ${#file_extensions[@]} -eq 0 ]]; then
-      declare -a file_extensions=( config conf cnf );
+      declare -a file_extensions=( cfg conf cnf );
     fi;
 
     #### -----------------------------------------------------------------------
