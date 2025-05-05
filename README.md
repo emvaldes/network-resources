@@ -85,16 +85,16 @@ The system is modular and separated into logical stages:
 
 ### CSV Report Summary (tabulated):
 
-| target           | config             | object                                                     | entry                                     | description               | caption
-| :--------------- | :----------------- | :--------------------------------------------------------- | :---------------------------------------- | :------------------------ | :------
-| "10.0.0.1"       | "cisco/fw1.cfg"    | "object-group network BU1-NETWORK"                         | "network-object host 10.0.0.1"            | "Corporate HQ Subnets"    | "Business-Unit-HQ"
-| "10.0.0.1"       | "cisco/fw1.cfg"    | "access-list OUTSIDE extended permit ip host 10.0.0.1 any" | "none"                                    | "none"                    | "cisco/fw1.cfg"
-| "10.0.0.1"       | "misc/switch.conf" | "object-group network SOME-THING"                          | "network-object host 10.0.0.1"            | "Local Office Subnets"    | "misc/switch.conf"
-| "10.0.1.2"       | "cisco/fw1.cfg"    | "object-group network BU1-NETWORK"                         | "network-object host 10.0.1.2"            | "Corporate HQ Subnets"    | "Business-Unit-HQ"
-| "10.0.1.2"       | "misc/switch.conf" | "interface Vlan2"                                          | "ip address 10.0.1.2 255.255.255.0"       | "none"                    | "misc/switch.conf"
-| "172.31.255.254" | "misc/switch.conf" | "interface Vlan1"                                          | "ip address 172.31.255.254 255.255.255.0" | "none"                    | "misc/switch.conf"
-| "192.168.1.10"   | "cisco/fw1.cfg"    | "object network Server-192-168-1-10"                       | "host 192.168.1.10"                       | "Main Application Server" | "cisco/fw1.cfg"
-| "203.0.113.25"   | "cisco/fw1.cfg"    | "object network External-203-0-113-25"                     | "host 203.0.113.25"                       | "none"                    | "cisco/fw1.cfg"
+| target | config | object | entry | description | caption |
+| :- | :- | :- | :- | :- | :- |
+| 10.0.0.1 | cisco/fw1.cfg | object-group network BU1-NETWORK | network-object host 10.0.0.1 | Corporate HQ Subnets | Identified Matching Entries |
+| 10.0.0.1 | cisco/fw1.cfg | access-list OUTSIDE extended permit ip host 10.0.0.1 any | none | none | cisco/fw1.cfg |
+| 10.0.0.1 | misc/switch.conf | object-group network SOME-THING | network-object host 10.0.0.1 | Local Office Subnets | Identified Matching Entries |
+| 10.0.1.2 | cisco/fw1.cfg | object-group network BU1-NETWORK | network-object host 10.0.1.2 | Corporate HQ Subnets | Identified Matching Entries |
+| 10.0.1.2 | misc/switch.conf | interface Vlan2 | ip address 10.0.1.2 255.255.255.0 | none | Business-Unit-Networks |
+| 172.31.255.254 | misc/switch.conf | interface Vlan1 | ip address 172.31.255.254 255.255.255.0 | none | Business-Unit-Networks |
+| 192.168.1.10 | cisco/fw1.cfg | object network Server-192-168-1-10 | host 192.168.1.10 | Main Application Server | Business-Unit-HQ |
+| 203.0.113.25 | cisco/fw1.cfg | object network External-203-0-113-25 | host 203.0.113.25 | none | Business-Unit-External |
 
 Data flows from configuration parsing into structured reports automatically.
 
@@ -401,7 +401,7 @@ object-group network SOME-THING
           "object": "object-group network BU1-NETWORK",
           "entry": "network-object host 10.0.0.1",
           "description": "Corporate HQ Subnets",
-          "caption": "Business-Unit-HQ"
+          "caption": "Identified Matching Entries"
         },
         {
           "object": "access-list OUTSIDE extended permit ip host 10.0.0.1 any",
@@ -418,7 +418,7 @@ object-group network SOME-THING
           "object": "object-group network SOME-THING",
           "entry": "network-object host 10.0.0.1",
           "description": "Local Office Subnets",
-          "caption": "misc/switch.conf"
+          "caption": "Identified Matching Entries"
         }
       ]
     }
@@ -475,7 +475,7 @@ interface Vlan2
           "object": "object-group network BU1-NETWORK",
           "entry": "network-object host 10.0.1.2",
           "description": "Corporate HQ Subnets",
-          "caption": "Business-Unit-HQ"
+          "caption": "Identified Matching Entries"
         }
       ]
     },
@@ -486,7 +486,7 @@ interface Vlan2
           "object": "interface Vlan2",
           "entry": "ip address 10.0.1.2 255.255.255.0",
           "description": false,
-          "caption": "misc/switch.conf"
+          "caption": "Business-Unit-Networks"
         }
       ]
     }
