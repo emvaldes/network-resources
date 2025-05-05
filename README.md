@@ -19,14 +19,13 @@ Designed for flexibility, parallel execution, structured output, and ease of man
 * [10. Error Handling and Best Practices](#10-error-handling-and-best-practices)
 * [11. Extensibility and Future Enhancements](#11-extensibility-and-future-enhancements)
 * [12. Limitations and Assumptions](#12-limitations-and-assumptions)
-* [13. Example End-to-End Run](#13-example-end-to-end-run)
-* [14. Conclusion](#14-conclusion)
-* [15. Folder Layout](#15-folder-layout)
-* [16. Execution Flow Overview](#16-execution-flow-overview)
-* [17. Failure Handling Overview](#17-failure-handling-overview)
-* [18. Operator Post-Run Checklist](#18-operator-post-run-checklist)
-* [19. Example JSON Object for Parsed IP](#19-example-json-object-for-parsed-ip)
-* [20. Example JSON Object for Fallback-Only Match](#20-example-json-object-for-fallback-only-match)
+* [13. Conclusion](#14-conclusion)
+* [14. Folder Layout](#15-folder-layout)
+* [15. Execution Flow Overview](#16-execution-flow-overview)
+* [16. Failure Handling Overview](#17-failure-handling-overview)
+* [17. Operator Post-Run Checklist](#18-operator-post-run-checklist)
+* [18. Example JSON Object for Parsed IP](#19-example-json-object-for-parsed-ip)
+* [19. Example JSON Object for Fallback-Only Match](#20-example-json-object-for-fallback-only-match)
 
 ---
 
@@ -83,6 +82,19 @@ The system is modular and separated into logical stages:
                                    --> aggregation --> reports/reports.json
                                    --> export CSV --> reports/reports.csv
 ```
+
+### CSV Report Summary (tabulated):
+
+| target           | config             | object                                                     | entry                                     | description               | caption
+| :--------------- | :----------------- | :--------------------------------------------------------- | :---------------------------------------- | :------------------------ | :------
+| "10.0.0.1"       | "cisco/fw1.cfg"    | "object-group network BU1-NETWORK"                         | "network-object host 10.0.0.1"            | "Corporate HQ Subnets"    | "Business-Unit-HQ"
+| "10.0.0.1"       | "cisco/fw1.cfg"    | "access-list OUTSIDE extended permit ip host 10.0.0.1 any" | "none"                                    | "none"                    | "cisco/fw1.cfg"
+| "10.0.0.1"       | "misc/switch.conf" | "object-group network SOME-THING"                          | "network-object host 10.0.0.1"            | "Local Office Subnets"    | "misc/switch.conf"
+| "10.0.1.2"       | "cisco/fw1.cfg"    | "object-group network BU1-NETWORK"                         | "network-object host 10.0.1.2"            | "Corporate HQ Subnets"    | "Business-Unit-HQ"
+| "10.0.1.2"       | "misc/switch.conf" | "interface Vlan2"                                          | "ip address 10.0.1.2 255.255.255.0"       | "none"                    | "misc/switch.conf"
+| "172.31.255.254" | "misc/switch.conf" | "interface Vlan1"                                          | "ip address 172.31.255.254 255.255.255.0" | "none"                    | "misc/switch.conf"
+| "192.168.1.10"   | "cisco/fw1.cfg"    | "object network Server-192-168-1-10"                       | "host 192.168.1.10"                       | "Main Application Server" | "cisco/fw1.cfg"
+| "203.0.113.25"   | "cisco/fw1.cfg"    | "object network External-203-0-113-25"                     | "host 203.0.113.25"                       | "none"                    | "cisco/fw1.cfg"
 
 Data flows from configuration parsing into structured reports automatically.
 
@@ -150,7 +162,6 @@ Command:
 > ./scripts/parse-configs.shell --configs="configs" \
                                 --file-ext="cfg" \
                                 --index="  --> " \
-                                --interval="0.05" \
                                 --ip-addr="10.0.0.1" \
                                 --matrix="matrix.json" \
                                 --reports="reports" \
@@ -172,8 +183,23 @@ Behavior:
 Command:
 
 ```bash
-./scripts/parse-listings.shell --ips-list="ips.list" --configs="cfg, conf, cnf" --matrix="matrix.json" --jobs=10 ;
+# Step 1: Parse all IPs in parallel
+> ./scripts/parse-listings.shell --configs="configs" \
+                                 --file-ext="cfg, conf, cnf" \
+                                 --interval=0.05
+                                 --ips-list="ips.list" \
+                                 --jobs=10 ;
+                                 --matrix="matrix.json" \
+                                 --reports="reports" \
+  ;
 ```
+
+Results:
+
+* `reports/reports.json` → Master data aggregation
+* `reports/reports.csv` → Final CSV export for business reporting
+
+No further manual steps required.
 
 Behavior:
 
@@ -240,30 +266,7 @@ Maintaining `reports.json` integrity is critical for the reliability of the fina
 
 ---
 
-## 13. Example End-to-End Run
-
-```bash
-# Step 1: Parse all IPs in parallel
-> ./scripts/parse-listings.shell --configs="configs" \
-                               --file-ext="cfg, conf, cnf" \
-                               --interval=0.05
-                               --ips-list="ips.list" \
-                               --jobs=10 ;
-                               --matrix="matrix.json" \
-                               --reports="reports" \
-  ;
-```
-
-Results:
-
-* `reports/reports.json` → Master data aggregation
-* `reports/reports.csv` → Final CSV export for business reporting
-
-No further manual steps required.
-
----
-
-## 14. Conclusion
+## 13. Conclusion
 
 This tool provides a **professional**, **extensible**, and **production-ready** method for:
 
@@ -276,7 +279,7 @@ it is ideal for **infrastructure audits**, **decommissioning projects**, and **c
 
 ---
 
-## 15. Folder Layout
+## 14. Folder Layout
 
 ```text
 project-root/
@@ -328,7 +331,7 @@ project-root/
 
 ---
 
-## 16. Execution Flow Overview
+## 15. Execution Flow Overview
 
 1. Load IPs from `ips.list`.
 2. Load configurations from `configs/`.
@@ -339,7 +342,7 @@ project-root/
 
 ---
 
-## 17. Failure Handling Overview
+## 16. Failure Handling Overview
 
 * Missing input files → Immediate error and stop.
 * No configs found → Warning; continue.
@@ -350,7 +353,7 @@ project-root/
 
 ---
 
-## 18. Operator Post-Run Checklist
+## 17. Operator Post-Run Checklist
 
 * Confirm successful parsing (no critical errors).
 * Validate that `reports/reports.json` and `reports/reports.csv` exist.
@@ -360,7 +363,7 @@ project-root/
 
 ---
 
-## 19. Example JSON Object for Parsed IP
+## 18. Example JSON Object for Parsed IP
 
 ```bash
 Source Configuration files:
@@ -398,13 +401,13 @@ object-group network SOME-THING
           "object": "object-group network BU1-NETWORK",
           "entry": "network-object host 10.0.0.1",
           "description": "Corporate HQ Subnets",
-          "caption": "Identified Matching Entries"
+          "caption": "Business-Unit-HQ"
         },
         {
           "object": "access-list OUTSIDE extended permit ip host 10.0.0.1 any",
           "entry": false,
           "description": false,
-          "caption": "fw1.cfg"
+          "caption": "cisco/fw1.cfg"
         }
       ]
     },
@@ -415,7 +418,7 @@ object-group network SOME-THING
           "object": "object-group network SOME-THING",
           "entry": "network-object host 10.0.0.1",
           "description": "Local Office Subnets",
-          "caption": "Identified Matching Entries"
+          "caption": "misc/switch.conf"
         }
       ]
     }
@@ -438,29 +441,52 @@ object-group network SOME-THING
 
 ---
 
-## 20. Example JSON Object for Fallback-Only Match
+## 19. Example JSON Object for Fallback-Only Match
 
 ```bash
-(08) Valid IP Address: 172.31.255.254
+Source Configuration files:
+  - configs/cisco/fw1.cfg
+  - configs/misc/switch.conf
+
+(02) Valid IP Address: 10.0.1.2
+
+Config: configs/cisco/fw1.cfg
+
+object-group network BU1-NETWORK
+ description Corporate HQ Subnets
+ network-object host 10.0.0.1
+ network-object host 10.0.1.2
+ network-object 192.168.1.0 255.255.255.0
 
 Config: configs/misc/switch.conf
 
-interface Vlan1
- ip address 172.31.255.254 255.255.255.0
+interface Vlan2
+ ip address 10.0.1.2 255.255.255.0
 ```
 
 ```json
 {
-  "target": "172.31.255.254",
+  "target": "10.0.1.2",
   "configs": [
+    {
+      "config": "configs/cisco/fw1.cfg",
+      "objects": [
+        {
+          "object": "object-group network BU1-NETWORK",
+          "entry": "network-object host 10.0.1.2",
+          "description": "Corporate HQ Subnets",
+          "caption": "Business-Unit-HQ"
+        }
+      ]
+    },
     {
       "config": "configs/misc/switch.conf",
       "objects": [
         {
-          "object": "interface Vlan1",
-          "entry": "ip address 172.31.255.254 255.255.255.0",
+          "object": "interface Vlan2",
+          "entry": "ip address 10.0.1.2 255.255.255.0",
           "description": false,
-          "caption": "switch.conf"
+          "caption": "misc/switch.conf"
         }
       ]
     }

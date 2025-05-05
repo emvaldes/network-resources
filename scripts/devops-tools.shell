@@ -61,3 +61,63 @@ function exit_error () {
   log_error "${msg}";
   exit "${code}";
 }; alias exit-error='exit_error';
+
+#------------------------------------------------------------------------------#
+
+function display_help () {
+    local script_name="${1}";
+    local mode="${2}";
+    local -a help_lines=();
+    local nl="\n";
+    local indent="    ";
+    ## Header
+    help_lines+=( "Usage: ${script_name} [OPTIONS]${nl}" );
+    ## Shared Options
+    help_lines+=( "Options:${nl}" );
+    help_lines+=( "  -c, --configs      Path to configuration files ( default: ./configs )" );
+    help_lines+=( "  -x, --file-ext     Comma-separated list of config file extensions ( e.g., cfg,conf,cnf )" );
+    help_lines+=( "  -m, --matrix       Path to translation matrix ( matrix.json )" );
+    help_lines+=( "  -r, --reports      Folder to store generated reports ( default: reports )" );
+    ## Script-Specific Options
+    case "${mode}" in
+      listings )
+        help_lines+=( "  -l, --interval     Interval ( in seconds ) between job dispatch checks [default: 0.1]" );
+        help_lines+=( "  -i, --ips-list     File containing list of target IP addresses" );
+        help_lines+=( "  -j, --jobs         Count of concurrent jobs to run in parallel${nl}" );
+        ## Examples for listings
+        help_lines+=( "Examples:${nl}" );
+        help_lines+=( "./scripts/parse-listings.shell --configs=\"configs\" \\" );
+        help_lines+=( "                               --file-ext=\"cfg, conf, cnf\" \\" );
+        help_lines+=( "                               --interval=0.05 \\" );
+        help_lines+=( "                               --ips-list=\"ips.list\" \\" );
+        help_lines+=( "                               --jobs=10 \\" );
+        help_lines+=( "                               --matrix=\"matrix.json\" \\" );
+        help_lines+=( "                               --reports=\"reports\" ;${nl}" );
+        ;;
+      configs )
+        help_lines+=( "  -n, --index        Padded job index ( provided by controlling script )" );
+        help_lines+=( "  -i, --ip-addr      Target IP address to scan for in configurations${nl}" );
+        ## Examples for configs
+        help_lines+=( "Examples:${nl}" );
+        help_lines+=( "./scripts/parse-configs.shell --configs=\"configs\" \\" );
+        help_lines+=( "                              --file-ext=\"cfg\" \\" );
+        help_lines+=( "                              --index=\"  --> \" \\" );
+        help_lines+=( "                              --interval=\"0.05\" \\" );
+        help_lines+=( "                              --ip-addr=\"10.0.0.1\" \\" );
+        help_lines+=( "                              --matrix=\"matrix.json\" \\" );
+        help_lines+=( "                              --reports=\"reports\" ;${nl}" );
+        ;;
+    esac;
+    ## Flags
+    help_lines+=( "Flags:${nl}" );
+    help_lines+=( "  --help             Show this help message and exit" );
+    help_lines+=( "  --debug            Enable debug mode with trace output" );
+    help_lines+=( "  --dry-run          Print actions without executing them" );
+    help_lines+=( "  --verbose          Enable verbose output${nl}" );
+    ## Output
+    newline;
+    for line in "${help_lines[@]}"; do
+      print "${indent}${line}"; newline;
+    done;
+    return 0;
+}; alias display-help='display_help_generic'

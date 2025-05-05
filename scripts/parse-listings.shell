@@ -46,7 +46,6 @@ function generate_csvoutput () {
         | @csv
       ' "${input_json}";
     } > "${output_csv}";
-    if
     if [[ "${verbose}" == true ]]; then
       if [[ -s "${output_csv}" ]]; then
         newline;
@@ -57,36 +56,6 @@ function generate_csvoutput () {
     fi;
     return 0;
 }; alias generate-csvoutput='generate_csvoutput';
-
-#------------------------------------------------------------------------------#
-
-function display_help () {
-    local script_filename="$( basename ${script_name} )";
-    print "
-    Usage: ${script_filename} [OPTIONS]
-
-    Options:
-    -c, --configs      Target Configuration files's path (default: ./configs)
-    -x, --file-ext     List of configuration file's extensions (cfg, conf, etc.)
-    -l, --interval     Interval (in seconds) between job dispatch checks [default: 0.1]
-    -i, --ips-list     File containing list of target IP addresses
-    -j, --jobs         Count of Concurrent Jobs to be launched in parallel.
-    -m, --matrix       Business Units/Client ID Translation-Matrix (matrix.json)
-    -r, --reports      Generated Reports folder (store JSON configurations)
-
-    --help             Show this help message and exit
-    --debug            Enable debug mode with trace output
-    --dry-run          Print actions without executing them
-    --verbose          Enable verbose output
-
-    Examples:
-    ${script_filename} --ips-list='ips.list' ;
-    ${script_filename} --file-ext='cfg, conf, cnf' ;
-    ${script_filename} --reports='reports' ;
-    ${script_filename} --matrix='matrix.json' ;
-    ";
-    return 0;
-  }; alias display-help='display_help';
 
 #------------------------------------------------------------------------------#
 
@@ -123,7 +92,7 @@ function main () {
 
     #### -----------------------------------------------------------------------
     if [[ ${script_helper:-} == true ]]; then
-      display_help;
+      display_help "${script_name}"  "listings";
       exit 0;
     fi;
     ## Target Configurations (file-extensions):
