@@ -85,7 +85,7 @@ The system is modular and separated into logical stages:
 
 ### CSV Report Summary (tabulated):
 
-| target | config | object | entry | description | caption |
+| target | config | object | entry | description | group |
 | :- | :- | :- | :- | :- | :- |
 | 10.0.0.1 | cisco/fw1.cfg | object-group network BU1-NETWORK | network-object host 10.0.0.1 | Corporate HQ Subnets | Identified Matching Entries |
 | 10.0.0.1 | cisco/fw1.cfg | access-list OUTSIDE extended permit ip host 10.0.0.1 any | none | none | cisco/fw1.cfg |
@@ -134,21 +134,21 @@ Example:
 [
     {
         "match": ["BU1-NETWORK", "SOME-THING"],
-        "caption": "Identified Matching Entries"
+        "group": "Identified Matching Entries"
     },
     {
         "match": ["BU1-NETWORK", "Corporate HQ Subnets"],
-        "caption": "Business-Unit-HQ"
+        "group": "Business-Unit-HQ"
     },
     {
         "match": ["Remote-Site-Office", "All-Offices"],
-        "caption": "Business-Unit-Remote"
+        "group": "Business-Unit-Remote"
     }
 ]
 ```
 
 * `match[]`: List of object names or descriptions to match.
-* `caption`: Business unit identifier.
+* `group`: Business unit identifier.
 
 If a block's `name` or `description` matches a string from `match[]`, the IP is classified accordingly.
 
@@ -401,13 +401,13 @@ object-group network SOME-THING
           "object": "object-group network BU1-NETWORK",
           "entry": "network-object host 10.0.0.1",
           "description": "Corporate HQ Subnets",
-          "caption": "Identified Matching Entries"
+          "group": "Identified Matching Entries"
         },
         {
           "object": "access-list OUTSIDE extended permit ip host 10.0.0.1 any",
           "entry": false,
           "description": false,
-          "caption": "cisco/fw1.cfg"
+          "group": "cisco/fw1.cfg"
         }
       ]
     },
@@ -418,7 +418,7 @@ object-group network SOME-THING
           "object": "object-group network SOME-THING",
           "entry": "network-object host 10.0.0.1",
           "description": "Local Office Subnets",
-          "caption": "Identified Matching Entries"
+          "group": "Identified Matching Entries"
         }
       ]
     }
@@ -437,7 +437,7 @@ object-group network SOME-THING
 | `type`        | Type of network object (e.g., `object network`, `object-group network`, `address`, etc.). |
 | `name`        | Name of the object (false if missing).                                                    |
 | `description` | Description attached to the object (false if missing).                                    |
-| `caption`     | Business classification according to the translation matrix or file-path fallback.        |
+| `group`       | Business classification according to the translation matrix or file-path fallback.        |
 
 ---
 
@@ -475,7 +475,7 @@ interface Vlan2
           "object": "object-group network BU1-NETWORK",
           "entry": "network-object host 10.0.1.2",
           "description": "Corporate HQ Subnets",
-          "caption": "Identified Matching Entries"
+          "group": "Identified Matching Entries"
         }
       ]
     },
@@ -486,7 +486,7 @@ interface Vlan2
           "object": "interface Vlan2",
           "entry": "ip address 10.0.1.2 255.255.255.0",
           "description": false,
-          "caption": "Business-Unit-Networks"
+          "group": "Business-Unit-Networks"
         }
       ]
     }
@@ -505,7 +505,7 @@ interface Vlan2
 | `type`        | Set to `"raw match"` to indicate no structured block was available. |
 | `name`        | `false`, meaning no object name was detected.                       |
 | `description` | `false`, meaning no description was detected.                       |
-| `caption`     | Set to the file path where the IP was found, serving as fallback.   |
+| `group`       | Set to the file path where the IP was found, serving as fallback.   |
 
 ---
 

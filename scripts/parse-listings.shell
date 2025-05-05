@@ -29,7 +29,7 @@ function generate_csvoutput () {
       return 1;
     fi;
     {
-      echo "target,config,object,entry,description,caption";
+      echo "target,config,object,entry,description,group";
       jq -r --arg configs_dirpath "${configs_dirpath}" '
         .[] as $entry
         | $entry.configs[]
@@ -41,7 +41,7 @@ function generate_csvoutput () {
             (.object // "none" | tostring | select(length > 0) // "none"),
             (.entry // "none" | tostring | select(length > 0) // "none"),
             (.description // "none" | tostring | select(length > 0) // "none"),
-            (.caption // "none" | tostring | select(length > 0) // "none")
+            (.group // "none" | tostring | select(length > 0) // "none")
           ]
         | @csv
       ' "${input_json}";

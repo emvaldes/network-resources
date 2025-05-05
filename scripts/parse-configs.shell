@@ -60,31 +60,31 @@ function generate_objects () {
         done;
 
         #-----------------------------------------------------------------------#
-        ## Resolve caption by extracting final token from object name
-        local caption_val="";
+        ## Resolve group by extracting final token from object name
+        local group_val="";
 
         # Extract last word from object (e.g., "BU1-NETWORK")
         local object_key="$( awk '{print $NF}' <<< "${object_val}" | sed -E 's/[[:punct:]]*$//' )";
 
-        # Search for matching caption in matrix where any match contains the object_key
-        caption_val="$(
+        # Search for matching group in matrix where any match contains the object_key
+        group_val="$(
           jq -r --arg key "${object_key}" '
-            map(select(.match[]? | contains($key))) | .[0].caption
+            map(select(.match[]? | contains($key))) | .[0].group
           ' <<< "${matrix_configs}"
         )";
 
         # Fallback to description match (optional, based on your rules — keep if needed)
-        if [[ -z "${caption_val}" || "${caption_val}" == null ]]; then
-          caption_val="$(
+        if [[ -z "${group_val}" || "${group_val}" == null ]]; then
+          group_val="$(
             jq -r --arg desc "${desc_val}" '
-              map(select(.match[]? == $desc)) | .[0].caption
+              map(select(.match[]? == $desc)) | .[0].group
             ' <<< "${matrix_configs}"
           )";
         fi;
 
         # Final fallback to config file path
-        if [[ -z "${caption_val}" || "${caption_val}" == null ]]; then
-          caption_val="$(
+        if [[ -z "${group_val}" || "${group_val}" == null ]]; then
+          group_val="$(
             sed -E "s|^${configs_dirpath}/||" <<< "${cfg_file}"
           )";
         fi;
@@ -105,12 +105,12 @@ function generate_objects () {
             --arg object "${object_val}" \
             --argjson entry "${entry_final}" \
             --arg desc "${desc_val}" \
-            --arg caption "${caption_val}" \
+            --arg group "${group_val}" \
             '{
               object: $object,
               entry: $entry,
               description: ($desc | select(. != "" and . != "null") // false),
-              caption: $caption
+              group: $group
             }'
         )");
       done <<< "${blocks}";
@@ -357,7 +357,7 @@ function main () {
     #                   type: "",
     #                   name: false,
     #                   description: false,
-    #                   caption: null
+    #                   group: null
     #                 }
     #               ]
     #             }))
