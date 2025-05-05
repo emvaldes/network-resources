@@ -58,23 +58,38 @@ function generate_objects () {
             break;
           fi;
         done;
-        ## Resolve caption dynamically from matrix
+
+        #-----------------------------------------------------------------------#
+        ## Resolve caption by extracting final token from object name
         local caption_val="";
+
+        # Extract last word from object (e.g., "BU1-NETWORK")
+        local object_key="$( awk '{print $NF}' <<< "${object_val}" | sed -E 's/[[:punct:]]*$//' )";
+
+        # Search for matching caption in matrix where any match contains the object_key
         caption_val="$(
-          jq -r --arg desc "${desc_val}" '.[] | select(.match[]? | test($desc)) | .caption' \
-            <<< "${matrix_configs}" | head -n1
+          jq -r --arg key "${object_key}" '
+            map(select(.match[]? | contains($key))) | .[0].caption
+          ' <<< "${matrix_configs}"
         )";
+
+        # Fallback to description match (optional, based on your rules — keep if needed)
         if [[ -z "${caption_val}" || "${caption_val}" == null ]]; then
           caption_val="$(
-            jq -r --arg obj "${object_val}" '.[] | select(.match[]? | test($obj)) | .caption' \
-              <<< "${matrix_configs}" | head -n1
+            jq -r --arg desc "${desc_val}" '
+              map(select(.match[]? == $desc)) | .[0].caption
+            ' <<< "${matrix_configs}"
           )";
         fi;
+
+        # Final fallback to config file path
         if [[ -z "${caption_val}" || "${caption_val}" == null ]]; then
           caption_val="$(
             sed -E "s|^${configs_dirpath}/||" <<< "${cfg_file}"
           )";
         fi;
+        #-----------------------------------------------------------------------#
+
         ## Skip if no match was found in this block
         if [[ "${entry_val}" == null || -z "${entry_val}" ]]; then
           continue;
@@ -112,18 +127,16 @@ function generate_objects () {
           '{ config: $cfg, objects: $objs }'
       )");
     done;
-
-    # Final wrap for the target IP
+    ## Final wrap for the target IP
     local cfgs_json="[]";
     if (( ${#configs[@]} > 0 )); then
       cfgs_json="$( jq -s . <<< "${configs[*]}" )";
     fi;
-
+    ## Generating JSON Configuration
     jq -n \
       --arg ip "${ip_address}" \
       --argjson cfgs "${cfgs_json}" \
       '{ target: $ip, configs: $cfgs }' > "${outfile}";
-
     return 0;
 }; alias generate-objects='generate_objects';
 

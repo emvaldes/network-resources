@@ -9,10 +9,6 @@ Source Configuration files:
 
 Source Configuration files:
   - configs/cisco/fw1.cfg
-
-  - configs/misc/switch.conf
-Source Configuration files:
-  - configs/cisco/fw1.cfg
   - configs/misc/switch.conf
 
 Source Configuration files:
@@ -23,12 +19,16 @@ Source Configuration files:
   - configs/cisco/fw1.cfg
   - configs/misc/switch.conf
 
-Source Configuration files:
-  - configs/cisco/fw1.cfg
-  - configs/misc/switch.conf
 
 Source Configuration files:
+
+Source Configuration files:
+Source Configuration files:
   - configs/cisco/fw1.cfg
+  - configs/cisco/fw1.cfg
+  - configs/cisco/fw1.cfg
+  - configs/misc/switch.conf
+  - configs/misc/switch.conf
   - configs/misc/switch.conf
 
 Source Configuration files:
@@ -60,68 +60,68 @@ interface Vlan1
           "object": "interface Vlan1",
           "entry": "ip address 172.31.255.254 255.255.255.0",
           "description": false,
-          "caption": "misc/switch.conf"
+          "caption": "Business-Unit-Networks"
         }
       ]
     }
   ]
 }
 
+
+Source Configuration files:
 Source Configuration files:
   - configs/cisco/fw1.cfg
+  - configs/cisco/fw1.cfg
   - configs/misc/switch.conf
+  - configs/misc/switch.conf
+
 
 (10) Valid IP Address: 192.168.1.10
-
-Config: configs/cisco/fw1.cfg
-
-object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server
-
-{
-  "target": "192.168.1.10",
-  "configs": [
-    {
-      "config": "configs/cisco/fw1.cfg",
-      "objects": [
-        {
-          "object": "object network Server-192-168-1-10",
-          "entry": "host 192.168.1.10",
-          "description": "Main Application Server",
-          "caption": "cisco/fw1.cfg"
-        }
-      ]
-    }
-  ]
-}
-
-Source Configuration files:
-  - configs/cisco/fw1.cfg
-  - configs/misc/switch.conf
-
 (15) Valid IP Address: 203.0.113.25
 
+
+Config: configs/cisco/fw1.cfg
 Config: configs/cisco/fw1.cfg
 
+
+object network Server-192-168-1-10
 object network External-203-0-113-25
+ host 192.168.1.10
  host 203.0.113.25
+ description Main Application Server
+
 
 {
+{
   "target": "203.0.113.25",
+  "target": "192.168.1.10",
+  "configs": [
   "configs": [
     {
+    {
+      "config": "configs/cisco/fw1.cfg",
       "config": "configs/cisco/fw1.cfg",
       "objects": [
+      "objects": [
+        {
         {
           "object": "object network External-203-0-113-25",
+          "object": "object network Server-192-168-1-10",
           "entry": "host 203.0.113.25",
+          "entry": "host 192.168.1.10",
           "description": false,
-          "caption": "cisco/fw1.cfg"
+          "description": "Main Application Server",
+          "caption": "Business-Unit-External"
+          "caption": "Business-Unit-HQ"
+        }
         }
       ]
+      ]
+    }
     }
   ]
+  ]
+}
 }
 
 Source Configuration files:
@@ -153,7 +153,7 @@ interface Vlan2
           "object": "object-group network BU1-NETWORK",
           "entry": "network-object host 10.0.1.2",
           "description": "Corporate HQ Subnets",
-          "caption": "Business-Unit-HQ"
+          "caption": "Identified Matching Entries"
         }
       ]
     },
@@ -164,7 +164,7 @@ interface Vlan2
           "object": "interface Vlan2",
           "entry": "ip address 10.0.1.2 255.255.255.0",
           "description": false,
-          "caption": "misc/switch.conf"
+          "caption": "Business-Unit-Networks"
         }
       ]
     }
@@ -204,7 +204,7 @@ object-group network SOME-THING
           "object": "object-group network BU1-NETWORK",
           "entry": "network-object host 10.0.0.1",
           "description": "Corporate HQ Subnets",
-          "caption": "Business-Unit-HQ"
+          "caption": "Identified Matching Entries"
         },
         {
           "object": "access-list OUTSIDE extended permit ip host 10.0.0.1 any",
@@ -221,7 +221,7 @@ object-group network SOME-THING
           "object": "object-group network SOME-THING",
           "entry": "network-object host 10.0.0.1",
           "description": "Local Office Subnets",
-          "caption": "misc/switch.conf"
+          "caption": "Identified Matching Entries"
         }
       ]
     }
