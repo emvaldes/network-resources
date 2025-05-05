@@ -8,6 +8,10 @@ Source Configuration files:
   - configs/misc/switch.conf
 
 Source Configuration files:
+
+  - configs/cisco/fw1.cfg
+Source Configuration files:
+  - configs/misc/switch.conf
   - configs/cisco/fw1.cfg
   - configs/misc/switch.conf
 
@@ -19,16 +23,12 @@ Source Configuration files:
   - configs/cisco/fw1.cfg
   - configs/misc/switch.conf
 
-
 Source Configuration files:
-
-Source Configuration files:
-Source Configuration files:
-  - configs/cisco/fw1.cfg
-  - configs/cisco/fw1.cfg
   - configs/cisco/fw1.cfg
   - configs/misc/switch.conf
-  - configs/misc/switch.conf
+
+Source Configuration files:
+  - configs/cisco/fw1.cfg
   - configs/misc/switch.conf
 
 Source Configuration files:
@@ -67,61 +67,61 @@ interface Vlan1
   ]
 }
 
-
-Source Configuration files:
 Source Configuration files:
   - configs/cisco/fw1.cfg
-  - configs/cisco/fw1.cfg
   - configs/misc/switch.conf
-  - configs/misc/switch.conf
-
 
 (10) Valid IP Address: 192.168.1.10
-(15) Valid IP Address: 203.0.113.25
-
 
 Config: configs/cisco/fw1.cfg
-Config: configs/cisco/fw1.cfg
-
 
 object network Server-192-168-1-10
-object network External-203-0-113-25
  host 192.168.1.10
- host 203.0.113.25
  description Main Application Server
 
-
 {
-{
-  "target": "203.0.113.25",
   "target": "192.168.1.10",
   "configs": [
-  "configs": [
-    {
     {
       "config": "configs/cisco/fw1.cfg",
-      "config": "configs/cisco/fw1.cfg",
-      "objects": [
       "objects": [
         {
-        {
-          "object": "object network External-203-0-113-25",
           "object": "object network Server-192-168-1-10",
-          "entry": "host 203.0.113.25",
           "entry": "host 192.168.1.10",
-          "description": false,
           "description": "Main Application Server",
-          "caption": "Business-Unit-External"
           "caption": "Business-Unit-HQ"
         }
-        }
-      ]
       ]
     }
-    }
-  ]
   ]
 }
+
+Source Configuration files:
+  - configs/cisco/fw1.cfg
+  - configs/misc/switch.conf
+
+(15) Valid IP Address: 203.0.113.25
+
+Config: configs/cisco/fw1.cfg
+
+object network External-203-0-113-25
+ host 203.0.113.25
+
+{
+  "target": "203.0.113.25",
+  "configs": [
+    {
+      "config": "configs/cisco/fw1.cfg",
+      "objects": [
+        {
+          "object": "object network External-203-0-113-25",
+          "entry": "host 203.0.113.25",
+          "description": false,
+          "caption": "Business-Unit-External"
+        }
+      ]
+    }
+  ]
 }
 
 Source Configuration files:

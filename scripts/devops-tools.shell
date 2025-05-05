@@ -70,6 +70,7 @@ function display_help () {
     local -a help_lines=();
     local nl="\n";
     local indent="    ";
+    local padding="$( printf '%*s' ${#script_name} ' ' )";
     ## Header
     help_lines+=( "Usage: ${script_name} [OPTIONS]${nl}" );
     ## Shared Options
@@ -86,29 +87,24 @@ function display_help () {
         help_lines+=( "  -j, --jobs         Count of concurrent jobs to run in parallel${nl}" );
         ## Examples for listings
         help_lines+=( "Examples:${nl}" );
-        help_lines+=( "./scripts/parse-listings.shell --configs=\"configs\" \\" );
-        help_lines+=( "                               --file-ext=\"cfg, conf, cnf\" \\" );
-        help_lines+=( "                               --interval=0.05 \\" );
-        help_lines+=( "                               --ips-list=\"ips.list\" \\" );
-        help_lines+=( "                               --jobs=10 \\" );
-        help_lines+=( "                               --matrix=\"matrix.json\" \\" );
-        help_lines+=( "                               --reports=\"reports\" ;${nl}" );
+        help_lines+=( "${script_name} --interval=0.05 \\" );
+        help_lines+=( "${padding} --ips-list=\"ips.list\" \\" );
+        help_lines+=( "${padding} --jobs=10 \\" );
         ;;
       configs )
         help_lines+=( "  -n, --index        Padded job index ( provided by controlling script )" );
         help_lines+=( "  -i, --ip-addr      Target IP address to scan for in configurations${nl}" );
         ## Examples for configs
         help_lines+=( "Examples:${nl}" );
-        help_lines+=( "./scripts/parse-configs.shell --configs=\"configs\" \\" );
-        help_lines+=( "                              --file-ext=\"cfg\" \\" );
-        help_lines+=( "                              --index=\"  --> \" \\" );
-        help_lines+=( "                              --interval=\"0.05\" \\" );
-        help_lines+=( "                              --ip-addr=\"10.0.0.1\" \\" );
-        help_lines+=( "                              --matrix=\"matrix.json\" \\" );
-        help_lines+=( "                              --reports=\"reports\" ;${nl}" );
+        help_lines+=( "${script_name} --index=\"  --> \" \\" );
+        help_lines+=( "${padding} --ip-addr=\"10.0.0.1\" \\" );
         ;;
     esac;
     ## Flags
+    help_lines+=( "${padding} --configs=\"configs\" \\" );
+    help_lines+=( "${padding} --file-ext=\"cfg\" \\" );
+    help_lines+=( "${padding} --matrix=\"matrix.json\" \\" );
+    help_lines+=( "${padding} --reports=\"reports\" ;${nl}" );
     help_lines+=( "Flags:${nl}" );
     help_lines+=( "  --help             Show this help message and exit" );
     help_lines+=( "  --debug            Enable debug mode with trace output" );
