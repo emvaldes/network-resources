@@ -117,3 +117,69 @@ function display_help () {
     done;
     return 0;
 }; alias display-help='display_help_generic'
+
+#------------------------------------------------------------------------------#
+
+function validate_address () {
+    ## IP Address (CIDR-aware) regex:
+    local ip_cidr_regex='^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})(/([0-9]{1,2}))?$';
+    if [[ "${target_address}" =~ ${ip_cidr_regex} ]]; then
+            # Normalize each segment and validate
+            local -a segments=(
+              "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "${BASH_REMATCH[3]}" "${BASH_REMATCH[4]}"
+            );
+            local cidr="${BASH_REMATCH[6]:-}";
+            ## Validate CIDR before building target_address
+            if [[ -n "${cidr}" ]]; then
+              if ! [[ "${cidr}" =~ ^[0-9]+$ ]] || (( cidr < 0 || cidr > 32 )); then
+                [[ "${debug}" == true ]] && \
+                   error_message "Invalid CIDR mask '/${cidr}' in ${target_address}";
+                return 3;
+              fi;
+            fi;
+            for i in "${!segments[@]}"; do
+              segment="$(
+                print "${segments[$i]}" | sed -E 's/^[[:space:]]*0*([0-9]+)[[:space:]]*$/\1/'
+              )";
+              if ! [[ "${segment}" =~ ^[0-9]+$ ]] || (( segment < 0 || segment > 255 )); then
+                [[ "${debug}" == true ]] && \
+                   error_message "Invalid IP segment after normalization (${segment}) in ${target_address}";
+                return 4;
+              fi;
+              segments[$i]="${segment}";
+            done; local segments="${segments[*]}";
+            # Reconstruct normalized IP with CIDR (only if valid)
+            # local fixed_address="${segments[0]}.${segments[1]}.${segments[2]}.${segments[3]}";
+            local fixed_address="${segments// /.}";
+            [[ -n "${cidr}" ]] && fixed_address+="/${cidr}";
+            if [[ "${target_address}" != "${fixed_address}" ]]; then
+                [[ "${verbose}" == true ]] && \
+                   error_message "IP address was corrected to '${fixed_address}'";
+                target_address="${fixed_address}";
+              # else  [[ "${verbose}" == true ]] && \
+              #          print "${target_index:-}Valid IP Address: ${target_address}"; newline;
+            fi;
+            ## Prompt only if valid CIDR and not /32
+            if [[ -n "${cidr}" && "${cidr}" -lt 32 ]]; then
+              local confirmation='';
+              read -t 3 -p "Proceed with CIDR block [ /${cidr} ]? (type 'n' to abort): " confirmation || true;
+              newline;
+              if [[ "${confirmation}" =~ ^(N|n)$ ]]; then
+                      [[ "${verbose}" == true ]] && \
+                         print "Skipping CIDR block: ${target_address}"; newline;
+                      return 5;
+                elif [[ -z "${confirmation}" ]]; then
+                      [[ "${verbose}" == true ]] && \
+                         print "Auto-continue with CIDR block: ${target_address}"; newline;
+                else  [[ "${verbose}" == true ]] && \
+                         print "Proceeding with CIDR block: ${target_address}"; newline;
+              fi;
+            fi;
+      else  [[ "${debug}" == true ]] && \
+               error_message "Invalid IP or CIDR format: ${target_address}";
+            return 6;
+    fi;
+    return 0;
+}; alias validate-address='validate_address';
+
+#------------------------------------------------------------------------------#
