@@ -74,31 +74,64 @@ function detect_platform () {
     return 0;
 }; alias detect-platform='detect_platform';
 
-function install_packages () {
+# function install_packages () {
+#     local os="$1";
+#     case "$os" in
+#       macos)  echo "[+] Detected macOS (requires Homebrew)";
+#               brew install jq gnu-sed coreutils moreutils grep;
+#       ;;
+#       debian) echo "[+] Detected Debian/Ubuntu";
+#               sudo apt-get update -y;
+#               sudo apt-get install -y jq sed grep coreutils findutils util-linux moreutils less;
+#       ;;
+#       rhel)   echo "[+] Detected RHEL/CentOS/Fedora";
+#               sudo yum install -y epel-release;
+#               sudo yum install -y jq sed grep coreutils findutils util-linux moreutils less;
+#       ;;
+#       alpine) echo "[+] Detected Alpine Linux";
+#               sudo apk update;
+#               sudo apk add jq sed grep coreutils findutils util-linux moreutils less;
+#       ;;
+#       *)  echo "[-] Unsupported OS type: $os";
+#           exit 1;
+#       ;;
+#     esac;
+#     echo "Dependencies installed for ${os}";
+#     return 0;
+# }; alias install-packages='install_packages';
+
+function installed () {
+  command -v "$1" &>/dev/null;
+  return 0;
+};
+
+function install_missing () {
     local os="$1";
+    local pkg_cmd="";
+    local -A pkg_map=(
+      [jq]="jq"
+      [sed]="sed"
+      [grep]="grep"
+      [find]="find"
+      [column]="moreutils"   # for Debian/Ubuntu
+      [less]="less"
+      [base64]="coreutils"
+    );
     case "$os" in
-      macos)  echo "[+] Detected macOS (requires Homebrew)";
-              brew install jq gnu-sed coreutils moreutils grep;
-      ;;
-      debian) echo "[+] Detected Debian/Ubuntu";
-              sudo apt-get update -y;
-              sudo apt-get install -y jq sed grep coreutils findutils util-linux moreutils less;
-      ;;
-      rhel)   echo "[+] Detected RHEL/CentOS/Fedora";
-              sudo yum install -y epel-release;
-              sudo yum install -y jq sed grep coreutils findutils util-linux moreutils less;
-      ;;
-      alpine) echo "[+] Detected Alpine Linux";
-              sudo apk update;
-              sudo apk add jq sed grep coreutils findutils util-linux moreutils less;
-      ;;
-      *)  echo "[-] Unsupported OS type: $os";
-          exit 1;
-      ;;
+      macos)   pkg_cmd="brew install";;
+      debian)  pkg_cmd="sudo apt-get install -y";;
+      rhel)    pkg_cmd="sudo yum install -y";;
+      alpine)  pkg_cmd="sudo apk add";;
+      *)       echo "[-] Unsupported OS"; exit 1;;
     esac;
-    echo "Dependencies installed for ${os}";
+    for bin in "${!pkg_map[@]}"; do
+      if ! installed "${bin}"; then
+        echo "[+] Installing ${pkg_map[$bin]} (for ${bin})";
+        ${pkg_cmd} "${pkg_map[$bin]}";
+      fi;
+    done;
     return 0;
-}; alias install-packages='install_packages';
+}; alias install-missing='install_missing';
 
 #------------------------------------------------------------------------------#
 
