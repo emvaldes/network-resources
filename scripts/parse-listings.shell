@@ -208,6 +208,9 @@ function main () {
 local_state_dir=".local";
 mkdir -p "${local_state_dir}";
 
+os="$( detect_platform )";
+install_missing "${os}";
+
 export script_name="${0}";
 
 if [[ ${#@} -ge 1 && "${1,,}" =~ ^-*(h|help)$ ]]; then
