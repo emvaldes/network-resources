@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+# File: setup-remotes.shell
+# Purpose: Configure Git remotes for pull-only (GitHub) and push-only (Bitbucket)
+
+set -euo pipefail;
+
+# Check arguments
+if [[ $# -ne 2 ]]; then
+  echo "Usage: $0 <PULL_ONLY_REPO> <PUSH_ONLY_REPO>" >&2;
+  exit 1;
+fi;
+
+PULL_ONLY_REPO="${1}";
+PUSH_ONLY_REPO="${2}";
+
+if [[ -z "${PULL_ONLY_REPO}" || -z "${PUSH_ONLY_REPO}" ]]; then
+  echo "Error: One or both remote URLs are empty." >&2;
+  exit 1;
+fi;
+
+# Ensure we're in a Git repository
+if ! git rev-parse --is-inside-work-tree &>/dev/null; then
+  echo "Error: Not inside a Git repository." >&2;
+  exit 2;
+fi;
+
+# Configure origin as GitHub pull-only
+git remote remove origin 2>/dev/null || true;
+git remote add origin "${PULL_ONLY_REPO}";
+git remote set-url --push origin DISABLE;
+
+# Add Bitbucket as push-only remote
+git remote remove bitbucket-push-only 2>/dev/null || true;
+git remote add bitbucket-push-only DISABLE;
+git remote set-url --push bitbucket-push-only "${PUSH_ONLY_REPO}";
+
+# Show result
+echo "Remote configuration completed:";
+git remote -v;
