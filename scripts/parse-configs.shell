@@ -215,26 +215,49 @@ function main () {
 
     #### -----------------------------------------------------------------------
     ## Processing Custom/Default the Target Configurations (source):
+
+    # local configs_dirpath="${configs_dirpath:-configs}";
+    # if [[ ! -d "${configs_dirpath}" ]]; then
+    #         [[ "${verbose}" == true ]] && \
+    #            error_message "Project Source Configurations path not found: ${configs_dirpath}";
+    #         return 1;
+    #   else  ## Build config file list once, globally scoped
+    #         declare -ga source_configs=();
+    #         local -a find_cmd=( find "$configs_dirpath" -type f \( );
+    #         for ext in "${file_extensions[@]}"; do
+    #           find_cmd+=( -iname "*.${ext}" -o );
+    #         done;
+    #         unset 'find_cmd[-1]';  # Remove trailing -o
+    #         find_cmd+=( \) );
+    #         mapfile -t source_configs < <( "${find_cmd[@]}" | sort );
+    #         if [[ "${debug}" == true ]]; then
+    #           newline; print "Source Configuration files:"; newline;
+    #           for cfg in "${source_configs[@]}"; do
+    #             print "  - ${cfg}"; newline;
+    #           done;
+    #         fi;
+    # fi;
+
+    ## Processing Custom/Default the Target Configurations (source):
     local configs_dirpath="${configs_dirpath:-configs}";
-    if [[ ! -d "${configs_dirpath}" ]]; then
+    declare -ga source_configs=();
+    ip_list_file="targets/${target_address%%/*}.list";
+
+    if [[ -f "${ip_list_file}" ]]; then
+            mapfile -t source_configs < "${ip_list_file}";
             [[ "${verbose}" == true ]] && \
-               error_message "Project Source Configurations path not found: ${configs_dirpath}";
-            return 1;
-      else  ## Build config file list once, globally scoped
-            declare -ga source_configs=();
+            print "Using pre-matched config list: ${ip_list_file}";
+      elif  [[ -d "${configs_dirpath}" ]]; then
             local -a find_cmd=( find "$configs_dirpath" -type f \( );
             for ext in "${file_extensions[@]}"; do
               find_cmd+=( -iname "*.${ext}" -o );
             done;
-            unset 'find_cmd[-1]';  # Remove trailing -o
+            unset 'find_cmd[-1]';
             find_cmd+=( \) );
             mapfile -t source_configs < <( "${find_cmd[@]}" | sort );
-            if [[ "${debug}" == true ]]; then
-              newline; print "Source Configuration files:"; newline;
-              for cfg in "${source_configs[@]}"; do
-                print "  - ${cfg}"; newline;
-              done;
-            fi;
+      else  [[ "${verbose}" == true ]] && \
+            error_message "Project Source Configurations path not found: ${configs_dirpath}";
+            return 1;
     fi;
 
     #### -----------------------------------------------------------------------
