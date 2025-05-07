@@ -143,8 +143,10 @@ function main () {
             unset 'find_cmd[-1]';  # Remove trailing -o
             find_cmd+=( \) );
             "${find_cmd[@]}" | sort > "${configs_list_cache}";
-            [[ "${verbose}" == true ]] && print "Generated configs.list at ${configs_list_cache}";
-      else  [[ "${verbose}" == true ]] && print "Using cached configs.list from ${configs_list_cache}";
+            [[ "${verbose}" == true ]] && \
+               print "Generated configs.list at ${configs_list_cache}";
+      else  [[ "${verbose}" == true ]] && \
+               print "Using cached configs.list from ${configs_list_cache}";
     fi;
 
     #### -----------------------------------------------------------------------
@@ -206,6 +208,25 @@ function main () {
     done;
 
     #### -----------------------------------------------------------------------
+    local total_requested=${#target_listing[@]};
+    local total_mapped=${#filtered_target_listing[@]};
+    {
+      print "Total IPs requested: ${total_requested}";
+      print "Total IPs mapped:    ${total_mapped}";
+      print "Unmapped IPs:        $(( total_requested - total_mapped ))";
+    } >> "${reports_folder}/reports.log";
+
+    #### -----------------------------------------------------------------------
+    ## Log unmapped IPs explicitly
+    {
+      print "Unmapped IPs:";
+      for ip in "${target_listing[@]}"; do
+        ip_cleaned="$( print "${ip}" | tr -d '\r' )";
+        [[ ! -f "targets/${ip_cleaned}.list" ]] && print "  - ${ip_cleaned}";
+      done;
+    } >> "${reports_folder}/reports.log";
+
+    #### -----------------------------------------------------------------------
     ip_index=0;
     # total_ips=${#target_listing[@]};
     total_ips=${#filtered_target_listing[@]};
@@ -217,15 +238,12 @@ function main () {
       available_slots=$(( parallel_threads - running_jobs ));
       if (( available_slots > 0 )); then
         for (( i = 0; i < available_slots && ip_index < total_ips; i++ )); do
-          # ip_addr="${target_listing[ip_index++]}";
           ip_addr="${filtered_target_listing[ip_index++]}";
-          padded_index="$(
-            printf "%0${#total_ips}d" "${ip_index}"
-          )";
+          padded_index="$( printf "%0${#total_ips}d" "${ip_index}" )";
+          print "[START] IP: ${ip_addr}" >> "${reports_folder}/reports.log"; newline;
           [[ "${debug}" == true ]] && \
              print "[POOL] Launching job (${ip_addr})[$ip_index] ..."; newline;
           (
-            #### ---------------------------------------------------------------
             execute=(
               ./scripts/parse-configs.shell
               --configs="${configs_dirpath}"
@@ -239,19 +257,27 @@ function main () {
             );
             [[ "${classify_targets}" == true ]] && execute+=( --classify );
             [[ "${validate_address}" == true ]] && execute+=( --validate );
-            #### ---------------------------------------------------------------
             [[ "${verbose}" == true ]] && execute+=( --verbose );
             [[ "${debug}" == true ]] && execute+=( --debug );
-            #### ---------------------------------------------------------------
-            if [[ "${debug}" == true ]]; then
-                    output="$( bash -x "${execute[@]}" )";
-              else  output="$( "${execute[@]}" )";
-            fi;
-            if [[ -n "${output//[[:space:]]/}" ]]; then
-              printf "%s\n" "$output";
-              printf "%s\n" "$output" >> "${reports_folder}/reports.log";
-            fi;
-            #### ---------------------------------------------------------------
+
+            (
+              mkdir -p "${reports_folder}/logs" "${reports_folder}/errors";
+              logfile="${reports_folder}/logs/${ip_addr}.log";
+              if [[ "${debug}" == true ]]; then
+                bash -x "${execute[@]}" > "${logfile}" 2>&1;
+              else
+                "${execute[@]}" > "${logfile}" 2>&1;
+              fi;
+              status=$?;
+              if (( status != 0 )); then
+                {
+                  echo "[ERROR] IP: ${ip_addr} failed :: exit ${status}";
+                  echo "  See: ${logfile}";
+                } >> "${reports_folder}/errors/errors.log";
+              else
+                echo "[OK] IP: ${ip_addr} completed" >> "${reports_folder}/reports.log";
+              fi;
+            ) &
           ) &
         done;
       fi;
