@@ -132,29 +132,19 @@ function main () {
     : > "${reports_folder}/reports.log";
 
     #### -----------------------------------------------------------------------
-    ## Custom/Default configs folder:
-    local configs_dirpath="${configs_dirpath:-configs}";
-    ## Custom/Default reports folder:
-    local reports_folder="${reports_folder:-reports}";
-    mkdir -p "${reports_folder}";
-    ## Initializing the log file
-    : > "${reports_folder}/reports.log";
-
-    #### -----------------------------------------------------------------------
     ## Generate master list of config files only once
     local configs_list_cache=".cache/configs.list";
     mkdir -p .cache;
     if [[ ! -f "${configs_list_cache}" ]]; then
-      local -a find_cmd=( find "${configs_dirpath}" -type f \( );
-      for ext in "${file_extensions[@]}"; do
-        find_cmd+=( -iname "*.${ext}" -o );
-      done;
-      unset 'find_cmd[-1]';  # Remove trailing -o
-      find_cmd+=( \) );
-      "${find_cmd[@]}" | sort > "${configs_list_cache}";
-      [[ "${verbose}" == true ]] && print "Generated configs.list at ${configs_list_cache}";
-    else
-      [[ "${verbose}" == true ]] && print "Using cached configs.list from ${configs_list_cache}";
+            local -a find_cmd=( find "${configs_dirpath}" -type f \( );
+            for ext in "${file_extensions[@]}"; do
+              find_cmd+=( -iname "*.${ext}" -o );
+            done;
+            unset 'find_cmd[-1]';  # Remove trailing -o
+            find_cmd+=( \) );
+            "${find_cmd[@]}" | sort > "${configs_list_cache}";
+            [[ "${verbose}" == true ]] && print "Generated configs.list at ${configs_list_cache}";
+      else  [[ "${verbose}" == true ]] && print "Using cached configs.list from ${configs_list_cache}";
     fi;
 
     #### -----------------------------------------------------------------------
@@ -192,7 +182,9 @@ function main () {
 
     for ip_addr in "${target_listing[@]}"; do
       (
-        ip_cleaned="$( print "${ip_addr}" | tr -d '\r' )";
+        ip_cleaned="$(
+          print "${ip_addr}" | tr -d '\r'
+        )";
         target_file="targets/${ip_cleaned}.list";
         matched_files="$(
           grep -lF "${ip_cleaned}" $(< "${configs_list_cache}") 2>/dev/null || true
@@ -217,7 +209,6 @@ function main () {
     ip_index=0;
     # total_ips=${#target_listing[@]};
     total_ips=${#filtered_target_listing[@]};
-    echo -e ${total_ips[*]}
 
     while (( ip_index < total_ips )); do
       running_jobs=$(
@@ -268,11 +259,13 @@ function main () {
     done; wait;
 
     #### -----------------------------------------------------------------------
-    #### Aggregate all JSON outputs into one reports.json
+    ## Aggregate all JSON outputs into one reports.json
     local json_dir="${reports_folder}/json";
     local master_json="${reports_folder}/reports.json";
     if [[ -d "${json_dir}" ]]; then
-      mapfile -t json_files < <( find "${json_dir}" -type f -name '*.json' | sort );
+      mapfile -t json_files < <(
+        find "${json_dir}" -type f -name '*.json' | sort
+      );
       if (( ${#json_files[@]} > 0 )); then
         jq -s '.' "${json_files[@]}" > "${master_json}";
       fi;

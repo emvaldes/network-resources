@@ -59,64 +59,34 @@ function generate_objects () {
           fi;
         done;
 
-        # #-----------------------------------------------------------------------#
-        # ## Resolve group by extracting final token from object name
-        # local group_val="";
-        #
-        # # Extract last word from object (e.g., "BU1-NETWORK")
-        # local object_key="$( awk '{print $NF}' <<< "${object_val}" | sed -E 's/[[:punct:]]*$//' )";
-        #
-        # # Search for matching group in matrix where any match contains the object_key
-        # group_val="$(
-        #   jq -r --arg key "${object_key}" '
-        #     map(select(.match[]? | contains($key))) | .[0].group
-        #   ' <<< "${matrix_configs}"
-        # )";
-        #
-        # # Fallback to description match (optional, based on your rules — keep if needed)
-        # if [[ -z "${group_val}" || "${group_val}" == null ]]; then
-        #   group_val="$(
-        #     jq -r --arg desc "${desc_val}" '
-        #       map(select(.match[]? == $desc)) | .[0].group
-        #     ' <<< "${matrix_configs}"
-        #   )";
-        # fi;
-        #
-        # # Final fallback to config file path
-        # if [[ -z "${group_val}" || "${group_val}" == null ]]; then
-        #   group_val="$(
-        #     sed -E "s|^${configs_dirpath}/||" <<< "${cfg_file}"
-        #   )";
-        # fi;
-        # #-----------------------------------------------------------------------#
-
         #-----------------------------------------------------------------------#
         ## Resolve group by extracting final token from object name
         local group_val="";
-
         if [[ "${classify_targets:-false}" == true ]]; then
-          local object_key="$( awk '{print $NF}' <<< "${object_val}" | sed -E 's/[[:punct:]]*$//' )";
-          group_val="$(
-            jq -r --arg key "${object_key}" '
-              map(select(.match[]? | contains($key))) | .[0].group
-            ' <<< "${matrix_configs}"
-          )";
-          if [[ -z "${group_val}" || "${group_val}" == null ]]; then
-            group_val="$(
-              jq -r --arg desc "${desc_val}" '
-                map(select(.match[]? == $desc)) | .[0].group
-              ' <<< "${matrix_configs}"
-            )";
-          fi;
-        else
-          group_val="Unclassified";
+                local object_key="$(
+                  awk '{print $NF}' <<< "${object_val}" | sed -E 's/[[:punct:]]*$//'
+                )";
+                group_val="$(
+                  jq -r --arg key "${object_key}" '
+                    map(select(.match[]? | contains($key))) | .[0].group
+                  ' <<< "${matrix_configs}"
+                )";
+                if [[ -z "${group_val}" || "${group_val}" == null ]]; then
+                  group_val="$(
+                    jq -r --arg desc "${desc_val}" '
+                      map(select(.match[]? == $desc)) | .[0].group
+                    ' <<< "${matrix_configs}"
+                  )";
+                fi;
+          else  group_val="Unclassified";
         fi;
-
         if [[ -z "${group_val}" || "${group_val}" == null ]]; then
-          group_val="$( sed -E "s|^${configs_dirpath}/||" <<< "${cfg_file}" )";
+          group_val="$(
+            sed -E "s|^${configs_dirpath}/||" <<< "${cfg_file}"
+          )";
         fi;
-        #-----------------------------------------------------------------------#
 
+        #-----------------------------------------------------------------------#
         ## Skip if no match was found in this block
         if [[ "${entry_val}" == null || -z "${entry_val}" ]]; then
           continue;
@@ -215,38 +185,13 @@ function main () {
 
     #### -----------------------------------------------------------------------
     ## Processing Custom/Default the Target Configurations (source):
-
-    # local configs_dirpath="${configs_dirpath:-configs}";
-    # if [[ ! -d "${configs_dirpath}" ]]; then
-    #         [[ "${verbose}" == true ]] && \
-    #            error_message "Project Source Configurations path not found: ${configs_dirpath}";
-    #         return 1;
-    #   else  ## Build config file list once, globally scoped
-    #         declare -ga source_configs=();
-    #         local -a find_cmd=( find "$configs_dirpath" -type f \( );
-    #         for ext in "${file_extensions[@]}"; do
-    #           find_cmd+=( -iname "*.${ext}" -o );
-    #         done;
-    #         unset 'find_cmd[-1]';  # Remove trailing -o
-    #         find_cmd+=( \) );
-    #         mapfile -t source_configs < <( "${find_cmd[@]}" | sort );
-    #         if [[ "${debug}" == true ]]; then
-    #           newline; print "Source Configuration files:"; newline;
-    #           for cfg in "${source_configs[@]}"; do
-    #             print "  - ${cfg}"; newline;
-    #           done;
-    #         fi;
-    # fi;
-
-    ## Processing Custom/Default the Target Configurations (source):
     local configs_dirpath="${configs_dirpath:-configs}";
     declare -ga source_configs=();
     ip_list_file="targets/${target_address%%/*}.list";
-
     if [[ -f "${ip_list_file}" ]]; then
             mapfile -t source_configs < "${ip_list_file}";
             [[ "${verbose}" == true ]] && \
-            print "Using pre-matched config list: ${ip_list_file}";
+               print "Using pre-matched config list: ${ip_list_file}";
       elif  [[ -d "${configs_dirpath}" ]]; then
             local -a find_cmd=( find "$configs_dirpath" -type f \( );
             for ext in "${file_extensions[@]}"; do
@@ -256,7 +201,7 @@ function main () {
             find_cmd+=( \) );
             mapfile -t source_configs < <( "${find_cmd[@]}" | sort );
       else  [[ "${verbose}" == true ]] && \
-            error_message "Project Source Configurations path not found: ${configs_dirpath}";
+               error_message "Project Source Configurations path not found: ${configs_dirpath}";
             return 1;
     fi;
 
@@ -309,7 +254,7 @@ function main () {
     local divisor="$(
       date +%s%N | base64 | tr -dc 'a-zA-Z0-9'
     )";
-
+    ## Parsing available target configuration files
     for cfg_file in "${source_configs[@]}"; do
       if grep -qF "${search_ip}" "${cfg_file}"; then
         matched_configs["${cfg_file}"]=true;
