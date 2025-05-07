@@ -1,40 +1,51 @@
 #!/usr/bin/env bash
 
 # File: setup-remotes.shell
-# Purpose: Configure Git remotes for pull-only (GitHub) and push-only (Bitbucket)
+# Purpose: Configure Git remotes for pull-only and push-only workflows
 
 set -euo pipefail;
 
-# Check arguments
-if [[ $# -ne 2 ]]; then
-  echo "Usage: $0 <PULL_ONLY_REPO> <PUSH_ONLY_REPO>" >&2;
+# Validate arguments
+if [[ $# -lt 1 || $# -gt 2 ]]; then
+  echo "Usage: $0 [PULL_ONLY_REPO] <PUSH_ONLY_REPO>" >&2;
   exit 1;
 fi;
 
-PULL_ONLY_REPO="${1}";
-PUSH_ONLY_REPO="${2}";
+PULL_ONLY_REPO="${1:-}";
+PUSH_ONLY_REPO="${2:-}";
 
-if [[ -z "${PULL_ONLY_REPO}" || -z "${PUSH_ONLY_REPO}" ]]; then
-  echo "Error: One or both remote URLs are empty." >&2;
-  exit 1;
-fi;
-
-# Ensure we're in a Git repository
+# Verify inside a Git repo
 if ! git rev-parse --is-inside-work-tree &>/dev/null; then
   echo "Error: Not inside a Git repository." >&2;
   exit 2;
 fi;
 
-# Configure origin as GitHub pull-only
-git remote remove origin 2>/dev/null || true;
-git remote add origin "${PULL_ONLY_REPO}";
-git remote set-url --push origin DISABLE;
+# Fallback to existing 'origin' if pull URL not given
+if [[ -z "${PULL_ONLY_REPO}" ]]; then
+  if git remote get-url pull-only-remote &>/dev/null; then
+    PULL_ONLY_REPO="$( git remote get-url pull-only-remote )";
+    echo "Info: Using existing 'pull-only-remote' fetch URL: ${PULL_ONLY_REPO}";
+  else
+    echo "Error: No pull-only repo provided and no existing 'pull-only-remote' found." >&2;
+    exit 3;
+  fi;
+fi;
 
-# Add Bitbucket as push-only remote
-git remote remove bitbucket-push-only 2>/dev/null || true;
-git remote add bitbucket-push-only DISABLE;
-git remote set-url --push bitbucket-push-only "${PUSH_ONLY_REPO}";
+if [[ -z "${PUSH_ONLY_REPO}" ]]; then
+  echo "Error: push-only repo URL is required." >&2;
+  exit 4;
+fi;
 
-# Show result
-echo "Remote configuration completed:";
+# Configure pull-only remote
+git remote remove pull-only-remote 2>/dev/null || true;
+git remote add pull-only-remote "${PULL_ONLY_REPO}";
+git remote set-url --push pull-only-remote DISABLE;
+
+# Configure push-only remote
+git remote remove push-only-remote 2>/dev/null || true;
+git remote add push-only-remote DISABLE;
+git remote set-url --push push-only-remote "${PUSH_ONLY_REPO}";
+
+# Confirmation
+echo "Remote setup complete:";
 git remote -v;
