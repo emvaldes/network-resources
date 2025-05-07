@@ -59,34 +59,61 @@ function generate_objects () {
           fi;
         done;
 
+        # #-----------------------------------------------------------------------#
+        # ## Resolve group by extracting final token from object name
+        # local group_val="";
+        #
+        # # Extract last word from object (e.g., "BU1-NETWORK")
+        # local object_key="$( awk '{print $NF}' <<< "${object_val}" | sed -E 's/[[:punct:]]*$//' )";
+        #
+        # # Search for matching group in matrix where any match contains the object_key
+        # group_val="$(
+        #   jq -r --arg key "${object_key}" '
+        #     map(select(.match[]? | contains($key))) | .[0].group
+        #   ' <<< "${matrix_configs}"
+        # )";
+        #
+        # # Fallback to description match (optional, based on your rules — keep if needed)
+        # if [[ -z "${group_val}" || "${group_val}" == null ]]; then
+        #   group_val="$(
+        #     jq -r --arg desc "${desc_val}" '
+        #       map(select(.match[]? == $desc)) | .[0].group
+        #     ' <<< "${matrix_configs}"
+        #   )";
+        # fi;
+        #
+        # # Final fallback to config file path
+        # if [[ -z "${group_val}" || "${group_val}" == null ]]; then
+        #   group_val="$(
+        #     sed -E "s|^${configs_dirpath}/||" <<< "${cfg_file}"
+        #   )";
+        # fi;
+        # #-----------------------------------------------------------------------#
+
         #-----------------------------------------------------------------------#
         ## Resolve group by extracting final token from object name
         local group_val="";
 
-        # Extract last word from object (e.g., "BU1-NETWORK")
-        local object_key="$( awk '{print $NF}' <<< "${object_val}" | sed -E 's/[[:punct:]]*$//' )";
-
-        # Search for matching group in matrix where any match contains the object_key
-        group_val="$(
-          jq -r --arg key "${object_key}" '
-            map(select(.match[]? | contains($key))) | .[0].group
-          ' <<< "${matrix_configs}"
-        )";
-
-        # Fallback to description match (optional, based on your rules — keep if needed)
-        if [[ -z "${group_val}" || "${group_val}" == null ]]; then
+        if [[ "${classify_targets:-false}" == true ]]; then
+          local object_key="$( awk '{print $NF}' <<< "${object_val}" | sed -E 's/[[:punct:]]*$//' )";
           group_val="$(
-            jq -r --arg desc "${desc_val}" '
-              map(select(.match[]? == $desc)) | .[0].group
+            jq -r --arg key "${object_key}" '
+              map(select(.match[]? | contains($key))) | .[0].group
             ' <<< "${matrix_configs}"
           )";
+          if [[ -z "${group_val}" || "${group_val}" == null ]]; then
+            group_val="$(
+              jq -r --arg desc "${desc_val}" '
+                map(select(.match[]? == $desc)) | .[0].group
+              ' <<< "${matrix_configs}"
+            )";
+          fi;
+        else
+          group_val="Unclassified";
         fi;
 
-        # Final fallback to config file path
         if [[ -z "${group_val}" || "${group_val}" == null ]]; then
-          group_val="$(
-            sed -E "s|^${configs_dirpath}/||" <<< "${cfg_file}"
-          )";
+          group_val="$( sed -E "s|^${configs_dirpath}/||" <<< "${cfg_file}" )";
         fi;
         #-----------------------------------------------------------------------#
 
@@ -154,8 +181,10 @@ function main () {
       [[ $key =~ ^(file-ext|x)$ ]] && file_extensions+=(
         $( print "${value}" | tr ':,;\n ' '\n' )
       );
+      [[ $key =~ ^(classify|g)$ ]] && local classify_targets=true;
       [[ $key =~ ^(index|n)$ ]] && local target_index="${value}";
       [[ $key =~ ^(ip-addr|i)$ ]] && local target_address="${value}";
+      [[ $key =~ ^(validate|v)$ ]] && local validate_address=true;
       [[ $key =~ ^(matrix|m)$ ]] && local matrix_filename="${value}";
       [[ $key =~ ^(reports|r)$ ]] && local reports_folder="${value}";
       #### ---------------------------------------------------------------------
@@ -179,6 +208,10 @@ function main () {
     if [[ -z ${file_extensions+x} || ${#file_extensions[@]} -eq 0 ]]; then
       declare -a file_extensions=( cfg conf cnf );
     fi;
+
+    #### -----------------------------------------------------------------------
+    ## Enabling IP/CIDR Blocks Group Classification
+    [[ -z ${classify_targets:-} ]] && export classify_targets=false;
 
     #### -----------------------------------------------------------------------
     ## Processing Custom/Default the Target Configurations (source):
@@ -205,9 +238,12 @@ function main () {
     fi;
 
     #### -----------------------------------------------------------------------
+    ## Presetting Target-Index Marker
     [[ -z ${target_index:-} ]] && target_index='';
 
     #### -----------------------------------------------------------------------
+    ## Validating IP Addresses (Skipping?)
+    [[ -z ${validate_address:-} ]] && export validate_address=false;
     ## Target IP Address (required):
     if [[ -z "${target_address:-}" ]]; then
             [[ "${debug}" == true ]] && \
@@ -217,7 +253,9 @@ function main () {
               print "${target_address}" | sed -E 's/[[:space:]]+//g' | tr -d '\r'
             )";
             ## Validating Target-Address (IP/CIDR):
-            validate_address;
+            if [[ ${validate_address} == true ]]; then
+              validate_address;
+            fi;
     fi;
 
     #### -----------------------------------------------------------------------

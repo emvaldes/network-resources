@@ -71,8 +71,10 @@ function main () {
       [[ $key =~ ^(file-ext|x)$ ]] && file_extensions+=(
         $( print "${value}" | tr ':,;\n ' '\n' )
       );
+      [[ $key =~ ^(classify|g)$ ]] && local classify_targets=true;
       [[ $key =~ ^(interval|l)$ ]] && local delaying_factor="${value}";
       [[ $key =~ ^(ips-list|i)$ ]] && local listing_filename="${value}";
+      [[ $key =~ ^(validate|v)$ ]] && local validate_address=true;
       [[ $key =~ ^(jobs|j)$ ]] && local parallel_threads="${value}";
       [[ $key =~ ^(matrix|m)$ ]] && local matrix_filename="${value}";
       [[ $key =~ ^(reports|r)$ ]] && local reports_folder="${value}";
@@ -95,10 +97,18 @@ function main () {
       display_help "${script_name}"  "listings";
       exit 0;
     fi;
+
+    #### -----------------------------------------------------------------------
     ## Target Configurations (file-extensions):
     if [[ -z ${file_extensions+x} || ${#file_extensions[@]} -eq 0 ]]; then
       declare -a file_extensions=( cfg conf cnf );
     fi;
+
+    #### -----------------------------------------------------------------------
+    ## Enabling IP/CIDR Blocks Group Classification
+    [[ -z ${classify_targets:-} ]] && export classify_targets=false;
+
+    #### -----------------------------------------------------------------------
     ## Processing Custom/Default the Translation-Matrix (source):
     [[ -z "${matrix_filename:-}" ]] && matrix_filename="matrix.json";
     if [[ ! -f "${matrix_filename}" ]]; then
@@ -111,6 +121,8 @@ function main () {
               cat "${matrix_filename}"
             )";
     fi;
+
+    #### -----------------------------------------------------------------------
     ## Custom/Default configs folder:
     local configs_dirpath="${configs_dirpath:-configs}";
     ## Custom/Default reports folder:
@@ -118,6 +130,12 @@ function main () {
     mkdir -p "${reports_folder}";
     ## Initializing the log file
     : > "${reports_folder}/reports.log";
+
+    #### -----------------------------------------------------------------------
+    ## Validating IP Addresses (Skipping?)
+    [[ -z ${validate_address:-} ]] && export validate_address=false;
+
+    #### -----------------------------------------------------------------------
     ## Processing Target Addresses Listing (default: ips.list)
     if [[ ! -f "${listing_filename}" ]]; then
             error_message "Project Target IP-listing file not found: ${listing_filename}";
@@ -138,8 +156,8 @@ function main () {
                     fi;
             fi;
     fi;
-    #### -----------------------------------------------------------------------
 
+    #### -----------------------------------------------------------------------
     ip_index=0;
     total_ips=${#target_listing[@]};
     while (( ip_index < total_ips )); do
@@ -168,6 +186,9 @@ function main () {
                   IFS=,; print "${file_extensions[*]}"
                 )"
             );
+            [[ "${classify_targets}" == true ]] && execute+=( --classify );
+            [[ "${validate_address}" == true ]] && execute+=( --validate );
+            #### ---------------------------------------------------------------
             [[ "${verbose}" == true ]] && execute+=( --verbose );
             [[ "${debug}" == true ]] && execute+=( --debug );
             #### ---------------------------------------------------------------
@@ -208,8 +229,8 @@ function main () {
 local_state_dir=".local";
 mkdir -p "${local_state_dir}";
 
-os="$( detect_platform )";
-install_missing "${os}";
+# os="$( detect_platform )";
+# install_missing "${os}";
 
 export script_name="${0}";
 
