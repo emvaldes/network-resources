@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# File: scripts/setup-remotes.shell
-# Purpose: Configure Git remotes for pull-only and push-only separation
+# File: setup-remotes.shell
+# Purpose: Configure Git remotes with logical pull/push roles as 'public' (pull-only) and 'private' (push-only)
 
 set -euo pipefail;
 
@@ -9,50 +9,47 @@ set -euo pipefail;
 PULL_ONLY_REPO="";
 PUSH_ONLY_REPO="";
 
-# Parse flags
+# Parse named arguments
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --pull-only)
-      PULL_ONLY_REPO="${2:-}"; shift 2 ;;
+      PULL_ONLY_REPO="$2"; shift 2;;
     --push-only)
-      PUSH_ONLY_REPO="${2:-}"; shift 2 ;;
+      PUSH_ONLY_REPO="$2"; shift 2;;
     *)
-      echo "Usage: $0 [--pull-only <url>] [--push-only <url>]" >&2; exit 1 ;;
+      echo "Unknown parameter: $1" >&2; exit 1;;
   esac
 done
 
-# Validate repo
+# Ensure in a Git repo
 if ! git rev-parse --is-inside-work-tree &>/dev/null; then
   echo "Error: Not inside a Git repository." >&2; exit 2;
 fi
 
-# -------------------------------------------------------------------------
-# Configure pull-only-remote
-if [[ -n "${PULL_ONLY_REPO}" ]]; then
-  git remote remove pull-only-remote 2>/dev/null || true;
-  git remote add pull-only-remote "${PULL_ONLY_REPO}";
-  git remote set-url --push pull-only-remote DISABLE;
-else
-  if ! git remote get-url pull-only-remote &>/dev/null; then
-    if git remote get-url origin &>/dev/null; then
-      git remote rename origin pull-only-remote;
-      git remote set-url --push pull-only-remote DISABLE;
-    else
-      echo "Error: No --pull-only URL provided and no existing pull-only-remote or origin found." >&2;
-      exit 3;
-    fi
+# Set or fallback to existing 'origin' as pull-only
+if [[ -z "${PULL_ONLY_REPO}" ]]; then
+  if git remote get-url public &>/dev/null; then
+    : # already exists
+  elif git remote get-url origin &>/dev/null; then
+    git remote rename origin public
+  else
+    echo "Error: No --pull-only URL provided and no existing remote to rename." >&2; exit 3;
   fi
+else
+  git remote remove public 2>/dev/null || true
+  git remote add public "${PULL_ONLY_REPO}"
 fi
 
-# -------------------------------------------------------------------------
-# Configure push-only-remote
+# Disable pushing to pull-only remote
+git remote set-url --push public DISABLE
+
+# Configure push-only remote if given
 if [[ -n "${PUSH_ONLY_REPO}" ]]; then
-  git remote remove push-only-remote 2>/dev/null || true;
-  git remote add push-only-remote DISABLE;
-  git remote set-url --push push-only-remote "${PUSH_ONLY_REPO}";
+  git remote remove private 2>/dev/null || true
+  git remote add private DISABLE
+  git remote set-url --push private "${PUSH_ONLY_REPO}"
 fi
 
-# -------------------------------------------------------------------------
-# Summary
-echo "Remotes successfully configured:";
-git remote -v;
+# Done
+echo "Remotes successfully configured:"
+git remote -v
