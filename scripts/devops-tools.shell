@@ -64,6 +64,44 @@ function exit_error () {
 
 #------------------------------------------------------------------------------#
 
+function detect_platform () {
+    if [[ "$OSTYPE" == "darwin"* ]]; then echo "macos";
+      elif [[ -f /etc/alpine-release ]]; then echo "alpine";
+      elif [[ -f /etc/debian_version ]]; then echo "debian";
+      elif [[ -f /etc/redhat-release ]]; then echo "rhel";
+      else echo "unknown";
+    fi;
+    return 0;
+}; detect-platform='dectec_platform';
+
+function install_packages () {
+    local os="$1";
+    case "$os" in
+      macos)  echo "[+] Detected macOS (requires Homebrew)";
+              brew install jq gnu-sed coreutils moreutils grep;
+      ;;
+      debian) echo "[+] Detected Debian/Ubuntu";
+              sudo apt-get update -y;
+              sudo apt-get install -y jq sed grep coreutils findutils util-linux moreutils less;
+      ;;
+      rhel)   echo "[+] Detected RHEL/CentOS/Fedora";
+              sudo yum install -y epel-release;
+              sudo yum install -y jq sed grep coreutils findutils util-linux moreutils less;
+      ;;
+      alpine) echo "[+] Detected Alpine Linux";
+              sudo apk update;
+              sudo apk add jq sed grep coreutils findutils util-linux moreutils less;
+      ;;
+      *)  echo "[-] Unsupported OS type: $os";
+          exit 1;
+      ;;
+    esac;
+    echo "Dependencies installed for ${os}";
+    return 0;
+}; alias install-packages='install_packages';
+
+#------------------------------------------------------------------------------#
+
 function display_help () {
     local script_name="${1}";
     local mode="${2}";
