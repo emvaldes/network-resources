@@ -107,7 +107,9 @@ function main () {
       elif  ! jq -e 'length > 0' "${matrix_filename}" &>/dev/null; then
             error_message "Matrix file is missing, invalid, or empty: ${matrix_filename}";
             return 2;
-      else  local matrix_configs="$( cat "${matrix_filename}" )";
+      else  local matrix_configs="$(
+              cat "${matrix_filename}"
+            )";
     fi;
     ## Custom/Default configs folder:
     local configs_dirpath="${configs_dirpath:-configs}";
@@ -141,30 +143,38 @@ function main () {
     ip_index=0;
     total_ips=${#target_listing[@]};
     while (( ip_index < total_ips )); do
-      running_jobs=$( jobs -rp | wc -l );
+      running_jobs=$(
+        jobs -rp | wc -l
+      );
       available_slots=$(( parallel_threads - running_jobs ));
       if (( available_slots > 0 )); then
         for (( i = 0; i < available_slots && ip_index < total_ips; i++ )); do
           ip_addr="${target_listing[ip_index++]}";
-          padded_index="$( printf "%0${#total_ips}d" "${ip_index}" )";
+          padded_index="$(
+            printf "%0${#total_ips}d" "${ip_index}"
+          )";
           [[ "${debug}" == true ]] && \
              print "[POOL] Launching job (${ip_addr})[$ip_index] ..."; newline;
           (
             #### ---------------------------------------------------------------
             execute=(
               ./scripts/parse-configs.shell
-              --ip-addr="${ip_addr}"
-              --index="(${padded_index}) "
-              --matrix="${matrix_filename}"
-              --reports="${reports_folder}"
-              --file-ext="$(
-                IFS=,; print "${file_extensions[*]}"
-              )"
+                --configs="${configs_dirpath}"
+                --ip-addr="${ip_addr}"
+                --index="${padded_index}"
+                --matrix="${matrix_filename}"
+                --reports="${reports_folder}"
+                --file-ext="$(
+                  IFS=,; print "${file_extensions[*]}"
+                )"
             );
             [[ "${verbose}" == true ]] && execute+=( --verbose );
             [[ "${debug}" == true ]] && execute+=( --debug );
             #### ---------------------------------------------------------------
-            output="$("${execute[@]}")";
+            if [[ "${debug}" == true ]]; then
+                    output="$( bash -x "${execute[@]}" )";
+              else  output="$( "${execute[@]}" )";
+            fi;
             if [[ -n "${output//[[:space:]]/}" ]]; then
               printf "%s\n" "$output";
               printf "%s\n" "$output" >> "${reports_folder}/reports.log";
