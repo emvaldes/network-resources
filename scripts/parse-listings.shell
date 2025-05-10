@@ -1,33 +1,39 @@
 #!/usr/bin/env bash
 
 # File: scripts/parse-listings.shell
-# Purpose: Parse a set of IPs listings and output to reports/<ip>.json
+# Purpose: Parse a set of IP addresses against a directory of configuration files
+#          and produce detailed per-IP reports in JSON and CSV format.
 
-# Wwarning: Requires Bash version 4.0 or higher
+# Requirements: Bash v4+ and GNU utilities (jq, find, grep, sed, etc.)
 
-set -euo pipefail;
-# set -x;
+set -euo pipefail  ## Strict mode: exit on error, undefined var use, and pipeline failure
+# set -x;          ## Enable for execution tracing/debugging
 
 ## POSIX locale standard
-export LC_ALL=C;
+export LC_ALL=C   ## Ensure consistent sorting and character handling (POSIX-compliant)
 
-## Temp-dir and automatic clean-up on exit
+# Create a secure, temporary working directory (auto-cleaned at script exit)
 export TMP_DIR="$( mktemp -d )";
 trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT;
 
 #------------------------------------------------------------------------------#
 
+# Load common utility functions (logging, platform detection, etc.)
 source ./scripts/devops-tools.shell;
 
 #------------------------------------------------------------------------------#
-# Generate CSV output from reports/reports.json
+# Function: generate_csvoutput
+# Purpose: Converts final reports.json to a human-readable CSV file.
+
 function generate_csvoutput () {
     local input_json="${reports_folder}/reports.json";
     local output_csv="${reports_folder}/reports.csv";
+    ## Ensure the JSON file exists before proceeding
     if [[ ! -f "${input_json}" ]]; then
       error_message "Missing ${input_json}, cannot generate CSV.";
       return 1;
     fi;
+    ## Build CSV header and extract values from JSON using jq
     {
       echo "target,config,object,entry,description,group";
       jq -r --arg configs_dirpath "${configs_dirpath}" '
@@ -46,6 +52,7 @@ function generate_csvoutput () {
         | @csv
       ' "${input_json}";
     } > "${output_csv}";
+    ## Optionally print CSV as a formatted table to the terminal
     if [[ "${verbose}" == true ]]; then
       if [[ -s "${output_csv}" ]]; then
         newline;
@@ -58,81 +65,77 @@ function generate_csvoutput () {
 }; alias generate-csvoutput='generate_csvoutput';
 
 #------------------------------------------------------------------------------#
+# Function: main
+# Entry point of this script
 
 function main () {
     ## tracking_process ${FUNCNAME} "${@}";
     declare -a file_extensions=();
     oIFS="${IFS}";
+
+    ## Process command-line arguments and map them to local variables
     for xitem in "${@}"; do
       IFS='=' read -r key value <<< "$(
         echo -e "${xitem}" | sed -e '1s|^\(-\)\{1,\}||'
       )"; #echo -e "\nxitem: '${xitem}'\nkey: '${key}'\t->\tvalue: '${value}'";
-      [[ $key =~ ^(configs|c)$ ]] && local configs_dirpath="${value}";
+
+      #### ---------------------------------------------------------------------
+      ## Match accepted arguments
+      [[ $key =~ ^(classify|g)$ ]] && local classify_targets=true;
       [[ $key =~ ^(file-ext|x)$ ]] && file_extensions+=(
         $( print "${value}" | tr ':,;\n ' '\n' )
       );
-      [[ $key =~ ^(classify|g)$ ]] && local classify_targets=true;
+      [[ $key =~ ^(configs|c)$ ]] && export configs_dirpath="${value}";
       [[ $key =~ ^(interval|l)$ ]] && local delaying_factor="${value}";
       [[ $key =~ ^(ips-list|i)$ ]] && local listing_filename="${value}";
-      [[ $key =~ ^(validate|v)$ ]] && local validate_address=true;
+      [[ $key =~ ^(logs|o)$ ]] && export enable_logging=true;
       [[ $key =~ ^(jobs|j)$ ]] && local parallel_threads="${value}";
       [[ $key =~ ^(matrix|m)$ ]] && local matrix_filename="${value}";
-      [[ $key =~ ^(reports|r)$ ]] && local reports_folder="${value}";
+      [[ $key =~ ^(reports|r)$ ]] && export reports_folder="${value}";
+      [[ $key =~ ^(validate|v)$ ]] && local validate_address=true;
+
       #### ---------------------------------------------------------------------
+      ## Special options
       [[ $key == "help" ]] && local script_helper=true;
       [[ $key == "debug" ]] && local debug=true;
       [[ $key == "dry-run" ]] && local dry_run=true;
       [[ $key == "verbose" ]] && local verbose=true;
     done; IFS="${oIFS}";
+
     #### -----------------------------------------------------------------------
+    ## Set custom values if not supplied
     [[ -z ${delaying_factor:-} ]] && delaying_factor="0.05";
     [[ -z ${listing_filename:-} ]] && listing_filename="ips.list";
     [[ -z ${parallel_threads:-} ]] && parallel_threads=100;
+
     #### -----------------------------------------------------------------------
+    ## Set default values if not supplied
     [[ -z ${debug:-} ]] && debug=false;
     [[ -z ${verbose:-} ]] && verbose=false;
 
     #### -----------------------------------------------------------------------
+    ## Display usage help if requested
     if [[ ${script_helper:-} == true ]]; then
-      display_help "${script_name}"  "listings";
+      display_help "${script_name}" "listings";
       exit 0;
     fi;
 
     #### -----------------------------------------------------------------------
+    ## Enabling IP/CIDR Blocks Group Classification
+    [[ -z ${classify_targets:-} ]] && local classify_targets=false;
+
+    #### -----------------------------------------------------------------------
     ## Target Configurations (file-extensions):
+    ## Set default file extensions if none provided
     if [[ -z ${file_extensions+x} || ${#file_extensions[@]} -eq 0 ]]; then
       declare -a file_extensions=( cfg conf cnf );
     fi;
 
     #### -----------------------------------------------------------------------
-    ## Enabling IP/CIDR Blocks Group Classification
-    [[ -z ${classify_targets:-} ]] && export classify_targets=false;
-
-    #### -----------------------------------------------------------------------
-    ## Processing Custom/Default the Translation-Matrix (source):
-    [[ -z "${matrix_filename:-}" ]] && matrix_filename="matrix.json";
-    if [[ ! -f "${matrix_filename}" ]]; then
-            error_message "Project Source Matrix-Configs file not found: ${matrix_filename}";
-            return 1;
-      elif  ! jq -e 'length > 0' "${matrix_filename}" &>/dev/null; then
-            error_message "Matrix file is missing, invalid, or empty: ${matrix_filename}";
-            return 2;
-      else  local matrix_configs="$(
-              cat "${matrix_filename}"
-            )";
-    fi;
-
-    #### -----------------------------------------------------------------------
-    ## Custom/Default configs folder:
-    local configs_dirpath="${configs_dirpath:-configs}";
-    ## Custom/Default reports folder:
-    local reports_folder="${reports_folder:-reports}";
-    mkdir -p "${reports_folder}";
-    ## Initializing the log file
-    : > "${reports_folder}/reports.log";
-
-    #### -----------------------------------------------------------------------
     ## Generate master list of config files only once
+    ## Custom/Default configs folder:
+    export configs_dirpath="${configs_dirpath:-configs}";
+    ## Cache list of configuration files to avoid repeated find calls
     local configs_list_cache=".cache/configs.list";
     mkdir -p .cache;
     if [[ ! -f "${configs_list_cache}" ]]; then
@@ -140,7 +143,7 @@ function main () {
             for ext in "${file_extensions[@]}"; do
               find_cmd+=( -iname "*.${ext}" -o );
             done;
-            unset 'find_cmd[-1]';  # Remove trailing -o
+            unset 'find_cmd[-1]';  ## Remove trailing -o
             find_cmd+=( \) );
             "${find_cmd[@]}" | sort > "${configs_list_cache}";
             [[ "${verbose}" == true ]] && \
@@ -150,17 +153,41 @@ function main () {
     fi;
 
     #### -----------------------------------------------------------------------
+    ## Processing Custom/Default the Translation-Matrix (source):
+    ## Load and validate translation matrix (used for grouping logic)
+    [[ -z "${matrix_filename:-}" ]] && matrix_filename="matrix.json";
+    if [[ ! -f "${matrix_filename}" ]]; then
+            error_message "Project Source Matrix-Configs file not found: ${matrix_filename}";
+            return 1;
+      elif  ! jq -e 'length > 0' "${matrix_filename}" &>/dev/null; then
+            error_message "Matrix file is missing, invalid, or empty: ${matrix_filename}";
+            return 2;
+      else  export matrix_configs="$(
+              cat "${matrix_filename}"
+            )";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Custom/Default reports folder:
+    export reports_folder="${reports_folder:-reports}";
+    mkdir -p "${reports_folder}";
+    ## Initializing the log file
+    : > "${reports_folder}/reports.log";  ## Truncate report log
+
+    #### -----------------------------------------------------------------------
     ## Validating IP Addresses (Skipping?)
     [[ -z ${validate_address:-} ]] && export validate_address=false;
 
     #### -----------------------------------------------------------------------
     ## Processing Target Addresses Listing (default: ips.list)
+    ## Load and validate IP address listing
     if [[ ! -f "${listing_filename}" ]]; then
             error_message "Project Target IP-listing file not found: ${listing_filename}";
             return 3;
       else  ## Sort a list numerically, not lexicographically
             mapfile -t target_listing < <(
-              grep -v '^\s*$' "${listing_filename}" | tr -d '\r' |
+              grep -v '^\s*$' "${listing_filename}" | \
+              tr -d '\r' | \
               sort -t . -k1,1n -k2,2n -k3,3n -k4,4n
             )
             if [[ ${#target_listing[@]} -eq 0 ]]; then
@@ -177,28 +204,34 @@ function main () {
 
     #### -----------------------------------------------------------------------
     ## Build mapping: which files reference which IP
+    ## Map each IP address to the config files it appears in (pre-scan phase)
     mkdir -p targets;
     if [[ "${verbose}" == true ]]; then
       newline; print "Mapping IPs to config files (pre-scan phase)..."; newline;
     fi;
-
     for ip_addr in "${target_listing[@]}"; do
+      ip_cleaned="$(
+        print "${ip_addr}" | tr -d '\r'
+      )";
+      target_file="targets/${ip_cleaned}.list";
       (
-        ip_cleaned="$(
-          print "${ip_addr}" | tr -d '\r'
-        )";
-        target_file="targets/${ip_cleaned}.list";
         matched_files="$(
-          grep -lF "${ip_cleaned}" $(< "${configs_list_cache}") 2>/dev/null || true
+          grep -lF "${ip_cleaned}" $( < "${configs_list_cache}" ) 2>/dev/null || true
         )";
         if [[ -n "${matched_files}" ]]; then
+          # prefix="${configs_dirpath%/}/";
+          # fixed_listing="$( sed "s|${prefix}||g" <<< "${matched_files}" )";
           printf "%s\n" ${matched_files} > "${target_file}";
         fi;
       ) &
-    done; wait;
+    done;
 
     #### -----------------------------------------------------------------------
-    ## Filter target IPs that have a match file in targets/
+    ## Final Synchronization and Output Completion Check
+    waitfor_completion;
+
+    #### -----------------------------------------------------------------------
+    ## Filter out IPs (Search Patterns) that had no matching config references
     declare -a filtered_target_listing=();
     for ip_addr in "${target_listing[@]}"; do
       ip_cleaned="$( print "${ip_addr}" | tr -d '\r' )";
@@ -211,26 +244,30 @@ function main () {
     local total_requested=${#target_listing[@]};
     local total_mapped=${#filtered_target_listing[@]};
     {
-      print "Total IPs requested: ${total_requested}";
-      print "Total IPs mapped:    ${total_mapped}";
+      newline;
+      print "Total IPs requested: ${total_requested}"; newline;
+      print "Total IPs mapped:    ${total_mapped}"; newline;
       print "Unmapped IPs:        $(( total_requested - total_mapped ))";
+      newline 2;
     } >> "${reports_folder}/reports.log";
 
     #### -----------------------------------------------------------------------
-    ## Log unmapped IPs explicitly
+    ## Log unmapped IPs explicitly (no matches found)
     {
-      print "Unmapped IPs:";
+      print "Unmapped IPs:"; newline 2;
       for ip in "${target_listing[@]}"; do
-        ip_cleaned="$( print "${ip}" | tr -d '\r' )";
-        [[ ! -f "targets/${ip_cleaned}.list" ]] && print "  - ${ip_cleaned}";
+        ip_cleaned="$( print "${ip}" | tr -d '\r' | sed -E 's/[[:space:]]+//g' )";
+        if [[ -n "${ip_cleaned}" && ! -f "targets/${ip_cleaned}.list" ]]; then
+          print "  - ${ip_cleaned}"; newline;
+        fi;
       done;
+      newline;
     } >> "${reports_folder}/reports.log";
 
     #### -----------------------------------------------------------------------
+    ## Launch parallel parsing jobs for matched IPs
     ip_index=0;
-    # total_ips=${#target_listing[@]};
     total_ips=${#filtered_target_listing[@]};
-
     while (( ip_index < total_ips )); do
       running_jobs=$(
         jobs -rp | wc -l
@@ -240,7 +277,7 @@ function main () {
         for (( i = 0; i < available_slots && ip_index < total_ips; i++ )); do
           ip_addr="${filtered_target_listing[ip_index++]}";
           padded_index="$( printf "%0${#total_ips}d" "${ip_index}" )";
-          print "[START] IP: ${ip_addr}" >> "${reports_folder}/reports.log"; newline;
+          print "[START] IP: ${ip_addr}${nl}" >> "${reports_folder}/reports.log"; newline;
           [[ "${debug}" == true ]] && \
              print "[POOL] Launching job (${ip_addr})[$ip_index] ..."; newline;
           (
@@ -261,33 +298,68 @@ function main () {
             [[ "${debug}" == true ]] && execute+=( --debug );
 
             (
-              mkdir -p "${reports_folder}/logs" "${reports_folder}/errors";
-              logfile="${reports_folder}/logs/${ip_addr}.log";
-              if [[ "${debug}" == true ]]; then
-                bash -x "${execute[@]}" > "${logfile}" 2>&1;
-              else
-                "${execute[@]}" > "${logfile}" 2>&1;
+              if [[ "${enable_logging:-}" == true ]]; then
+                      mkdir -p "${local_state_dir}/jobs" "${local_state_dir}/errors";
+                      logfile="${local_state_dir}/jobs/${ip_addr}.job";
+                      if [[ "${debug}" == true ]]; then
+                              bash -x "${execute[@]}" > "${logfile}" 2>&1;
+                        else  "${execute[@]}" > "${logfile}" 2>&1;
+                      fi;
+                else  if [[ "${debug}" == true ]]; then
+                              bash -x "${execute[@]}" >/dev/null 2>&1;
+                        else  "${execute[@]}" >/dev/null 2>&1;
+                      fi;
               fi;
               status=$?;
               if (( status != 0 )); then
-                {
-                  echo "[ERROR] IP: ${ip_addr} failed :: exit ${status}";
-                  echo "  See: ${logfile}";
-                } >> "${reports_folder}/errors/errors.log";
-              else
-                echo "[OK] IP: ${ip_addr} completed" >> "${reports_folder}/reports.log";
+                      {
+                        echo "[ERROR] IP: ${ip_addr} failed :: exit ${status}";
+                        echo "  See: ${logfile}";
+                      } >> "${local_state_dir}/errors/errors.log";
+                else  print "${nl}[OK] IP: ${ip_addr} completed" >> "${reports_folder}/reports.log";
               fi;
             ) &
           ) &
         done;
       fi;
       sleep ${delaying_factor};
-    done; wait;
+    done;
 
     #### -----------------------------------------------------------------------
+    ## Final Synchronization and Output Completion Check
+    waitfor_completion;
+
+    #### -----------------------------------------------------------------------
+    ## Strip base config path from all targets/*.list entries
+    if [[ -d targets ]]; then
+      local prefix="${configs_dirpath%/}/";
+      find targets -type f -name '*.list' | while read -r list_file; do
+        sed -i '' -E "s|^${prefix}||g" "${list_file}";
+      done;
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Wait until all expected JSON report files are physically present on disk
     ## Aggregate all JSON outputs into one reports.json
     local json_dir="${reports_folder}/json";
     local master_json="${reports_folder}/reports.json";
+
+    ## This guarantees that each parsed IP’s output is available before aggregation
+    expected_reports=${#filtered_target_listing[@]};  ## Total IPs that should have a corresponding JSON report
+    actual_reports=$(
+      find "${json_dir}" -type f -name '*.json' | wc -l
+    );  ## Count current .json files in output directory
+
+    ## Poll loop: sleep until all JSON files are confirmed present
+    while (( actual_reports < expected_reports )); do
+      sleep 0.2;  ## Short delay to avoid overloading the disk with find/wc calls
+      actual_reports=$(
+        find "${json_dir}" -type f -name '*.json' | wc -l
+      );  ## Recalculate number of completed reports
+    done;
+
+    #### -----------------------------------------------------------------------
+    ## Merge all per-IP JSONs into a single master report
     if [[ -d "${json_dir}" ]]; then
       mapfile -t json_files < <(
         find "${json_dir}" -type f -name '*.json' | sort
@@ -296,7 +368,8 @@ function main () {
         jq -s '.' "${json_files[@]}" > "${master_json}";
       fi;
     fi;
-    ## Generating ./reports/reports.json into CSV output
+
+    ## Exporting ./reports/reports.json data-sets into CSV output
     generate_csvoutput ;
 
     #### -----------------------------------------------------------------------
@@ -304,9 +377,6 @@ function main () {
 }; alias parse-listings='main';
 
 #------------------------------------------------------------------------------#
-
-local_state_dir=".local";
-mkdir -p "${local_state_dir}";
 
 # os="$( detect_platform )";
 # install_missing "${os}";
@@ -316,7 +386,7 @@ export script_name="${0}";
 if [[ ${#@} -ge 1 && "${1,,}" =~ ^-*(h|help)$ ]]; then
         main --help ;
   else  main "${@}";
-        # newline; print "Done."; newline 2;
+        ## newline; print "Done."; newline 2;
 fi;
 
 #------------------------------------------------------------------------------#

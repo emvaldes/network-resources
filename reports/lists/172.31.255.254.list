@@ -1,5 +1,11 @@
 
-Config: configs/misc/switch.conf
+Config: misc/switch.conf
 
 interface Vlan1
  ip address 172.31.255.254 255.255.255.0
+interface Vlan2
+ ip address 10.0.1.2 255.255.255.0
+object-group network SOME-THING
+  description Local Office Subnets
+  network-object host 10.0.0.1
+  network-object 192.168.12.0 255.255.255.0

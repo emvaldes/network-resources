@@ -2,30 +2,24 @@
   "target": "10.0.0.1",
   "configs": [
     {
-      "config": "configs/cisco/fw1.cfg",
+      "config": "cisco/fw1.cfg",
       "objects": [
         {
           "object": "object-group network BU1-NETWORK",
           "entry": "network-object host 10.0.0.1",
           "description": "Corporate HQ Subnets",
           "group": "Identified Matching Entries"
-        },
-        {
-          "object": "access-list OUTSIDE extended permit ip host 10.0.0.1 any",
-          "entry": false,
-          "description": false,
-          "group": "cisco/fw1.cfg"
         }
       ]
     },
     {
-      "config": "configs/misc/switch.conf",
+      "config": "misc/switch.conf",
       "objects": [
         {
-          "object": "object-group network SOME-THING",
+          "object": "interface Vlan1",
           "entry": "network-object host 10.0.0.1",
           "description": "Local Office Subnets",
-          "group": "Identified Matching Entries"
+          "group": "Business-Unit-Networks"
         }
       ]
     }

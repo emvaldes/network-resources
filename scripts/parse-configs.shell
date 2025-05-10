@@ -1,138 +1,176 @@
 #!/usr/bin/env bash
 
 # File: scripts/parse-configs.shell
-# Purpose: Parse a single IP and output to reports/<ip>.json
+# Purpose: Parse a single IP and output matched configurations to reports/<ip>.json
 
-# Wwarning: Requires Bash version 4.0 or higher
+# Requirements: Bash v4+ and GNU utilities (jq, find, grep, sed, etc.)
 
-set -euo pipefail;
-# set -x;
+set -euo pipefail  # Strict mode: exit on error, undefined var use, and pipeline failure
+# set -x;          # Enable for execution tracing/debugging
 
 ## POSIX locale standard
-export LC_ALL=C;
+export LC_ALL=C   # Ensure consistent sorting and character handling (POSIX-compliant)
 
-## Temp-dir and automatic clean-up on exit
-TMP_DIR="$( mktemp -d )";
+# Create a secure, temporary working directory (auto-cleaned at script exit)
+export TMP_DIR="$( mktemp -d )";
 trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT;
 
 #------------------------------------------------------------------------------#
 
+# Load common utility functions (logging, platform detection, etc.)
 source ./scripts/devops-tools.shell;
 
-#------------------------------------------------------------------------------#
+#### -----------------------------------------------------------------------
+## Function: process_blocks
+## Purpose: Parses a config block, extracts matching line, description, and group
+## Input:
+##   $1 = IP address
+##   $2 = Configuration file path
+##   $3 = Raw configuration block
+##   $4 = Output array name (nameref)
+
+function process_blocks () {
+    local ip="${1}";
+    local cfg="${2}";
+    local block="${3}";
+    local -n obj_array="${4}";
+
+    ## Split block into non-empty lines
+    mapfile -t lines < <(
+      sed '/^[[:space:]]*$/d' <<< "${block}"
+    );
+    [[ ${#lines[@]} -eq 0 ]] && return;
+    local object_val="$(
+      sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//' <<< "${lines[0]}"
+    )";
+
+    ## Try to find the exact line that references the IP
+    local entry_val="";
+    for line in "${lines[@]}"; do
+      if grep -q -wF "${ip}" <<< "$line"; then
+        entry_val="$(
+          sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//' <<< "$line"
+        )";
+        break;
+      fi;
+    done;
+    [[ -z "${entry_val}" ]] && return;
+
+    ## Attempt to extract an optional description from the block
+    local desc_val="false";
+    for line in "${lines[@]}"; do
+      if [[ "${line,,}" =~ ^[[:space:]]*description ]]; then
+        desc_val="$(
+          sed -E 's/^[^"]*"?description"?[[:space:]]*//I; s/^[[:space:]]*//; s/[[:space:]]*$//' <<< "$line"
+        )";
+        [[ -z "$desc_val" ]] && desc_val="false";
+        break;
+      fi;
+    done;
+
+    ## Classification group (default = Unclassified unless --classify is set)
+    local group_val="Unclassified";
+    if [[ "${classify_targets:-false}" == true ]]; then
+
+      ## Extract object key (usually last token in object definition)
+      local object_key="$(
+        awk '{print $NF}' <<< "${object_val}" | \
+        sed -E 's/[[:punct:]]*$//'
+      )";
+
+      ## Attempt classification by object key
+      group_val="$(
+        jq -r --arg key "${object_key}" \
+        'map(select(.match[]? | contains($key))) | .[0].group' <<< "${matrix_configs}"
+      )";
+
+      ## Fallback to classification by description value
+      if [[ -z "${group_val}" || "${group_val}" == "null" ]]; then
+        group_val="$(
+          jq -r --arg desc "${desc_val}" \
+          'map(select(.match[]? == $desc)) | .[0].group' <<< "${matrix_configs}"
+        )";
+      fi;
+
+      ## Default to "Unclassified" if no match found
+      [[ -z "${group_val}" || "${group_val}" == "null" ]] && group_val="Unclassified";
+    fi;
+
+    ## If only 1 line in block, the entry is not valid
+    local entry_out="\"${entry_val}\"";
+    [[ ${#lines[@]} -eq 1 ]] && entry_out="false";
+
+    ## Build and append object JSON structure
+    obj_array+=("$(
+      jq -n \
+        --arg object "${object_val}" \
+        --argjson entry "${entry_out}" \
+        --arg desc "${desc_val}" \
+        --arg group "${group_val}" \
+        '{
+          object: $object,
+          entry: $entry,
+          description: ($desc | select(. != "" and . != "null") // false),
+          group: $group
+        }'
+    )");
+    return 0;
+}; alias process-blocks='process_blocks';
+
+#### -----------------------------------------------------------------------
+## Function: generate_objects
+## Purpose: Generate JSON objects for all matched config blocks
+## Input:
+##   $1 = Target IP address
+##   $2 = Output JSON file path
 
 function generate_objects () {
     local ip_address="${1}";
     local outfile="${2}";
     local -a configs=();
-    ## Iterate over the ordered list of matched configuration files
+
+    ## Iterate over config files matched in memory
     for cfg_file in "${matched_configs_order[@]}"; do
       local blocks="${matched_blocks_byfile[${cfg_file}]}";
       local -a objects=();
-      ## Deserialize and clean each matched block
-      while IFS= read -r block; do
-        local restored="$( sed "s/${divisor}/\n/g" <<< "${block}" | sed '/^[[:space:]]*$/d' )";
-        ## Parse lines from the restored block
-        local -a lines=();
-        while IFS= read -r line || [[ -n "${line}" ]]; do
-          lines+=( "${line}" );
-        done <<< "${restored}";
-        ## Normalize the first line as the object type
-        local object_val="$( sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//' <<< "${lines[0]:-}" )";
-        ## Identify the specific line where the IP appears
-        local entry_val=null;
-        for entry in "${lines[@]}"; do
-          if grep -Eq "\b${ip_address//./\\.}\b" <<< "${entry}"; then
-            entry_val="$( sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//' <<< "${entry}" )";
-            break;
-          fi;
-        done;
-        ## Extract optional description
-        local desc_val=null;
-        for entry in "${lines[@]}"; do
-          if [[ "${entry,,}" =~ ^[[:space:]]*description ]]; then
-            desc_val="$(
-              sed -E 's/^[^"]*"?description"?[[:space:]]*//I' <<< "${entry}" | \
-              sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
-            )";
-            break;
-          fi;
-        done;
+      local current_block="";
 
-        #-----------------------------------------------------------------------#
-        ## Resolve group by extracting final token from object name
-        local group_val="";
-        if [[ "${classify_targets:-false}" == true ]]; then
-                local object_key="$(
-                  awk '{print $NF}' <<< "${object_val}" | sed -E 's/[[:punct:]]*$//'
-                )";
-                group_val="$(
-                  jq -r --arg key "${object_key}" '
-                    map(select(.match[]? | contains($key))) | .[0].group
-                  ' <<< "${matrix_configs}"
-                )";
-                if [[ -z "${group_val}" || "${group_val}" == null ]]; then
-                  group_val="$(
-                    jq -r --arg desc "${desc_val}" '
-                      map(select(.match[]? == $desc)) | .[0].group
-                    ' <<< "${matrix_configs}"
-                  )";
+      ## Split config file content into logical blocks
+      while IFS= read -r line || [[ -n "$line" ]]; do
+        if [[ -z "${line//[[:space:]]/}" ]]; then
+                if [[ -n "$current_block" ]]; then
+                  process_blocks "$ip_address" "$cfg_file" "$current_block" objects;
+                  current_block="";
                 fi;
-          else  group_val="Unclassified";
+          else  current_block+="${line}"$'\n';
         fi;
-        if [[ -z "${group_val}" || "${group_val}" == null ]]; then
-          group_val="$(
-            sed -E "s|^${configs_dirpath}/||" <<< "${cfg_file}"
-          )";
-        fi;
+      done <<< "$blocks";
 
-        #-----------------------------------------------------------------------#
-        ## Skip if no match was found in this block
-        if [[ "${entry_val}" == null || -z "${entry_val}" ]]; then
-          continue;
-        fi;
-        ## For single-line blocks, suppress 'entry' field (set to false)
-        local entry_final="\"${entry_val}\"";
-        if (( ${#lines[@]} == 1 )); then
-          entry_final="false";
-        fi;
-        ## Construct the object JSON and add to list
-        objects+=("$(
-          jq -n \
-            --arg object "${object_val}" \
-            --argjson entry "${entry_final}" \
-            --arg desc "${desc_val}" \
-            --arg group "${group_val}" \
-            '{
-              object: $object,
-              entry: $entry,
-              description: ($desc | select(. != "" and . != "null") // false),
-              group: $group
-            }'
-        )");
-      done <<< "${blocks}";
-      ## Consolidate objects for the config block
+      ## Handle the last block if no newline at EOF
+      [[ -n "$current_block" ]] && \
+        process_blocks "$ip_address" "$cfg_file" "$current_block" objects;
+
+      ## Create JSON for this config file
       local objs_json="[]";
       if (( ${#objects[@]} > 0 )); then
-        objs_json="$( jq -s . <<< "${objects[*]}" )";
+        objs_json="$(
+          jq -s . <<< "${objects[*]}"
+        )";
       fi;
-      ## Populate Configuration Objects
       configs+=("$(
-        jq -n \
-          --arg cfg "${cfg_file}" \
-          --argjson objs "${objs_json}" \
-          '{ config: $cfg, objects: $objs }'
+        jq -n --arg cfg "$( relative_configpath "${cfg_file}" )" \
+              --argjson objs "${objs_json}" \
+        '{ config: $cfg, objects: $objs }'
       )");
     done;
-    ## Final wrap for the target IP
+
+    ## Final output JSON structure
     local cfgs_json="[]";
     if (( ${#configs[@]} > 0 )); then
       cfgs_json="$( jq -s . <<< "${configs[*]}" )";
     fi;
-    ## Generating JSON Configuration
-    jq -n \
-      --arg ip "${ip_address}" \
-      --argjson cfgs "${cfgs_json}" \
+    jq -n --arg ip "${ip_address}" \
+          --argjson cfgs "${cfgs_json}" \
       '{ target: $ip, configs: $cfgs }' > "${outfile}";
     return 0;
 }; alias generate-objects='generate_objects';
@@ -143,40 +181,45 @@ function main () {
     ## tracking_process ${FUNCNAME} "${@}";
     declare -a file_extensions=();
     oIFS="${IFS}";
+
+    ## Process command-line arguments and map them to local variables
     for xitem in "${@}"; do
       IFS='=' read -r key value <<< "$(
         echo -e "${xitem}" | sed -e '1s|^\(-\)\{1,\}||'
       )"; #echo -e "\nxitem: '${xitem}'\nkey: '${key}'\t->\tvalue: '${value}'";
-      [[ $key =~ ^(configs|c)$ ]] && local configs_dirpath="${value}";
+
+      #### ---------------------------------------------------------------------
+      ## Match accepted arguments
+      [[ $key =~ ^(classify|g)$ ]] && export classify_targets=true;
       [[ $key =~ ^(file-ext|x)$ ]] && file_extensions+=(
         $( print "${value}" | tr ':,;\n ' '\n' )
       );
-      [[ $key =~ ^(classify|g)$ ]] && local classify_targets=true;
+      [[ $key =~ ^(configs|c)$ ]] && export configs_dirpath="${value}";
       [[ $key =~ ^(index|n)$ ]] && local target_index="${value}";
       [[ $key =~ ^(ip-addr|i)$ ]] && local target_address="${value}";
-      [[ $key =~ ^(validate|v)$ ]] && local validate_address=true;
+      [[ $key =~ ^(logs|o)$ ]] && export enable_logging=true;
       [[ $key =~ ^(matrix|m)$ ]] && local matrix_filename="${value}";
       [[ $key =~ ^(reports|r)$ ]] && local reports_folder="${value}";
+      [[ $key =~ ^(validate|v)$ ]] && local validate_address=true;
+
       #### ---------------------------------------------------------------------
+      ## Special options
       [[ $key == "help" ]] && local script_helper=true;
       [[ $key == "debug" ]] && export debug=true;
       [[ $key == "dry-run" ]] && local dry_run=true;
       [[ $key == "verbose" ]] && export verbose=true;
     done; IFS="${oIFS}";
+
     #### -----------------------------------------------------------------------
+    ## Set default values if not supplied
     [[ -z ${debug:-} ]] && export debug=false;
     [[ -z ${verbose:-} ]] && export verbose=false;
 
     #### -----------------------------------------------------------------------
+    ## Display usage help if requested
     if [[ ${script_helper:-} == true ]]; then
-      display_help "${script_name}"  "configs";
+      display_help "${script_name}" "configs";
       exit 0;
-    fi;
-
-    #### -----------------------------------------------------------------------
-    ## Target Configurations (file-extensions):
-    if [[ -z ${file_extensions+x} || ${#file_extensions[@]} -eq 0 ]]; then
-      declare -a file_extensions=( cfg conf cnf );
     fi;
 
     #### -----------------------------------------------------------------------
@@ -184,10 +227,18 @@ function main () {
     [[ -z ${classify_targets:-} ]] && export classify_targets=false;
 
     #### -----------------------------------------------------------------------
+    ## Target Configurations (file-extensions):
+    ## Set default file extensions if none provided
+    if [[ -z ${file_extensions+x} || ${#file_extensions[@]} -eq 0 ]]; then
+      declare -a file_extensions=( cfg conf cnf );
+    fi;
+
+    #### -----------------------------------------------------------------------
     ## Processing Custom/Default the Target Configurations (source):
-    local configs_dirpath="${configs_dirpath:-configs}";
+    export configs_dirpath="${configs_dirpath:-configs}";
     declare -ga source_configs=();
     ip_list_file="targets/${target_address%%/*}.list";
+
     if [[ -f "${ip_list_file}" ]]; then
             mapfile -t source_configs < "${ip_list_file}";
             [[ "${verbose}" == true ]] && \
@@ -204,6 +255,26 @@ function main () {
                error_message "Project Source Configurations path not found: ${configs_dirpath}";
             return 1;
     fi;
+
+    #### -----------------------------------------------------------------------
+    ## Processing Custom/Default the Translation-Matrix (source):
+    ## Load and validate translation matrix (used for grouping logic)
+    local matrix_filename="${matrix_filename:-matrix.json}";
+    if [[ ! -f "${matrix_filename}" ]]; then
+            [[ "${verbose}" == true ]] && \
+               error_message "Project Source Matrix-Configs file not found: ${matrix_filename}";
+            return 7;
+      elif  ! jq -e 'length > 0' "${matrix_filename}" &>/dev/null; then
+            [[ "${verbose}" == true ]] && \
+               error_message "Matrix file is missing, invalid, or empty: ${matrix_filename}";
+            return 8;
+      else  export matrix_configs="$( cat "${matrix_filename}" )";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Custom/Default reports folder:
+    export reports_folder="${reports_folder:-reports}";
+    mkdir -p ${reports_folder}/{lists,json};
 
     #### -----------------------------------------------------------------------
     ## Presetting Target-Index Marker
@@ -227,109 +298,126 @@ function main () {
     fi;
 
     #### -----------------------------------------------------------------------
-    ## Processing Custom/Default the Translation-Matrix (source):
-    local matrix_filename="${matrix_filename:-matrix.json}";
-    if [[ ! -f "${matrix_filename}" ]]; then
-            [[ "${verbose}" == true ]] && \
-               error_message "Project Source Matrix-Configs file not found: ${matrix_filename}";
-            return 7;
-      elif  ! jq -e 'length > 0' "${matrix_filename}" &>/dev/null; then
-            [[ "${verbose}" == true ]] && \
-               error_message "Matrix file is missing, invalid, or empty: ${matrix_filename}";
-            return 8;
-      else  local matrix_configs="$( cat "${matrix_filename}" )";
-    fi;
-
-    #### -----------------------------------------------------------------------
-    ## Custom/Default reports folder:
-    local reports_folder="${reports_folder:-reports}";
-    mkdir -p "${reports_folder}";
-
-    #### -----------------------------------------------------------------------
-    ## Search/Extract (listing) all matching configurations:
-    declare -gA matched_configs=();
+    ## Search/Extract (listing) all matching configurations (chunks to TMP_DIR):
+    ## Chunk scanning logic: break each config file into 100-line chunks
     declare -ga matched_configs_order=();  # Preserves config file order
-    declare -gA matched_blocks_byfile=();
+    # declare -gA matched_blocks_byfile=();
     local search_ip="${target_address%%/*}";
     local divisor="$(
       date +%s%N | base64 | tr -dc 'a-zA-Z0-9'
     )";
+
+    #### -----------------------------------------------------------------------
     ## Parsing available target configuration files
     for cfg_file in "${source_configs[@]}"; do
-      if grep -qF "${search_ip}" "${cfg_file}"; then
-        matched_configs["${cfg_file}"]=true;
-        matched_configs_order+=( "${cfg_file}" );
-        local content="$(sed 's/!/\n/g' "${cfg_file}")";
-        local serialized="";
-        while IFS= read -r line || [[ -n "$line" ]]; do
-          serialized+="${line}${divisor}";
-        done <<< "${content}";
-        serialized="$(
-          sed -E "s/${divisor}([^ ])/\\n\1/g; s/${divisor}$//" <<< "${serialized}"
-        )";
-        while IFS= read -r object; do
-          if grep -qF "${search_ip}" <<< "${object}"; then
-            matched_blocks_byfile["${cfg_file}"]+="${object}"$'\n';
-          fi;
-        done <<< "${serialized}";
-      fi;
+      mapfile -t lines < <( sed 's/!/\n/g' "$cfg_file" | sed '/^[[:space:]]*$/d' );
+      total="${#lines[@]}"; start=0; size=100;
+      while (( start < total )); do
+        chunk=( "${lines[@]:start:size}" );
+        (( ${#chunk[@]} == 0 )) && break;
+        block="$( printf "%s\n" "${chunk[@]}" )";
+        if grep -qF "${target_address}" <<< "$block"; then
+          out="${TMP_DIR}/${target_address//./_}__$(basename "$cfg_file" | tr '/' '_')__$start.chunks";
+          echo "$block" > "$out";
+        fi;
+        (( start += size ));
+      done;
+    done
+
+    #### -----------------------------------------------------------------------
+    ## Print matched chunk filenames (for visibility/debugging)
+    print; print "Matched chunks:"; newline;
+    find "${TMP_DIR}" -type f -name "${search_ip//./_}__*.chunks" | sort | while read -r chunk; do
+      echo " - $(basename "$chunk")"
+    done;
+    newline;
+
+    ## Rebuild matched blocks into memory structure (by config file)
+    for chunk_file in "${TMP_DIR}/${search_ip//./_}"__*.chunks; do
+      [[ -f "$chunk_file" ]] || continue;
+      cfg_base="$( basename "${chunk_file}" | sed -E "s/^${search_ip//./_}__//;s/__[0-9]+\.chunks$//" )";
+      for full_cfg in "${source_configs[@]}"; do
+        if [[ "$(basename "$full_cfg")" == "$cfg_base" ]]; then
+          matched_blocks_byfile["${full_cfg}"]+=$'\n'"$( < "${chunk_file}" )"$'\n';
+          matched_configs_order+=( "${full_cfg}" );
+          break;
+        fi;
+      done;
     done;
 
     #### -----------------------------------------------------------------------
-    ## Skip output generation if no matching configs found
+    ## If no matches found, skip output and exit
     if [[ ${#matched_configs_order[@]} -eq 0 ]]; then
       # [[ "${debug}" == true ]] && \
       #    newline; print "No configuration files matched IP: ${target_address}"; newline 2;
       return 0;
     fi;
     # [[ "${verbose}" == true ]] && \
-       newline; print "${target_index:-} Valid IP Address: ${target_address}"; newline 2;
+       newline;
+       print "${target_index:-} Valid IP Address: ${target_address}";
+       newline 2;
 
     #### -----------------------------------------------------------------------
-    ## Generate enriched JSON from matched_blocks_byfile[]
+    ## Generate enriched output JSON from matched_blocks_byfile[]
     local tmp_json="${TMP_DIR}/partial.json";
     generate_objects "${target_address}" "${tmp_json}";
 
     #### -----------------------------------------------------------------------
     ## Listing matching resources (optional) + write to reports
-    mkdir -p ${reports_folder}/{lists,json};
+    ## Optional list output (raw config snippet display)
     local list_outfile="${reports_folder}/lists/${search_ip}.list";
     local json_outfile="${reports_folder}/json/${search_ip}.json";
     # : > "${list_outfile}";  # truly empty file
     print > "${list_outfile}";  # prepend newline at the top
+
     for cfg_file in "${matched_configs_order[@]}"; do
+      [[ -v matched_blocks_byfile["$cfg_file"] ]] || continue;
       local first_block=true;
+      config_heading="Config: $( relative_configpath "${cfg_file}" )";
+      print "${nl}${config_heading}${nl}${nl}" >> "${list_outfile}";
+      [[ "${verbose}" == true ]] && \
+         # print "Config: ${cfg_file}"; newline 2;
+         print "${config_heading}"; newline 2;
       while IFS= read -r matched_object; do
         restored="$(
-          sed "s/${divisor}/\n/g" <<< "${matched_object}" | sed '/^[[:space:]]*$/d'
+          sed '/^[[:space:]]*$/d' <<< "${matched_object}"
         )";
         if [[ -n "${restored//[[:space:]]/}" ]]; then
-          if [[ "${first_block}" == true && -n "${matched_blocks_byfile[$cfg_file]//[[:space:]]/}" ]]; then
-            print "\nConfig: ${cfg_file}\n" >> "${list_outfile}";
-            [[ "${verbose}" == true ]] && \
-               print "Config: ${cfg_file}"; newline 2;
-            first_block=false;
-          fi;
-          print "\n${restored}\n" >> "${list_outfile}";
-          [[ "${verbose}" == true ]] && \
-             print "${restored}"; newline 2;
+          print "${restored}" >> "${list_outfile}";
+          [[ "${verbose}" == true ]] && print "${restored}"; newline;
+          newline >> "${list_outfile}";
         fi;
       done <<< "${matched_blocks_byfile[$cfg_file]}";
     done;
 
+    cp "${tmp_json}" "${json_outfile}";
+    [[ "${verbose}" == true ]] && jq . "${json_outfile}" && echo;
+
     #### -----------------------------------------------------------------------
     ## Final output JSON object:
-    cp "${tmp_json}" "${json_outfile}";
-    [[ "${verbose}" == true ]] && \
-       jq . "${json_outfile}"; newline;
+    ## Append structured CSV entry for IP to master report
+    local csv_outfile="${reports_folder}/reports.csv";
+    if [[ ! -f "${csv_outfile}" ]]; then
+      echo "IP,Config,Object,Entry,Description,Group" > "${csv_outfile}";
+    fi;
+
+    jq -r --arg ip "${target_address}" '
+      .configs[] as $cfg |
+      $cfg.objects[]? |
+      [
+        $ip,
+        $cfg.config,
+        .object,
+        (if .entry == false then "" else .entry end),
+        (if .description == false then "" else .description end),
+        .group
+      ] | @csv
+    ' "${json_outfile}" >> "${csv_outfile}";
 
     return 0;
 }; alias parse-configs='main';
 
 #------------------------------------------------------------------------------#
-
-local_state_dir=".local";
-mkdir -p "${local_state_dir}";
 
 declare -gA matched_blocks_byfile=();
 export script_name="${0}";

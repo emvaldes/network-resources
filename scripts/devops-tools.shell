@@ -15,6 +15,10 @@ fi;
 
 # POSIX locale standard
 export LC_ALL=C;
+export nl="\n";
+
+local_state_dir=".local";
+mkdir -p "${local_state_dir}";
 
 #------------------------------------------------------------------------------#
 # Output Utilities
@@ -139,23 +143,25 @@ function display_help () {
     local script_name="${1}";
     local mode="${2}";
     local -a help_lines=();
-    local nl="\n";
     local indent="    ";
     local padding="$( printf '%*s' ${#script_name} ' ' )";
     ## Header
     help_lines+=( "Usage: ${script_name} [OPTIONS]${nl}" );
     ## Shared Options
     help_lines+=( "Options:${nl}" );
+    help_lines+=( "  -g, --classify     Provide classification based on matrix.json" );
     help_lines+=( "  -c, --configs      Path to configuration files ( default: ./configs )" );
     help_lines+=( "  -x, --file-ext     Comma-separated list of config file extensions ( e.g., cfg,conf,cnf )" );
     help_lines+=( "  -m, --matrix       Path to translation matrix ( matrix.json )" );
     help_lines+=( "  -r, --reports      Folder to store generated reports ( default: reports )" );
+    help_lines+=( "  -v, --validate     Validating IP/CIDR Block addresses" );
     ## Script-Specific Options
     case "${mode}" in
       listings )
         help_lines+=( "  -l, --interval     Interval ( in seconds ) between job dispatch checks [default: 0.1]" );
         help_lines+=( "  -i, --ips-list     File containing list of target IP addresses" );
         help_lines+=( "  -j, --jobs         Count of concurrent jobs to run in parallel${nl}" );
+        help_lines+=( "  -o, --logging      Enabling Logging-operations (files)${nl}" );
         ## Examples for listings
         help_lines+=( "Examples:${nl}" );
         help_lines+=( "${script_name} --interval=0.05 \\" );
@@ -177,7 +183,6 @@ function display_help () {
     help_lines+=( "${padding} --matrix=\"matrix.json\" \\" );
     help_lines+=( "${padding} --reports=\"reports\" ;${nl}" );
     help_lines+=( "Flags:${nl}" );
-    help_lines+=( "  --validate         Validating IP/CIDR Block addresses" );
     help_lines+=( "  --help             Show this help message and exit" );
     help_lines+=( "  --debug            Enable debug mode with trace output" );
     help_lines+=( "  --dry-run          Print actions without executing them" );
@@ -191,7 +196,16 @@ function display_help () {
 }; alias display-help='display_help_generic'
 
 #------------------------------------------------------------------------------#
+## Strip base config directory from path
+function relative_configpath () {
+    local full_path="${1}";
+    local prefix="${configs_dirpath%/}/";
+    print "$( sed "s|${prefix}||g" <<< "${full_path}" )";
+    return 0;
+}; alias relative-configpath='relative_configpath';
 
+#------------------------------------------------------------------------------#
+## Validating IPs & CIDR Block addresses
 function validate_address () {
     ## IP Address (CIDR-aware) regex:
     local ip_cidr_regex='^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})(/([0-9]{1,2}))?$';
@@ -255,3 +269,11 @@ function validate_address () {
 }; alias validate-address='validate_address';
 
 #------------------------------------------------------------------------------#
+## Function: wait_for_completion
+## Purpose: Wait for background jobs and flush I/O buffers to ensure data integrity
+function waitfor_completion () {
+    wait;       ## Wait for all background jobs to finish
+    sleep 0.5;  ## Allow I/O buffers to settle
+    sync;       ## Flush all in-memory buffers to disk
+    return 0;
+}; alias waitfor-completion='waitfor_completion';
