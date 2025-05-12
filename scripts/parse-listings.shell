@@ -77,6 +77,9 @@ function main () {
       exit 0;
     fi;
 
+    local start_time="$(date '+%Y-%m-%d %H:%M:%S')"
+    SECONDS=0;  ## Start timer
+
     #### -----------------------------------------------------------------------
     ## Enabling IP/CIDR Blocks Group Classification
     [[ -z ${classify_targets:-} ]] && local classify_targets=false;
@@ -209,11 +212,24 @@ function main () {
 
     #### -----------------------------------------------------------------------
     ## Strip base config path from all targets/*.json entries
+
+    # if [[ -d targets ]]; then
+    #   local prefix="${configs_dirpath%/}/";
+    #   find targets -type f -name '*.json' | while read -r list_file; do
+    #     sed -i '' -E "s|^${prefix}||g" "${list_file}";
+    #   done;
+    # fi;
+
     if [[ -d targets ]]; then
       local prefix="${configs_dirpath%/}/";
-      find targets -type f -name '*.json' | while read -r list_file; do
-        sed -i '' -E "s|^${prefix}||g" "${list_file}";
-      done;
+      shopt -s nullglob;
+      local json_files=( targets/*.json );
+      shopt -u nullglob;
+      if (( ${#json_files[@]} > 0 )); then
+        for list_file in "${json_files[@]}"; do
+          sed -i '' -E "s|\"config\": \"${prefix}|\"config\": \"|g" "${list_file}";
+        done;
+      fi;
     fi;
 
     #### -----------------------------------------------------------------------
@@ -248,9 +264,15 @@ function main () {
     fi;
 
     ## Exporting ./reports/reports.json data-sets into CSV output
-    generate_csvoutput ;
+    generate_csvoutput;
 
     #### -----------------------------------------------------------------------
+    local elapsed="${SECONDS}";
+    newline;
+    printf "[INFO] Started at: %s\n" "${start_time}";
+    printf "[INFO] Total runtime: %02d:%02d:%02d\n" \
+           $((elapsed/3600)) $(( (elapsed%3600)/60 )) $((elapsed%60));
+
     return 0;
 }; alias parse-listings='main';
 

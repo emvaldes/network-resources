@@ -2,8 +2,8 @@
 + export LC_ALL=C
 + LC_ALL=C
 ++ mktemp -d
-+ export TMP_DIR=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.qGZru2sLFr
-+ TMP_DIR=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.qGZru2sLFr
++ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.nzBLGSQ12d
++ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.nzBLGSQ12d
 + trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
 + source ./scripts/tools-devops.shell
 ++ [[ -n '' ]]
@@ -154,8 +154,8 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ sed -e '1s|^\(-\)\{1,\}||'
 ++ echo -e --file-ext=cfg,conf,cnf
+++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ file-ext =~ ^(classify|g)$ ]]
 + [[ file-ext =~ ^(file-ext|x)$ ]]
 + file_extensions+=($(print "${value}" | tr ':,;\n ' '\n'))
@@ -197,8 +197,8 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ sed -e '1s|^\(-\)\{1,\}||'
 ++ echo -e --verbose
+++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ verbose =~ ^(classify|g)$ ]]
 + [[ verbose =~ ^(file-ext|x)$ ]]
 + [[ verbose =~ ^(configs|c)$ ]]
@@ -371,7 +371,7 @@ Extracted config paths from JSON:+ for cfg in "${source_configs[@]}"
 ++ date +%s%N
 ++ base64
 ++ tr -dc a-zA-Z0-9
-+ local divisor=MTc0NzAwNDM1NTU0ODM3MjAwMAo
++ local divisor=MTc0NzAxNDM1MTM4ODY1MjAwMAo
 + for cfg_file in "${source_configs[@]}"
 + mapfile -t lines
 ++ sed 's/!/\n/g' configs/cisco/fw1.cfg
@@ -399,7 +399,7 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25'
 + grep -qF 192.168.1.10
 ++ basename configs/cisco/fw1.cfg
 ++ tr / _
-+ out=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.qGZru2sLFr/192_168_1_10__fw1.cfg__0.chunks
++ out=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.nzBLGSQ12d/192_168_1_10__fw1.cfg__0.chunks
 + print 'object-group network BU1-NETWORK
  description Corporate HQ Subnets
  network-object host 10.0.0.1
@@ -455,10 +455,10 @@ Matched chunks:+ newline
 
 + (( i++ ))
 + (( i < count ))
-+ find /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.qGZru2sLFr -type f -name '192_168_1_10__*.chunks'
++ find /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.nzBLGSQ12d -type f -name '192_168_1_10__*.chunks'
 + sort
 + read -r chunk
-++ basename /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.qGZru2sLFr/192_168_1_10__fw1.cfg__0.chunks
+++ basename /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.nzBLGSQ12d/192_168_1_10__fw1.cfg__0.chunks
 + print ' - 192_168_1_10__fw1.cfg__0.chunks'
 + [[ -n  - 192_168_1_10__fw1.cfg__0.chunks ]]
 + echo -en ' - 192_168_1_10__fw1.cfg__0.chunks'
@@ -472,8 +472,8 @@ Matched chunks:+ newline
 + (( i++ ))
 + (( i < count ))
 + for chunk_file in "${TMP_DIR}/${search_ip//./_}"__*.chunks
-+ [[ -f /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.qGZru2sLFr/192_168_1_10__fw1.cfg__0.chunks ]]
-++ basename /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.qGZru2sLFr/192_168_1_10__fw1.cfg__0.chunks
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.nzBLGSQ12d/192_168_1_10__fw1.cfg__0.chunks ]]
+++ basename /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.nzBLGSQ12d/192_168_1_10__fw1.cfg__0.chunks
 ++ sed -E 's/^192_168_1_10__//;s/__[0-9]+\.chunks$//'
 + cfg_base=fw1.cfg
 + for full_cfg in "${source_configs[@]}"
@@ -520,10 +520,10 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25
 
 + (( i++ ))
 + (( i < count ))
-+ local tmp_json=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.qGZru2sLFr/partial.json
-+ generate_objects 192.168.1.10 /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.qGZru2sLFr/partial.json
++ local tmp_json=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.nzBLGSQ12d/partial.json
++ generate_objects 192.168.1.10 /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.nzBLGSQ12d/partial.json
 + local ip_address=192.168.1.10
-+ local outfile=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.qGZru2sLFr/partial.json
++ local outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.nzBLGSQ12d/partial.json
 + configs=()
 + local -a configs
 + for cfg_file in "${matched_configs_order[@]}"
@@ -706,17 +706,17 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25
 + [[ Identified Matching Entries == \n\u\l\l ]]
 + [[ -z Identified Matching Entries ]]
 + [[ Identified Matching Entries == \n\u\l\l ]]
-+ local 'entry_out="host 192.168.1.10"'
++ local 'entry_out=host 192.168.1.10'
 + [[ 13 -eq 1 ]]
-+ obj_array+=("$(jq -n --arg object "${object_val}" --argjson entry "${entry_out}" --arg desc "${desc_val}" --arg group "${group_val}" '{
++ obj_array+=("$(jq -n --arg object "${object_val}" --arg entry "${entry_out}" --arg desc "${desc_val}" --arg group "${group_val}" '{
           object: $object,
-          entry: $entry,
+          entry: ($entry | select(. != "" and . != "null" and . != "false") // false),
           description: ($desc | select(. != "" and . != "null") // false),
           group: $group
         }')")
-++ jq -n --arg object 'object-group network BU1-NETWORK' --argjson entry '"host 192.168.1.10"' --arg desc 'Corporate HQ Subnets' --arg group 'Identified Matching Entries' '{
+++ jq -n --arg object 'object-group network BU1-NETWORK' --arg entry 'host 192.168.1.10' --arg desc 'Corporate HQ Subnets' --arg group 'Identified Matching Entries' '{
           object: $object,
-          entry: $entry,
+          entry: ($entry | select(. != "" and . != "null" and . != "false") // false),
           description: ($desc | select(. != "" and . != "null") // false),
           group: $group
         }'
@@ -1183,7 +1183,7 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25+ ne
 + [[ -n '' ]]
 + IFS=
 + read -r matched_object
-+ cp /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.qGZru2sLFr/partial.json reports/json/192.168.1.10.json
++ cp /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.nzBLGSQ12d/partial.json reports/json/192.168.1.10.json
 + [[ true == true ]]
 + jq . reports/json/192.168.1.10.json
 {
@@ -1220,5 +1220,5 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25+ ne
     ' reports/json/192.168.1.10.json
 + return 0
 + unset verbose debug
-+ [[ -d /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.qGZru2sLFr ]]
-+ rm -rf /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.qGZru2sLFr
++ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.nzBLGSQ12d ]]
++ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.nzBLGSQ12d

@@ -134,23 +134,45 @@ function process_blocks () {
       ## Default to "Unclassified" if no match found
       [[ -z "${group_val}" || "${group_val}" == "null" ]] && group_val="Unclassified";
     fi;
+
+    #### -----------------------------------------------------------------------
     ## If only 1 line in block, the entry is not valid
-    local entry_out="\"${entry_val}\"";
-    [[ ${#lines[@]} -eq 1 ]] && entry_out="false";
+    # local entry_out="\"${entry_val}\"";
+    # [[ ${#lines[@]} -eq 1 ]] && entry_out="false";
+
+    local entry_out="${entry_val}"
+    [[ ${#lines[@]} -eq 1 ]] && entry_out=""
+
+    #### -----------------------------------------------------------------------
     ## Build and append object JSON structure
+    # obj_array+=("$(
+    #   jq -n \
+    #     --arg object "${object_val}" \
+    #     --argjson entry "${entry_out}" \
+    #     --arg desc "${desc_val}" \
+    #     --arg group "${group_val}" \
+    #     '{
+    #       object: $object,
+    #       entry: $entry,
+    #       description: ($desc | select(. != "" and . != "null") // false),
+    #       group: $group
+    #     }'
+    # )");
+
     obj_array+=("$(
       jq -n \
         --arg object "${object_val}" \
-        --argjson entry "${entry_out}" \
+        --arg entry "${entry_out}" \
         --arg desc "${desc_val}" \
         --arg group "${group_val}" \
         '{
           object: $object,
-          entry: $entry,
+          entry: ($entry | select(. != "" and . != "null" and . != "false") // false),
           description: ($desc | select(. != "" and . != "null") // false),
           group: $group
         }'
     )");
+
     return 0;
 }; alias process-blocks='process_blocks';
 

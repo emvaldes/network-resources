@@ -31,12 +31,24 @@ function generate_configslist () {
         config_lines=$(
           wc -l < "${configs_dirpath}/${config_file}"
         );
+        ## Count how many times the IP appears in the config file
+        match_count=$(
+          grep -oFw "${ip_addr}" "${configs_dirpath}/${config_file}" | \
+          wc -l | tr -d ' '
+        );
         ## Generate JSON entry for the current file and append it to the JSON array
+        # config_json=$(
+        #   print "${config_json}" |
+        #   jq --arg config "${config_file}" \
+        #      --argjson lines "${config_lines}" \
+        #                '. += [{"config": $config, "lines": $lines}]'
+        # );
         config_json=$(
           print "${config_json}" |
           jq --arg config "${config_file}" \
              --argjson lines "${config_lines}" \
-                       '. += [{"config": $config, "lines": $lines}]'
+             --argjson count "${match_count}" \
+             '. += [{"config": $config, "lines": $lines, "count": $count}]'
         );
       done <<< "${matched_files}";
       ## Wrap the array into the final structure with {configs: $configs}

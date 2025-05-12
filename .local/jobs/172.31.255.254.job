@@ -2,8 +2,8 @@
 + export LC_ALL=C
 + LC_ALL=C
 ++ mktemp -d
-+ export TMP_DIR=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.YfXSGCNqgO
-+ TMP_DIR=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.YfXSGCNqgO
++ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.anghUQEUtW
++ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.anghUQEUtW
 + trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
 + source ./scripts/tools-devops.shell
 ++ [[ -n '' ]]
@@ -154,8 +154,8 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ sed -e '1s|^\(-\)\{1,\}||'
 ++ echo -e --file-ext=cfg,conf,cnf
+++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ file-ext =~ ^(classify|g)$ ]]
 + [[ file-ext =~ ^(file-ext|x)$ ]]
 + file_extensions+=($(print "${value}" | tr ':,;\n ' '\n'))
@@ -371,7 +371,7 @@ Extracted config paths from JSON:+ for cfg in "${source_configs[@]}"
 ++ date +%s%N
 ++ base64
 ++ tr -dc a-zA-Z0-9
-+ local divisor=MTc0NzAwNDM1NTU0Njc1MzAwMAo
++ local divisor=MTc0NzAxNDM1MTM4MzgzMTAwMAo
 + for cfg_file in "${source_configs[@]}"
 + mapfile -t lines
 ++ sed 's/!/\n/g' configs/misc/switch.conf
@@ -394,7 +394,7 @@ object-group network SOME-THING
 + grep -qF 172.31.255.254
 ++ basename configs/misc/switch.conf
 ++ tr / _
-+ out=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.YfXSGCNqgO/172_31_255_254__switch.conf__0.chunks
++ out=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.anghUQEUtW/172_31_255_254__switch.conf__0.chunks
 + print 'interface Vlan1
  ip address 172.31.255.254 255.255.255.0
 interface Vlan2
@@ -435,10 +435,10 @@ Matched chunks:+ newline
 
 + (( i++ ))
 + (( i < count ))
-+ find /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.YfXSGCNqgO -type f -name '172_31_255_254__*.chunks'
++ find /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.anghUQEUtW -type f -name '172_31_255_254__*.chunks'
 + sort
 + read -r chunk
-++ basename /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.YfXSGCNqgO/172_31_255_254__switch.conf__0.chunks
+++ basename /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.anghUQEUtW/172_31_255_254__switch.conf__0.chunks
 + print ' - 172_31_255_254__switch.conf__0.chunks'
 + [[ -n  - 172_31_255_254__switch.conf__0.chunks ]]
 + echo -en ' - 172_31_255_254__switch.conf__0.chunks'
@@ -452,8 +452,8 @@ Matched chunks:+ newline
 + (( i++ ))
 + (( i < count ))
 + for chunk_file in "${TMP_DIR}/${search_ip//./_}"__*.chunks
-+ [[ -f /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.YfXSGCNqgO/172_31_255_254__switch.conf__0.chunks ]]
-++ basename /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.YfXSGCNqgO/172_31_255_254__switch.conf__0.chunks
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.anghUQEUtW/172_31_255_254__switch.conf__0.chunks ]]
+++ basename /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.anghUQEUtW/172_31_255_254__switch.conf__0.chunks
 ++ sed -E 's/^172_31_255_254__//;s/__[0-9]+\.chunks$//'
 + cfg_base=switch.conf
 + for full_cfg in "${source_configs[@]}"
@@ -495,10 +495,10 @@ object-group network SOME-THING
 
 + (( i++ ))
 + (( i < count ))
-+ local tmp_json=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.YfXSGCNqgO/partial.json
-+ generate_objects 172.31.255.254 /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.YfXSGCNqgO/partial.json
++ local tmp_json=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.anghUQEUtW/partial.json
++ generate_objects 172.31.255.254 /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.anghUQEUtW/partial.json
 + local ip_address=172.31.255.254
-+ local outfile=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.YfXSGCNqgO/partial.json
++ local outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.anghUQEUtW/partial.json
 + configs=()
 + local -a configs
 + for cfg_file in "${matched_configs_order[@]}"
@@ -634,17 +634,17 @@ object-group network SOME-THING
 + [[ Business-Unit-Networks == \n\u\l\l ]]
 + [[ -z Business-Unit-Networks ]]
 + [[ Business-Unit-Networks == \n\u\l\l ]]
-+ local 'entry_out="ip address 172.31.255.254 255.255.255.0"'
++ local 'entry_out=ip address 172.31.255.254 255.255.255.0'
 + [[ 8 -eq 1 ]]
-+ obj_array+=("$(jq -n --arg object "${object_val}" --argjson entry "${entry_out}" --arg desc "${desc_val}" --arg group "${group_val}" '{
++ obj_array+=("$(jq -n --arg object "${object_val}" --arg entry "${entry_out}" --arg desc "${desc_val}" --arg group "${group_val}" '{
           object: $object,
-          entry: $entry,
+          entry: ($entry | select(. != "" and . != "null" and . != "false") // false),
           description: ($desc | select(. != "" and . != "null") // false),
           group: $group
         }')")
-++ jq -n --arg object 'interface Vlan1' --argjson entry '"ip address 172.31.255.254 255.255.255.0"' --arg desc 'Local Office Subnets' --arg group Business-Unit-Networks '{
+++ jq -n --arg object 'interface Vlan1' --arg entry 'ip address 172.31.255.254 255.255.255.0' --arg desc 'Local Office Subnets' --arg group Business-Unit-Networks '{
           object: $object,
-          entry: $entry,
+          entry: ($entry | select(. != "" and . != "null" and . != "false") // false),
           description: ($desc | select(. != "" and . != "null") // false),
           group: $group
         }'
@@ -976,7 +976,7 @@ object-group network SOME-THING+ newline
 + [[ -n '' ]]
 + IFS=
 + read -r matched_object
-+ cp /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.YfXSGCNqgO/partial.json reports/json/172.31.255.254.json
++ cp /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.anghUQEUtW/partial.json reports/json/172.31.255.254.json
 + [[ true == true ]]
 + jq . reports/json/172.31.255.254.json
 {
@@ -999,6 +999,9 @@ object-group network SOME-THING+ newline
 
 + local csv_outfile=reports/reports.csv
 + [[ ! -f reports/reports.csv ]]
++ print IP,Config,Object,Entry,Description,Group
++ [[ -n IP,Config,Object,Entry,Description,Group ]]
++ echo -en IP,Config,Object,Entry,Description,Group
 + jq -r --arg ip 172.31.255.254 '
       .configs[] as $cfg |
       $cfg.objects[]? |
@@ -1013,5 +1016,5 @@ object-group network SOME-THING+ newline
     ' reports/json/172.31.255.254.json
 + return 0
 + unset verbose debug
-+ [[ -d /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.YfXSGCNqgO ]]
-+ rm -rf /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.YfXSGCNqgO
++ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.anghUQEUtW ]]
++ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.anghUQEUtW
