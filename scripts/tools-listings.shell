@@ -23,10 +23,14 @@ function generate_configslist () {
       ## Iterate through matched files and prepare JSON entries
       while IFS= read -r config_file; do
         ## Remove the "configs_dirpath" prefix from each file path
-        config_file=$(
-          print "${config_file}" | \
-          sed "s|^${configs_dirpath}/||"
-        );
+
+        # config_file=$(
+        #   print "${config_file}" | \
+        #   sed "s|^${configs_dirpath}/||"
+        # );
+        ## Strip full prefix before storing to JSON
+        config_file="${config_file#"${configs_dirpath%/}/"}";
+
         ## Count the number of lines in the config file
         config_lines=$(
           wc -l < "${configs_dirpath}/${config_file}"

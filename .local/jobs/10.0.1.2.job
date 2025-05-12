@@ -2,8 +2,8 @@
 + export LC_ALL=C
 + LC_ALL=C
 ++ mktemp -d
-+ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L9IuoFIHo7
-+ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L9IuoFIHo7
++ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI
++ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI
 + trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
 + source ./scripts/tools-devops.shell
 ++ [[ -n '' ]]
@@ -378,7 +378,7 @@ Extracted config paths from JSON:+ for cfg in "${source_configs[@]}"
 ++ date +%s%N
 ++ base64
 ++ tr -dc a-zA-Z0-9
-+ local divisor=MTc0NzAxNDM1MTM4MzA4MjAwMAo
++ local divisor=MTc0NzAyMzE0Nzc3MzA1MTAwMAo
 + for cfg_file in "${source_configs[@]}"
 + mapfile -t lines
 ++ sed 's/!/\n/g' configs/cisco/fw1.cfg
@@ -406,7 +406,7 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25'
 + grep -qF 10.0.1.2
 ++ basename configs/cisco/fw1.cfg
 ++ tr / _
-+ out=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L9IuoFIHo7/10_0_1_2__fw1.cfg__0.chunks
++ out=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/10_0_1_2__fw1.cfg__0.chunks
 + print 'object-group network BU1-NETWORK
  description Corporate HQ Subnets
  network-object host 10.0.0.1
@@ -470,7 +470,7 @@ object-group network SOME-THING
 + grep -qF 10.0.1.2
 ++ basename configs/misc/switch.conf
 ++ tr / _
-+ out=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L9IuoFIHo7/10_0_1_2__switch.conf__0.chunks
++ out=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/10_0_1_2__switch.conf__0.chunks
 + print 'interface Vlan1
  ip address 172.31.255.254 255.255.255.0
 interface Vlan2
@@ -511,15 +511,15 @@ Matched chunks:+ newline
 
 + (( i++ ))
 + (( i < count ))
-+ find /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L9IuoFIHo7 -type f -name '10_0_1_2__*.chunks'
++ find /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI -type f -name '10_0_1_2__*.chunks'
 + sort
 + read -r chunk
-++ basename /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L9IuoFIHo7/10_0_1_2__fw1.cfg__0.chunks
+++ basename /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/10_0_1_2__fw1.cfg__0.chunks
 + print ' - 10_0_1_2__fw1.cfg__0.chunks'
 + [[ -n  - 10_0_1_2__fw1.cfg__0.chunks ]]
 + echo -en ' - 10_0_1_2__fw1.cfg__0.chunks'
  - 10_0_1_2__fw1.cfg__0.chunks+ read -r chunk
-++ basename /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L9IuoFIHo7/10_0_1_2__switch.conf__0.chunks
+++ basename /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/10_0_1_2__switch.conf__0.chunks
 + print ' - 10_0_1_2__switch.conf__0.chunks'
 + [[ -n  - 10_0_1_2__switch.conf__0.chunks ]]
 + echo -en ' - 10_0_1_2__switch.conf__0.chunks'
@@ -533,8 +533,8 @@ Matched chunks:+ newline
 + (( i++ ))
 + (( i < count ))
 + for chunk_file in "${TMP_DIR}/${search_ip//./_}"__*.chunks
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L9IuoFIHo7/10_0_1_2__fw1.cfg__0.chunks ]]
-++ basename /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L9IuoFIHo7/10_0_1_2__fw1.cfg__0.chunks
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/10_0_1_2__fw1.cfg__0.chunks ]]
+++ basename /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/10_0_1_2__fw1.cfg__0.chunks
 ++ sed -E 's/^10_0_1_2__//;s/__[0-9]+\.chunks$//'
 + cfg_base=fw1.cfg
 + for full_cfg in "${source_configs[@]}"
@@ -558,8 +558,8 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25
 + matched_configs_order+=("${full_cfg}")
 + break
 + for chunk_file in "${TMP_DIR}/${search_ip//./_}"__*.chunks
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L9IuoFIHo7/10_0_1_2__switch.conf__0.chunks ]]
-++ basename /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L9IuoFIHo7/10_0_1_2__switch.conf__0.chunks
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/10_0_1_2__switch.conf__0.chunks ]]
+++ basename /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/10_0_1_2__switch.conf__0.chunks
 ++ sed -E 's/^10_0_1_2__//;s/__[0-9]+\.chunks$//'
 + cfg_base=switch.conf
 + for full_cfg in "${source_configs[@]}"
@@ -604,10 +604,10 @@ object-group network SOME-THING
 
 + (( i++ ))
 + (( i < count ))
-+ local tmp_json=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L9IuoFIHo7/partial.json
-+ generate_objects 10.0.1.2 /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L9IuoFIHo7/partial.json
++ local tmp_json=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/partial.json
++ generate_objects 10.0.1.2 /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/partial.json
 + local ip_address=10.0.1.2
-+ local outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L9IuoFIHo7/partial.json
++ local outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/partial.json
 + configs=()
 + local -a configs
 + for cfg_file in "${matched_configs_order[@]}"
@@ -788,13 +788,13 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25
 + [[ 13 -eq 1 ]]
 + obj_array+=("$(jq -n --arg object "${object_val}" --arg entry "${entry_out}" --arg desc "${desc_val}" --arg group "${group_val}" '{
           object: $object,
-          entry: ($entry | select(. != "" and . != "null" and . != "false") // false),
+          entry: $entry,
           description: ($desc | select(. != "" and . != "null") // false),
           group: $group
         }')")
 ++ jq -n --arg object 'object-group network BU1-NETWORK' --arg entry 'network-object host 10.0.1.2' --arg desc 'Corporate HQ Subnets' --arg group 'Identified Matching Entries' '{
           object: $object,
-          entry: ($entry | select(. != "" and . != "null" and . != "false") // false),
+          entry: $entry,
           description: ($desc | select(. != "" and . != "null") // false),
           group: $group
         }'
@@ -973,13 +973,13 @@ object-group network SOME-THING
 + [[ 8 -eq 1 ]]
 + obj_array+=("$(jq -n --arg object "${object_val}" --arg entry "${entry_out}" --arg desc "${desc_val}" --arg group "${group_val}" '{
           object: $object,
-          entry: ($entry | select(. != "" and . != "null" and . != "false") // false),
+          entry: $entry,
           description: ($desc | select(. != "" and . != "null") // false),
           group: $group
         }')")
 ++ jq -n --arg object 'interface Vlan1' --arg entry 'ip address 10.0.1.2 255.255.255.0' --arg desc 'Local Office Subnets' --arg group Business-Unit-Networks '{
           object: $object,
-          entry: ($entry | select(. != "" and . != "null" and . != "false") // false),
+          entry: $entry,
           description: ($desc | select(. != "" and . != "null") // false),
           group: $group
         }'
@@ -1727,7 +1727,7 @@ object-group network SOME-THING+ newline
 + [[ -n '' ]]
 + IFS=
 + read -r matched_object
-+ cp /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L9IuoFIHo7/partial.json reports/json/10.0.1.2.json
++ cp /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/partial.json reports/json/10.0.1.2.json
 + [[ true == true ]]
 + jq . reports/json/10.0.1.2.json
 {
@@ -1775,5 +1775,5 @@ object-group network SOME-THING+ newline
     ' reports/json/10.0.1.2.json
 + return 0
 + unset verbose debug
-+ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L9IuoFIHo7 ]]
-+ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L9IuoFIHo7
++ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI ]]
++ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI

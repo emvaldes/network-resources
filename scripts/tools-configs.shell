@@ -67,14 +67,21 @@ function generate_objects () {
     return 0;
 }; alias generate-objects='generate_objects';
 
-#### ---------------------------------------------------------------------------
+#### -----------------------------------------------------------------------
 ## Function: process_blocks
 ## Purpose: Parses a config block, extracts matching line, description, and group
 ## Input:
 ##   $1 = IP address
-##   $2 = Configuration file path
-##   $3 = Raw configuration block
-##   $4 = Output array name (nameref)
+##   $2 = full config path
+##   $3 = full block string
+##   $4 = name of array variable (passed by name, reference with `-n`)
+## Output:
+##   Appends JSON object(s) to the referenced array
+## Notes:
+##   - Extracts the first IP-matching line as `entry`
+##   - Tries to determine the object name and use it for classification
+##   - Also pulls description when possible
+#### -----------------------------------------------------------------------
 
 function process_blocks () {
     local ip="${1}";
@@ -148,7 +155,7 @@ function process_blocks () {
     obj_array+=("$(
       jq -n \
         --arg object "${object_val}" \
-        --argjson entry "${entry_out}" \
+        --arg entry "${entry_out}" \
         --arg desc "${desc_val}" \
         --arg group "${group_val}" \
         '{

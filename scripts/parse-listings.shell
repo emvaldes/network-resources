@@ -220,17 +220,17 @@ function main () {
     #   done;
     # fi;
 
-    if [[ -d targets ]]; then
-      local prefix="${configs_dirpath%/}/";
-      shopt -s nullglob;
-      local json_files=( targets/*.json );
-      shopt -u nullglob;
-      if (( ${#json_files[@]} > 0 )); then
-        for list_file in "${json_files[@]}"; do
-          sed -i '' -E "s|\"config\": \"${prefix}|\"config\": \"|g" "${list_file}";
-        done;
-      fi;
-    fi;
+    # if [[ -d targets ]]; then
+    #   local prefix="${configs_dirpath%/}/";
+    #   shopt -s nullglob;
+    #   local json_files=( targets/*.json );
+    #   shopt -u nullglob;
+    #   if (( ${#json_files[@]} > 0 )); then
+    #     for list_file in "${json_files[@]}"; do
+    #       sed -i '' -E "s|\"config\": \"${prefix}|\"config\": \"|g" "${list_file}";
+    #     done;
+    #   fi;
+    # fi;
 
     #### -----------------------------------------------------------------------
     ## Wait until all expected JSON report files are physically present on disk
