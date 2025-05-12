@@ -19,50 +19,8 @@ trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT;
 #------------------------------------------------------------------------------#
 
 # Load common utility functions (logging, platform detection, etc.)
-source ./scripts/devops-tools.shell;
-
-#------------------------------------------------------------------------------#
-# Function: generate_csvoutput
-# Purpose: Converts final reports.json to a human-readable CSV file.
-
-function generate_csvoutput () {
-    local input_json="${reports_folder}/reports.json";
-    local output_csv="${reports_folder}/reports.csv";
-    ## Ensure the JSON file exists before proceeding
-    if [[ ! -f "${input_json}" ]]; then
-      error_message "Missing ${input_json}, cannot generate CSV.";
-      return 1;
-    fi;
-    ## Build CSV header and extract values from JSON using jq
-    {
-      echo "target,config,object,entry,description,group";
-      jq -r --arg configs_dirpath "${configs_dirpath}" '
-        .[] as $entry
-        | $entry.configs[]
-        | .config as $cfg
-        | .objects[]
-        | [
-            $entry.target,
-            ($cfg | sub("^" + $configs_dirpath + "/"; "")),
-            (.object // "none" | tostring | select(length > 0) // "none"),
-            (.entry // "none" | tostring | select(length > 0) // "none"),
-            (.description // "none" | tostring | select(length > 0) // "none"),
-            (.group // "none" | tostring | select(length > 0) // "none")
-          ]
-        | @csv
-      ' "${input_json}";
-    } > "${output_csv}";
-    ## Optionally print CSV as a formatted table to the terminal
-    if [[ "${verbose}" == true ]]; then
-      if [[ -s "${output_csv}" ]]; then
-        newline;
-        print "CSV Report Summary (tabulated):";
-        newline;
-        column -t -s, "${output_csv}" | less -SFX;
-      fi;
-    fi;
-    return 0;
-}; alias generate-csvoutput='generate_csvoutput';
+source ./scripts/tools-devops.shell;
+source ./scripts/tools-listings.shell;
 
 #------------------------------------------------------------------------------#
 # Function: main
@@ -70,7 +28,6 @@ function generate_csvoutput () {
 
 function main () {
     ## tracking_process ${FUNCNAME} "${@}";
-    declare -a file_extensions=();
     oIFS="${IFS}";
 
     ## Process command-line arguments and map them to local variables
@@ -90,7 +47,7 @@ function main () {
       [[ $key =~ ^(ips-list|i)$ ]] && local listing_filename="${value}";
       [[ $key =~ ^(logs|o)$ ]] && export enable_logging=true;
       [[ $key =~ ^(jobs|j)$ ]] && local parallel_threads="${value}";
-      [[ $key =~ ^(matrix|m)$ ]] && local matrix_filename="${value}";
+      [[ $key =~ ^(matrix|m)$ ]] && export matrix_filename="${value}";
       [[ $key =~ ^(reports|r)$ ]] && export reports_folder="${value}";
       [[ $key =~ ^(validate|v)$ ]] && local validate_address=true;
 
@@ -128,7 +85,7 @@ function main () {
     ## Target Configurations (file-extensions):
     ## Set default file extensions if none provided
     if [[ -z ${file_extensions+x} || ${#file_extensions[@]} -eq 0 ]]; then
-      declare -a file_extensions=( cfg conf cnf );
+      file_extensions=( cfg conf cnf );
     fi;
 
     #### -----------------------------------------------------------------------
@@ -155,7 +112,7 @@ function main () {
     #### -----------------------------------------------------------------------
     ## Processing Custom/Default the Translation-Matrix (source):
     ## Load and validate translation matrix (used for grouping logic)
-    [[ -z "${matrix_filename:-}" ]] && matrix_filename="matrix.json";
+    [[ -z "${matrix_filename:-}" ]] && export matrix_filename="matrix.json";
     if [[ ! -f "${matrix_filename}" ]]; then
             error_message "Project Source Matrix-Configs file not found: ${matrix_filename}";
             return 1;
@@ -172,7 +129,7 @@ function main () {
     export reports_folder="${reports_folder:-reports}";
     mkdir -p "${reports_folder}";
     ## Initializing the log file
-    : > "${reports_folder}/reports.log";  ## Truncate report log
+    : > "${reports_logsfile}";  ## Truncate report log
 
     #### -----------------------------------------------------------------------
     ## Validating IP Addresses (Skipping?)
@@ -209,33 +166,15 @@ function main () {
     if [[ "${verbose}" == true ]]; then
       newline; print "Mapping IPs to config files (pre-scan phase)..."; newline;
     fi;
-    for ip_addr in "${target_listing[@]}"; do
-      ip_cleaned="$(
-        print "${ip_addr}" | tr -d '\r'
-      )";
-      target_file="targets/${ip_cleaned}.list";
-      (
-        matched_files="$(
-          grep -lF "${ip_cleaned}" $( < "${configs_list_cache}" ) 2>/dev/null || true
-        )";
-        if [[ -n "${matched_files}" ]]; then
-          # prefix="${configs_dirpath%/}/";
-          # fixed_listing="$( sed "s|${prefix}||g" <<< "${matched_files}" )";
-          printf "%s\n" ${matched_files} > "${target_file}";
-        fi;
-      ) &
-    done;
 
-    #### -----------------------------------------------------------------------
-    ## Final Synchronization and Output Completion Check
-    waitfor_completion;
+    ## Advanced Background Jobs management workflow
+    matching_configs;
 
     #### -----------------------------------------------------------------------
     ## Filter out IPs (Search Patterns) that had no matching config references
-    declare -a filtered_target_listing=();
     for ip_addr in "${target_listing[@]}"; do
       ip_cleaned="$( print "${ip_addr}" | tr -d '\r' )";
-      if [[ -f "targets/${ip_cleaned}.list" ]]; then
+      if [[ -f "targets/${ip_cleaned}.json" ]]; then
         filtered_target_listing+=( "${ip_cleaned}" );
       fi;
     done;
@@ -249,7 +188,7 @@ function main () {
       print "Total IPs mapped:    ${total_mapped}"; newline;
       print "Unmapped IPs:        $(( total_requested - total_mapped ))";
       newline 2;
-    } >> "${reports_folder}/reports.log";
+    } >> "${reports_logsfile}";
 
     #### -----------------------------------------------------------------------
     ## Log unmapped IPs explicitly (no matches found)
@@ -257,83 +196,22 @@ function main () {
       print "Unmapped IPs:"; newline 2;
       for ip in "${target_listing[@]}"; do
         ip_cleaned="$( print "${ip}" | tr -d '\r' | sed -E 's/[[:space:]]+//g' )";
-        if [[ -n "${ip_cleaned}" && ! -f "targets/${ip_cleaned}.list" ]]; then
+        if [[ -n "${ip_cleaned}" && ! -f "targets/${ip_cleaned}.json" ]]; then
           print "  - ${ip_cleaned}"; newline;
         fi;
       done;
       newline;
-    } >> "${reports_folder}/reports.log";
+    } >> "${reports_logsfile}";
 
     #### -----------------------------------------------------------------------
-    ## Launch parallel parsing jobs for matched IPs
-    ip_index=0;
-    total_ips=${#filtered_target_listing[@]};
-    while (( ip_index < total_ips )); do
-      running_jobs=$(
-        jobs -rp | wc -l
-      );
-      available_slots=$(( parallel_threads - running_jobs ));
-      if (( available_slots > 0 )); then
-        for (( i = 0; i < available_slots && ip_index < total_ips; i++ )); do
-          ip_addr="${filtered_target_listing[ip_index++]}";
-          padded_index="$( printf "%0${#total_ips}d" "${ip_index}" )";
-          print "[START] IP: ${ip_addr}${nl}" >> "${reports_folder}/reports.log"; newline;
-          [[ "${debug}" == true ]] && \
-             print "[POOL] Launching job (${ip_addr})[$ip_index] ..."; newline;
-          (
-            execute=(
-              ./scripts/parse-configs.shell
-              --configs="${configs_dirpath}"
-              --ip-addr="${ip_addr}"
-              --index="${padded_index}"
-              --matrix="${matrix_filename}"
-              --reports="${reports_folder}"
-              --file-ext="$(
-                IFS=,; print "${file_extensions[*]}"
-              )"
-            );
-            [[ "${classify_targets}" == true ]] && execute+=( --classify );
-            [[ "${validate_address}" == true ]] && execute+=( --validate );
-            [[ "${verbose}" == true ]] && execute+=( --verbose );
-            [[ "${debug}" == true ]] && execute+=( --debug );
-
-            (
-              if [[ "${enable_logging:-}" == true ]]; then
-                      mkdir -p "${local_state_dir}/jobs" "${local_state_dir}/errors";
-                      logfile="${local_state_dir}/jobs/${ip_addr}.job";
-                      if [[ "${debug}" == true ]]; then
-                              bash -x "${execute[@]}" > "${logfile}" 2>&1;
-                        else  "${execute[@]}" > "${logfile}" 2>&1;
-                      fi;
-                else  if [[ "${debug}" == true ]]; then
-                              bash -x "${execute[@]}" >/dev/null 2>&1;
-                        else  "${execute[@]}" >/dev/null 2>&1;
-                      fi;
-              fi;
-              status=$?;
-              if (( status != 0 )); then
-                      {
-                        echo "[ERROR] IP: ${ip_addr} failed :: exit ${status}";
-                        echo "  See: ${logfile}";
-                      } >> "${local_state_dir}/errors/errors.log";
-                else  print "${nl}[OK] IP: ${ip_addr} completed" >> "${reports_folder}/reports.log";
-              fi;
-            ) &
-          ) &
-        done;
-      fi;
-      sleep ${delaying_factor};
-    done;
+    ## Launch and monitor parallel config parsing jobs for matched IPs
+    manage_configs;
 
     #### -----------------------------------------------------------------------
-    ## Final Synchronization and Output Completion Check
-    waitfor_completion;
-
-    #### -----------------------------------------------------------------------
-    ## Strip base config path from all targets/*.list entries
+    ## Strip base config path from all targets/*.json entries
     if [[ -d targets ]]; then
       local prefix="${configs_dirpath%/}/";
-      find targets -type f -name '*.list' | while read -r list_file; do
+      find targets -type f -name '*.json' | while read -r list_file; do
         sed -i '' -E "s|^${prefix}||g" "${list_file}";
       done;
     fi;
@@ -382,6 +260,14 @@ function main () {
 # install_missing "${os}";
 
 export script_name="${0}";
+
+## Default/Custom configuration file's extensions: cfg conf cnf
+declare -a file_extensions=();
+
+# Description:
+#   This script parses a list of IP addresses, scans configuration files for matches,
+#   classifies matched entries, and generates structured JSON and CSV reports.
+declare -a filtered_target_listing=();
 
 if [[ ${#@} -ge 1 && "${1,,}" =~ ^-*(h|help)$ ]]; then
         main --help ;

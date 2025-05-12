@@ -1,0 +1,230 @@
+#!/usr/bin/env bash
+
+# File: scripts/tools-listings.shell
+
+## Prevent re-sourcing and ensure one-time initialization
+if [[ -n "${__TOOLS_LISTINGS_SOURCED:-}" ]]; then return 0; fi;
+readonly __TOOLS_LISTINGS_SOURCED=1;
+
+#### ---------------------------------------------------------------------------
+# JSON generation function: Handles file matching and creates the JSON output
+function generate_configslist () {
+    local ip_addr="$1";
+    local target_file="$2";
+    ## Match configuration files for the current IP address
+    local matched_files=$(
+      grep -lF "${ip_addr}" $( <"${configs_list_cache}" ) 2>/dev/null || true
+    );
+    # print "Matched files: ${matched_files}"
+    ## If matched files exist, generate the JSON structure
+    if [[ -n "${matched_files}" ]]; then
+      ## Initialize an empty JSON array
+      config_json="[]";
+      ## Iterate through matched files and prepare JSON entries
+      while IFS= read -r config_file; do
+        ## Remove the "configs_dirpath" prefix from each file path
+        config_file=$(
+          print "${config_file}" | \
+          sed "s|^${configs_dirpath}/||"
+        );
+        ## Count the number of lines in the config file
+        config_lines=$(
+          wc -l < "${configs_dirpath}/${config_file}"
+        );
+        ## Generate JSON entry for the current file and append it to the JSON array
+        config_json=$(
+          print "${config_json}" |
+          jq --arg config "${config_file}" \
+             --argjson lines "${config_lines}" \
+                       '. += [{"config": $config, "lines": $lines}]'
+        );
+      done <<< "${matched_files}";
+      ## Wrap the array into the final structure with {configs: $configs}
+      final_json=$(
+        print "${config_json}" | jq '{configs: .}'
+      );
+      ## Save the final JSON to the target file
+      jq -r <<< "${final_json}" > "${target_file}";
+      ## Log the generation of the JSON file
+      print "${nl}[INFO] Generated JSON for IP: ${ip_addr} at ${target_file}" \
+            >> "${targets_logsfile}";
+    fi;
+    return 0;
+}; alias generate-configslist='generate_configslist';
+
+#### ---------------------------------------------------------------------------
+# Function: generate_csvoutput
+# Purpose: Converts final reports.json to a human-readable CSV file.
+
+function generate_csvoutput () {
+    local input_json="${reports_folder}/reports.json";
+    local output_csv="${reports_folder}/reports.csv";
+    ## Ensure the JSON file exists before proceeding
+    if [[ ! -f "${input_json}" ]]; then
+      error_message "Missing ${input_json}, cannot generate CSV.";
+      return 1;
+    fi;
+    ## Build CSV header and extract values from JSON using jq
+    {
+      print "target,config,object,entry,description,group"; newline;
+      ## Flatten nested JSON structure: one row per matched object per config per IP
+      jq -r --arg configs_dirpath "${configs_dirpath}" '
+        .[] as $entry
+        | $entry.configs[]
+        | .config as $cfg
+        | .objects[]
+        | [
+            $entry.target,
+            ($cfg | sub("^" + $configs_dirpath + "/"; "")),
+            (.object // "none" | tostring | select(length > 0) // "none"),
+            (.entry // "none" | tostring | select(length > 0) // "none"),
+            (.description // "none" | tostring | select(length > 0) // "none"),
+            (.group // "none" | tostring | select(length > 0) // "none")
+          ]
+        | @csv
+      ' "${input_json}";
+    } > "${output_csv}";
+    ## Optionally print CSV as a formatted table to the terminal
+    if [[ "${verbose}" == true ]]; then
+      if [[ -s "${output_csv}" ]]; then
+        newline;
+        print "CSV Report Summary (tabulated):";
+        newline;
+        column -t -s, "${output_csv}" | less -SFX;
+      fi;
+    fi;
+    return 0;
+}; alias generate-csvoutput='generate_csvoutput';
+
+#### ---------------------------------------------------------------------------
+# Main function: Manages the background jobs and waits for them to complete
+function manage_configs () {
+    declare -a job_pids=();    ## Array to hold the PIDs of background jobs
+    declare -A job_ip_map=();  ## Associative array to map PIDs to IPs
+    ip_index=0;
+    total_ips=${#filtered_target_listing[@]};
+    while (( ip_index < total_ips )); do
+      ip_addr="${filtered_target_listing[ip_index++]}";
+      padded_index="$( printf "%0${#total_ips}d" "${ip_index}" )";
+      (
+        parse_configs "${ip_addr}" "${padded_index}"
+      ) &
+      job_pid=$!;
+      job_pids+=("${job_pid}");
+      job_ip_map["$job_pid"]="${ip_addr}";
+      print "${nl}[INFO] Started IP: ${ip_addr} (PID: ${job_pid})" \
+            >> "${started_logsfile}"; newline;
+    done;
+    ## Monitor background jobs
+    while (( ${#job_pids[@]} > 0 )); do
+      valid_job_pids=();
+      for pid in "${job_pids[@]}"; do
+        if ! kill -0 "$pid" 2>/dev/null; then
+          ip="${job_ip_map[$pid]}"
+                print "${nl}[INFO] Completed IP: ${ip} (PID: $pid)" \
+                      >> "${success_logsfile}"; newline;
+          else  valid_job_pids+=("$pid");
+        fi;
+      done;
+      job_pids=("${valid_job_pids[@]}");
+      sleep 0.5;
+    done;
+    return 0;
+}; alias manage-configs='manage_configs';
+
+#### ---------------------------------------------------------------------------
+# Main function: Manages the background jobs and waits for them to complete
+function matching_configs () {
+    declare -a job_pids=();  ## Array to hold the PIDs of the background jobs
+    declare -A job_ip_map;    ## Associative array to map PIDs to IPs
+    ## Iterate over target IP addresses
+    for ip_addr in "${target_listing[@]}"; do
+      ip_cleaned="$(
+        print "${ip_addr}" | tr -d '\r'
+      )";  ## Clean the IP address
+      target_file="targets/${ip_cleaned}.json";
+      ## Start background job for each IP address
+      (
+        ## Call JSON generation function which handles file matching and creation
+        generate_configslist "${ip_cleaned}" "${target_file}"
+      ) &
+      ## Capture the job's PID and store it in the job_pids array
+      job_pid=$!;
+      job_pids+=("${job_pid}");
+      ## Map the PID to the corresponding IP address
+      job_ip_map["$job_pid"]="${ip_cleaned}";
+      ## Optionally log the start of the job
+      print "${nl}[INFO] Started IP: ${ip_addr} (PID: ${job_pid})" \
+            >> "${started_logsfile}"; newline;
+    done;
+    ## Monitor the background jobs until all are completed
+    while (( ${#job_pids[@]} > 0 )); do
+      valid_job_pids=();
+      for pid in "${job_pids[@]}"; do
+        if ! kill -0 "$pid" 2>/dev/null; then
+                ## Job completed
+                ip_address="${job_ip_map[$pid]}"  ## Retrieve the IP associated with this job PID
+                print "${nl}[INFO] Completed IP: ${ip_address} (PID: $pid)" \
+                      >> "${success_logsfile}"; newline;
+          else  valid_job_pids+=("$pid");  ## Job still running
+        fi;
+      done;
+      job_pids=("${valid_job_pids[@]}");
+      sleep 0.5  # Short delay to prevent excessive CPU usage
+    done;
+    return 0;
+}; alias matching-configs='matching_configs';
+
+#### ---------------------------------------------------------------------------
+# Function: run_config_parser
+# Purpose: Executes parse-configs.shell for a single IP address
+# Input:
+#   $1 = IP address
+#   $2 = padded index
+
+## WARNING: This function is executed as a background job from manage_configs()
+##          Do not introduce inner '&' or nested asynchronous calls.
+##          Keep all processing synchronous to retain job PID tracking.
+
+function parse_configs () {
+    local ip_addr="${1}";
+    local padded_index="${2}";
+    execute=(
+      ./scripts/parse-configs.shell
+      --configs="${configs_dirpath}"
+      --ip-addr="${ip_addr}"
+      --index="${padded_index}"
+      --matrix="${matrix_filename}"
+      --reports="${reports_folder}"
+      --file-ext="$(
+        IFS=,; print "${file_extensions[*]}"
+      )"
+    );
+    [[ "${classify_targets}" == true ]] && execute+=( --classify );
+    [[ "${validate_address}" == true ]] && execute+=( --validate );
+    [[ "${verbose}" == true ]] && execute+=( --verbose );
+    [[ "${debug}" == true ]] && execute+=( --debug );
+    if [[ "${enable_logging:-}" == true ]]; then
+      mkdir -p "${local_state_dir}/jobs" "${local_state_dir}/errors";
+      logfile="${local_state_dir}/jobs/${ip_addr}.job";
+      if [[ "${debug}" == true ]]; then
+              bash -x "${execute[@]}" > "${logfile}" 2>&1;
+        else  "${execute[@]}" > "${logfile}" 2>&1;
+      fi;
+      else  if [[ "${debug}" == true ]]; then
+                    bash -x "${execute[@]}" >/dev/null 2>&1;
+              else  "${execute[@]}" >/dev/null 2>&1;
+            fi;
+    fi;
+    local status=$?;
+    if (( status != 0 )); then
+            {
+              print "[ERROR] IP: ${ip_addr} failed :: exit ${status}"; newline;
+              print "  See: ${logfile}";
+            } >> "${local_state_dir}/errors/errors.log";
+      else  print "${nl}[DONE] IP: ${ip_addr}" >> "${reports_logsfile}";
+    fi;
+    return "${status}";
+}; alias parse-configs='parse_configs';
+
+#------------------------------------------------------------------------------#

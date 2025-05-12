@@ -1,0 +1,112 @@
+
+# -----------------------------------------------------------------------------#
+# Legacy (Traditional) mechanism to mange background jobs.
+for ip_addr in "${target_listing[@]}"; do
+  ip_cleaned="$(
+    print "${ip_addr}" | tr -d '\r'
+  )";
+  target_file="targets/${ip_cleaned}.list";
+  (
+    matched_files="$(
+      grep -lF "${ip_cleaned}" $( < "${configs_list_cache}" ) 2>/dev/null || true
+    )";
+    if [[ -n "${matched_files}" ]]; then
+      # prefix="${configs_dirpath%/}/";
+      # fixed_listing="$( sed "s|${prefix}||g" <<< "${matched_files}" )";
+      printf "%s\n" ${matched_files} > "${target_file}";
+    fi;
+  ) &
+done;
+
+# -----------------------------------------------------------------------------#
+## Launch parallel parsing jobs for matched IPs
+ip_index=0;
+total_ips=${#filtered_target_listing[@]};
+while (( ip_index < total_ips )); do
+  running_jobs=$(
+    jobs -rp | wc -l
+  );
+  available_slots=$(( parallel_threads - running_jobs ));
+  if (( available_slots > 0 )); then
+    for (( i = 0; i < available_slots && ip_index < total_ips; i++ )); do
+      ip_addr="${filtered_target_listing[ip_index++]}";
+      padded_index="$( printf "%0${#total_ips}d" "${ip_index}" )";
+      print "[START] IP: ${ip_addr}${nl}" >> "${reports_folder}/reports.log"; newline;
+      [[ "${debug}" == true ]] && \
+         print "[POOL] Launching job (${ip_addr})[$ip_index] ..."; newline;
+      (
+        execute=(
+          ./scripts/parse-configs.shell
+          --configs="${configs_dirpath}"
+          --ip-addr="${ip_addr}"
+          --index="${padded_index}"
+          --matrix="${matrix_filename}"
+          --reports="${reports_folder}"
+          --file-ext="$(
+            IFS=,; print "${file_extensions[*]}"
+          )"
+        );
+        [[ "${classify_targets}" == true ]] && execute+=( --classify );
+        [[ "${validate_address}" == true ]] && execute+=( --validate );
+        [[ "${verbose}" == true ]] && execute+=( --verbose );
+        [[ "${debug}" == true ]] && execute+=( --debug );
+
+        (
+          if [[ "${enable_logging:-}" == true ]]; then
+                  mkdir -p "${local_state_dir}/jobs" "${local_state_dir}/errors";
+                  logfile="${local_state_dir}/jobs/${ip_addr}.job";
+                  if [[ "${debug}" == true ]]; then
+                          bash -x "${execute[@]}" > "${logfile}" 2>&1;
+                    else  "${execute[@]}" > "${logfile}" 2>&1;
+                  fi;
+            else  if [[ "${debug}" == true ]]; then
+                          bash -x "${execute[@]}" >/dev/null 2>&1;
+                    else  "${execute[@]}" >/dev/null 2>&1;
+                  fi;
+          fi;
+          status=$?;
+          if (( status != 0 )); then
+                  {
+                    print "[ERROR] IP: ${ip_addr} failed :: exit ${status}"; newline;
+                    print "  See: ${logfile}";
+                  } >> "${local_state_dir}/errors/errors.log";
+            else  print "${nl}[DONE] IP: ${ip_addr}" >> "${reports_folder}/reports.log";
+          fi;
+        ) &
+      ) &
+    done;
+  fi;
+  sleep ${delaying_factor};
+done;
+
+#------------------------------------------------------------------------------#
+## Function: wait_for_completion
+## Purpose: Wait for background jobs and flush I/O buffers to ensure data integrity
+function waitfor_completion () {
+    wait;       ## Wait for all background jobs to finish
+    sleep 0.5;  ## Allow I/O buffers to settle
+    sync;       ## Flush all in-memory buffers to disk
+    return 0;
+}; alias waitfor-completion='waitfor_completion';
+
+#------------------------------------------------------------------------------#
+## Processing Custom/Default the Target Configurations (source):
+export configs_dirpath="${configs_dirpath:-configs}";
+declare -ga source_configs=();
+ip_list_file="targets/${target_address%%/*}.list";
+if [[ -f "${ip_list_file}" ]]; then
+        mapfile -t source_configs < "${ip_list_file}";
+        [[ "${verbose}" == true ]] && \
+           print "Using pre-matched config list: ${ip_list_file}";
+  elif  [[ -d "${configs_dirpath}" ]]; then
+        local -a find_cmd=( find "$configs_dirpath" -type f \( );
+        for ext in "${file_extensions[@]}"; do
+          find_cmd+=( -iname "*.${ext}" -o );
+        done;
+        unset 'find_cmd[-1]';
+        find_cmd+=( \) );
+        mapfile -t source_configs < <( "${find_cmd[@]}" | sort );
+  else  [[ "${verbose}" == true ]] && \
+           error_message "Project Source Configurations path not found: ${configs_dirpath}";
+        return 1;
+fi;

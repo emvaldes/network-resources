@@ -1,0 +1,157 @@
+#!/usr/bin/env bash
+
+# File: scripts/tools-configs.shell
+
+## Prevent re-sourcing and ensure one-time initialization
+if [[ -n "${__TOOLS_CONFIGS_SOURCED:-}" ]]; then return 0; fi;
+readonly __TOOLS_CONFIGS_SOURCED=1;
+
+#### ---------------------------------------------------------------------------
+## Function: generate_objects
+
+## Iterate over the list of config files that matched the current IP address.
+## Each file was pre-filtered during the chunking phase and is associated with
+## one or more config blocks (stored in matched_blocks_byfile[]).
+## For each config file, we reconstruct its block(s), extract the relevant
+## metadata (object type, entry, description, group), and build a structured
+## JSON output grouped under that config.
+
+##   $1 = Target IP address
+##   $2 = Output JSON file path
+
+function generate_objects () {
+    local ip_address="${1}";
+    local outfile="${2}";
+    local -a configs=();
+    ## Iterate over config files matched in memory
+    for cfg_file in "${matched_configs_order[@]}"; do
+      local blocks="${matched_blocks_byfile[${cfg_file}]}";
+      local -a objects=();
+      local current_block="";
+      ## Split config file content into logical blocks
+      while IFS= read -r line || [[ -n "$line" ]]; do
+        if [[ -z "${line//[[:space:]]/}" ]]; then
+                if [[ -n "$current_block" ]]; then
+                  process_blocks "$ip_address" "$cfg_file" "$current_block" objects;
+                  current_block="";
+                fi;
+          else  current_block+="${line}"$'\n';
+        fi;
+      done <<< "$blocks";
+      ## Handle the last block if no newline at EOF
+      [[ -n "$current_block" ]] && \
+        process_blocks "$ip_address" "$cfg_file" "$current_block" objects;
+      ## Create JSON for this config file
+      local objs_json="[]";
+      if (( ${#objects[@]} > 0 )); then
+        objs_json="$(
+          jq -s . <<< "${objects[*]}"
+        )";
+      fi;
+      configs+=("$(
+        jq -n --arg cfg "$(
+                      relative_configpath "${cfg_file}"
+                    )" \
+              --argjson objs "${objs_json}" \
+        '{ config: $cfg, objects: $objs }'
+      )");
+    done;
+    ## Final output JSON structure
+    local cfgs_json="[]";
+    if (( ${#configs[@]} > 0 )); then
+      cfgs_json="$( jq -s . <<< "${configs[*]}" )";
+    fi;
+    jq -n --arg ip "${ip_address}" \
+          --argjson cfgs "${cfgs_json}" \
+      '{ target: $ip, configs: $cfgs }' > "${outfile}";
+    return 0;
+}; alias generate-objects='generate_objects';
+
+#### ---------------------------------------------------------------------------
+## Function: process_blocks
+## Purpose: Parses a config block, extracts matching line, description, and group
+## Input:
+##   $1 = IP address
+##   $2 = Configuration file path
+##   $3 = Raw configuration block
+##   $4 = Output array name (nameref)
+
+function process_blocks () {
+    local ip="${1}";
+    local cfg="${2}";
+    local block="${3}";
+    local -n obj_array="${4}";
+    ## Split block into non-empty lines
+    mapfile -t lines < <(
+      sed '/^[[:space:]]*$/d' <<< "${block}"
+    );
+    [[ ${#lines[@]} -eq 0 ]] && return;
+    local object_val="$(
+      sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//' <<< "${lines[0]}"
+    )";
+    ## Try to find the exact line that references the IP
+    local entry_val="";
+    for line in "${lines[@]}"; do
+      if grep -q -wF "${ip}" <<< "$line"; then
+        entry_val="$(
+          sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//' <<< "$line"
+        )";
+        break;
+      fi;
+    done;
+    [[ -z "${entry_val}" ]] && return;
+    ## Attempt to extract an optional description from the block
+    local desc_val="false";
+    for line in "${lines[@]}"; do
+      if [[ "${line,,}" =~ ^[[:space:]]*description ]]; then
+        desc_val="$(
+          sed -E 's/^[^"]*"?description"?[[:space:]]*//I; s/^[[:space:]]*//; s/[[:space:]]*$//' <<< "$line"
+        )";
+        [[ -z "$desc_val" ]] && desc_val="false";
+        break;
+      fi;
+    done;
+    ## Classification group (default = Unclassified unless --classify is set)
+    local group_val="Unclassified";
+    if [[ "${classify_targets:-false}" == true ]]; then
+      ## Extract object key (usually last token in object definition)
+      local object_key="$(
+        awk '{print $NF}' <<< "${object_val}" | \
+        sed -E 's/[[:punct:]]*$//'
+      )";
+      ## Attempt classification by object key
+      group_val="$(
+        jq -r --arg key "${object_key}" \
+        'map(select(.match[]? | contains($key))) | .[0].group' <<< "${matrix_configs}"
+      )";
+      ## Fallback to classification by description value
+      if [[ -z "${group_val}" || "${group_val}" == "null" ]]; then
+        group_val="$(
+          jq -r --arg desc "${desc_val}" \
+          'map(select(.match[]? == $desc)) | .[0].group' <<< "${matrix_configs}"
+        )";
+      fi;
+      ## Default to "Unclassified" if no match found
+      [[ -z "${group_val}" || "${group_val}" == "null" ]] && group_val="Unclassified";
+    fi;
+    ## If only 1 line in block, the entry is not valid
+    local entry_out="\"${entry_val}\"";
+    [[ ${#lines[@]} -eq 1 ]] && entry_out="false";
+    ## Build and append object JSON structure
+    obj_array+=("$(
+      jq -n \
+        --arg object "${object_val}" \
+        --argjson entry "${entry_out}" \
+        --arg desc "${desc_val}" \
+        --arg group "${group_val}" \
+        '{
+          object: $object,
+          entry: $entry,
+          description: ($desc | select(. != "" and . != "null") // false),
+          group: $group
+        }'
+    )");
+    return 0;
+}; alias process-blocks='process_blocks';
+
+#------------------------------------------------------------------------------#

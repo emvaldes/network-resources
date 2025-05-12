@@ -1,64 +1,77 @@
 #!/usr/bin/env bash
 
-# File: scripts/devops-tools.shell
-# Purpose: Sharing common features across scripts.
+## File: scripts/tools-devops.shell
 
-# Prevent re-sourcing and ensure one-time initialization
+## Purpose: Sharing common features across scripts.
+##          Utility library of shared shell functions and environment exports
+##    Note: Used by both parse-listings.shell and parse-configs.shell
+
+## Prevent re-sourcing and ensure one-time initialization
 if [[ -n "${__DEVOPS_TOOLS_SOURCED:-}" ]]; then return 0; fi;
 readonly __DEVOPS_TOOLS_SOURCED=1;
 
-# Require Bash 4.0+ for associative array support (only runs once)
+## Require Bash 4.0+ for associative array support (only runs once)
 if [[ "${BASH_VERSINFO[0]}" -lt 4 ]]; then
   echo "Error: Bash 4.0 or newer is required. Current version: ${BASH_VERSINFO[*]}";
   exit 1;
 fi;
 
-# POSIX locale standard
+## POSIX locale standard
 export LC_ALL=C;
 export nl="\n";
 
 local_state_dir=".local";
-mkdir -p "${local_state_dir}";
+mkdir -p ${local_state_dir}/{errors,jobs,stats};
+export stats_folder="${local_state_dir}/stats/";
+
+export reports_logsfile="${stats_folder}/reports.jobs";
+export started_logsfile="${stats_folder}/started.jobs";
+export success_logsfile="${stats_folder}/success.jobs";
+export targets_logsfile="${stats_folder}/targets.jobs";
 
 #------------------------------------------------------------------------------#
-# Output Utilities
+## Output Utilities: Print an error message in consistent format
+function error_message () {
+  [[ -n ${1:-} ]] && local message="${1}" || return 0;
+  print "\nError: ${message}"; newline;
+}; alias error-message='error_message';
 
-# Print a message without newline unless specified
-function print () {
-  [[ -n ${1:-} ]] && echo -en "${1}" || return 0;
-};
-
-# Print N newlines (default: 1)
+#------------------------------------------------------------------------------#
+## Output Utilities: Print N newlines (default: 1)
 function newline () {
   local count="${1:-1}";
   for ((i = 0; i < count; i++)); do echo; done;
 };
 
-# Print an error message in consistent format
-function error_message () {
-  [[ -n ${1:-} ]] && local message="${1}" || return 0;
-  print "\nError: ${message}"; newline;
-}; alias error-message='error_message'
+#------------------------------------------------------------------------------#
+## Output Utilities: Print a message without newline unless specified
+function print () {
+  [[ -n ${1:-} ]] && echo -en "${1}" || return 0;
+};
 
 #------------------------------------------------------------------------------#
-# Timestamped Logging Utilities
-
+## Logging Utilities: Log Information (info)
 function log_info () {
   [[ -n ${1:-} ]] || return 0;
   print "[INFO]  $(date '+%Y-%m-%d %H:%M:%S') - ${1}"; newline;
 }; alias log-info='log_info';
 
+#------------------------------------------------------------------------------#
+## Logging Utilities: Log Warnings
 function log_warn () {
   [[ -n ${1:-} ]] || return 0;
   print "[WARN]  $(date '+%Y-%m-%d %H:%M:%S') - ${1}" >&2; newline;
 }; alias log-warn='log_warn';
 
+#------------------------------------------------------------------------------#
+## Logging Utilities: Log Errors
 function log_error () {
   [[ -n ${1:-} ]] || return 0;
   print "[ERROR] $(date '+%Y-%m-%d %H:%M:%S') - ${1}" >&2; newline;
 }; alias log-error='log_error';
 
-# Exit script with error message and exit code
+#------------------------------------------------------------------------------#
+## Exit script with error message and exit code
 function exit_error () {
   local msg="${1:-Unspecified fatal error}";
   local code="${2:-1}";
@@ -67,7 +80,7 @@ function exit_error () {
 }; alias exit-error='exit_error';
 
 #------------------------------------------------------------------------------#
-
+## Package Installation: Detect Platform
 function detect_platform () {
     if [[ "$OSTYPE" == "darwin"* ]]; then echo "macos";
       elif [[ -f /etc/alpine-release ]]; then echo "alpine";
@@ -78,37 +91,43 @@ function detect_platform () {
     return 0;
 }; alias detect-platform='detect_platform';
 
-# function install_packages () {
-#     local os="$1";
-#     case "$os" in
-#       macos)  echo "[+] Detected macOS (requires Homebrew)";
-#               brew install jq gnu-sed coreutils moreutils grep;
-#       ;;
-#       debian) echo "[+] Detected Debian/Ubuntu";
-#               sudo apt-get update -y;
-#               sudo apt-get install -y jq sed grep coreutils findutils util-linux moreutils less;
-#       ;;
-#       rhel)   echo "[+] Detected RHEL/CentOS/Fedora";
-#               sudo yum install -y epel-release;
-#               sudo yum install -y jq sed grep coreutils findutils util-linux moreutils less;
-#       ;;
-#       alpine) echo "[+] Detected Alpine Linux";
-#               sudo apk update;
-#               sudo apk add jq sed grep coreutils findutils util-linux moreutils less;
-#       ;;
-#       *)  echo "[-] Unsupported OS type: $os";
-#           exit 1;
-#       ;;
-#     esac;
-#     echo "Dependencies installed for ${os}";
-#     return 0;
-# }; alias install-packages='install_packages';
+#------------------------------------------------------------------------------#
+## Package Installation: Install Packages
+function install_packages () {
+    local os="$1";
+    case "$os" in
+      macos)  echo "[+] Detected macOS (requires Homebrew)";
+              brew install jq gnu-sed coreutils moreutils grep;
+      ;;
+      debian) echo "[+] Detected Debian/Ubuntu";
+              sudo apt-get update -y;
+              sudo apt-get install -y jq sed grep coreutils findutils util-linux moreutils less;
+      ;;
+      rhel)   echo "[+] Detected RHEL/CentOS/Fedora";
+              sudo yum install -y epel-release;
+              sudo yum install -y jq sed grep coreutils findutils util-linux moreutils less;
+      ;;
+      alpine) echo "[+] Detected Alpine Linux";
+              sudo apk update;
+              sudo apk add jq sed grep coreutils findutils util-linux moreutils less;
+      ;;
+      *)  echo "[-] Unsupported OS type: $os";
+          exit 1;
+      ;;
+    esac;
+    echo "Dependencies installed for ${os}";
+    return 0;
+}; alias install-packages='install_packages';
 
+#------------------------------------------------------------------------------#
+## Package Installation: Installed
 function installed () {
   command -v "$1" &>/dev/null;
   return 0;
 };
 
+#------------------------------------------------------------------------------#
+## Package Installation: Install Missing
 function install_missing () {
     local os="$1";
     local pkg_cmd="";
@@ -117,7 +136,7 @@ function install_missing () {
       [sed]="sed"
       [grep]="grep"
       [find]="find"
-      [column]="moreutils"   # for Debian/Ubuntu
+      [column]="moreutils"  ## for Debian/Ubuntu
       [less]="less"
       [base64]="coreutils"
     );
@@ -138,7 +157,7 @@ function install_missing () {
 }; alias install-missing='install_missing';
 
 #------------------------------------------------------------------------------#
-
+## Displaying Built-In Help
 function display_help () {
     local script_name="${1}";
     local mode="${2}";
@@ -196,7 +215,7 @@ function display_help () {
 }; alias display-help='display_help_generic'
 
 #------------------------------------------------------------------------------#
-## Strip base config directory from path
+## Strips the base config path prefix from a full path to normalize output
 function relative_configpath () {
     local full_path="${1}";
     local prefix="${configs_dirpath%/}/";
@@ -210,7 +229,7 @@ function validate_address () {
     ## IP Address (CIDR-aware) regex:
     local ip_cidr_regex='^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})(/([0-9]{1,2}))?$';
     if [[ "${target_address}" =~ ${ip_cidr_regex} ]]; then
-            # Normalize each segment and validate
+            ## Normalize each segment and validate
             local -a segments=(
               "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "${BASH_REMATCH[3]}" "${BASH_REMATCH[4]}"
             );
@@ -234,8 +253,8 @@ function validate_address () {
               fi;
               segments[$i]="${segment}";
             done; local segments="${segments[*]}";
-            # Reconstruct normalized IP with CIDR (only if valid)
-            # local fixed_address="${segments[0]}.${segments[1]}.${segments[2]}.${segments[3]}";
+            ## Reconstruct normalized IP with CIDR (only if valid)
+            ## local fixed_address="${segments[0]}.${segments[1]}.${segments[2]}.${segments[3]}";
             local fixed_address="${segments// /.}";
             [[ -n "${cidr}" ]] && fixed_address+="/${cidr}";
             if [[ "${target_address}" != "${fixed_address}" ]]; then
@@ -269,11 +288,3 @@ function validate_address () {
 }; alias validate-address='validate_address';
 
 #------------------------------------------------------------------------------#
-## Function: wait_for_completion
-## Purpose: Wait for background jobs and flush I/O buffers to ensure data integrity
-function waitfor_completion () {
-    wait;       ## Wait for all background jobs to finish
-    sleep 0.5;  ## Allow I/O buffers to settle
-    sync;       ## Flush all in-memory buffers to disk
-    return 0;
-}; alias waitfor-completion='waitfor_completion';
