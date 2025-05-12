@@ -145,29 +145,15 @@ function process_blocks () {
 
     #### -----------------------------------------------------------------------
     ## Build and append object JSON structure
-    # obj_array+=("$(
-    #   jq -n \
-    #     --arg object "${object_val}" \
-    #     --argjson entry "${entry_out}" \
-    #     --arg desc "${desc_val}" \
-    #     --arg group "${group_val}" \
-    #     '{
-    #       object: $object,
-    #       entry: $entry,
-    #       description: ($desc | select(. != "" and . != "null") // false),
-    #       group: $group
-    #     }'
-    # )");
-
     obj_array+=("$(
       jq -n \
         --arg object "${object_val}" \
-        --arg entry "${entry_out}" \
+        --argjson entry "${entry_out}" \
         --arg desc "${desc_val}" \
         --arg group "${group_val}" \
         '{
           object: $object,
-          entry: ($entry | select(. != "" and . != "null" and . != "false") // false),
+          entry: $entry,
           description: ($desc | select(. != "" and . != "null") // false),
           group: $group
         }'
