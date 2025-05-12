@@ -6,6 +6,45 @@
 if [[ -n "${__TOOLS_CONFIGS_SOURCED:-}" ]]; then return 0; fi;
 readonly __TOOLS_CONFIGS_SOURCED=1;
 
+#### -----------------------------------------------------------------------
+## Function: serialize_datablocks
+## Purpose: Reads a config file, breaks it into 100-line chunks,
+##          serializes only those containing the target IP using a divisor
+## Input:
+##   $1 = target IP
+##   $2 = full config file path
+##   $3 = serialization divisor
+##   $4 = name of array variable (passed by name)
+## Output:
+##   Appends serialized blocks into provided array
+#### -----------------------------------------------------------------------
+
+function serialize_datablocks () {
+    local target_ip="${1}";
+    local input_file="${2}";
+    local divisor="${3}";
+    local -n out_array="${4}";
+    mapfile -t lines < <(
+      sed 's/!/\n/g' "${input_file}" | \
+      sed '/^[[:space:]]*$/d'
+    );
+    local total="${#lines[@]}";
+    local start=0 size=10;
+    while (( start < total )); do
+      chunk=( "${lines[@]:start:size}" );
+      (( ${#chunk[@]} == 0 )) && break;
+      block="$( printf "%s\n" "${chunk[@]}" )";
+      if grep -qF "${target_ip}" <<< "${block}"; then
+        serialized="$(
+          sed 's/^/'"${divisor}"'/' <<< "${block}"
+        )";
+        out_array+=( "${serialized}" );
+      fi;
+      (( start += size ));
+    done;
+    return 0;
+};
+
 #### ---------------------------------------------------------------------------
 ## Function: generate_objects
 
@@ -48,13 +87,26 @@ function generate_objects () {
           jq -s . <<< "${objects[*]}"
         )";
       fi;
-      configs+=("$(
-        jq -n --arg cfg "$(
-                      relative_configpath "${cfg_file}"
-                    )" \
-              --argjson objs "${objs_json}" \
-        '{ config: $cfg, objects: $objs }'
+
+      relative_cfg="$(
+        relative_configpath "${cfg_file}"
+      )";
+      site="${relative_cfg%%/*}";
+      device="${relative_cfg#*/}";
+      # configs+=("$(
+      #   jq -n --arg cfg "$(
+      #                 relative_configpath "${cfg_file}"
+      #               )" \
+      #         --argjson objs "${objs_json}" \
+      #   '{ config: $cfg, objects: $objs }'
+      # )");
+      configs+=("$(jq -n \
+        --arg site "${site}" \
+        --arg device "${device}" \
+        --argjson objs "${objs_json}" \
+        '{ config: { site: $site, device: $device }, objects: $objs }'
       )");
+
     done;
     ## Final output JSON structure
     local cfgs_json="[]";

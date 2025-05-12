@@ -1,17 +1,27 @@
 $ bash -x ./scripts/parse-listings.shell --verbose --debug --classify --logs ;
-
-  + set -euo pipefail
++ set -euo pipefail
 + export LC_ALL=C
 + LC_ALL=C
 ++ mktemp -d
-+ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.InAZzIrNhm
-+ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.InAZzIrNhm
++ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Pe88ZVm7c5
++ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Pe88ZVm7c5
 + trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
 + source ./scripts/tools-devops.shell
 ++ [[ -n '' ]]
-++ readonly __DEVOPS_TOOLS_SOURCED=1
-++ __DEVOPS_TOOLS_SOURCED=1
+++ readonly __TOOLS_DEVOPS_SOURCED=1
+++ __TOOLS_DEVOPS_SOURCED=1
 ++ [[ 5 -lt 4 ]]
+++ alias log-info=log_info
+++ alias log-warn=log_warn
+++ alias log-error=log_error
+++ alias error-message=error_message
+++ alias exit-error=exit_error
+++ alias detect-platform=detect_platform
+++ alias install-packages=install_packages
+++ alias install-missing=install_missing
+++ alias display-help=display_help_generic
+++ alias relative-configpath=relative_configpath
+++ alias validate-address=validate_address
 ++ export LC_ALL=C
 ++ LC_ALL=C
 ++ export 'nl=\n'
@@ -28,18 +38,18 @@ $ bash -x ./scripts/parse-listings.shell --verbose --debug --classify --logs ;
 ++ success_logsfile=.local/stats//success.jobs
 ++ export targets_logsfile=.local/stats//targets.jobs
 ++ targets_logsfile=.local/stats//targets.jobs
-++ alias error-message=error_message
-++ alias log-info=log_info
-++ alias log-warn=log_warn
-++ alias log-error=log_error
-++ alias exit-error=exit_error
-++ alias detect-platform=detect_platform
-++ alias install-packages=install_packages
-++ alias install-missing=install_missing
-++ alias display-help=display_help_generic
-++ alias relative-configpath=relative_configpath
-++ alias validate-address=validate_address
-+ source ./scripts/tools-listings.shell
++++ date +%s%N
++++ base64
++++ tr -dc a-zA-Z0-9
+++ export divisor=MTc0NzA1Nzk2MTI2ODI1NDAwMAo
+++ divisor=MTc0NzA1Nzk2MTI2ODI1NDAwMAo
+++ print 'DEBUG: divisor = '\''MTc0NzA1Nzk2MTI2ODI1NDAwMAo'\'''
+++ [[ -n DEBUG: divisor = 'MTc0NzA1Nzk2MTI2ODI1NDAwMAo' ]]
+++ echo -en 'DEBUG: divisor = '\''MTc0NzA1Nzk2MTI2ODI1NDAwMAo'\'''
+DEBUG: divisor = 'MTc0NzA1Nzk2MTI2ODI1NDAwMAo'+ source ./scripts/tools-listings.shell
+++ [[ -n '' ]]
+++ readonly __TOOLS_LISTINGS_SOURCED=1
+++ __TOOLS_LISTINGS_SOURCED=1
 ++ alias generate-configslist=generate_configslist
 ++ alias generate-csvoutput=generate_csvoutput
 ++ alias manage-configs=manage_configs
@@ -149,6 +159,9 @@ $ bash -x ./scripts/parse-listings.shell --verbose --debug --classify --logs ;
 + [[ -z true ]]
 + [[ -z true ]]
 + [[ '' == true ]]
+++ date '+%Y-%m-%d %H:%M:%S'
++ local 'start_time=2025-05-12 06:52:41'
++ SECONDS=0
 + [[ -z true ]]
 + [[ -z '' ]]
 + file_extensions=(cfg conf cnf)
@@ -508,15 +521,12 @@ Mapping IPs to config files (pre-scan phase)...+ newline
 ++ tr -d '\r'
 + ip_cleaned=10.0.0.1
 + target_file=targets/10.0.0.1.json
-+ job_pid=41127
++ job_pid=7131
 + job_pids+=("${job_pid}")
 + job_ip_map["$job_pid"]=10.0.0.1
-+ print '\n[INFO] Started IP: 10.0.0.1 (PID: 41127)'
-+ generate_configslist 10.0.0.1 targets/10.0.0.1.json
-+ local ip_addr=10.0.0.1
-+ local target_file=targets/10.0.0.1.json
-+ [[ -n \n[INFO] Started IP: 10.0.0.1 (PID: 41127) ]]
-+ echo -en '\n[INFO] Started IP: 10.0.0.1 (PID: 41127)'
++ print '\n[INFO] Started IP: 10.0.0.1 (PID: 7131)'
++ [[ -n \n[INFO] Started IP: 10.0.0.1 (PID: 7131) ]]
++ echo -en '\n[INFO] Started IP: 10.0.0.1 (PID: 7131)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -526,11 +536,16 @@ Mapping IPs to config files (pre-scan phase)...+ newline
 + (( i++ ))
 + (( i < count ))
 + for ip_addr in "${target_listing[@]}"
++ generate_configslist 10.0.0.1 targets/10.0.0.1.json
++ local ip_addr=10.0.0.1
++ local target_file=targets/10.0.0.1.json
 ++ grep -lF 10.0.0.1 configs/cisco/fw1.cfg configs/misc/switch.conf
 ++ print 10.0.1.2
 ++ [[ -n 10.0.1.2 ]]
 ++ echo -en 10.0.1.2
 ++ tr -d '\r'
++ ip_cleaned=10.0.1.2
++ target_file=targets/10.0.1.2.json
 + local 'matched_files=configs/cisco/fw1.cfg
 configs/misc/switch.conf'
 + [[ -n configs/cisco/fw1.cfg
@@ -538,17 +553,13 @@ configs/misc/switch.conf ]]
 + config_json='[]'
 + IFS=
 + read -r config_file
-+ ip_cleaned=10.0.1.2
-+ target_file=targets/10.0.1.2.json
-+ job_pid=41133
++ job_pid=7137
 + job_pids+=("${job_pid}")
 + job_ip_map["$job_pid"]=10.0.1.2
-+ print '\n[INFO] Started IP: 10.0.1.2 (PID: 41133)'
-+ generate_configslist 10.0.1.2 targets/10.0.1.2.json
-+ [[ -n \n[INFO] Started IP: 10.0.1.2 (PID: 41133) ]]
-+ echo -en '\n[INFO] Started IP: 10.0.1.2 (PID: 41133)'
-+ local ip_addr=10.0.1.2
-+ local target_file=targets/10.0.1.2.json
++ config_file=cisco/fw1.cfg
++ print '\n[INFO] Started IP: 10.0.1.2 (PID: 7137)'
++ [[ -n \n[INFO] Started IP: 10.0.1.2 (PID: 7137) ]]
++ echo -en '\n[INFO] Started IP: 10.0.1.2 (PID: 7137)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -558,35 +569,36 @@ configs/misc/switch.conf ]]
 + (( i++ ))
 + (( i < count ))
 + for ip_addr in "${target_listing[@]}"
-++ print configs/cisco/fw1.cfg
-++ [[ -n configs/cisco/fw1.cfg ]]
-++ echo -en configs/cisco/fw1.cfg
-++ sed 's|^configs/||'
++ generate_configslist 10.0.1.2 targets/10.0.1.2.json
++ local ip_addr=10.0.1.2
++ local target_file=targets/10.0.1.2.json
+++ wc -l
 ++ grep -lF 10.0.1.2 configs/cisco/fw1.cfg configs/misc/switch.conf
 ++ print 10.0.2.3
 ++ [[ -n 10.0.2.3 ]]
 ++ echo -en 10.0.2.3
 ++ tr -d '\r'
-+ config_file=cisco/fw1.cfg
-+ ip_cleaned=10.0.2.3
++ config_lines='      18'
 + local 'matched_files=configs/cisco/fw1.cfg
++ ip_cleaned=10.0.2.3
 configs/misc/switch.conf'
-+ [[ -n configs/cisco/fw1.cfg
-++ wc -l
-configs/misc/switch.conf ]]
 + target_file=targets/10.0.2.3.json
++ [[ -n configs/cisco/fw1.cfg
+configs/misc/switch.conf ]]
 + config_json='[]'
 + IFS=
 + read -r config_file
-+ job_pid=41143
-+ generate_configslist 10.0.2.3 targets/10.0.2.3.json
++ config_file=cisco/fw1.cfg
++ job_pid=7146
 + job_pids+=("${job_pid}")
++ job_ip_map["$job_pid"]=10.0.2.3
++ print '\n[INFO] Started IP: 10.0.2.3 (PID: 7146)'
++ [[ -n \n[INFO] Started IP: 10.0.2.3 (PID: 7146) ]]
++ generate_configslist 10.0.2.3 targets/10.0.2.3.json
+++ wc -l
++ echo -en '\n[INFO] Started IP: 10.0.2.3 (PID: 7146)'
 + local ip_addr=10.0.2.3
 + local target_file=targets/10.0.2.3.json
-+ job_ip_map["$job_pid"]=10.0.2.3
-+ print '\n[INFO] Started IP: 10.0.2.3 (PID: 41143)'
-+ [[ -n \n[INFO] Started IP: 10.0.2.3 (PID: 41143) ]]
-+ echo -en '\n[INFO] Started IP: 10.0.2.3 (PID: 41143)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -596,37 +608,40 @@ configs/misc/switch.conf ]]
 + (( i++ ))
 + (( i < count ))
 + for ip_addr in "${target_listing[@]}"
-++ print configs/cisco/fw1.cfg
-++ [[ -n configs/cisco/fw1.cfg ]]
-++ echo -en configs/cisco/fw1.cfg
-++ sed 's|^configs/||'
+++ grep -oFw 10.0.0.1 configs/cisco/fw1.cfg
+++ wc -l
 ++ grep -lF 10.0.2.3 configs/cisco/fw1.cfg configs/misc/switch.conf
+++ tr -d ' '
 ++ print 10.10.10.10
 ++ [[ -n 10.10.10.10 ]]
 ++ echo -en 10.10.10.10
 ++ tr -d '\r'
-+ config_lines='      18'
-+ config_file=cisco/fw1.cfg
-++ print '[]'
-++ [[ -n [] ]]
-++ echo -en '[]'
-++ jq --arg config cisco/fw1.cfg --argjson lines '      18' '. += [{"config": $config, "lines": $lines}]'
-++ wc -l
 ++ true
++ config_lines='      18'
 + local matched_files=
 + [[ -n '' ]]
 + return 0
++ match_count=2
++ site=cisco
++ device=fw1.cfg
 + ip_cleaned=10.10.10.10
 + target_file=targets/10.10.10.10.json
-+ job_pid=41158
+++ grep -oFw 10.0.1.2 configs/cisco/fw1.cfg
++ job_pid=7160
 + job_pids+=("${job_pid}")
+++ wc -l
+++ print '[]'
 + job_ip_map["$job_pid"]=10.10.10.10
-+ print '\n[INFO] Started IP: 10.10.10.10 (PID: 41158)'
-+ [[ -n \n[INFO] Started IP: 10.10.10.10 (PID: 41158) ]]
-+ echo -en '\n[INFO] Started IP: 10.10.10.10 (PID: 41158)'
+++ [[ -n [] ]]
 + generate_configslist 10.10.10.10 targets/10.10.10.10.json
++ print '\n[INFO] Started IP: 10.10.10.10 (PID: 7160)'
+++ echo -en '[]'
 + local ip_addr=10.10.10.10
 + local target_file=targets/10.10.10.10.json
+++ tr -d ' '
++ [[ -n \n[INFO] Started IP: 10.10.10.10 (PID: 7160) ]]
++ echo -en '\n[INFO] Started IP: 10.10.10.10 (PID: 7160)'
+++ jq --arg site cisco --arg device fw1.cfg --argjson lines '      18' --argjson count 2 '. += [{"config": {"site": $site, "device": $device}, "lines": $lines, "count": $count}]'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -641,38 +656,28 @@ configs/misc/switch.conf ]]
 ++ [[ -n 172.16.0.5 ]]
 ++ echo -en 172.16.0.5
 ++ tr -d '\r'
-+ config_lines='      18'
++ match_count=1
++ site=cisco
++ device=fw1.cfg
+++ true
 ++ print '[]'
 ++ [[ -n [] ]]
-++ echo -en '[]'
-+ config_json='[
-  {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
-  }
-]'
-+ IFS=
-+ read -r config_file
-++ jq --arg config cisco/fw1.cfg --argjson lines '      18' '. += [{"config": $config, "lines": $lines}]'
-++ true
 + ip_cleaned=172.16.0.5
+++ echo -en '[]'
 + target_file=targets/172.16.0.5.json
+++ jq --arg site cisco --arg device fw1.cfg --argjson lines '      18' --argjson count 1 '. += [{"config": {"site": $site, "device": $device}, "lines": $lines, "count": $count}]'
 + local matched_files=
 + [[ -n '' ]]
 + return 0
-+ job_pid=41168
++ job_pid=7173
 + job_pids+=("${job_pid}")
-+ job_ip_map["$job_pid"]=172.16.0.5
-++ print configs/misc/switch.conf
-++ [[ -n configs/misc/switch.conf ]]
-++ echo -en configs/misc/switch.conf
-+ print '\n[INFO] Started IP: 172.16.0.5 (PID: 41168)'
-++ sed 's|^configs/||'
 + generate_configslist 172.16.0.5 targets/172.16.0.5.json
-+ [[ -n \n[INFO] Started IP: 172.16.0.5 (PID: 41168) ]]
-+ echo -en '\n[INFO] Started IP: 172.16.0.5 (PID: 41168)'
++ job_ip_map["$job_pid"]=172.16.0.5
 + local ip_addr=172.16.0.5
 + local target_file=targets/172.16.0.5.json
++ print '\n[INFO] Started IP: 172.16.0.5 (PID: 7173)'
++ [[ -n \n[INFO] Started IP: 172.16.0.5 (PID: 7173) ]]
++ echo -en '\n[INFO] Started IP: 172.16.0.5 (PID: 7173)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -682,183 +687,185 @@ configs/misc/switch.conf ]]
 + (( i++ ))
 + (( i < count ))
 + for ip_addr in "${target_listing[@]}"
++ config_json='[
+  {
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 2
+  }
+]'
 ++ grep -lF 172.16.0.5 configs/cisco/fw1.cfg configs/misc/switch.conf
++ IFS=
++ read -r config_file
++ config_file=misc/switch.conf
+++ wc -l
 ++ print 172.16.1.6
 ++ [[ -n 172.16.1.6 ]]
 ++ echo -en 172.16.1.6
 ++ tr -d '\r'
-+ config_file=misc/switch.conf
-++ wc -l
 ++ true
++ local matched_files=
++ [[ -n '' ]]
++ return 0
++ ip_cleaned=172.16.1.6
++ target_file=targets/172.16.1.6.json
++ config_lines='      10'
 + config_json='[
   {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 1
   }
 ]'
 + IFS=
 + read -r config_file
-+ ip_cleaned=172.16.1.6
-+ local matched_files=
-+ [[ -n '' ]]
-+ target_file=targets/172.16.1.6.json
-+ return 0
-+ job_pid=41179
++ config_file=misc/switch.conf
++ job_pid=7181
 + job_pids+=("${job_pid}")
 + job_ip_map["$job_pid"]=172.16.1.6
-+ print '\n[INFO] Started IP: 172.16.1.6 (PID: 41179)'
-+ [[ -n \n[INFO] Started IP: 172.16.1.6 (PID: 41179) ]]
-+ echo -en '\n[INFO] Started IP: 172.16.1.6 (PID: 41179)'
-+ generate_configslist 172.16.1.6 targets/172.16.1.6.json
++ print '\n[INFO] Started IP: 172.16.1.6 (PID: 7181)'
++ [[ -n \n[INFO] Started IP: 172.16.1.6 (PID: 7181) ]]
++ echo -en '\n[INFO] Started IP: 172.16.1.6 (PID: 7181)'
 + newline
-+ local ip_addr=172.16.1.6
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
-+ local target_file=targets/172.16.1.6.json
 + echo
 
 + (( i++ ))
 + (( i < count ))
 + for ip_addr in "${target_listing[@]}"
-++ print configs/misc/switch.conf
-++ [[ -n configs/misc/switch.conf ]]
-++ sed 's|^configs/||'
-++ echo -en configs/misc/switch.conf
++ generate_configslist 172.16.1.6 targets/172.16.1.6.json
+++ wc -l
++ local ip_addr=172.16.1.6
++ local target_file=targets/172.16.1.6.json
+++ grep -oFw 10.0.0.1 configs/misc/switch.conf
+++ wc -l
+++ tr -d ' '
 ++ grep -lF 172.16.1.6 configs/cisco/fw1.cfg configs/misc/switch.conf
-+ config_lines='      10'
 ++ print 172.18.1.20
 ++ [[ -n 172.18.1.20 ]]
 ++ echo -en 172.18.1.20
 ++ tr -d '\r'
++ config_lines='      10'
++ match_count=1
++ site=misc
++ device=switch.conf
++ ip_cleaned=172.18.1.20
++ target_file=targets/172.18.1.20.json
+++ true
++ job_pid=7196
++ job_pids+=("${job_pid}")
++ job_ip_map["$job_pid"]=172.18.1.20
+++ grep -oFw 10.0.1.2 configs/misc/switch.conf
++ print '\n[INFO] Started IP: 172.18.1.20 (PID: 7196)'
++ local matched_files=
++ [[ -n '' ]]
++ return 0
++ generate_configslist 172.18.1.20 targets/172.18.1.20.json
+++ wc -l
++ local ip_addr=172.18.1.20
++ local target_file=targets/172.18.1.20.json
++ [[ -n \n[INFO] Started IP: 172.18.1.20 (PID: 7196) ]]
++ echo -en '\n[INFO] Started IP: 172.18.1.20 (PID: 7196)'
+++ tr -d ' '
 ++ print '[
   {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 2
   }
 ]'
++ newline
 ++ [[ -n [
   {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 2
   }
 ] ]]
 ++ echo -en '[
   {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 2
   }
 ]'
-+ config_file=misc/switch.conf
-++ jq --arg config misc/switch.conf --argjson lines '      10' '. += [{"config": $config, "lines": $lines}]'
-++ wc -l
-++ true
-+ ip_cleaned=172.18.1.20
-+ target_file=targets/172.18.1.20.json
-+ local matched_files=
-+ [[ -n '' ]]
-+ return 0
-+ job_pid=41192
-+ job_pids+=("${job_pid}")
-+ job_ip_map["$job_pid"]=172.18.1.20
-+ print '\n[INFO] Started IP: 172.18.1.20 (PID: 41192)'
-+ [[ -n \n[INFO] Started IP: 172.18.1.20 (PID: 41192) ]]
-+ echo -en '\n[INFO] Started IP: 172.18.1.20 (PID: 41192)'
-+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
-+ generate_configslist 172.18.1.20 targets/172.18.1.20.json
 + echo
 
 + (( i++ ))
 + (( i < count ))
 + for ip_addr in "${target_listing[@]}"
-+ local ip_addr=172.18.1.20
-+ local target_file=targets/172.18.1.20.json
+++ jq --arg site misc --arg device switch.conf --argjson lines '      10' --argjson count 1 '. += [{"config": {"site": $site, "device": $device}, "lines": $lines, "count": $count}]'
 ++ grep -lF 172.18.1.20 configs/cisco/fw1.cfg configs/misc/switch.conf
 ++ print 172.31.255.254
 ++ [[ -n 172.31.255.254 ]]
 ++ echo -en 172.31.255.254
 ++ tr -d '\r'
-+ config_lines='      10'
++ match_count=1
++ site=misc
++ device=switch.conf
+++ true
 ++ print '[
   {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 1
   }
 ]'
 ++ [[ -n [
   {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 1
   }
 ] ]]
++ local matched_files=
 ++ echo -en '[
   {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 1
   }
 ]'
-++ jq --arg config misc/switch.conf --argjson lines '      10' '. += [{"config": $config, "lines": $lines}]'
-+ config_json='[
-  {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
-  },
-  {
-    "config": "misc/switch.conf",
-    "lines": 10
-  }
-]'
-+ IFS=
-+ read -r config_file
-++ true
-+ ip_cleaned=172.31.255.254
-+ target_file=targets/172.31.255.254.json
-+ local matched_files=
+++ jq --arg site misc --arg device switch.conf --argjson lines '      10' --argjson count 1 '. += [{"config": {"site": $site, "device": $device}, "lines": $lines, "count": $count}]'
 + [[ -n '' ]]
 + return 0
-++ print '[
-  {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
-  },
-  {
-    "config": "misc/switch.conf",
-    "lines": 10
-  }
-]'
-+ job_pid=41204
++ ip_cleaned=172.31.255.254
++ target_file=targets/172.31.255.254.json
++ job_pid=7209
 + job_pids+=("${job_pid}")
-++ [[ -n [
-  {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
-  },
-  {
-    "config": "misc/switch.conf",
-    "lines": 10
-  }
-] ]]
-++ echo -en '[
-  {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
-  },
-  {
-    "config": "misc/switch.conf",
-    "lines": 10
-  }
-]'
-++ jq '{configs: .}'
 + job_ip_map["$job_pid"]=172.31.255.254
-+ print '\n[INFO] Started IP: 172.31.255.254 (PID: 41204)'
-+ generate_configslist 172.31.255.254 targets/172.31.255.254.json
-+ [[ -n \n[INFO] Started IP: 172.31.255.254 (PID: 41204) ]]
-+ echo -en '\n[INFO] Started IP: 172.31.255.254 (PID: 41204)'
-+ local ip_addr=172.31.255.254
-+ local target_file=targets/172.31.255.254.json
++ print '\n[INFO] Started IP: 172.31.255.254 (PID: 7209)'
++ [[ -n \n[INFO] Started IP: 172.31.255.254 (PID: 7209) ]]
++ echo -en '\n[INFO] Started IP: 172.31.255.254 (PID: 7209)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -867,82 +874,126 @@ configs/misc/switch.conf ]]
 
 + (( i++ ))
 + (( i < count ))
++ generate_configslist 172.31.255.254 targets/172.31.255.254.json
 + for ip_addr in "${target_listing[@]}"
-++ grep -lF 172.31.255.254 configs/cisco/fw1.cfg configs/misc/switch.conf
-++ print 192.0.2.50
-++ [[ -n 192.0.2.50 ]]
-++ echo -en 192.0.2.50
-++ tr -d '\r'
++ local ip_addr=172.31.255.254
++ local target_file=targets/172.31.255.254.json
 + config_json='[
   {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 2
   },
   {
-    "config": "misc/switch.conf",
-    "lines": 10
+    "config": {
+      "site": "misc",
+      "device": "switch.conf"
+    },
+    "lines": 10,
+    "count": 1
   }
 ]'
 + IFS=
 + read -r config_file
-+ local matched_files=configs/misc/switch.conf
-+ ip_cleaned=192.0.2.50
-+ [[ -n configs/misc/switch.conf ]]
-+ config_json='[]'
-+ target_file=targets/192.0.2.50.json
-+ IFS=
-+ read -r config_file
+++ grep -lF 172.31.255.254 configs/cisco/fw1.cfg configs/misc/switch.conf
+++ print 192.0.2.50
+++ [[ -n 192.0.2.50 ]]
+++ tr -d '\r'
+++ echo -en 192.0.2.50
 ++ print '[
   {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 2
   },
   {
-    "config": "misc/switch.conf",
-    "lines": 10
+    "config": {
+      "site": "misc",
+      "device": "switch.conf"
+    },
+    "lines": 10,
+    "count": 1
   }
 ]'
 ++ [[ -n [
   {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 2
   },
   {
-    "config": "misc/switch.conf",
-    "lines": 10
+    "config": {
+      "site": "misc",
+      "device": "switch.conf"
+    },
+    "lines": 10,
+    "count": 1
   }
 ] ]]
 ++ echo -en '[
   {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 2
   },
   {
-    "config": "misc/switch.conf",
-    "lines": 10
+    "config": {
+      "site": "misc",
+      "device": "switch.conf"
+    },
+    "lines": 10,
+    "count": 1
   }
 ]'
-+ final_json='{
-  "configs": [
-    {
-      "config": "cisco/fw1.cfg",
-      "lines": 18
-    },
-    {
-      "config": "misc/switch.conf",
-      "lines": 10
-    }
-  ]
-}'
-+ jq -r
 ++ jq '{configs: .}'
-+ job_pid=41212
++ local matched_files=configs/misc/switch.conf
++ [[ -n configs/misc/switch.conf ]]
++ config_json='[]'
++ IFS=
++ read -r config_file
++ config_json='[
+  {
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 1
+  },
+  {
+    "config": {
+      "site": "misc",
+      "device": "switch.conf"
+    },
++ ip_cleaned=192.0.2.50
+    "lines": 10,
+    "count": 1
+  }
+]'
++ config_file=misc/switch.conf
++ target_file=targets/192.0.2.50.json
++ IFS=
++ read -r config_file
++ job_pid=7218
 + job_pids+=("${job_pid}")
 + job_ip_map["$job_pid"]=192.0.2.50
-+ print '\n[INFO] Started IP: 192.0.2.50 (PID: 41212)'
++ print '\n[INFO] Started IP: 192.0.2.50 (PID: 7218)'
+++ wc -l
 + generate_configslist 192.0.2.50 targets/192.0.2.50.json
-+ [[ -n \n[INFO] Started IP: 192.0.2.50 (PID: 41212) ]]
-+ echo -en '\n[INFO] Started IP: 192.0.2.50 (PID: 41212)'
++ [[ -n \n[INFO] Started IP: 192.0.2.50 (PID: 7218) ]]
++ echo -en '\n[INFO] Started IP: 192.0.2.50 (PID: 7218)'
 + local ip_addr=192.0.2.50
 + local target_file=targets/192.0.2.50.json
 + newline
@@ -954,45 +1005,104 @@ configs/misc/switch.conf ]]
 + (( i++ ))
 + (( i < count ))
 + for ip_addr in "${target_listing[@]}"
-++ print configs/misc/switch.conf
-++ [[ -n configs/misc/switch.conf ]]
-++ echo -en configs/misc/switch.conf
-++ sed 's|^configs/||'
+++ print '[
+  {
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 1
+  },
+  {
+    "config": {
+      "site": "misc",
+      "device": "switch.conf"
+    },
+    "lines": 10,
+    "count": 1
+  }
+]'
+++ [[ -n [
+  {
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 1
+  },
+  {
+    "config": {
+      "site": "misc",
+      "device": "switch.conf"
+    },
+    "lines": 10,
+    "count": 1
+  }
+] ]]
+++ echo -en '[
+  {
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 1
+++ jq '{configs: .}'
+  },
+  {
+    "config": {
+      "site": "misc",
+      "device": "switch.conf"
+    },
+    "lines": 10,
+    "count": 1
+  }
+]'
 ++ grep -lF 192.0.2.50 configs/cisco/fw1.cfg configs/misc/switch.conf
 ++ print 192.168.1.10
 ++ [[ -n 192.168.1.10 ]]
 ++ echo -en 192.168.1.10
 ++ tr -d '\r'
-+ config_file=misc/switch.conf
-++ wc -l
-++ true
-+ local matched_files=
-+ ip_cleaned=192.168.1.10
-+ [[ -n '' ]]
-+ return 0
-+ target_file=targets/192.168.1.10.json
-+ job_pid=41225
 + final_json='{
   "configs": [
     {
-      "config": "cisco/fw1.cfg",
-      "lines": 18
+      "config": {
+        "site": "cisco",
+        "device": "fw1.cfg"
+      },
+      "lines": 18,
+      "count": 2
     },
     {
-      "config": "misc/switch.conf",
-      "lines": 10
+      "config": {
+        "site": "misc",
+        "device": "switch.conf"
+      },
+      "lines": 10,
+      "count": 1
     }
   ]
 }'
 + jq -r
++ config_lines='      10'
+++ true
++ local matched_files=
++ [[ -n '' ]]
++ return 0
+++ grep -oFw 172.31.255.254 configs/misc/switch.conf
++ ip_cleaned=192.168.1.10
++ target_file=targets/192.168.1.10.json
+++ wc -l
+++ tr -d ' '
++ job_pid=7235
 + job_pids+=("${job_pid}")
 + job_ip_map["$job_pid"]=192.168.1.10
-+ print '\n[INFO] Started IP: 192.168.1.10 (PID: 41225)'
-+ [[ -n \n[INFO] Started IP: 192.168.1.10 (PID: 41225) ]]
-+ echo -en '\n[INFO] Started IP: 192.168.1.10 (PID: 41225)'
++ print '\n[INFO] Started IP: 192.168.1.10 (PID: 7235)'
++ [[ -n \n[INFO] Started IP: 192.168.1.10 (PID: 7235) ]]
++ echo -en '\n[INFO] Started IP: 192.168.1.10 (PID: 7235)'
 + generate_configslist 192.168.1.10 targets/192.168.1.10.json
-+ local ip_addr=192.168.1.10
-+ local target_file=targets/192.168.1.10.json
 + newline
 + local count=1
 + (( i = 0 ))
@@ -1001,35 +1111,64 @@ configs/misc/switch.conf ]]
 
 + (( i++ ))
 + (( i < count ))
++ local ip_addr=192.168.1.10
 + for ip_addr in "${target_listing[@]}"
-+ print '\n[INFO] Generated JSON for IP: 10.0.0.1 at targets/10.0.0.1.json'
-+ [[ -n \n[INFO] Generated JSON for IP: 10.0.0.1 at targets/10.0.0.1.json ]]
-+ echo -en '\n[INFO] Generated JSON for IP: 10.0.0.1 at targets/10.0.0.1.json'
-+ return 0
++ local target_file=targets/192.168.1.10.json
++ final_json='{
+  "configs": [
+    {
+      "config": {
+        "site": "cisco",
+        "device": "fw1.cfg"
+      },
+      "lines": 18,
+      "count": 1
+    },
+    {
+      "config": {
+        "site": "misc",
+        "device": "switch.conf"
+      },
+      "lines": 10,
+      "count": 1
+    }
+  ]
+}'
 ++ grep -lF 192.168.1.10 configs/cisco/fw1.cfg configs/misc/switch.conf
++ jq -r
 ++ print 192.168.1.11
 ++ [[ -n 192.168.1.11 ]]
 ++ echo -en 192.168.1.11
 ++ tr -d '\r'
-+ config_lines='      10'
++ match_count=1
++ site=misc
++ device=switch.conf
++ print '\n[INFO] Generated JSON for IP: 10.0.0.1 at targets/10.0.0.1.json'
++ [[ -n \n[INFO] Generated JSON for IP: 10.0.0.1 at targets/10.0.0.1.json ]]
++ echo -en '\n[INFO] Generated JSON for IP: 10.0.0.1 at targets/10.0.0.1.json'
++ return 0
 ++ print '[]'
 ++ [[ -n [] ]]
 ++ echo -en '[]'
-++ jq --arg config misc/switch.conf --argjson lines '      10' '. += [{"config": $config, "lines": $lines}]'
+++ jq --arg site misc --arg device switch.conf --argjson lines '      10' --argjson count 1 '. += [{"config": {"site": $site, "device": $device}, "lines": $lines, "count": $count}]'
 + local matched_files=configs/cisco/fw1.cfg
 + [[ -n configs/cisco/fw1.cfg ]]
 + config_json='[]'
 + IFS=
 + read -r config_file
++ config_file=cisco/fw1.cfg
 + ip_cleaned=192.168.1.11
 + target_file=targets/192.168.1.11.json
-+ job_pid=41236
+++ wc -l
++ job_pid=7246
 + job_pids+=("${job_pid}")
 + job_ip_map["$job_pid"]=192.168.1.11
-+ print '\n[INFO] Started IP: 192.168.1.11 (PID: 41236)'
-+ [[ -n \n[INFO] Started IP: 192.168.1.11 (PID: 41236) ]]
-+ echo -en '\n[INFO] Started IP: 192.168.1.11 (PID: 41236)'
++ print '\n[INFO] Started IP: 192.168.1.11 (PID: 7246)'
++ [[ -n \n[INFO] Started IP: 192.168.1.11 (PID: 7246) ]]
++ echo -en '\n[INFO] Started IP: 192.168.1.11 (PID: 7246)'
 + generate_configslist 192.168.1.11 targets/192.168.1.11.json
++ local ip_addr=192.168.1.11
++ local target_file=targets/192.168.1.11.json
 + newline
 + local count=1
 + (( i = 0 ))
@@ -1038,98 +1177,127 @@ configs/misc/switch.conf ]]
 
 + (( i++ ))
 + (( i < count ))
-+ print '\n[INFO] Generated JSON for IP: 10.0.1.2 at targets/10.0.1.2.json'
 + for ip_addr in "${target_listing[@]}"
-+ local ip_addr=192.168.1.11
-+ local target_file=targets/192.168.1.11.json
-++ print configs/cisco/fw1.cfg
++ print '\n[INFO] Generated JSON for IP: 10.0.1.2 at targets/10.0.1.2.json'
+++ grep -lF 192.168.1.11 configs/cisco/fw1.cfg configs/misc/switch.conf
 + [[ -n \n[INFO] Generated JSON for IP: 10.0.1.2 at targets/10.0.1.2.json ]]
 + echo -en '\n[INFO] Generated JSON for IP: 10.0.1.2 at targets/10.0.1.2.json'
 + return 0
-++ [[ -n configs/cisco/fw1.cfg ]]
-++ echo -en configs/cisco/fw1.cfg
-++ sed 's|^configs/||'
-++ grep -lF 192.168.1.11 configs/cisco/fw1.cfg configs/misc/switch.conf
 ++ print 192.168.2.12
 ++ [[ -n 192.168.2.12 ]]
 ++ echo -en 192.168.2.12
 ++ tr -d '\r'
-+ config_file=cisco/fw1.cfg
++ config_lines='      18'
 + config_json='[
   {
-    "config": "misc/switch.conf",
-    "lines": 10
+    "config": {
+      "site": "misc",
+      "device": "switch.conf"
+    },
+    "lines": 10,
+    "count": 1
   }
 ]'
 + IFS=
 + read -r config_file
+++ grep -oFw 192.168.1.10 configs/cisco/fw1.cfg
 ++ wc -l
 ++ true
+++ tr -d ' '
 + local matched_files=
-+ ip_cleaned=192.168.2.12
-+ [[ -n '' ]]
-+ return 0
-+ target_file=targets/192.168.2.12.json
 ++ print '[
   {
-    "config": "misc/switch.conf",
-    "lines": 10
+    "config": {
+      "site": "misc",
+      "device": "switch.conf"
+    },
+    "lines": 10,
+    "count": 1
   }
 ]'
-+ job_pid=41248
-+ job_pids+=("${job_pid}")
-+ job_ip_map["$job_pid"]=192.168.2.12
++ [[ -n '' ]]
++ return 0
++ ip_cleaned=192.168.2.12
 ++ [[ -n [
   {
-    "config": "misc/switch.conf",
-    "lines": 10
+    "config": {
+      "site": "misc",
+      "device": "switch.conf"
+    },
+    "lines": 10,
+    "count": 1
   }
 ] ]]
-+ print '\n[INFO] Started IP: 192.168.2.12 (PID: 41248)'
 ++ echo -en '[
   {
-    "config": "misc/switch.conf",
-    "lines": 10
+    "config": {
+      "site": "misc",
+      "device": "switch.conf"
+    },
+    "lines": 10,
+    "count": 1
   }
 ]'
++ target_file=targets/192.168.2.12.json
 ++ jq '{configs: .}'
-+ [[ -n \n[INFO] Started IP: 192.168.2.12 (PID: 41248) ]]
-+ echo -en '\n[INFO] Started IP: 192.168.2.12 (PID: 41248)'
++ job_pid=7260
++ job_pids+=("${job_pid}")
++ job_ip_map["$job_pid"]=192.168.2.12
++ print '\n[INFO] Started IP: 192.168.2.12 (PID: 7260)'
++ [[ -n \n[INFO] Started IP: 192.168.2.12 (PID: 7260) ]]
++ echo -en '\n[INFO] Started IP: 192.168.2.12 (PID: 7260)'
 + generate_configslist 192.168.2.12 targets/192.168.2.12.json
++ local ip_addr=192.168.2.12
 + newline
++ local target_file=targets/192.168.2.12.json
 + local count=1
 + (( i = 0 ))
-+ local ip_addr=192.168.2.12
 + (( i < count ))
-+ local target_file=targets/192.168.2.12.json
 + echo
 
 + (( i++ ))
 + (( i < count ))
 + for ip_addr in "${target_listing[@]}"
 ++ grep -lF 192.168.2.12 configs/cisco/fw1.cfg configs/misc/switch.conf
++ match_count=1
++ site=cisco
++ device=fw1.cfg
 ++ print 192.168.100.100
 ++ [[ -n 192.168.100.100 ]]
 ++ echo -en 192.168.100.100
 ++ tr -d '\r'
-+ config_lines='      18'
 ++ print '[]'
 ++ [[ -n [] ]]
 ++ echo -en '[]'
-++ jq --arg config cisco/fw1.cfg --argjson lines '      18' '. += [{"config": $config, "lines": $lines}]'
+++ jq --arg site cisco --arg device fw1.cfg --argjson lines '      18' --argjson count 1 '. += [{"config": {"site": $site, "device": $device}, "lines": $lines, "count": $count}]'
 ++ true
 + ip_cleaned=192.168.100.100
 + target_file=targets/192.168.100.100.json
 + local matched_files=
 + [[ -n '' ]]
 + return 0
-+ job_pid=41258
++ final_json='{
+  "configs": [
+    {
+      "config": {
+        "site": "misc",
+        "device": "switch.conf"
+      },
+      "lines": 10,
+      "count": 1
+    }
+  ]
+}'
++ jq -r
++ job_pid=7269
 + job_pids+=("${job_pid}")
 + job_ip_map["$job_pid"]=192.168.100.100
-+ print '\n[INFO] Started IP: 192.168.100.100 (PID: 41258)'
-+ [[ -n \n[INFO] Started IP: 192.168.100.100 (PID: 41258) ]]
-+ echo -en '\n[INFO] Started IP: 192.168.100.100 (PID: 41258)'
 + generate_configslist 192.168.100.100 targets/192.168.100.100.json
++ print '\n[INFO] Started IP: 192.168.100.100 (PID: 7269)'
++ local ip_addr=192.168.100.100
++ local target_file=targets/192.168.100.100.json
++ [[ -n \n[INFO] Started IP: 192.168.100.100 (PID: 7269) ]]
++ echo -en '\n[INFO] Started IP: 192.168.100.100 (PID: 7269)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -1138,18 +1306,7 @@ configs/misc/switch.conf ]]
 
 + (( i++ ))
 + (( i < count ))
-+ local ip_addr=192.168.100.100
 + for ip_addr in "${target_listing[@]}"
-+ local target_file=targets/192.168.100.100.json
-+ final_json='{
-  "configs": [
-    {
-      "config": "misc/switch.conf",
-      "lines": 10
-    }
-  ]
-}'
-+ jq -r
 ++ grep -lF 192.168.100.100 configs/cisco/fw1.cfg configs/misc/switch.conf
 ++ print 198.51.100.75
 ++ [[ -n 198.51.100.75 ]]
@@ -1157,46 +1314,67 @@ configs/misc/switch.conf ]]
 ++ tr -d '\r'
 + config_json='[
   {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 1
   }
 ]'
 + IFS=
 + read -r config_file
 ++ true
-+ ip_cleaned=198.51.100.75
-+ target_file=targets/198.51.100.75.json
 + local matched_files=
 + [[ -n '' ]]
 + return 0
-+ job_pid=41266
-+ job_pids+=("${job_pid}")
-+ job_ip_map["$job_pid"]=198.51.100.75
-+ print '\n[INFO] Started IP: 198.51.100.75 (PID: 41266)'
-+ generate_configslist 198.51.100.75 targets/198.51.100.75.json
 ++ print '[
   {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 1
   }
 ]'
-+ local ip_addr=198.51.100.75
-+ [[ -n \n[INFO] Started IP: 198.51.100.75 (PID: 41266) ]]
-+ local target_file=targets/198.51.100.75.json
-+ echo -en '\n[INFO] Started IP: 198.51.100.75 (PID: 41266)'
 ++ [[ -n [
   {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 1
   }
 ] ]]
 ++ echo -en '[
   {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 1
   }
 ]'
+++ jq '{configs: .}'
++ ip_cleaned=198.51.100.75
++ target_file=targets/198.51.100.75.json
++ print '\n[INFO] Generated JSON for IP: 172.31.255.254 at targets/172.31.255.254.json'
++ job_pid=7279
++ job_pids+=("${job_pid}")
++ [[ -n \n[INFO] Generated JSON for IP: 172.31.255.254 at targets/172.31.255.254.json ]]
++ echo -en '\n[INFO] Generated JSON for IP: 172.31.255.254 at targets/172.31.255.254.json'
++ job_ip_map["$job_pid"]=198.51.100.75
++ print '\n[INFO] Started IP: 198.51.100.75 (PID: 7279)'
++ return 0
++ [[ -n \n[INFO] Started IP: 198.51.100.75 (PID: 7279) ]]
++ echo -en '\n[INFO] Started IP: 198.51.100.75 (PID: 7279)'
++ generate_configslist 198.51.100.75 targets/198.51.100.75.json
 + newline
++ local ip_addr=198.51.100.75
++ local target_file=targets/198.51.100.75.json
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -1204,57 +1382,56 @@ configs/misc/switch.conf ]]
 
 + (( i++ ))
 + (( i < count ))
-++ jq '{configs: .}'
 + for ip_addr in "${target_listing[@]}"
-+ print '\n[INFO] Generated JSON for IP: 172.31.255.254 at targets/172.31.255.254.json'
-+ [[ -n \n[INFO] Generated JSON for IP: 172.31.255.254 at targets/172.31.255.254.json ]]
-+ echo -en '\n[INFO] Generated JSON for IP: 172.31.255.254 at targets/172.31.255.254.json'
 ++ grep -lF 198.51.100.75 configs/cisco/fw1.cfg configs/misc/switch.conf
-+ return 0
 ++ print 203.0.113.25
 ++ [[ -n 203.0.113.25 ]]
 ++ echo -en 203.0.113.25
 ++ tr -d '\r'
 ++ true
 + local matched_files=
-+ [[ -n '' ]]
-+ return 0
-+ ip_cleaned=203.0.113.25
-+ target_file=targets/203.0.113.25.json
-+ job_pid=41274
-+ job_pids+=("${job_pid}")
-+ job_ip_map["$job_pid"]=203.0.113.25
-+ print '\n[INFO] Started IP: 203.0.113.25 (PID: 41274)'
-+ [[ -n \n[INFO] Started IP: 203.0.113.25 (PID: 41274) ]]
-+ echo -en '\n[INFO] Started IP: 203.0.113.25 (PID: 41274)'
-+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-+ ((  15 > 0  ))
-+ valid_job_pids=()
-+ for pid in "${job_pids[@]}"
-+ kill -0 41127
-+ generate_configslist 203.0.113.25 targets/203.0.113.25.json
-+ ip_address=10.0.0.1
-+ local ip_addr=203.0.113.25
-+ local target_file=targets/203.0.113.25.json
-+ print '\n[INFO] Completed IP: 10.0.0.1 (PID: 41127)'
 + final_json='{
   "configs": [
     {
-      "config": "cisco/fw1.cfg",
-      "lines": 18
+      "config": {
+        "site": "cisco",
+        "device": "fw1.cfg"
+      },
+      "lines": 18,
++ ip_cleaned=203.0.113.25
+      "count": 1
++ [[ -n '' ]]
     }
   ]
 }'
++ return 0
 + jq -r
-+ [[ -n \n[INFO] Completed IP: 10.0.0.1 (PID: 41127) ]]
-+ echo -en '\n[INFO] Completed IP: 10.0.0.1 (PID: 41127)'
++ target_file=targets/203.0.113.25.json
++ job_pid=7286
++ job_pids+=("${job_pid}")
++ job_ip_map["$job_pid"]=203.0.113.25
++ print '\n[INFO] Started IP: 203.0.113.25 (PID: 7286)'
++ [[ -n \n[INFO] Started IP: 203.0.113.25 (PID: 7286) ]]
++ echo -en '\n[INFO] Started IP: 203.0.113.25 (PID: 7286)'
++ generate_configslist 203.0.113.25 targets/203.0.113.25.json
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
++ local ip_addr=203.0.113.25
+
++ (( i++ ))
++ (( i < count ))
++ local target_file=targets/203.0.113.25.json
++ ((  15 > 0  ))
++ valid_job_pids=()
++ for pid in "${job_pids[@]}"
++ kill -0 7131
++ ip_address=10.0.0.1
++ print '\n[INFO] Completed IP: 10.0.0.1 (PID: 7131)'
++ [[ -n \n[INFO] Completed IP: 10.0.0.1 (PID: 7131) ]]
++ echo -en '\n[INFO] Completed IP: 10.0.0.1 (PID: 7131)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -1264,26 +1441,26 @@ configs/misc/switch.conf ]]
 + (( i++ ))
 + (( i < count ))
 + for pid in "${job_pids[@]}"
-+ kill -0 41133
++ kill -0 7137
 + ip_address=10.0.1.2
-+ print '\n[INFO] Completed IP: 10.0.1.2 (PID: 41133)'
-+ [[ -n \n[INFO] Completed IP: 10.0.1.2 (PID: 41133) ]]
-+ echo -en '\n[INFO] Completed IP: 10.0.1.2 (PID: 41133)'
++ print '\n[INFO] Completed IP: 10.0.1.2 (PID: 7137)'
++ [[ -n \n[INFO] Completed IP: 10.0.1.2 (PID: 7137) ]]
++ echo -en '\n[INFO] Completed IP: 10.0.1.2 (PID: 7137)'
 + newline
 + local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-+ for pid in "${job_pids[@]}"
-+ kill -0 41143
 ++ grep -lF 203.0.113.25 configs/cisco/fw1.cfg configs/misc/switch.conf
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ for pid in "${job_pids[@]}"
++ kill -0 7146
 + ip_address=10.0.2.3
-+ print '\n[INFO] Completed IP: 10.0.2.3 (PID: 41143)'
-+ [[ -n \n[INFO] Completed IP: 10.0.2.3 (PID: 41143) ]]
-+ echo -en '\n[INFO] Completed IP: 10.0.2.3 (PID: 41143)'
++ print '\n[INFO] Completed IP: 10.0.2.3 (PID: 7146)'
++ [[ -n \n[INFO] Completed IP: 10.0.2.3 (PID: 7146) ]]
++ echo -en '\n[INFO] Completed IP: 10.0.2.3 (PID: 7146)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -1293,11 +1470,11 @@ configs/misc/switch.conf ]]
 + (( i++ ))
 + (( i < count ))
 + for pid in "${job_pids[@]}"
-+ kill -0 41158
++ kill -0 7160
 + ip_address=10.10.10.10
-+ print '\n[INFO] Completed IP: 10.10.10.10 (PID: 41158)'
-+ [[ -n \n[INFO] Completed IP: 10.10.10.10 (PID: 41158) ]]
-+ echo -en '\n[INFO] Completed IP: 10.10.10.10 (PID: 41158)'
++ print '\n[INFO] Completed IP: 10.10.10.10 (PID: 7160)'
++ [[ -n \n[INFO] Completed IP: 10.10.10.10 (PID: 7160) ]]
++ echo -en '\n[INFO] Completed IP: 10.10.10.10 (PID: 7160)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -1307,11 +1484,11 @@ configs/misc/switch.conf ]]
 + (( i++ ))
 + (( i < count ))
 + for pid in "${job_pids[@]}"
-+ kill -0 41168
++ kill -0 7173
 + ip_address=172.16.0.5
-+ print '\n[INFO] Completed IP: 172.16.0.5 (PID: 41168)'
-+ [[ -n \n[INFO] Completed IP: 172.16.0.5 (PID: 41168) ]]
-+ echo -en '\n[INFO] Completed IP: 172.16.0.5 (PID: 41168)'
++ print '\n[INFO] Completed IP: 172.16.0.5 (PID: 7173)'
++ [[ -n \n[INFO] Completed IP: 172.16.0.5 (PID: 7173) ]]
++ echo -en '\n[INFO] Completed IP: 172.16.0.5 (PID: 7173)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -1321,11 +1498,11 @@ configs/misc/switch.conf ]]
 + (( i++ ))
 + (( i < count ))
 + for pid in "${job_pids[@]}"
-+ kill -0 41179
++ kill -0 7181
 + ip_address=172.16.1.6
-+ print '\n[INFO] Completed IP: 172.16.1.6 (PID: 41179)'
-+ [[ -n \n[INFO] Completed IP: 172.16.1.6 (PID: 41179) ]]
-+ echo -en '\n[INFO] Completed IP: 172.16.1.6 (PID: 41179)'
++ print '\n[INFO] Completed IP: 172.16.1.6 (PID: 7181)'
++ [[ -n \n[INFO] Completed IP: 172.16.1.6 (PID: 7181) ]]
++ echo -en '\n[INFO] Completed IP: 172.16.1.6 (PID: 7181)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -1335,11 +1512,11 @@ configs/misc/switch.conf ]]
 + (( i++ ))
 + (( i < count ))
 + for pid in "${job_pids[@]}"
-+ kill -0 41192
++ kill -0 7196
 + ip_address=172.18.1.20
-+ print '\n[INFO] Completed IP: 172.18.1.20 (PID: 41192)'
-+ [[ -n \n[INFO] Completed IP: 172.18.1.20 (PID: 41192) ]]
-+ echo -en '\n[INFO] Completed IP: 172.18.1.20 (PID: 41192)'
++ print '\n[INFO] Completed IP: 172.18.1.20 (PID: 7196)'
++ [[ -n \n[INFO] Completed IP: 172.18.1.20 (PID: 7196) ]]
++ echo -en '\n[INFO] Completed IP: 172.18.1.20 (PID: 7196)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -1349,11 +1526,11 @@ configs/misc/switch.conf ]]
 + (( i++ ))
 + (( i < count ))
 + for pid in "${job_pids[@]}"
-+ kill -0 41204
++ kill -0 7209
 + ip_address=172.31.255.254
-+ print '\n[INFO] Completed IP: 172.31.255.254 (PID: 41204)'
-+ [[ -n \n[INFO] Completed IP: 172.31.255.254 (PID: 41204) ]]
-+ echo -en '\n[INFO] Completed IP: 172.31.255.254 (PID: 41204)'
++ print '\n[INFO] Completed IP: 172.31.255.254 (PID: 7209)'
++ [[ -n \n[INFO] Completed IP: 172.31.255.254 (PID: 7209) ]]
++ echo -en '\n[INFO] Completed IP: 172.31.255.254 (PID: 7209)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -1363,11 +1540,11 @@ configs/misc/switch.conf ]]
 + (( i++ ))
 + (( i < count ))
 + for pid in "${job_pids[@]}"
-+ kill -0 41212
++ kill -0 7218
 + ip_address=192.0.2.50
-+ print '\n[INFO] Completed IP: 192.0.2.50 (PID: 41212)'
-+ [[ -n \n[INFO] Completed IP: 192.0.2.50 (PID: 41212) ]]
-+ echo -en '\n[INFO] Completed IP: 192.0.2.50 (PID: 41212)'
++ print '\n[INFO] Completed IP: 192.0.2.50 (PID: 7218)'
++ [[ -n \n[INFO] Completed IP: 192.0.2.50 (PID: 7218) ]]
++ echo -en '\n[INFO] Completed IP: 192.0.2.50 (PID: 7218)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -1377,14 +1554,14 @@ configs/misc/switch.conf ]]
 + (( i++ ))
 + (( i < count ))
 + for pid in "${job_pids[@]}"
-+ kill -0 41225
++ kill -0 7235
 + valid_job_pids+=("$pid")
 + for pid in "${job_pids[@]}"
-+ kill -0 41236
++ kill -0 7246
 + ip_address=192.168.1.11
-+ print '\n[INFO] Completed IP: 192.168.1.11 (PID: 41236)'
-+ [[ -n \n[INFO] Completed IP: 192.168.1.11 (PID: 41236) ]]
-+ echo -en '\n[INFO] Completed IP: 192.168.1.11 (PID: 41236)'
++ print '\n[INFO] Completed IP: 192.168.1.11 (PID: 7246)'
++ [[ -n \n[INFO] Completed IP: 192.168.1.11 (PID: 7246) ]]
++ echo -en '\n[INFO] Completed IP: 192.168.1.11 (PID: 7246)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -1394,11 +1571,11 @@ configs/misc/switch.conf ]]
 + (( i++ ))
 + (( i < count ))
 + for pid in "${job_pids[@]}"
-+ kill -0 41248
++ kill -0 7260
 + ip_address=192.168.2.12
-+ print '\n[INFO] Completed IP: 192.168.2.12 (PID: 41248)'
-+ [[ -n \n[INFO] Completed IP: 192.168.2.12 (PID: 41248) ]]
-+ echo -en '\n[INFO] Completed IP: 192.168.2.12 (PID: 41248)'
++ print '\n[INFO] Completed IP: 192.168.2.12 (PID: 7260)'
++ [[ -n \n[INFO] Completed IP: 192.168.2.12 (PID: 7260) ]]
++ echo -en '\n[INFO] Completed IP: 192.168.2.12 (PID: 7260)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -1408,11 +1585,11 @@ configs/misc/switch.conf ]]
 + (( i++ ))
 + (( i < count ))
 + for pid in "${job_pids[@]}"
-+ kill -0 41258
++ kill -0 7269
 + ip_address=192.168.100.100
-+ print '\n[INFO] Completed IP: 192.168.100.100 (PID: 41258)'
-+ [[ -n \n[INFO] Completed IP: 192.168.100.100 (PID: 41258) ]]
-+ echo -en '\n[INFO] Completed IP: 192.168.100.100 (PID: 41258)'
++ print '\n[INFO] Completed IP: 192.168.100.100 (PID: 7269)'
++ [[ -n \n[INFO] Completed IP: 192.168.100.100 (PID: 7269) ]]
++ echo -en '\n[INFO] Completed IP: 192.168.100.100 (PID: 7269)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -1420,78 +1597,100 @@ configs/misc/switch.conf ]]
 + echo
 
 + (( i++ ))
-+ local matched_files=configs/cisco/fw1.cfg
 + (( i < count ))
 + for pid in "${job_pids[@]}"
-+ kill -0 41266
++ kill -0 7279
++ ip_address=198.51.100.75
++ print '\n[INFO] Completed IP: 198.51.100.75 (PID: 7279)'
++ [[ -n \n[INFO] Completed IP: 198.51.100.75 (PID: 7279) ]]
++ echo -en '\n[INFO] Completed IP: 198.51.100.75 (PID: 7279)'
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ local matched_files=configs/cisco/fw1.cfg
++ for pid in "${job_pids[@]}"
++ kill -0 7286
 + [[ -n configs/cisco/fw1.cfg ]]
 + config_json='[]'
 + IFS=
 + read -r config_file
-+ ip_address=198.51.100.75
-+ print '\n[INFO] Completed IP: 198.51.100.75 (PID: 41266)'
-+ [[ -n \n[INFO] Completed IP: 198.51.100.75 (PID: 41266) ]]
-+ echo -en '\n[INFO] Completed IP: 198.51.100.75 (PID: 41266)'
-+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-+ for pid in "${job_pids[@]}"
-+ kill -0 41274
 + valid_job_pids+=("$pid")
 + job_pids=("${valid_job_pids[@]}")
 + sleep 0.5
-++ print configs/cisco/fw1.cfg
-++ [[ -n configs/cisco/fw1.cfg ]]
-++ echo -en configs/cisco/fw1.cfg
++ config_file=cisco/fw1.cfg
 + print '\n[INFO] Generated JSON for IP: 192.168.1.10 at targets/192.168.1.10.json'
-++ sed 's|^configs/||'
 + [[ -n \n[INFO] Generated JSON for IP: 192.168.1.10 at targets/192.168.1.10.json ]]
 + echo -en '\n[INFO] Generated JSON for IP: 192.168.1.10 at targets/192.168.1.10.json'
 + return 0
-+ config_file=cisco/fw1.cfg
 ++ wc -l
 + config_lines='      18'
+++ grep -oFw 203.0.113.25 configs/cisco/fw1.cfg
+++ wc -l
+++ tr -d ' '
++ match_count=1
++ site=cisco
++ device=fw1.cfg
 ++ print '[]'
 ++ [[ -n [] ]]
 ++ echo -en '[]'
-++ jq --arg config cisco/fw1.cfg --argjson lines '      18' '. += [{"config": $config, "lines": $lines}]'
+++ jq --arg site cisco --arg device fw1.cfg --argjson lines '      18' --argjson count 1 '. += [{"config": {"site": $site, "device": $device}, "lines": $lines, "count": $count}]'
 + config_json='[
   {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 1
   }
 ]'
 + IFS=
 + read -r config_file
 ++ print '[
   {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 1
   }
 ]'
 ++ [[ -n [
   {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 1
   }
 ] ]]
 ++ echo -en '[
   {
-    "config": "cisco/fw1.cfg",
-    "lines": 18
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
+    "lines": 18,
+    "count": 1
   }
 ]'
 ++ jq '{configs: .}'
 + final_json='{
   "configs": [
     {
-      "config": "cisco/fw1.cfg",
-      "lines": 18
+      "config": {
+        "site": "cisco",
+        "device": "fw1.cfg"
+      },
+      "lines": 18,
+      "count": 1
     }
   ]
 }'
@@ -1503,11 +1702,11 @@ configs/misc/switch.conf ]]
 + ((  2 > 0  ))
 + valid_job_pids=()
 + for pid in "${job_pids[@]}"
-+ kill -0 41225
++ kill -0 7235
 + ip_address=192.168.1.10
-+ print '\n[INFO] Completed IP: 192.168.1.10 (PID: 41225)'
-+ [[ -n \n[INFO] Completed IP: 192.168.1.10 (PID: 41225) ]]
-+ echo -en '\n[INFO] Completed IP: 192.168.1.10 (PID: 41225)'
++ print '\n[INFO] Completed IP: 192.168.1.10 (PID: 7235)'
++ [[ -n \n[INFO] Completed IP: 192.168.1.10 (PID: 7235) ]]
++ echo -en '\n[INFO] Completed IP: 192.168.1.10 (PID: 7235)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -1517,11 +1716,11 @@ configs/misc/switch.conf ]]
 + (( i++ ))
 + (( i < count ))
 + for pid in "${job_pids[@]}"
-+ kill -0 41274
++ kill -0 7286
 + ip_address=203.0.113.25
-+ print '\n[INFO] Completed IP: 203.0.113.25 (PID: 41274)'
-+ [[ -n \n[INFO] Completed IP: 203.0.113.25 (PID: 41274) ]]
-+ echo -en '\n[INFO] Completed IP: 203.0.113.25 (PID: 41274)'
++ print '\n[INFO] Completed IP: 203.0.113.25 (PID: 7286)'
++ [[ -n \n[INFO] Completed IP: 203.0.113.25 (PID: 7286) ]]
++ echo -en '\n[INFO] Completed IP: 203.0.113.25 (PID: 7286)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -1952,19 +2151,19 @@ configs/misc/switch.conf ]]
 + ip_addr=10.0.0.1
 ++ printf %01d 1
 + padded_index=1
-+ job_pid=41404
++ job_pid=7417
 + job_pids+=("${job_pid}")
 + job_ip_map["$job_pid"]=10.0.0.1
-+ print '\n[INFO] Started IP: 10.0.0.1 (PID: 41404)'
-+ [[ -n \n[INFO] Started IP: 10.0.0.1 (PID: 41404) ]]
-+ echo -en '\n[INFO] Started IP: 10.0.0.1 (PID: 41404)'
++ print '\n[INFO] Started IP: 10.0.0.1 (PID: 7417)'
++ [[ -n \n[INFO] Started IP: 10.0.0.1 (PID: 7417) ]]
++ echo -en '\n[INFO] Started IP: 10.0.0.1 (PID: 7417)'
 + parse_configs 10.0.0.1 1
 + local ip_addr=10.0.0.1
++ local padded_index=1
++ execute=(./scripts/parse-configs.shell --configs="${configs_dirpath}" --ip-addr="${ip_addr}" --index="${padded_index}" --matrix="${matrix_filename}" --reports="${reports_folder}" --file-ext="$(IFS=,; print "${file_extensions[*]}")")
 + newline
 + local count=1
-+ local padded_index=1
 + (( i = 0 ))
-+ execute=(./scripts/parse-configs.shell --configs="${configs_dirpath}" --ip-addr="${ip_addr}" --index="${padded_index}" --matrix="${matrix_filename}" --reports="${reports_folder}" --file-ext="$(IFS=,; print "${file_extensions[*]}")")
 + (( i < count ))
 + echo
 
@@ -1985,30 +2184,30 @@ configs/misc/switch.conf ]]
 + [[ true == true ]]
 + execute+=(--debug)
 + [[ true == true ]]
-+ padded_index=2
 + mkdir -p .local/jobs .local/errors
-+ job_pid=41408
++ padded_index=2
++ job_pid=7421
 + job_pids+=("${job_pid}")
 + job_ip_map["$job_pid"]=10.0.1.2
-+ print '\n[INFO] Started IP: 10.0.1.2 (PID: 41408)'
-+ [[ -n \n[INFO] Started IP: 10.0.1.2 (PID: 41408) ]]
-+ echo -en '\n[INFO] Started IP: 10.0.1.2 (PID: 41408)'
++ print '\n[INFO] Started IP: 10.0.1.2 (PID: 7421)'
++ parse_configs 10.0.1.2 2
++ [[ -n \n[INFO] Started IP: 10.0.1.2 (PID: 7421) ]]
++ echo -en '\n[INFO] Started IP: 10.0.1.2 (PID: 7421)'
++ local ip_addr=10.0.1.2
 + newline
 + local count=1
 + (( i = 0 ))
++ local padded_index=2
 + (( i < count ))
 + echo
 
 + (( i++ ))
++ execute=(./scripts/parse-configs.shell --configs="${configs_dirpath}" --ip-addr="${ip_addr}" --index="${padded_index}" --matrix="${matrix_filename}" --reports="${reports_folder}" --file-ext="$(IFS=,; print "${file_extensions[*]}")")
 + (( i < count ))
 + ((  ip_index < total_ips  ))
 + ip_addr=172.31.255.254
-+ parse_configs 10.0.1.2 2
-+ local ip_addr=10.0.1.2
-+ local padded_index=2
-+ execute=(./scripts/parse-configs.shell --configs="${configs_dirpath}" --ip-addr="${ip_addr}" --index="${padded_index}" --matrix="${matrix_filename}" --reports="${reports_folder}" --file-ext="$(IFS=,; print "${file_extensions[*]}")")
-++ printf %01d 3
 ++ IFS=,
+++ printf %01d 3
 ++ print cfg,conf,cnf
 ++ [[ -n cfg,conf,cnf ]]
 ++ echo -en cfg,conf,cnf
@@ -2022,35 +2221,34 @@ configs/misc/switch.conf ]]
 + execute+=(--debug)
 + [[ true == true ]]
 + mkdir -p .local/jobs .local/errors
-+ job_pid=41411
++ job_pid=7424
 + job_pids+=("${job_pid}")
 + job_ip_map["$job_pid"]=172.31.255.254
-+ print '\n[INFO] Started IP: 172.31.255.254 (PID: 41411)'
-+ [[ -n \n[INFO] Started IP: 172.31.255.254 (PID: 41411) ]]
-+ echo -en '\n[INFO] Started IP: 172.31.255.254 (PID: 41411)'
++ print '\n[INFO] Started IP: 172.31.255.254 (PID: 7424)'
++ [[ -n \n[INFO] Started IP: 172.31.255.254 (PID: 7424) ]]
++ echo -en '\n[INFO] Started IP: 172.31.255.254 (PID: 7424)'
 + logfile=.local/jobs/10.0.0.1.job
 + [[ true == true ]]
 + bash -x ./scripts/parse-configs.shell --configs=configs --ip-addr=10.0.0.1 --index=1 --matrix=matrix.json --reports=reports --file-ext=cfg,conf,cnf --classify --verbose --debug
-+ parse_configs 172.31.255.254 3
 + newline
 + local count=1
 + (( i = 0 ))
++ parse_configs 172.31.255.254 3
 + (( i < count ))
 + echo
++ local ip_addr=172.31.255.254
 
 + (( i++ ))
 + (( i < count ))
-+ local ip_addr=172.31.255.254
 + ((  ip_index < total_ips  ))
 + local padded_index=3
-+ ip_addr=192.168.1.10
 + execute=(./scripts/parse-configs.shell --configs="${configs_dirpath}" --ip-addr="${ip_addr}" --index="${padded_index}" --matrix="${matrix_filename}" --reports="${reports_folder}" --file-ext="$(IFS=,; print "${file_extensions[*]}")")
++ ip_addr=192.168.1.10
 ++ IFS=,
 ++ print cfg,conf,cnf
-++ printf %01d 4
 ++ [[ -n cfg,conf,cnf ]]
 ++ echo -en cfg,conf,cnf
-+ padded_index=4
+++ printf %01d 4
 + [[ true == true ]]
 + execute+=(--classify)
 + [[ false == true ]]
@@ -2060,21 +2258,18 @@ configs/misc/switch.conf ]]
 + execute+=(--debug)
 + [[ true == true ]]
 + mkdir -p .local/jobs .local/errors
-+ job_pid=41416
++ padded_index=4
++ job_pid=7430
 + job_pids+=("${job_pid}")
 + job_ip_map["$job_pid"]=192.168.1.10
++ print '\n[INFO] Started IP: 192.168.1.10 (PID: 7430)'
++ [[ -n \n[INFO] Started IP: 192.168.1.10 (PID: 7430) ]]
++ echo -en '\n[INFO] Started IP: 192.168.1.10 (PID: 7430)'
 + logfile=.local/jobs/10.0.1.2.job
 + [[ true == true ]]
-+ bash -x ./scripts/parse-configs.shell --configs=configs --ip-addr=10.0.1.2 --index=2 --matrix=matrix.json --reports=reports --file-ext=cfg,conf,cnf --classify --verbose --debug
-+ parse_configs 192.168.1.10 4
-+ print '\n[INFO] Started IP: 192.168.1.10 (PID: 41416)'
-+ local ip_addr=192.168.1.10
-+ local padded_index=4
-+ execute=(./scripts/parse-configs.shell --configs="${configs_dirpath}" --ip-addr="${ip_addr}" --index="${padded_index}" --matrix="${matrix_filename}" --reports="${reports_folder}" --file-ext="$(IFS=,; print "${file_extensions[*]}")")
-+ [[ -n \n[INFO] Started IP: 192.168.1.10 (PID: 41416) ]]
-+ echo -en '\n[INFO] Started IP: 192.168.1.10 (PID: 41416)'
 + newline
 + local count=1
++ bash -x ./scripts/parse-configs.shell --configs=configs --ip-addr=10.0.1.2 --index=2 --matrix=matrix.json --reports=reports --file-ext=cfg,conf,cnf --classify --verbose --debug
 + (( i = 0 ))
 + (( i < count ))
 + echo
@@ -2083,11 +2278,16 @@ configs/misc/switch.conf ]]
 + (( i < count ))
 + ((  ip_index < total_ips  ))
 + ip_addr=203.0.113.25
++ parse_configs 192.168.1.10 4
++ local ip_addr=192.168.1.10
++ local padded_index=4
++ execute=(./scripts/parse-configs.shell --configs="${configs_dirpath}" --ip-addr="${ip_addr}" --index="${padded_index}" --matrix="${matrix_filename}" --reports="${reports_folder}" --file-ext="$(IFS=,; print "${file_extensions[*]}")")
+++ printf %01d 5
 ++ IFS=,
 ++ print cfg,conf,cnf
 ++ [[ -n cfg,conf,cnf ]]
 ++ echo -en cfg,conf,cnf
-++ printf %01d 5
++ padded_index=5
 + [[ true == true ]]
 + execute+=(--classify)
 + [[ false == true ]]
@@ -2097,17 +2297,19 @@ configs/misc/switch.conf ]]
 + execute+=(--debug)
 + [[ true == true ]]
 + mkdir -p .local/jobs .local/errors
-+ padded_index=5
 + logfile=.local/jobs/172.31.255.254.job
 + [[ true == true ]]
 + bash -x ./scripts/parse-configs.shell --configs=configs --ip-addr=172.31.255.254 --index=3 --matrix=matrix.json --reports=reports --file-ext=cfg,conf,cnf --classify --verbose --debug
-+ job_pid=41422
++ job_pid=7434
 + job_pids+=("${job_pid}")
 + job_ip_map["$job_pid"]=203.0.113.25
-+ print '\n[INFO] Started IP: 203.0.113.25 (PID: 41422)'
-+ [[ -n \n[INFO] Started IP: 203.0.113.25 (PID: 41422) ]]
-+ echo -en '\n[INFO] Started IP: 203.0.113.25 (PID: 41422)'
 + parse_configs 203.0.113.25 5
++ print '\n[INFO] Started IP: 203.0.113.25 (PID: 7434)'
++ local ip_addr=203.0.113.25
++ local padded_index=5
++ execute=(./scripts/parse-configs.shell --configs="${configs_dirpath}" --ip-addr="${ip_addr}" --index="${padded_index}" --matrix="${matrix_filename}" --reports="${reports_folder}" --file-ext="$(IFS=,; print "${file_extensions[*]}")")
++ [[ -n \n[INFO] Started IP: 203.0.113.25 (PID: 7434) ]]
++ echo -en '\n[INFO] Started IP: 203.0.113.25 (PID: 7434)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -2120,22 +2322,19 @@ configs/misc/switch.conf ]]
 + ((  5 > 0  ))
 + valid_job_pids=()
 + for pid in "${job_pids[@]}"
-+ local ip_addr=203.0.113.25
-+ kill -0 41404
-+ local padded_index=5
-+ execute=(./scripts/parse-configs.shell --configs="${configs_dirpath}" --ip-addr="${ip_addr}" --index="${padded_index}" --matrix="${matrix_filename}" --reports="${reports_folder}" --file-ext="$(IFS=,; print "${file_extensions[*]}")")
++ kill -0 7417
 + valid_job_pids+=("$pid")
 + for pid in "${job_pids[@]}"
-+ kill -0 41408
++ kill -0 7421
 + valid_job_pids+=("$pid")
 + for pid in "${job_pids[@]}"
-+ kill -0 41411
++ kill -0 7424
 + valid_job_pids+=("$pid")
 + for pid in "${job_pids[@]}"
-+ kill -0 41416
++ kill -0 7430
 + valid_job_pids+=("$pid")
 + for pid in "${job_pids[@]}"
-+ kill -0 41422
++ kill -0 7434
 + valid_job_pids+=("$pid")
 + job_pids=("${valid_job_pids[@]}")
 + sleep 0.5
@@ -2158,38 +2357,20 @@ configs/misc/switch.conf ]]
 + logfile=.local/jobs/203.0.113.25.job
 + [[ true == true ]]
 + bash -x ./scripts/parse-configs.shell --configs=configs --ip-addr=203.0.113.25 --index=5 --matrix=matrix.json --reports=reports --file-ext=cfg,conf,cnf --classify --verbose --debug
-+ local status=0
-+ ((  status != 0  ))
-+ print '\n[DONE] IP: 172.31.255.254'
-+ [[ -n \n[DONE] IP: 172.31.255.254 ]]
-+ echo -en '\n[DONE] IP: 172.31.255.254'
-+ return 0
-+ local status=0
-+ ((  status != 0  ))
-+ print '\n[DONE] IP: 192.168.1.10'
-+ [[ -n \n[DONE] IP: 192.168.1.10 ]]
-+ echo -en '\n[DONE] IP: 192.168.1.10'
-+ return 0
-+ local status=0
-+ ((  status != 0  ))
-+ print '\n[DONE] IP: 203.0.113.25'
-+ [[ -n \n[DONE] IP: 203.0.113.25 ]]
-+ echo -en '\n[DONE] IP: 203.0.113.25'
-+ return 0
 + ((  5 > 0  ))
 + valid_job_pids=()
 + for pid in "${job_pids[@]}"
-+ kill -0 41404
++ kill -0 7417
 + valid_job_pids+=("$pid")
 + for pid in "${job_pids[@]}"
-+ kill -0 41408
++ kill -0 7421
 + valid_job_pids+=("$pid")
 + for pid in "${job_pids[@]}"
-+ kill -0 41411
++ kill -0 7424
 + ip=172.31.255.254
-+ print '\n[INFO] Completed IP: 172.31.255.254 (PID: 41411)'
-+ [[ -n \n[INFO] Completed IP: 172.31.255.254 (PID: 41411) ]]
-+ echo -en '\n[INFO] Completed IP: 172.31.255.254 (PID: 41411)'
++ print '\n[INFO] Completed IP: 172.31.255.254 (PID: 7424)'
++ [[ -n \n[INFO] Completed IP: 172.31.255.254 (PID: 7424) ]]
++ echo -en '\n[INFO] Completed IP: 172.31.255.254 (PID: 7424)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -2199,11 +2380,11 @@ configs/misc/switch.conf ]]
 + (( i++ ))
 + (( i < count ))
 + for pid in "${job_pids[@]}"
-+ kill -0 41416
++ kill -0 7430
 + ip=192.168.1.10
-+ print '\n[INFO] Completed IP: 192.168.1.10 (PID: 41416)'
-+ [[ -n \n[INFO] Completed IP: 192.168.1.10 (PID: 41416) ]]
-+ echo -en '\n[INFO] Completed IP: 192.168.1.10 (PID: 41416)'
++ print '\n[INFO] Completed IP: 192.168.1.10 (PID: 7430)'
++ [[ -n \n[INFO] Completed IP: 192.168.1.10 (PID: 7430) ]]
++ echo -en '\n[INFO] Completed IP: 192.168.1.10 (PID: 7430)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -2213,11 +2394,11 @@ configs/misc/switch.conf ]]
 + (( i++ ))
 + (( i < count ))
 + for pid in "${job_pids[@]}"
-+ kill -0 41422
++ kill -0 7434
 + ip=203.0.113.25
-+ print '\n[INFO] Completed IP: 203.0.113.25 (PID: 41422)'
-+ [[ -n \n[INFO] Completed IP: 203.0.113.25 (PID: 41422) ]]
-+ echo -en '\n[INFO] Completed IP: 203.0.113.25 (PID: 41422)'
++ print '\n[INFO] Completed IP: 203.0.113.25 (PID: 7434)'
++ [[ -n \n[INFO] Completed IP: 203.0.113.25 (PID: 7434) ]]
++ echo -en '\n[INFO] Completed IP: 203.0.113.25 (PID: 7434)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -2228,26 +2409,14 @@ configs/misc/switch.conf ]]
 + (( i < count ))
 + job_pids=("${valid_job_pids[@]}")
 + sleep 0.5
-+ local status=0
-+ ((  status != 0  ))
-+ print '\n[DONE] IP: 10.0.1.2'
-+ [[ -n \n[DONE] IP: 10.0.1.2 ]]
-+ echo -en '\n[DONE] IP: 10.0.1.2'
-+ return 0
-+ local status=0
-+ ((  status != 0  ))
-+ print '\n[DONE] IP: 10.0.0.1'
-+ [[ -n \n[DONE] IP: 10.0.0.1 ]]
-+ echo -en '\n[DONE] IP: 10.0.0.1'
-+ return 0
 + ((  2 > 0  ))
 + valid_job_pids=()
 + for pid in "${job_pids[@]}"
-+ kill -0 41404
++ kill -0 7417
 + ip=10.0.0.1
-+ print '\n[INFO] Completed IP: 10.0.0.1 (PID: 41404)'
-+ [[ -n \n[INFO] Completed IP: 10.0.0.1 (PID: 41404) ]]
-+ echo -en '\n[INFO] Completed IP: 10.0.0.1 (PID: 41404)'
++ print '\n[INFO] Completed IP: 10.0.0.1 (PID: 7417)'
++ [[ -n \n[INFO] Completed IP: 10.0.0.1 (PID: 7417) ]]
++ echo -en '\n[INFO] Completed IP: 10.0.0.1 (PID: 7417)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -2257,11 +2426,11 @@ configs/misc/switch.conf ]]
 + (( i++ ))
 + (( i < count ))
 + for pid in "${job_pids[@]}"
-+ kill -0 41408
++ kill -0 7421
 + ip=10.0.1.2
-+ print '\n[INFO] Completed IP: 10.0.1.2 (PID: 41408)'
-+ [[ -n \n[INFO] Completed IP: 10.0.1.2 (PID: 41408) ]]
-+ echo -en '\n[INFO] Completed IP: 10.0.1.2 (PID: 41408)'
++ print '\n[INFO] Completed IP: 10.0.1.2 (PID: 7421)'
++ [[ -n \n[INFO] Completed IP: 10.0.1.2 (PID: 7421) ]]
++ echo -en '\n[INFO] Completed IP: 10.0.1.2 (PID: 7421)'
 + newline
 + local count=1
 + (( i = 0 ))
@@ -2274,20 +2443,6 @@ configs/misc/switch.conf ]]
 + sleep 0.5
 + ((  0 > 0  ))
 + return 0
-+ [[ -d targets ]]
-+ local prefix=configs/
-+ find targets -type f -name '*.json'
-+ read -r list_file
-+ sed -i '' -E 's|^configs/||g' targets/172.31.255.254.json
-+ read -r list_file
-+ sed -i '' -E 's|^configs/||g' targets/192.168.1.10.json
-+ read -r list_file
-+ sed -i '' -E 's|^configs/||g' targets/203.0.113.25.json
-+ read -r list_file
-+ sed -i '' -E 's|^configs/||g' targets/10.0.1.2.json
-+ read -r list_file
-+ sed -i '' -E 's|^configs/||g' targets/10.0.0.1.json
-+ read -r list_file
 + local json_dir=reports/json
 + local master_json=reports/reports.json
 + expected_reports=5
@@ -2330,38 +2485,6 @@ configs/misc/switch.conf ]]
           ]
         | @csv
       ' reports/reports.json
-+ [[ true == true ]]
-+ [[ -s reports/reports.csv ]]
-+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-+ print 'CSV Report Summary (tabulated):'
-+ [[ -n CSV Report Summary (tabulated): ]]
-+ echo -en 'CSV Report Summary (tabulated):'
-CSV Report Summary (tabulated):+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-+ column -t -s, reports/reports.csv
-+ less -SFX
-target            config              object                              entry                                      description             group
-"10.0.0.1"        "cisco/fw1.cfg"     "object-group network BU1-NETWORK"  "network-object host 10.0.0.1"             "Corporate HQ Subnets"  "Identified Matching Entries"
-"10.0.0.1"        "misc/switch.conf"  "interface Vlan1"                   "network-object host 10.0.0.1"             "Local Office Subnets"  "Business-Unit-Networks"
-"10.0.1.2"        "cisco/fw1.cfg"     "object-group network BU1-NETWORK"  "network-object host 10.0.1.2"             "Corporate HQ Subnets"  "Identified Matching Entries"
-"10.0.1.2"        "misc/switch.conf"  "interface Vlan1"                   "ip address 10.0.1.2 255.255.255.0"        "Local Office Subnets"  "Business-Unit-Networks"
-"172.31.255.254"  "misc/switch.conf"  "interface Vlan1"                   "ip address 172.31.255.254 255.255.255.0"  "Local Office Subnets"  "Business-Unit-Networks"
-"192.168.1.10"    "cisco/fw1.cfg"     "object-group network BU1-NETWORK"  "host 192.168.1.10"                        "Corporate HQ Subnets"  "Identified Matching Entries"
-"203.0.113.25"    "cisco/fw1.cfg"     "object-group network BU1-NETWORK"  "host 203.0.113.25"                        "Corporate HQ Subnets"  "Identified Matching Entries"
-+ return 0
-+ return 0
-+ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.InAZzIrNhm ]]
-+ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.InAZzIrNhm
+jq: error (at reports/reports.json:125): object ({"site":"ci...) cannot be matched, as it is not a string
++ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Pe88ZVm7c5 ]]
++ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Pe88ZVm7c5

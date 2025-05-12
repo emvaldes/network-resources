@@ -2,14 +2,25 @@
 + export LC_ALL=C
 + LC_ALL=C
 ++ mktemp -d
-+ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI
-+ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI
++ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.60GvwHGMac
++ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.60GvwHGMac
 + trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
 + source ./scripts/tools-devops.shell
 ++ [[ -n '' ]]
 ++ readonly __TOOLS_DEVOPS_SOURCED=1
 ++ __TOOLS_DEVOPS_SOURCED=1
 ++ [[ 5 -lt 4 ]]
+++ alias log-info=log_info
+++ alias log-warn=log_warn
+++ alias log-error=log_error
+++ alias error-message=error_message
+++ alias exit-error=exit_error
+++ alias detect-platform=detect_platform
+++ alias install-packages=install_packages
+++ alias install-missing=install_missing
+++ alias display-help=display_help_generic
+++ alias relative-configpath=relative_configpath
+++ alias validate-address=validate_address
 ++ export LC_ALL=C
 ++ LC_ALL=C
 ++ export 'nl=\n'
@@ -26,18 +37,15 @@
 ++ success_logsfile=.local/stats//success.jobs
 ++ export targets_logsfile=.local/stats//targets.jobs
 ++ targets_logsfile=.local/stats//targets.jobs
-++ alias error-message=error_message
-++ alias log-info=log_info
-++ alias log-warn=log_warn
-++ alias log-error=log_error
-++ alias exit-error=exit_error
-++ alias detect-platform=detect_platform
-++ alias install-packages=install_packages
-++ alias install-missing=install_missing
-++ alias display-help=display_help_generic
-++ alias relative-configpath=relative_configpath
-++ alias validate-address=validate_address
-+ source ./scripts/tools-configs.shell
++++ date +%s%N
++++ base64
++++ tr -dc a-zA-Z0-9
+++ export divisor=MTc0NzA1ODQ2MzQxNzY3NDAwMAo
+++ divisor=MTc0NzA1ODQ2MzQxNzY3NDAwMAo
+++ print 'DEBUG: divisor = '\''MTc0NzA1ODQ2MzQxNzY3NDAwMAo'\'''
+++ [[ -n DEBUG: divisor = 'MTc0NzA1ODQ2MzQxNzY3NDAwMAo' ]]
+++ echo -en 'DEBUG: divisor = '\''MTc0NzA1ODQ2MzQxNzY3NDAwMAo'\'''
+DEBUG: divisor = 'MTc0NzA1ODQ2MzQxNzY3NDAwMAo'+ source ./scripts/tools-configs.shell
 ++ [[ -n '' ]]
 ++ readonly __TOOLS_CONFIGS_SOURCED=1
 ++ __TOOLS_CONFIGS_SOURCED=1
@@ -249,7 +257,7 @@
 + target_configlist_json=targets/10.0.1.2.json
 + [[ ! -f targets/10.0.1.2.json ]]
 + mapfile -t source_configs
-++ jq -r '.configs[].config' targets/10.0.1.2.json
+++ jq -r '.configs[] | "\(.config.site)/\(.config.device)"' targets/10.0.1.2.json
 + for i in "${!source_configs[@]}"
 + [[ cisco/fw1.cfg != \c\o\n\f\i\g\s\/* ]]
 + source_configs[$i]=configs/cisco/fw1.cfg
@@ -375,10 +383,6 @@ Extracted config paths from JSON:+ for cfg in "${source_configs[@]}"
 + matched_configs_order=()
 + declare -ga matched_configs_order
 + local search_ip=10.0.1.2
-++ date +%s%N
-++ base64
-++ tr -dc a-zA-Z0-9
-+ local divisor=MTc0NzAyMzE0Nzc3MzA1MTAwMAo
 + for cfg_file in "${source_configs[@]}"
 + mapfile -t lines
 ++ sed 's/!/\n/g' configs/cisco/fw1.cfg
@@ -406,7 +410,7 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25'
 + grep -qF 10.0.1.2
 ++ basename configs/cisco/fw1.cfg
 ++ tr / _
-+ out=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/10_0_1_2__fw1.cfg__0.chunks
++ out=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.60GvwHGMac/10_0_1_2__fw1.cfg__0.chunks
 + print 'object-group network BU1-NETWORK
  description Corporate HQ Subnets
  network-object host 10.0.0.1
@@ -470,7 +474,7 @@ object-group network SOME-THING
 + grep -qF 10.0.1.2
 ++ basename configs/misc/switch.conf
 ++ tr / _
-+ out=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/10_0_1_2__switch.conf__0.chunks
++ out=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.60GvwHGMac/10_0_1_2__switch.conf__0.chunks
 + print 'interface Vlan1
  ip address 172.31.255.254 255.255.255.0
 interface Vlan2
@@ -511,15 +515,15 @@ Matched chunks:+ newline
 
 + (( i++ ))
 + (( i < count ))
-+ find /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI -type f -name '10_0_1_2__*.chunks'
++ find /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.60GvwHGMac -type f -name '10_0_1_2__*.chunks'
 + sort
 + read -r chunk
-++ basename /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/10_0_1_2__fw1.cfg__0.chunks
+++ basename /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.60GvwHGMac/10_0_1_2__fw1.cfg__0.chunks
 + print ' - 10_0_1_2__fw1.cfg__0.chunks'
 + [[ -n  - 10_0_1_2__fw1.cfg__0.chunks ]]
 + echo -en ' - 10_0_1_2__fw1.cfg__0.chunks'
  - 10_0_1_2__fw1.cfg__0.chunks+ read -r chunk
-++ basename /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/10_0_1_2__switch.conf__0.chunks
+++ basename /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.60GvwHGMac/10_0_1_2__switch.conf__0.chunks
 + print ' - 10_0_1_2__switch.conf__0.chunks'
 + [[ -n  - 10_0_1_2__switch.conf__0.chunks ]]
 + echo -en ' - 10_0_1_2__switch.conf__0.chunks'
@@ -533,8 +537,8 @@ Matched chunks:+ newline
 + (( i++ ))
 + (( i < count ))
 + for chunk_file in "${TMP_DIR}/${search_ip//./_}"__*.chunks
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/10_0_1_2__fw1.cfg__0.chunks ]]
-++ basename /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/10_0_1_2__fw1.cfg__0.chunks
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.60GvwHGMac/10_0_1_2__fw1.cfg__0.chunks ]]
+++ basename /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.60GvwHGMac/10_0_1_2__fw1.cfg__0.chunks
 ++ sed -E 's/^10_0_1_2__//;s/__[0-9]+\.chunks$//'
 + cfg_base=fw1.cfg
 + for full_cfg in "${source_configs[@]}"
@@ -558,8 +562,8 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25
 + matched_configs_order+=("${full_cfg}")
 + break
 + for chunk_file in "${TMP_DIR}/${search_ip//./_}"__*.chunks
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/10_0_1_2__switch.conf__0.chunks ]]
-++ basename /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/10_0_1_2__switch.conf__0.chunks
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.60GvwHGMac/10_0_1_2__switch.conf__0.chunks ]]
+++ basename /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.60GvwHGMac/10_0_1_2__switch.conf__0.chunks
 ++ sed -E 's/^10_0_1_2__//;s/__[0-9]+\.chunks$//'
 + cfg_base=switch.conf
 + for full_cfg in "${source_configs[@]}"
@@ -604,10 +608,10 @@ object-group network SOME-THING
 
 + (( i++ ))
 + (( i < count ))
-+ local tmp_json=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/partial.json
-+ generate_objects 10.0.1.2 /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/partial.json
++ local tmp_json=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.60GvwHGMac/partial.json
++ generate_objects 10.0.1.2 /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.60GvwHGMac/partial.json
 + local ip_address=10.0.1.2
-+ local outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/partial.json
++ local outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.60GvwHGMac/partial.json
 + configs=()
 + local -a configs
 + for cfg_file in "${matched_configs_order[@]}"
@@ -815,23 +819,26 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25
     "group": "Identified Matching Entries"
   }
 ]'
-+ configs+=("$(jq -n --arg cfg "$(relative_configpath "${cfg_file}")" --argjson objs "${objs_json}" '{ config: $cfg, objects: $objs }')")
-+++ relative_configpath configs/cisco/fw1.cfg
-+++ local full_path=configs/cisco/fw1.cfg
-+++ local prefix=configs/
-++++ sed 's|configs/||g'
-+++ print cisco/fw1.cfg
-+++ [[ -n cisco/fw1.cfg ]]
-+++ echo -en cisco/fw1.cfg
-+++ return 0
-++ jq -n --arg cfg cisco/fw1.cfg --argjson objs '[
+++ relative_configpath configs/cisco/fw1.cfg
+++ local full_path=configs/cisco/fw1.cfg
+++ local prefix=configs/
++++ sed 's|configs/||g'
+++ print cisco/fw1.cfg
+++ [[ -n cisco/fw1.cfg ]]
+++ echo -en cisco/fw1.cfg
+++ return 0
++ relative_cfg=cisco/fw1.cfg
++ site=cisco
++ device=fw1.cfg
++ configs+=("$(jq -n --arg site "${site}" --arg device "${device}" --argjson objs "${objs_json}" '{ config: { site: $site, device: $device }, objects: $objs }')")
+++ jq -n --arg site cisco --arg device fw1.cfg --argjson objs '[
   {
     "object": "object-group network BU1-NETWORK",
     "entry": "network-object host 10.0.1.2",
     "description": "Corporate HQ Subnets",
     "group": "Identified Matching Entries"
   }
-]' '{ config: $cfg, objects: $objs }'
+]' '{ config: { site: $site, device: $device }, objects: $objs }'
 + for cfg_file in "${matched_configs_order[@]}"
 + local 'blocks=
 interface Vlan1
@@ -1000,29 +1007,35 @@ object-group network SOME-THING
     "group": "Business-Unit-Networks"
   }
 ]'
-+ configs+=("$(jq -n --arg cfg "$(relative_configpath "${cfg_file}")" --argjson objs "${objs_json}" '{ config: $cfg, objects: $objs }')")
-+++ relative_configpath configs/misc/switch.conf
-+++ local full_path=configs/misc/switch.conf
-+++ local prefix=configs/
-++++ sed 's|configs/||g'
-+++ print misc/switch.conf
-+++ [[ -n misc/switch.conf ]]
-+++ echo -en misc/switch.conf
-+++ return 0
-++ jq -n --arg cfg misc/switch.conf --argjson objs '[
+++ relative_configpath configs/misc/switch.conf
+++ local full_path=configs/misc/switch.conf
+++ local prefix=configs/
++++ sed 's|configs/||g'
+++ print misc/switch.conf
+++ [[ -n misc/switch.conf ]]
+++ echo -en misc/switch.conf
+++ return 0
++ relative_cfg=misc/switch.conf
++ site=misc
++ device=switch.conf
++ configs+=("$(jq -n --arg site "${site}" --arg device "${device}" --argjson objs "${objs_json}" '{ config: { site: $site, device: $device }, objects: $objs }')")
+++ jq -n --arg site misc --arg device switch.conf --argjson objs '[
   {
     "object": "interface Vlan1",
     "entry": "ip address 10.0.1.2 255.255.255.0",
     "description": "Local Office Subnets",
     "group": "Business-Unit-Networks"
   }
-]' '{ config: $cfg, objects: $objs }'
+]' '{ config: { site: $site, device: $device }, objects: $objs }'
 + local 'cfgs_json=[]'
 + ((  2 > 0  ))
 ++ jq -s .
 + cfgs_json='[
   {
-    "config": "cisco/fw1.cfg",
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
     "objects": [
       {
         "object": "object-group network BU1-NETWORK",
@@ -1033,7 +1046,10 @@ object-group network SOME-THING
     ]
   },
   {
-    "config": "misc/switch.conf",
+    "config": {
+      "site": "misc",
+      "device": "switch.conf"
+    },
     "objects": [
       {
         "object": "interface Vlan1",
@@ -1046,7 +1062,10 @@ object-group network SOME-THING
 ]'
 + jq -n --arg ip 10.0.1.2 --argjson cfgs '[
   {
-    "config": "cisco/fw1.cfg",
+    "config": {
+      "site": "cisco",
+      "device": "fw1.cfg"
+    },
     "objects": [
       {
         "object": "object-group network BU1-NETWORK",
@@ -1057,7 +1076,10 @@ object-group network SOME-THING
     ]
   },
   {
-    "config": "misc/switch.conf",
+    "config": {
+      "site": "misc",
+      "device": "switch.conf"
+    },
     "objects": [
       {
         "object": "interface Vlan1",
@@ -1727,14 +1749,17 @@ object-group network SOME-THING+ newline
 + [[ -n '' ]]
 + IFS=
 + read -r matched_object
-+ cp /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI/partial.json reports/json/10.0.1.2.json
++ cp /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.60GvwHGMac/partial.json reports/json/10.0.1.2.json
 + [[ true == true ]]
 + jq . reports/json/10.0.1.2.json
 {
   "target": "10.0.1.2",
   "configs": [
     {
-      "config": "cisco/fw1.cfg",
+      "config": {
+        "site": "cisco",
+        "device": "fw1.cfg"
+      },
       "objects": [
         {
           "object": "object-group network BU1-NETWORK",
@@ -1745,7 +1770,10 @@ object-group network SOME-THING+ newline
       ]
     },
     {
-      "config": "misc/switch.conf",
+      "config": {
+        "site": "misc",
+        "device": "switch.conf"
+      },
       "objects": [
         {
           "object": "interface Vlan1",
@@ -1773,7 +1801,6 @@ object-group network SOME-THING+ newline
         .group
       ] | @csv
     ' reports/json/10.0.1.2.json
-+ return 0
-+ unset verbose debug
-+ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI ]]
-+ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6JEUcidCEI
+jq: error (at reports/json/10.0.1.2.json:33): object ({"site":"ci...) is not valid in a csv row
++ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.60GvwHGMac ]]
++ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.60GvwHGMac

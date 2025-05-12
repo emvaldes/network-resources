@@ -16,26 +16,6 @@ if [[ "${BASH_VERSINFO[0]}" -lt 4 ]]; then
   exit 1;
 fi;
 
-## POSIX locale standard
-export LC_ALL=C;
-export nl="\n";
-
-local_state_dir=".local";
-mkdir -p ${local_state_dir}/{errors,jobs,stats};
-export stats_folder="${local_state_dir}/stats/";
-
-export reports_logsfile="${stats_folder}/reports.jobs";
-export started_logsfile="${stats_folder}/started.jobs";
-export success_logsfile="${stats_folder}/success.jobs";
-export targets_logsfile="${stats_folder}/targets.jobs";
-
-#------------------------------------------------------------------------------#
-## Output Utilities: Print an error message in consistent format
-function error_message () {
-  [[ -n ${1:-} ]] && local message="${1}" || return 0;
-  print "\nError: ${message}"; newline;
-}; alias error-message='error_message';
-
 #------------------------------------------------------------------------------#
 ## Output Utilities: Print N newlines (default: 1)
 function newline () {
@@ -69,6 +49,13 @@ function log_error () {
   [[ -n ${1:-} ]] || return 0;
   print "[ERROR] $(date '+%Y-%m-%d %H:%M:%S') - ${1}" >&2; newline;
 }; alias log-error='log_error';
+
+#------------------------------------------------------------------------------#
+## Output Utilities: Print an error message in consistent format
+function error_message () {
+  [[ -n ${1:-} ]] && local message="${1}" || return 0;
+  print "\nError: ${message}"; newline;
+}; alias error-message='error_message';
 
 #------------------------------------------------------------------------------#
 ## Exit script with error message and exit code
@@ -286,5 +273,25 @@ function validate_address () {
     fi;
     return 0;
 }; alias validate-address='validate_address';
+
+#------------------------------------------------------------------------------#
+
+## POSIX locale standard
+export LC_ALL=C;
+export nl="\n";
+
+local_state_dir=".local";
+mkdir -p ${local_state_dir}/{errors,jobs,stats};
+export stats_folder="${local_state_dir}/stats/";
+
+export reports_logsfile="${stats_folder}/reports.jobs";
+export started_logsfile="${stats_folder}/started.jobs";
+export success_logsfile="${stats_folder}/success.jobs";
+export targets_logsfile="${stats_folder}/targets.jobs";
+
+export divisor="$(
+  date +%s%N | base64 | tr -dc 'a-zA-Z0-9'
+)";
+print "DEBUG: divisor = '${divisor}'";
 
 #------------------------------------------------------------------------------#

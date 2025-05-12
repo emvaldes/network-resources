@@ -1,9 +1,16 @@
 #!/usr/bin/env bash
 
-# File: scripts/parse-configs.shell
-# Purpose: Parse a single IP and output matched configurations to reports/<ip>.json
+## File: scripts/parse-configs.shell
 
-# Requirements: Bash v4+ and GNU utilities (jq, find, grep, sed, etc.)
+## Purpose: Parse a single IP and output matched configurations to reports/<ip>.json
+## Requirements: Bash v4+ and GNU utilities (jq, find, grep, sed, etc.)
+
+## ./scripts/parse-configs.shell --configs="configs" \
+##                               --ip-addr="10.0.0.1" \
+##                               --index="1" \
+##                               --matrix="matrix.json" \
+##                               --reports="reports" \
+##                               --file-ext="cfg,conf" ;
 
 set -euo pipefail  # Strict mode: exit on error, undefined var use, and pipeline failure
 # set -x;          # Enable for execution tracing/debugging
@@ -91,9 +98,14 @@ function main () {
          error_message "Required config list not found: ${target_configlist_json}";
       return 3;
     fi;
+
+    # mapfile -t source_configs < <(
+    #   jq -r '.configs[].config' "${target_configlist_json}"
+    # );
     mapfile -t source_configs < <(
-      jq -r '.configs[].config' "${target_configlist_json}"
+      jq -r '.configs[] | "\(.config.site)/\(.config.device)"' "${target_configlist_json}"
     );
+
     # Patch: Prepend configs_dirpath if not already absolute
     for i in "${!source_configs[@]}"; do
       [[ "${source_configs[$i]}" != "${configs_dirpath}/"* ]] && \
@@ -159,9 +171,6 @@ function main () {
     declare -ga matched_configs_order=();
     # declare -gA matched_blocks_byfile=();
     local search_ip="${target_address%%/*}";
-    local divisor="$(
-      date +%s%N | base64 | tr -dc 'a-zA-Z0-9'
-    )";
 
     #### -----------------------------------------------------------------------
     ## Each 100-line chunk that contains the IP is saved to disk using the following pattern:
@@ -184,7 +193,18 @@ function main () {
         fi;
         (( start += size ));
       done;
-    done
+    done;
+
+    # for cfg_file in "${source_configs[@]}"; do
+    #   declare -a serialized_chunks=();
+    #   serialize_datablocks "${target_address}" "${cfg_file}" "${divisor}" serialized_chunks;
+    #   for idx in "${!serialized_chunks[@]}"; do
+    #     out="${TMP_DIR}/${target_address//./_}__$(
+    #       basename "$cfg_file" | tr '/' '_'
+    #     )__${idx}.chunks";
+    #     print "${serialized_chunks[$idx]}" > "${out}";
+    #   done;
+    # done;
 
     #### -----------------------------------------------------------------------
     ## Print matched chunk filenames (for visibility/debugging)
@@ -200,7 +220,14 @@ function main () {
       cfg_base="$( basename "${chunk_file}" | sed -E "s/^${search_ip//./_}__//;s/__[0-9]+\.chunks$//" )";
       for full_cfg in "${source_configs[@]}"; do
         if [[ "$(basename "$full_cfg")" == "$cfg_base" ]]; then
+
           matched_blocks_byfile["${full_cfg}"]+=$'\n'"$( < "${chunk_file}" )"$'\n';
+
+          # restored_block="$(
+          #   sed "s/${divisor}/\\n/g" < "${chunk_file}"
+          # )";
+          # matched_blocks_byfile["${full_cfg}"]+=$'\n'"${restored_block}"$'\n';
+
           matched_configs_order+=( "${full_cfg}" );
           break;
         fi;

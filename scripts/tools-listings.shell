@@ -40,20 +40,25 @@ function generate_configslist () {
           grep -oFw "${ip_addr}" "${configs_dirpath}/${config_file}" | \
           wc -l | tr -d ' '
         );
+        ## Extracting target Site and Device items
+        site="${config_file%%/*}"
+        device="${config_file#*/}"
         ## Generate JSON entry for the current file and append it to the JSON array
         # config_json=$(
         #   print "${config_json}" |
         #   jq --arg config "${config_file}" \
         #      --argjson lines "${config_lines}" \
-        #                '. += [{"config": $config, "lines": $lines}]'
+        #      --argjson count "${match_count}" \
+        #      '. += [{"config": $config, "lines": $lines, "count": $count}]'
         # );
         config_json=$(
           print "${config_json}" |
-          jq --arg config "${config_file}" \
+          jq --arg site "${site}" \
+             --arg device "${device}" \
              --argjson lines "${config_lines}" \
              --argjson count "${match_count}" \
-             '. += [{"config": $config, "lines": $lines, "count": $count}]'
-        );
+             '. += [{"config": {"site": $site, "device": $device}, "lines": $lines, "count": $count}]'
+        )
       done <<< "${matched_files}";
       ## Wrap the array into the final structure with {configs: $configs}
       final_json=$(
@@ -91,7 +96,7 @@ function generate_csvoutput () {
         | .objects[]
         | [
             $entry.target,
-            ($cfg | sub("^" + $configs_dirpath + "/"; "")),
+            ($cfg.site + "/" + $cfg.device | sub("^" + $configs_dirpath + "/"; "")),
             (.object // "none" | tostring | select(length > 0) // "none"),
             (.entry // "none" | tostring | select(length > 0) // "none"),
             (.description // "none" | tostring | select(length > 0) // "none"),
