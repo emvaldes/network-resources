@@ -79,10 +79,11 @@ function list_file () {
     [[ -n ${1:-} ]] || return 0;
     local target_file="${1}";
     if [[ "${debug:-false}" == true && -f "${target_file}" ]]; then
-      local base="$(basename "${target_file}")";
-      local parent="$(dirname "${target_file}")";
-      local format=$'File: '"${base}"$'\nParent: '"${parent}"$'\nSize: %z bytes\nBlocks/Inode: %b / %i\nMode: %Sp\nUID/GID: %u / %g\nAccess: %Sa\nModify: %Sm\nChange: %Sc\n'
-      stat -f "${format}" "${target_file}";
+      # local base="$(basename "${target_file}")";
+      # local parent="$(dirname "${target_file}")";
+      # local format=$'File: '"${base}"$'\nParent: '"${parent}"$'\nSize: %z bytes\nBlocks/Inode: %b / %i\nMode: %Sp\nUID/GID: %u / %g\nAccess: %Sa\nModify: %Sm\nChange: %Sc\n'
+      # stat -f "${format}" "${target_file}";
+      ls -al "${target_file}";
     fi;
     newline;
     return 0;
