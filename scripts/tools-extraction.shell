@@ -1,0 +1,394 @@
+#!/usr/bin/env bash
+
+## File: scripts/tools-extraction.shell
+
+## Purpose: Consolidated extraction function per official execution plan.
+
+## Prevent re-sourcing and ensure one-time initialization
+if [[ -n "${__TOOLS_EXTRACTION_SOURCED:-}" ]]; then return 0; fi;
+readonly __TOOLS_EXTRACTION_SOURCED=1;
+
+#### ---------------------------------------------------------------------------
+## Function: process_configs
+## Purpose: Process a restored configuration block and extract key metadata.
+## Input:
+##   $1 = target_ip        : The IP address being searched for (e.g., 10.0.0.1)
+##   $2 = config_path      : Full path to the config file where match was found
+##   $3 = restored_block   : A newline-delimited configuration block (text)
+##   $4 = object_store     : Name of an array variable to store JSON-encoded objects
+##
+## Description:
+##   - Strips whitespace and blank lines from the restored block.
+##   - Extracts the first line (object type or access rule) as the "object".
+##   - Identifies the specific line that matched the IP or pattern.
+##   - Optionally parses a description line, if present.
+##   - Attempts to classify the object based on known match patterns
+##     from matrix.json and assigns a group label.
+##   - Constructs a JSON object with the extracted fields and appends it
+##     to the provided object store array (via name reference).
+##
+## Output:
+##   - Updates the array referenced by $4 with JSON strings.
+##   - Returns 0 on success, 1 if object block is empty or invalid.
+#### ---------------------------------------------------------------------------
+
+function extract_configs () {
+    local config_file="$1";
+    local target_pattern="$2";
+    local target_listing="$3";
+    local json_output="$4";
+
+    #### -----------------------------------------------------------------------
+    ## Validate file exists
+    if [[ ! -f "${config_file}" ]]; then
+      error "[extract_configs] Config file not found: ${config_file}";
+      return 1;
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## [INSERT HERE] Check if config is readable and has content
+    message "[DEBUG] Checking if config file exists and is readable: ${config_file}";
+    if [[ ! -s "${config_file}" ]]; then
+            error_message "File '${config_file}' is missing or empty";
+      else  message "[OK] File '${config_file}' is readable and size is $(stat -c%s "${config_file}") bytes";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Full file ingestion and normalization
+    local imported_content="$( < "${config_file}" )";
+    if [[ "${verbose}" == true ]]; then
+      message "Imported Content: ${imported_content[@]}";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Remove multiple and/or empty blank lines plus "!"
+    local sanitized_content="$(
+      sed '/^\s*$/d;/^\s*!.*$/d' <<< "${imported_content}"
+    )";
+    if [[ "${verbose}" == true ]]; then
+      message "Sanitized Content: ${sanitized_content[@]}";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Replace newlines with date-base64 string (divisor)
+    local serialized_objects="$(
+      perl -pe 's/\n/'"${divisor}"'/g' <<< "${sanitized_content}"
+    )";
+    if [[ "${verbose}" == true ]]; then
+      message "Serialized Objects: ${serialized_objects[@]}";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Restoring configuration objects: inject real newlines after each object
+    local restored_lines="$(
+      sed -E "s/${divisor}([^[:space:]])/\n\1/g" <<< "${serialized_objects}"
+    )";
+    # Ensure each line ends with a literal newline (required for proper splitting)
+    restored_lines+=$'\n';
+    # Convert to array by splitting on real newlines between objects
+    IFS=$'\n' read -r -d '' -a config_objects < <(
+      printf '%s\0' "${restored_lines}"
+    );
+
+    if [[ "${verbose}" == true ]]; then
+      message "Loaded ${#config_objects[@]} config blocks";
+      for i in "${!config_objects[@]}"; do
+        message "|---> Block [${i}]\n${config_objects[$i]}";
+      done; newline;
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Match config-objects (blocks) containing search-pattern (e.g.: IP Address)
+    oIFS="${IFS}"; IFS=$'\n';
+    declare -a matched_objects=($(
+      printf "%s\n" "${config_objects[@]}" | \
+      grep -F "${target_pattern}"
+    ));
+    IFS="${oIFS}";
+
+    if [[ "${verbose}" == true ]]; then
+      message "Loaded ${#matched_objects[@]} config blocks";
+      for i in "${!matched_objects[@]}"; do
+        message "|---> Block [$i]\n${matched_objects[$i]}"
+      done; newline;
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Validating extracted data-sets (Expected count of entries)
+    local site_part="${config_file%/*}";
+    local file_part="${config_file##*/}";
+    local expected_count="$(
+      jq -r --arg site "${site_part##*/}" \
+            --arg file "${file_part}" \
+            '.configs[] | select(.config.site == $site and .config.device == $file) | .count' \
+            "${target_listing}"
+    )";
+    [[ "${verbose}" == true ]] && message "Expected Matches (Count): ${expected_count[@]}";
+    actual_count=${#matched_objects[@]};
+    if [[ "${expected_count}" != "${actual_count}" ]]; then
+      error_message "[FATAL] Count mismatch: expected=${expected_count}, actual=${actual_count} for ${config_file}";
+      return 2;
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Deserializing matched_objects:
+    declare -a restored_block=();
+    for serialized_line in "${matched_objects[@]}"; do
+      [[ "${verbose}" == true ]] && message "Serialized Line: ${serialized_line[@]}";
+      restored_block="$(
+        perl -pe 's/'"${divisor}"'/\n/g' <<< "${serialized_line}"
+      )"
+      # restored_block="${restored_block}"$'\n';
+      if [[ "${verbose}" == true ]]; then
+        message "Restored Configuration:\n${restored_block[@]}";
+      fi;
+      process_configs "${target_pattern}" \
+                      "${config_file}" \
+                      "${restored_block}" \
+                      "${json_output}" \
+      ;
+    done;
+
+    #### -----------------------------------------------------------------------
+    ## Append structured config object to fragments file (now final collector)
+    if [[ -s "${target_object}" ]]; then
+      jq -s \
+        --arg site "${config_file%/*}" \
+        --arg device "${config_file##*/}" \
+        '{
+          config: {
+            site: ($site | gsub("^.*/"; "")),
+            device: $device
+          },
+          objects: .
+        }' \
+      "${target_object}" >> "${json_fragments_file}";
+    fi;
+
+    return 0;
+}; alias extract-configs='extract_configs';
+
+#------------------------------------------------------------------------------#
+
+#### ---------------------------------------------------------------------------
+## Function: process_configs
+## Purpose:
+##   Processes a single deserialized configuration block and appends a
+##   structured JSON object into a shared object store (Bash array).
+##
+## Input:
+##   $1 = target_ip       → Target IP to match within the configuration block
+##   $2 = config_path     → Source config file path (for context only)
+##   $3 = restored_block  → A single config block (with real newlines)
+##   $4 = object_store    → A nameref to an array used to collect JSON objects
+##
+## Behavior:
+##   - Sanitizes the block (removes blank lines).
+##   - Identifies:
+##       - `object`: The main header line of the block
+##       - `entries`: All lines containing the target IP (can be multiple)
+##       - `description`: First valid description if found, or `false`
+##       - `group`: Classification group if matrix matching is enabled
+##   - Appends a JSON object to the shared `object_store` array, formatted as:
+##       {
+##         "object": "object-group",
+##         "type": "network BU1-NETWORK",
+##         "description": "Corporate HQ Subnets",
+##         "entries": [
+##           "network-object host 10.0.0.1",
+##           ...
+##         ],
+##         "group": "Business-Unit-HQ"
+##       }
+##
+## Notes:
+##   - If no entry line matches the target IP, the block is skipped.
+##   - Classification uses both object name and description for matching.
+##   - This is invoked once per config block match from `extract_configs()`.
+#### ---------------------------------------------------------------------------
+
+#### ---------------------------------------------------------------------------
+## Function: process_configs
+## Purpose:
+##   Processes a single deserialized configuration block and appends a
+##   structured JSON object into a shared object store (Bash array).
+## Supports:
+##   - Single-line access-list or nat entries
+##   - Two-line objects with description or host
+##   - Multi-line object groups with nested entries
+#### ---------------------------------------------------------------------------
+
+function process_configs () {
+    local target_pattern="$1";
+    local config_path="$2";
+    local restored_block="$3";
+    local json_output="$4";
+
+    #### -----------------------------------------------------------------------
+    ## Sanitize and validate non-empty block
+    local cleaned_block;
+    cleaned_block="$(
+      sed '/^[[:space:]]*$/d' <<< "${restored_block}"
+    )";
+
+    [[ -z "${cleaned_block}" ]] && return;
+    if [[ "${verbose}" == true ]]; then
+      message "[process_configs] Raw Block:\n${restored_block}";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Extract object line (first non-empty line)
+    local object_line;
+    object_line="$(
+      head -n 1 <<< "${cleaned_block}" | sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
+    )";
+    [[ -z "${object_line}" ]] && return;
+
+    #### -----------------------------------------------------------------------
+    ## Parse object keyword and type value
+    local object_keyword type_value;
+    object_keyword="$(
+      awk '{print $1}' <<< "${object_line}"
+    )";
+    type_value="$(
+      awk '{$1=""; print substr($0,2)}' <<< "${object_line}"
+    )";
+
+    if [[ "${verbose}" == true ]]; then
+      print "[process_configs] object   : ${object_keyword}";
+      print "[process_configs] type     : ${type_value}";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Extract all lines (entries) except description
+    local -a entries=();
+    while IFS= read -r line; do
+      local trimmed;
+      trimmed="$(
+        sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//' <<< "${line}"
+      )";
+      [[ -z "${trimmed}" ]] && continue;
+      [[ "${trimmed,,}" =~ ^description[[:space:]] ]] && continue;
+      entries+=( "${trimmed}" );
+    done <<< "${cleaned_block}";
+
+    ## Remove object header line if multiple entries
+    if (( ${#entries[@]} > 1 )); then
+      entries=( "${entries[@]:1}" );
+    fi;
+
+    if [[ "${verbose}" == true ]]; then
+      message "[process_configs] Entries:";
+      for e in "${entries[@]}"; do
+        print "  - ${e}";
+      done;
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Extract first line containing target IP
+    local matched_line;
+    matched_line="$(
+      grep -wF "${target_pattern}" <<< "${cleaned_block}" | \
+      head -n 1 | \
+      sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
+    )";
+
+    [[ -z "${matched_line}" ]] && return;
+    [[ "${verbose}" == true ]] && \
+       message "[process_configs] Matched: ${matched_line}";
+
+    #### -----------------------------------------------------------------------
+    ## Extract optional description (if present)
+    local desc_val="false";
+    # desc_val="$(
+    #   grep -i '^[[:space:]]*description' <<< "${cleaned_block}" | \
+    #   head -n 1 | \
+    #   sed -E 's/^[^"]*"?description"?[[:space:]]*//I; s/^[[:space:]]*//; s/[[:space:]]*$//'
+    # )";
+
+    [[ -z "${desc_val}" ]] && desc_val="false";
+    [[ "${verbose}" == true ]] && \
+       message "[process_configs] Description: ${desc_val}";
+
+    #### -----------------------------------------------------------------------
+    ## Determine group from matrix (if enabled)
+    local group_val="Unclassified";
+    if [[ "${classify_targets:-false}" == true ]]; then
+      local object_key;
+      object_key="$(
+        awk '{print $NF}' <<< "${type_value}" | \
+        sed -E 's/[[:punct:]]*$//'
+      )";
+      group_val="$(
+        jq -r --arg key "${object_key}" \
+                        'map(select(.match[]? | contains($key))) | .[0].group' \
+        <<< "${matrix_configs}" )";
+      if [[ -z "${group_val}" || "${group_val}" == "null" ]]; then
+        group_val="$(
+          jq -r --arg desc "${desc_val}" 'map(select(.match[]? == $desc)) | .[0].group' <<< "${matrix_configs}"
+        )";
+      fi;
+      [[ -z "${group_val}" || "${group_val}" == "null" ]] && group_val="Unclassified";
+    fi;
+
+    [[ "${verbose}" == true ]] && \
+       message "[process_configs] Group: ${group_val}";
+
+    ## -----------------------------------------------------------------------
+    ## Convert Bash array entries[] to JSON-safe array string
+    local entries_2json="$(
+      printf '%s\n' "${entries[@]}" | jq -R . | jq -s .
+    )";
+
+    export target_object;
+    if [[ "${#entries[@]}" -eq 1 ]]; then
+            # Single-line object: omit "type"
+            target_object="$(
+              jq -n \
+                --arg object "${object_keyword}" \
+                --arg description "${desc_val}" \
+                --argjson entries "${entries_2json}" \
+                --arg group "${group_val}" \
+                '{
+                  object: $object,
+                  type: false,
+                  description: ($description | select(. != "" and . != "null") // false),
+                  entries: $entries,
+                  group: $group
+                }'
+            )";
+      else  # Multi-line object: keep "type"
+            target_object="$(
+              jq -n \
+                --arg object "${object_keyword}" \
+                --arg type "${type_value}" \
+                --arg description "${desc_val}" \
+                --argjson entries "${entries_2json}" \
+                --arg group "${group_val}" \
+                '{
+                  object: $object,
+                  type: $type,
+                  description: ($description | select(. != "" and . != "null") // false),
+                  entries: $entries,
+                  group: $group
+                }'
+            )";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Write to JSON output file if provided as $4
+    if [[ -n "${4:-}" && -n "${target_object:-}" ]]; then
+      print "${target_object}" >> "${4}";
+    fi;
+
+    ## Append final JSON object to object_store
+    if [[ "${verbose:-false}" == true ]]; then
+      message "[process_configs] JSON Object (output):";
+      print "${target_object}" | jq .;
+      newline;
+    fi;
+
+    return 0
+}; alias process-configs='process_configs';
+
+#------------------------------------------------------------------------------#

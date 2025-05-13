@@ -30,6 +30,13 @@ function print () {
 };
 
 #------------------------------------------------------------------------------#
+## Output Utilities: Print an error message in consistent format
+function message () {
+  [[ -n ${1:-} ]] && local message="${1}" || return 0;
+  print "${message}"; newline;
+};
+
+#------------------------------------------------------------------------------#
 ## Logging Utilities: Log Information (info)
 function log_info () {
   [[ -n ${1:-} ]] || return 0;

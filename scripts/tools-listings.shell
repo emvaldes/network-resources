@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# File: scripts/tools-listings.shell
+## File: scripts/tools-listings.shell
 
 ## Prevent re-sourcing and ensure one-time initialization
 if [[ -n "${__TOOLS_LISTINGS_SOURCED:-}" ]]; then return 0; fi;
@@ -85,32 +85,54 @@ function generate_csvoutput () {
       error_message "Missing ${input_json}, cannot generate CSV.";
       return 1;
     fi;
+
     ## Build CSV header and extract values from JSON using jq
+
+    # {
+    #   message "target,config,object,entry,description,group"; newline;
+    #   ## Flatten nested JSON structure: one row per matched object per config per IP
+    #   jq -r --arg configs_dirpath "${configs_dirpath}" \
+    #     '.[] as $entry
+    #     | $entry.configs[]
+    #     | .config as $cfg
+    #     | .objects[]
+    #     | [
+    #         $entry.target,
+    #         ($cfg.site + "/" + $cfg.device | sub("^" + $configs_dirpath + "/"; "")),
+    #         (.object // "none" | tostring | select(length > 0) // "none"),
+    #         (.entry // "none" | tostring | select(length > 0) // "none"),
+    #         (.description // "none" | tostring | select(length > 0) // "none"),
+    #         (.group // "none" | tostring | select(length > 0) // "none")
+    #       ]
+    #     | @csv' \
+    #   "${input_json}";
+    # } > "${output_csv}";
+
     {
-      print "target,config,object,entry,description,group"; newline;
+      message "target,site,device,object,entry,description,group";
       ## Flatten nested JSON structure: one row per matched object per config per IP
-      jq -r --arg configs_dirpath "${configs_dirpath}" '
+      jq -r '
         .[] as $entry
         | $entry.configs[]
         | .config as $cfg
         | .objects[]
         | [
             $entry.target,
-            ($cfg.site + "/" + $cfg.device | sub("^" + $configs_dirpath + "/"; "")),
-            (.object // "none" | tostring | select(length > 0) // "none"),
-            (.entry // "none" | tostring | select(length > 0) // "none"),
-            (.description // "none" | tostring | select(length > 0) // "none"),
-            (.group // "none" | tostring | select(length > 0) // "none")
+            $cfg.site,
+            $cfg.device,
+            (.object // "none"),
+            (.entries[0] // "none"),  # assuming you want the first entry
+            (.description // "none"),
+            (.group // "none")
           ]
-        | @csv
-      ' "${input_json}";
+        | @csv' "${input_json}";
     } > "${output_csv}";
+
     ## Optionally print CSV as a formatted table to the terminal
     if [[ "${verbose}" == true ]]; then
       if [[ -s "${output_csv}" ]]; then
         newline;
-        print "CSV Report Summary (tabulated):";
-        newline;
+        message "CSV Report Summary (tabulated):";
         column -t -s, "${output_csv}" | less -SFX;
       fi;
     fi;

@@ -1,0 +1,267 @@
+# #### -----------------------------------------------------------------------
+# ## Holds the list of configuration file paths that matched this specific IP.
+# ## This array preserves the original file order and is used to drive structured
+# ## JSON generation so that the output reflects the same scan sequence.
+# ## Each entry maps to a key in matched_blocks_byfile[] containing the config blocks.
+# declare -ga matched_configs_order=();
+# # declare -gA matched_blocks_byfile=();
+# local search_ip="${target_address%%/*}";
+#
+# #### -----------------------------------------------------------------------
+# ## Each 100-line chunk that contains the IP is saved to disk using the following pattern:
+# ##   <IP-with-dots-replaced>__<config-filename>__<chunk-offset>.chunks
+# ## For example:
+# ##   10_0_0_1__fw1.conf__200.chunks
+# ## This naming allows easy identification of which IP, file, and chunk offset is involved,
+# ## and is later used to reassemble blocks back into memory for final processing.
+#
+# for cfg_file in "${source_configs[@]}"; do
+#   mapfile -t lines < <( sed 's/!/\n/g' "$cfg_file" | sed '/^[[:space:]]*$/d' );
+#   total="${#lines[@]}"; start=0; size=100;
+#   while (( start < total )); do
+#     chunk=( "${lines[@]:start:size}" );
+#     (( ${#chunk[@]} == 0 )) && break;
+#     block="$( printf "%s\n" "${chunk[@]}" )";
+#     if grep -qF "${target_address}" <<< "$block"; then
+#       out="${TMP_DIR}/${target_address//./_}__$(basename "$cfg_file" | tr '/' '_')__$start.chunks";
+#       print "$block" > "$out";
+#     fi;
+#     (( start += size ));
+#   done;
+# done;
+#
+# # for cfg_file in "${source_configs[@]}"; do
+# #   declare -a serialized_chunks=();
+# #   serialize_datablocks "${target_address}" "${cfg_file}" "${divisor}" serialized_chunks;
+# #   for idx in "${!serialized_chunks[@]}"; do
+# #     out="${TMP_DIR}/${target_address//./_}__$(
+# #       basename "$cfg_file" | tr '/' '_'
+# #     )__${idx}.chunks";
+# #     print "${serialized_chunks[$idx]}" > "${out}";
+# #   done;
+# # done;
+#
+# #### -----------------------------------------------------------------------
+# ## Print matched chunk filenames (for visibility/debugging)
+# print; print "Matched chunks:"; newline;
+# find "${TMP_DIR}" -type f -name "${search_ip//./_}__*.chunks" | sort | while read -r chunk; do
+#   print " - $(basename "$chunk")"
+# done;
+# newline;
+#
+# ## Rebuild matched blocks into memory structure (by config file)
+# for chunk_file in "${TMP_DIR}/${search_ip//./_}"__*.chunks; do
+#   [[ -f "$chunk_file" ]] || continue;
+#   cfg_base="$( basename "${chunk_file}" | sed -E "s/^${search_ip//./_}__//;s/__[0-9]+\.chunks$//" )";
+#   for full_cfg in "${source_configs[@]}"; do
+#     if [[ "$(basename "$full_cfg")" == "$cfg_base" ]]; then
+#
+#       matched_blocks_byfile["${full_cfg}"]+=$'\n'"$( < "${chunk_file}" )"$'\n';
+#
+#       # restored_block="$(
+#       #   sed "s/${divisor}/\\n/g" < "${chunk_file}"
+#       # )";
+#       # matched_blocks_byfile["${full_cfg}"]+=$'\n'"${restored_block}"$'\n';
+#
+#       matched_configs_order+=( "${full_cfg}" );
+#       break;
+#     fi;
+#   done;
+# done;
+#
+# #### -----------------------------------------------------------------------
+# ## If no matches found, skip output and exit
+# if [[ ${#matched_configs_order[@]} -eq 0 ]]; then
+#   # [[ "${debug}" == true ]] && \
+#   #    newline; print "No configuration files matched IP: ${target_address}"; newline 2;
+#   return 0;
+# fi;
+# # [[ "${verbose}" == true ]] && \
+#    newline;
+#    print "${target_index:-} Valid IP Address: ${target_address}";
+#    newline 2;
+#
+# #### -----------------------------------------------------------------------
+# ## Generate enriched output JSON from matched_blocks_byfile[]
+# local tmp_json="${TMP_DIR}/partial.json";
+# generate_objects "${target_address}" "${tmp_json}";
+#
+# #### -----------------------------------------------------------------------
+# ## Listing matching resources (optional) + write to reports
+# ## Optional list output (raw config snippet display)
+# local list_outfile="${reports_folder}/lists/${search_ip}.list";
+# local json_outfile="${reports_folder}/json/${search_ip}.json";
+# # : > "${list_outfile}";  # truly empty file
+# print > "${list_outfile}";  # prepend newline at the top
+#
+# for cfg_file in "${matched_configs_order[@]}"; do
+#   [[ -v matched_blocks_byfile["$cfg_file"] ]] || continue;
+#   local first_block=true;
+#   config_heading="Config: $(
+#     relative_configpath "${cfg_file}"
+#   )";
+#   print "${nl}${config_heading}${nl}${nl}" >> "${list_outfile}";
+#   [[ "${verbose}" == true ]] && \
+#      # print "Config: ${cfg_file}"; newline 2;
+#      print "${config_heading}"; newline 2;
+#   while IFS= read -r matched_object; do
+#     restored="$(
+#       sed '/^[[:space:]]*$/d' <<< "${matched_object}"
+#     )";
+#     if [[ -n "${restored//[[:space:]]/}" ]]; then
+#       print "${restored}" >> "${list_outfile}";
+#       [[ "${verbose}" == true ]] && print "${restored}"; newline;
+#       newline >> "${list_outfile}";
+#     fi;
+#   done <<< "${matched_blocks_byfile[$cfg_file]}";
+# done;
+#
+# cp "${tmp_json}" "${json_outfile}";
+# [[ "${verbose}" == true ]] && jq . "${json_outfile}" && echo;
+#
+# #### -----------------------------------------------------------------------
+# ## Final output JSON object:
+# ## Append structured CSV entry for IP to master report
+# local csv_outfile="${reports_folder}/reports.csv";
+# if [[ ! -f "${csv_outfile}" ]]; then
+#   print "IP,Config,Object,Entry,Description,Group" > "${csv_outfile}";
+# fi;
+#
+# jq -r --arg ip "${target_address}" '
+#   .configs[] as $cfg |
+#   $cfg.objects[]? |
+#   [
+#     $ip,
+#     $cfg.config,
+#     .object,
+#     (if .entry == false then "" else .entry end),
+#     (if .description == false then "" else .description end),
+#     .group
+#   ] | @csv
+# ' "${json_outfile}" >> "${csv_outfile}";
+#
+# #### -----------------------------------------------------------------------
+# # Ensure TMP_DIR and divisor are set from external scripts
+# [[ -z "${TMP_DIR:-}" ]] && { error "TMP_DIR not defined"; return 1; };
+# [[ -z "${divisor:-}" ]] && { error "divisor not defined"; return 1; };
+# local raw_content serialized_lines matched_lines restored_block expected_count actual_count;
+# local -a normalized_lines serialized_blocks matched_blocks;
+#
+# #### -----------------------------------------------------------------------
+# ## STEP 1: Full file ingestion and normalization
+# raw_content="$( < "${config_file}" )";
+# mapfile -t normalized_lines < <(
+#   sed '/^\s*$/d;/^\s*!$/d' <<< "${raw_content}"
+# );
+#
+# #### -----------------------------------------------------------------------
+# ## STEP 2: Serialization
+#
+# # serialized_blocks=();
+# # local current_block="";
+# # for line in "${normalized_lines[@]}"; do
+# #   if [[ "${line}" =~ ^[^[:space:]] ]]; then
+# #           if [[ -n "${current_block}" ]]; then
+# #             serialized_blocks+=( "${current_block}" );
+# #           fi;
+# #           current_block="${line}";
+# #     else  current_block+="${divisor}${line}"
+# #   fi;
+# # done;
+# # [[ -n "${current_block}" ]] && serialized_blocks+=( "${current_block}" );
+#
+# print "===== SERIALIZATION DEBUG START =====";
+# print "[INFO] Reading config: ${config_file}";
+# print "[INFO] Using divisor: ${divisor}";
+# print "--- ORIGINAL CONTENT ---";
+# echo "${raw_content}" | head -n 30;
+# print "--- NORMALIZED LINES ---";
+# for l in "${normalized_lines[@]}"; do echo "${l}"; done;
+#
+# # serialized_blocks=();
+# # local current_block="";
+# # for line in "${normalized_lines[@]}"; do
+# #   if [[ "${line}" =~ ^[^[:space:]] ]]; then
+# #     if [[ -n "${current_block}" ]]; then
+# #       serialized_blocks+=( "${current_block}" );
+# #     fi;
+# #     current_block="${line}";
+# #   else
+# #     current_block+="${divisor}${line}";
+# #   fi;
+# # done;
+# # [[ -n "${current_block}" ]] && serialized_blocks+=( "${current_block}" );
+#
+# local joined_text="";
+# joined_text="$(
+#   printf "%s${divisor}" "${normalized_lines[@]}" |
+#   sed -E "s/${divisor}([^[:space:]])/\n\1/g"
+# )";
+#
+# IFS=$'\n' read -r -d '' -a serialized_blocks < <(
+#   awk -v d="${divisor}" '
+#     /^[^[:space:]]/ {
+#       if (NR > 1) print block;
+#       block = $0;
+#       next;
+#     }
+#     { block = block d $0 }
+#     END { if (length(block)) print block }
+#   ' <<< "${joined_text}"
+# );
+#
+# print "--- SERIALIZED BLOCKS ---";
+# for blk in "${serialized_blocks[@]}"; do
+#   echo -e "BLOCK >> ${blk}" | head -n 5;
+# done;
+# print "===== SERIALIZATION DEBUG END =====";
+#
+# #### -----------------------------------------------------------------------
+# ## STEP 3: Pattern Matching
+# matched_blocks=();
+# for serialized in "${serialized_blocks[@]}"; do
+#   if grep -q "${target_pattern}" <<< "${serialized}"; then
+#       matched_blocks+=( "${serialized}" );
+#   fi;
+# done;
+#
+# #### -----------------------------------------------------------------------
+# ## STEP 4: Match Count Validation
+# # expected_count=$(
+# #   jq -r --arg cfg "${config_file}" \
+# #     '.configs[] | select(.config == $cfg) | .count' "${ip_json_file}"
+# # );
+# local site_part="${config_file%/*}"
+# local file_part="${config_file##*/}"
+# expected_count="$(
+#   jq -r --arg site "${site_part##*/}" \
+#         --arg file "${file_part}" \
+#         '.configs[] | select(.config.site == $site and .config.device == $file) | .count' \
+#         "${ip_json_file}"
+# )";
+#
+# actual_count=${#matched_blocks[@]};
+# if [[ "${expected_count}" != "${actual_count}" ]]; then
+#   error "[FATAL] Count mismatch: expected=${expected_count}, actual=${actual_count} for ${config_file}";
+#   return 2;
+# fi;
+#
+# #### -----------------------------------------------------------------------
+# ## STEP 5: Early Housekeeping
+# unset raw_content normalized_lines serialized_blocks current_block serialized;
+# [[ "${DEBUG:-}" == "true" || "${VERBOSE:-}" == "true" ]] && \
+#     print "[CLEANUP] Released memory buffers after successful validation for ${config_file}";
+#
+# #### -----------------------------------------------------------------------
+# ## STEP 6 & 7: Deserialization and Pass to Reporting
+# for serialized_line in "${matched_blocks[@]}"; do
+#   restored_block="$(
+#     sed "s/${divisor}/\\n/g" <<< "${serialized_line}" | sed '$!a\\'
+#   )";
+#   restored_block="${restored_block}"$'\n';
+#   # Pass restored blocks directly to existing processing logic (do not alter)
+#   process_block "${target_pattern}" "${config_file}" "${restored_block}";
+# done;
+#
+# #### -----------------------------------------------------------------------
+# ## STEP 8: Final Cleanup is automatic via trap for TMP_DIR

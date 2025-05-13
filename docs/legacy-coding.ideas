@@ -110,3 +110,62 @@ if [[ -f "${ip_list_file}" ]]; then
            error_message "Project Source Configurations path not found: ${configs_dirpath}";
         return 1;
 fi;
+
+#------------------------------------------------------------------------------#
+
+#### ---------------------------------------------------------------------------
+## Each 100-line chunk that contains the IP is saved to disk using the following pattern:
+##   <IP-with-dots-replaced>__<config-filename>__<chunk-offset>.chunks
+## For example:
+##   10_0_0_1__fw1.conf__200.chunks
+## This naming allows easy identification of which IP, file, and chunk offset is involved,
+## and is later used to reassemble blocks back into memory for final processing.
+
+# for cfg_file in "${source_configs[@]}"; do
+#   mapfile -t lines < <( sed 's/!/\n/g' "$cfg_file" | sed '/^[[:space:]]*$/d' );
+#   total="${#lines[@]}"; start=0; size=100;
+#   while (( start < total )); do
+#     chunk=( "${lines[@]:start:size}" );
+#     (( ${#chunk[@]} == 0 )) && break;
+#     block="$( printf "%s\n" "${chunk[@]}" )";
+#     if grep -qF "${target_address}" <<< "$block"; then
+#       out="${TMP_DIR}/${target_address//./_}__$(basename "$cfg_file" | tr '/' '_')__$start.chunks";
+#       print "$block" > "$out";
+#     fi;
+#     (( start += size ));
+#   done;
+# done;
+#
+# #### -----------------------------------------------------------------------
+# ## Print matched chunk filenames (for visibility/debugging)
+# print; print "Matched chunks:"; newline;
+# find "${TMP_DIR}" -type f -name "${search_ip//./_}__*.chunks" | sort | while read -r chunk; do
+#   print " - $(basename "$chunk")"
+# done;
+# newline;
+#
+# ## Rebuild matched blocks into memory structure (by config file)
+# for chunk_file in "${TMP_DIR}/${search_ip//./_}"__*.chunks; do
+#   [[ -f "$chunk_file" ]] || continue;
+#   cfg_base="$( basename "${chunk_file}" | sed -E "s/^${search_ip//./_}__//;s/__[0-9]+\.chunks$//" )";
+#   for full_cfg in "${source_configs[@]}"; do
+#     if [[ "$(basename "$full_cfg")" == "$cfg_base" ]]; then
+#
+#       matched_blocks_byfile["${full_cfg}"]+=$'\n'"$( < "${chunk_file}" )"$'\n';
+#       matched_configs_order+=( "${full_cfg}" );
+#       break;
+#     fi;
+#   done;
+# done;
+#
+# #### -----------------------------------------------------------------------
+# ## If no matches found, skip output and exit
+# if [[ ${#matched_configs_order[@]} -eq 0 ]]; then
+#   # [[ "${debug}" == true ]] && \
+#   #    newline; print "No configuration files matched IP: ${target_address}"; newline 2;
+#   return 0;
+# fi;
+# # [[ "${verbose}" == true ]] && \
+#    newline;
+#    print "${target_index:-} Valid IP Address: ${target_address}";
+#    newline 2;

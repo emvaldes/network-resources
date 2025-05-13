@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
-# File: scripts/parse-listings.shell
-# Purpose: Parse a set of IP addresses against a directory of configuration files
-#          and produce detailed per-IP reports in JSON and CSV format.
+## File: scripts/parse-listings.shell
 
-# Requirements: Bash v4+ and GNU utilities (jq, find, grep, sed, etc.)
+## Purpose: Parse a set of IP addresses against a directory of configuration files
+##          and produce detailed per-IP reports in JSON and CSV format.
+
+## Requirements: Bash v4+ and GNU utilities (jq, find, grep, sed, etc.)
 
 set -euo pipefail  ## Strict mode: exit on error, undefined var use, and pipeline failure
 # set -x;          ## Enable for execution tracing/debugging
@@ -241,16 +242,32 @@ function main () {
     ## This guarantees that each parsed IP’s output is available before aggregation
     expected_reports=${#filtered_target_listing[@]};  ## Total IPs that should have a corresponding JSON report
     actual_reports=$(
-      find "${json_dir}" -type f -name '*.json' | wc -l
+      find "${json_dir}" -type f -name '*.json' | wc -l | sed -e 's|\ ||g'
     );  ## Count current .json files in output directory
 
     ## Poll loop: sleep until all JSON files are confirmed present
-    while (( actual_reports < expected_reports )); do
-      sleep 0.2;  ## Short delay to avoid overloading the disk with find/wc calls
-      actual_reports=$(
-        find "${json_dir}" -type f -name '*.json' | wc -l
-      );  ## Recalculate number of completed reports
+
+    # while (( actual_reports < expected_reports )); do
+    #   sleep 0.2;  ## Short delay to avoid overloading the disk with find/wc calls
+    #   actual_reports=$(
+    #     find "${json_dir}" -type f -name '*.json' | wc -l
+    #   );  ## Recalculate number of completed reports
+    # done;
+
+    ## Optional safeguard: wait up to 5s for all reports to be present
+    timeout=5;
+    elapsed=0;
+    while (( actual_reports < expected_reports && elapsed < timeout * 10 )); do
+      sleep 0.1;
+      (( elapsed++ ));
+      actual_reports="$(
+        find reports/json -type f -name '*.json' | wc -l | sed -e 's|\ ||g'
+      )";
     done;
+    if (( actual_reports < expected_reports )); then
+      error_message "[ERROR] Only ${actual_reports} of ${expected_reports} reports were generated.";
+      exit 1;
+    fi;
 
     #### -----------------------------------------------------------------------
     ## Merge all per-IP JSONs into a single master report
