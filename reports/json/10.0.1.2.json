@@ -2,24 +2,40 @@
   "target": "10.0.1.2",
   "configs": [
     {
-      "object": "object-group",
-      "type": "network BU1-NETWORK",
-      "description": "false",
-      "entries": [
-        "network-object host 10.0.0.1",
-        "network-object host 10.0.1.2",
-        "network-object 192.168.1.0 255.255.255.0"
-      ],
-      "group": "Identified Matching Entries"
+      "config": {
+        "site": "cisco",
+        "device": "fw1.cfg"
+      },
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network BU1-NETWORK",
+          "description": "false",
+          "entries": [
+            "network-object host 10.0.0.1",
+            "network-object host 10.0.1.2",
+            "network-object 192.168.1.0 255.255.255.0"
+          ],
+          "group": "Identified Matching Entries"
+        }
+      ]
     },
     {
-      "object": "interface",
-      "type": false,
-      "description": "false",
-      "entries": [
-        "ip address 10.0.1.2 255.255.255.0"
-      ],
-      "group": "Business-Unit-Networks"
+      "config": {
+        "site": "misc",
+        "device": "switch.conf"
+      },
+      "objects": [
+        {
+          "object": "interface",
+          "type": false,
+          "description": "false",
+          "entries": [
+            "ip address 10.0.1.2 255.255.255.0"
+          ],
+          "group": "Business-Unit-Networks"
+        }
+      ]
     }
   ]
 }
