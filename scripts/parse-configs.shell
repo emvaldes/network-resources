@@ -179,12 +179,9 @@ function main () {
 
     if [[ -s "${tmp_fragments}" ]]; then
       jq -s --arg target "${target_address}" \
-            '{ target: $target, configs: . }' \
+                         '{ target: $target, configs: . }' \
       "${tmp_fragments}" > "${json_outfile}";
-    fi;
-
-    if [[ "${verbose}" == true ]]; then
-      jq . "${json_outfile}" && newline;
+      print_file "${json_outfile}";
     fi;
 
     return 0;

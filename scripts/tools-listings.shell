@@ -68,9 +68,12 @@ function generate_configslist () {
       );
       ## Save the final JSON to the target file
       jq -r <<< "${final_json}" > "${target_file}";
+      print_file "${target_file}";
+
       ## Log the generation of the JSON file
       print "${nl}[INFO] Generated JSON for IP: ${ip_addr} at ${target_file}" \
             >> "${targets_logsfile}";
+      # list_file "${targets_logsfile}";
     fi;
     return 0;
 }; alias generate-configslist='generate_configslist';
@@ -129,6 +132,7 @@ function generate_csvoutput () {
           ]
         | @csv' "${input_json}";
     } > "${output_csv}";
+    print_file "${output_csv}";
 
     ## Optionally print CSV as a formatted table to the terminal
     if [[ "${verbose}" == true ]]; then
@@ -159,6 +163,7 @@ function manage_configs () {
       job_ip_map["$job_pid"]="${ip_addr}";
       print "${nl}[INFO] Started IP: ${ip_addr} (PID: ${job_pid})" \
             >> "${started_logsfile}"; newline;
+      # list_file "${started_logsfile}";
     done;
     ## Monitor background jobs
     while (( ${#job_pids[@]} > 0 )); do
@@ -168,6 +173,7 @@ function manage_configs () {
           ip="${job_ip_map[$pid]}"
                 print "${nl}[INFO] Completed IP: ${ip} (PID: $pid)" \
                       >> "${success_logsfile}"; newline;
+                # list_file "${success_logsfile}";
           else  valid_job_pids+=("$pid");
         fi;
       done;
@@ -201,6 +207,7 @@ function matching_configs () {
       ## Optionally log the start of the job
       print "${nl}[INFO] Started IP: ${ip_addr} (PID: ${job_pid})" \
             >> "${started_logsfile}"; newline;
+      # list_file "${started_logsfile}";
     done;
     ## Monitor the background jobs until all are completed
     while (( ${#job_pids[@]} > 0 )); do
@@ -211,6 +218,7 @@ function matching_configs () {
                 ip_address="${job_ip_map[$pid]}"  ## Retrieve the IP associated with this job PID
                 print "${nl}[INFO] Completed IP: ${ip_address} (PID: $pid)" \
                       >> "${success_logsfile}"; newline;
+                # list_file "${success_logsfile}";
           else  valid_job_pids+=("$pid");  ## Job still running
         fi;
       done;
@@ -250,12 +258,13 @@ function parse_configs () {
     [[ "${verbose}" == true ]] && execute+=( --verbose );
     [[ "${debug}" == true ]] && execute+=( --debug );
     if [[ "${enable_logging:-}" == true ]]; then
-      mkdir -p "${local_state_dir}/jobs" "${local_state_dir}/errors";
-      logfile="${local_state_dir}/jobs/${ip_addr}.job";
-      if [[ "${debug}" == true ]]; then
-              bash -x "${execute[@]}" > "${logfile}" 2>&1;
-        else  "${execute[@]}" > "${logfile}" 2>&1;
-      fi;
+            mkdir -p "${local_state_dir}/jobs" "${local_state_dir}/errors";
+            logfile="${local_state_dir}/jobs/${ip_addr}.job";
+            if [[ "${debug}" == true ]]; then
+                    bash -x "${execute[@]}" > "${logfile}" 2>&1;
+              else  "${execute[@]}" > "${logfile}" 2>&1;
+            fi;
+            list_file "${logfile}";
       else  if [[ "${debug}" == true ]]; then
                     bash -x "${execute[@]}" >/dev/null 2>&1;
               else  "${execute[@]}" >/dev/null 2>&1;
@@ -263,11 +272,14 @@ function parse_configs () {
     fi;
     local status=$?;
     if (( status != 0 )); then
+            errors_logfile="${local_state_dir}/errors/errors.log";
             {
               print "[ERROR] IP: ${ip_addr} failed :: exit ${status}"; newline;
               print "  See: ${logfile}";
-            } >> "${local_state_dir}/errors/errors.log";
+            } >> "${errors_logfile}";
+            # list_file "${errors_logfile}";
       else  print "${nl}[DONE] IP: ${ip_addr}" >> "${reports_logsfile}";
+            # list_file "${reports_logsfile}";
     fi;
     return "${status}";
 }; alias parse-configs='parse_configs';

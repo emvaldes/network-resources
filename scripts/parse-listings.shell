@@ -132,8 +132,10 @@ function main () {
     ## Custom/Default reports folder:
     export reports_folder="${reports_folder:-reports}";
     mkdir -p "${reports_folder}";
+
     ## Initializing the log file
     : > "${reports_logsfile}";  ## Truncate report log
+    [[ "${debug}" == true ]] && list_file "${reports_logsfile}";
 
     #### -----------------------------------------------------------------------
     ## Validating IP Addresses (Skipping?)
@@ -193,6 +195,7 @@ function main () {
       print "Unmapped IPs:        $(( total_requested - total_mapped ))";
       newline 2;
     } >> "${reports_logsfile}";
+    print_file "${reports_logsfile}";
 
     #### -----------------------------------------------------------------------
     ## Log unmapped IPs explicitly (no matches found)
@@ -206,6 +209,7 @@ function main () {
       done;
       newline;
     } >> "${reports_logsfile}";
+    print_file "${reports_logsfile}";
 
     #### -----------------------------------------------------------------------
     ## Launch and monitor parallel config parsing jobs for matched IPs
@@ -277,6 +281,7 @@ function main () {
       );
       if (( ${#json_files[@]} > 0 )); then
         jq -s '.' "${json_files[@]}" > "${master_json}";
+        print_file "${master_json}";
       fi;
     fi;
 
