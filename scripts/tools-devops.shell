@@ -74,35 +74,58 @@ function exit_error () {
 }; alias exit-error='exit_error';
 
 #------------------------------------------------------------------------------#
-## Listing File Information
+## Listing File Information (portable for macOS and Linux/WSL)
 function list_file () {
     [[ -n ${1:-} ]] || return 0;
     local target_file="${1}";
+    local base="$(basename "${target_file}")";
+    local parent="$(dirname "${target_file}")";
     if [[ "${debug:-false}" == true && -f "${target_file}" ]]; then
-      # local base="$(basename "${target_file}")";
-      # local parent="$(dirname "${target_file}")";
-      # local format=$'File: '"${base}"$'\nParent: '"${parent}"$'\nSize: %z bytes\nBlocks/Inode: %b / %i\nMode: %Sp\nUID/GID: %u / %g\nAccess: %Sa\nModify: %Sm\nChange: %Sc\n'
-      # stat -f "${format}" "${target_file}";
-      ls -al "${target_file}";
+      local format_common="";
+      local format_os="";
+      local format="";
+      # Common prefix
+      format_common+=$'File: '"${base}"$'\n';
+      format_common+=$'Parent: '"${parent}"$'\n';
+      # OS-specific body
+      if [[ "$(uname)" == "Darwin" ]]; then
+            format_os+=$'Size: %z bytes\n';
+            format_os+=$'Blocks/Inode: %b / %i\n';
+            format_os+=$'Mode: %Sp\n';
+            format_os+=$'UID/GID: %u / %g\n';
+            format_os+=$'Access: %Sa\n';
+            format_os+=$'Modify: %Sm\n';
+            format_os+=$'Change: %Sc\n';
+            format="${format_common}${format_os}";
+            stat -f "${format}" "${target_file}";
+      else  format_os+=$'Size: %s bytes\n';
+            format_os+=$'Blocks/Inode: %b / %i\n';
+            format_os+=$'Mode: %A\n';
+            format_os+=$'UID/GID: %u / %g\n';
+            format_os+=$'Access: %x\n';
+            format_os+=$'Modify: %y\n';
+            format_os+=$'Change: %z\n';
+            format="${format_common}${format_os}";
+            stat --format="${format}" "${target_file}";
+      fi;
     fi;
-    newline;
     return 0;
 }; alias list-file='list_file';
 
 ## Printing File Content
 function print_file () {
-  [[ -n ${1:-} ]] || return 0;
-  local target_file="${1}";
-  if [[ "${debug:-false}" == true && -f "${target_file}" ]]; then
-    list_file "${target_file}";
-    case "${target_file}" in
-      *.json)  jq . "${target_file}" 2>/dev/null || cat "${target_file}" ;;
-      *.ya?ml) yq '.' "${target_file}" 2>/dev/null || cat "${target_file}" ;;
-      *)       cat "${target_file}" ;;
-    esac;
-  fi;
-  newline;
-  return 0;
+    [[ -n ${1:-} ]] || return 0;
+    local target_file="${1}";
+    if [[ "${debug:-false}" == true && -f "${target_file}" ]]; then
+      list_file "${target_file}";
+      case "${target_file}" in
+        *.json)  jq . "${target_file}" 2>/dev/null || cat "${target_file}" ;;
+        *.ya?ml) yq '.' "${target_file}" 2>/dev/null || cat "${target_file}" ;;
+        *)       cat "${target_file}" ;;
+      esac;
+    fi;
+    newline;
+    return 0;
 }; alias print-file='print_file';
 
 #------------------------------------------------------------------------------#
