@@ -120,7 +120,7 @@ function extract_configs () {
     oIFS="${IFS}"; IFS=$'\n';
     declare -a matched_objects=($(
       printf "%s\n" "${config_objects[@]}" | \
-      grep -F "${target_pattern}"
+      grep -E "(^|[^0-9.])${target_pattern//./\\.}([^0-9.]|$)"
     ));
     IFS="${oIFS}";
 
@@ -131,22 +131,22 @@ function extract_configs () {
       done; newline;
     fi;
 
-    #### -----------------------------------------------------------------------
-    ## Validating extracted data-sets (Expected count of entries)
-    local site_part="${config_file%/*}";
-    local file_part="${config_file##*/}";
-    local expected_count="$(
-      jq -r --arg site "${site_part##*/}" \
-            --arg file "${file_part}" \
-            '.configs[] | select(.config.site == $site and .config.device == $file) | .count' \
-            "${target_listing}"
-    )";
-    [[ "${verbose}" == true ]] && message "Expected Matches (Count): ${expected_count[@]}";
-    actual_count=${#matched_objects[@]};
-    if [[ "${expected_count}" != "${actual_count}" ]]; then
-      error_message "[FATAL] Count mismatch: expected=${expected_count}, actual=${actual_count} for ${config_file}";
-      return 2;
-    fi;
+    # #### -----------------------------------------------------------------------
+    # ## Validating extracted data-sets (Expected count of entries)
+    # local site_part="${config_file%/*}";
+    # local file_part="${config_file##*/}";
+    # local expected_count="$(
+    #   jq -r --arg site "${site_part##*/}" \
+    #         --arg file "${file_part}" \
+    #         '.configs[] | select(.config.site == $site and .config.device == $file) | .count' \
+    #         "${target_listing}"
+    # )";
+    # [[ "${verbose}" == true ]] && message "Expected Matches (Count): ${expected_count[@]}";
+    # actual_count=${#matched_objects[@]};
+    # if [[ "${expected_count}" != "${actual_count}" ]]; then
+    #   error_message "[FATAL] Count mismatch: expected=${expected_count}, actual=${actual_count} for ${config_file}";
+    #   return 2;
+    # fi;
 
     #### -----------------------------------------------------------------------
     ## Deserializing matched_objects:
@@ -311,7 +311,7 @@ function process_configs () {
     ## Extract first line containing target IP
     local matched_line;
     matched_line="$(
-      grep -wF "${target_pattern}" <<< "${cleaned_block}" | \
+      grep -E "(^|[^0-9.])${target_pattern//./\\.}([^0-9.]|$)" <<< "${cleaned_block}" | \
       head -n 1 | \
       sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
     )";

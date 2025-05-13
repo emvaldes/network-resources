@@ -2,8 +2,8 @@
 + export LC_ALL=C
 + LC_ALL=C
 ++ mktemp -d
-+ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Rvv40K1axI
-+ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Rvv40K1axI
++ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L6wOlCXXhz
++ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L6wOlCXXhz
 + trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
 + source ./scripts/tools-devops.shell
 ++ [[ -n '' ]]
@@ -40,12 +40,12 @@
 +++ date +%s%N
 +++ base64
 +++ tr -dc a-zA-Z0-9
-++ export divisor=MTc0NzE0NjI2NTE1MzMxODAwMAo
-++ divisor=MTc0NzE0NjI2NTE1MzMxODAwMAo
-++ print 'DEBUG: divisor = '\''MTc0NzE0NjI2NTE1MzMxODAwMAo'\'''
-++ [[ -n DEBUG: divisor = 'MTc0NzE0NjI2NTE1MzMxODAwMAo' ]]
-++ echo -en 'DEBUG: divisor = '\''MTc0NzE0NjI2NTE1MzMxODAwMAo'\'''
-DEBUG: divisor = 'MTc0NzE0NjI2NTE1MzMxODAwMAo'+ source ./scripts/tools-extraction.shell
+++ export divisor=MTc0NzE2NzYzMTUxMjI3NDAwMAo
+++ divisor=MTc0NzE2NzYzMTUxMjI3NDAwMAo
+++ print 'DEBUG: divisor = '\''MTc0NzE2NzYzMTUxMjI3NDAwMAo'\'''
+++ [[ -n DEBUG: divisor = 'MTc0NzE2NzYzMTUxMjI3NDAwMAo' ]]
+++ echo -en 'DEBUG: divisor = '\''MTc0NzE2NzYzMTUxMjI3NDAwMAo'\'''
+DEBUG: divisor = 'MTc0NzE2NzYzMTUxMjI3NDAwMAo'+ source ./scripts/tools-extraction.shell
 ++ [[ -n '' ]]
 ++ readonly __TOOLS_EXTRACTION_SOURCED=1
 ++ __TOOLS_EXTRACTION_SOURCED=1
@@ -373,14 +373,14 @@ Extracted config paths from JSON:+ for cfg in "${source_configs[@]}"
 ++ tr -d '\r'
 + target_address=203.0.113.25
 + [[ false == true ]]
-+ export tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Rvv40K1axI/fragments.json
-+ tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Rvv40K1axI/fragments.json
++ export tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L6wOlCXXhz/fragments.json
++ tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L6wOlCXXhz/fragments.json
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs configs/cisco/fw1.cfg 203.0.113.25 targets/203.0.113.25.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Rvv40K1axI/fragments.json
++ extract_configs configs/cisco/fw1.cfg 203.0.113.25 targets/203.0.113.25.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L6wOlCXXhz/fragments.json
 + local config_file=configs/cisco/fw1.cfg
 + local target_pattern=203.0.113.25
 + local target_listing=targets/203.0.113.25.json
-+ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Rvv40K1axI/fragments.json
++ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L6wOlCXXhz/fragments.json
 + [[ ! -f configs/cisco/fw1.cfg ]]
 + message '[DEBUG] Checking if config file exists and is readable: configs/cisco/fw1.cfg'
 + [[ -n [DEBUG] Checking if config file exists and is readable: configs/cisco/fw1.cfg ]]
@@ -421,7 +421,23 @@ usage: stat [-FLnq] [-f format | -l | -r | -s | -x] [-t timefmt] [file ...]
  network-object 192.168.1.0 255.255.255.0
 !
 
+object-group network BU2-WIRELESS
+ description Corporate HQ Subnets
+ network-object host 10.0.0.10
+ network-object host 10.0.1.200
+ network-object 192.168.1.0 255.255.255.0
 
+object-group network BU3-WAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.11
+ network-object host 10.0.1.112
+ network-object 192.168.1.0 255.255.255.0
+
+object-group network BU4-LAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.100
+ network-object host 10.0.1.12
+ network-object 192.168.1.0 255.255.255.0
 
 object network Server-192-168-1-10
  host 192.168.1.10
@@ -451,7 +467,23 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25
  network-object 192.168.1.0 255.255.255.0
 !
 
+object-group network BU2-WIRELESS
+ description Corporate HQ Subnets
+ network-object host 10.0.0.10
+ network-object host 10.0.1.200
+ network-object 192.168.1.0 255.255.255.0
 
+object-group network BU3-WAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.11
+ network-object host 10.0.1.112
+ network-object 192.168.1.0 255.255.255.0
+
+object-group network BU4-LAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.100
+ network-object host 10.0.1.12
+ network-object 192.168.1.0 255.255.255.0
 
 object network Server-192-168-1-10
  host 192.168.1.10
@@ -480,7 +512,23 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25
  network-object 192.168.1.0 255.255.255.0
 !
 
+object-group network BU2-WIRELESS
+ description Corporate HQ Subnets
+ network-object host 10.0.0.10
+ network-object host 10.0.1.200
+ network-object 192.168.1.0 255.255.255.0
 
+object-group network BU3-WAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.11
+ network-object host 10.0.1.112
+ network-object 192.168.1.0 255.255.255.0
+
+object-group network BU4-LAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.100
+ network-object host 10.0.1.12
+ network-object 192.168.1.0 255.255.255.0
 
 object network Server-192-168-1-10
  host 192.168.1.10
@@ -509,7 +557,23 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25
  network-object 192.168.1.0 255.255.255.0
 !
 
+object-group network BU2-WIRELESS
+ description Corporate HQ Subnets
+ network-object host 10.0.0.10
+ network-object host 10.0.1.200
+ network-object 192.168.1.0 255.255.255.0
 
+object-group network BU3-WAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.11
+ network-object host 10.0.1.112
+ network-object 192.168.1.0 255.255.255.0
+
+object-group network BU4-LAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.100
+ network-object host 10.0.1.12
+ network-object 192.168.1.0 255.255.255.0
 
 object network Server-192-168-1-10
  host 192.168.1.10
@@ -538,7 +602,23 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25
  network-object 192.168.1.0 255.255.255.0
 !
 
+object-group network BU2-WIRELESS
+ description Corporate HQ Subnets
+ network-object host 10.0.0.10
+ network-object host 10.0.1.200
+ network-object 192.168.1.0 255.255.255.0
 
+object-group network BU3-WAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.11
+ network-object host 10.0.1.112
+ network-object 192.168.1.0 255.255.255.0
+
+object-group network BU4-LAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.100
+ network-object host 10.0.1.12
+ network-object 192.168.1.0 255.255.255.0
 
 object network Server-192-168-1-10
  host 192.168.1.10
@@ -567,7 +647,23 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25
  network-object 192.168.1.0 255.255.255.0
 !
 
+object-group network BU2-WIRELESS
+ description Corporate HQ Subnets
+ network-object host 10.0.0.10
+ network-object host 10.0.1.200
+ network-object 192.168.1.0 255.255.255.0
 
+object-group network BU3-WAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.11
+ network-object host 10.0.1.112
+ network-object 192.168.1.0 255.255.255.0
+
+object-group network BU4-LAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.100
+ network-object host 10.0.1.12
+ network-object 192.168.1.0 255.255.255.0
 
 object network Server-192-168-1-10
  host 192.168.1.10
@@ -596,7 +692,23 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25
  network-object 192.168.1.0 255.255.255.0
 !
 
+object-group network BU2-WIRELESS
+ description Corporate HQ Subnets
+ network-object host 10.0.0.10
+ network-object host 10.0.1.200
+ network-object 192.168.1.0 255.255.255.0
 
+object-group network BU3-WAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.11
+ network-object host 10.0.1.112
+ network-object 192.168.1.0 255.255.255.0
+
+object-group network BU4-LAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.100
+ network-object host 10.0.1.12
+ network-object 192.168.1.0 255.255.255.0
 
 object network Server-192-168-1-10
  host 192.168.1.10
@@ -625,7 +737,23 @@ Imported Content: object-group network BU1-NETWORK
  network-object 192.168.1.0 255.255.255.0
 !
 
+object-group network BU2-WIRELESS
+ description Corporate HQ Subnets
+ network-object host 10.0.0.10
+ network-object host 10.0.1.200
+ network-object 192.168.1.0 255.255.255.0
 
+object-group network BU3-WAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.11
+ network-object host 10.0.1.112
+ network-object 192.168.1.0 255.255.255.0
+
+object-group network BU4-LAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.100
+ network-object host 10.0.1.12
+ network-object 192.168.1.0 255.255.255.0
 
 object network Server-192-168-1-10
  host 192.168.1.10
@@ -660,6 +788,21 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25
  network-object host 10.0.0.1
  network-object host 10.0.1.2
  network-object 192.168.1.0 255.255.255.0
+object-group network BU2-WIRELESS
+ description Corporate HQ Subnets
+ network-object host 10.0.0.10
+ network-object host 10.0.1.200
+ network-object 192.168.1.0 255.255.255.0
+object-group network BU3-WAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.11
+ network-object host 10.0.1.112
+ network-object 192.168.1.0 255.255.255.0
+object-group network BU4-LAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.100
+ network-object host 10.0.1.12
+ network-object 192.168.1.0 255.255.255.0
 object network Server-192-168-1-10
  host 192.168.1.10
  description Main Application Server
@@ -674,6 +817,21 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25'
  network-object host 10.0.0.1
  network-object host 10.0.1.2
  network-object 192.168.1.0 255.255.255.0
+object-group network BU2-WIRELESS
+ description Corporate HQ Subnets
+ network-object host 10.0.0.10
+ network-object host 10.0.1.200
+ network-object 192.168.1.0 255.255.255.0
+object-group network BU3-WAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.11
+ network-object host 10.0.1.112
+ network-object 192.168.1.0 255.255.255.0
+object-group network BU4-LAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.100
+ network-object host 10.0.1.12
+ network-object 192.168.1.0 255.255.255.0
 object network Server-192-168-1-10
  host 192.168.1.10
  description Main Application Server
@@ -686,6 +844,21 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25'
  description Corporate HQ Subnets
  network-object host 10.0.0.1
  network-object host 10.0.1.2
+ network-object 192.168.1.0 255.255.255.0
+object-group network BU2-WIRELESS
+ description Corporate HQ Subnets
+ network-object host 10.0.0.10
+ network-object host 10.0.1.200
+ network-object 192.168.1.0 255.255.255.0
+object-group network BU3-WAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.11
+ network-object host 10.0.1.112
+ network-object 192.168.1.0 255.255.255.0
+object-group network BU4-LAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.100
+ network-object host 10.0.1.12
  network-object 192.168.1.0 255.255.255.0
 object network Server-192-168-1-10
  host 192.168.1.10
@@ -700,6 +873,21 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25 ]]
  network-object host 10.0.0.1
  network-object host 10.0.1.2
  network-object 192.168.1.0 255.255.255.0
+object-group network BU2-WIRELESS
+ description Corporate HQ Subnets
+ network-object host 10.0.0.10
+ network-object host 10.0.1.200
+ network-object 192.168.1.0 255.255.255.0
+object-group network BU3-WAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.11
+ network-object host 10.0.1.112
+ network-object 192.168.1.0 255.255.255.0
+object-group network BU4-LAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.100
+ network-object host 10.0.1.12
+ network-object 192.168.1.0 255.255.255.0
 object network Server-192-168-1-10
  host 192.168.1.10
  description Main Application Server
@@ -712,6 +900,21 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25'
  description Corporate HQ Subnets
  network-object host 10.0.0.1
  network-object host 10.0.1.2
+ network-object 192.168.1.0 255.255.255.0
+object-group network BU2-WIRELESS
+ description Corporate HQ Subnets
+ network-object host 10.0.0.10
+ network-object host 10.0.1.200
+ network-object 192.168.1.0 255.255.255.0
+object-group network BU3-WAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.11
+ network-object host 10.0.1.112
+ network-object 192.168.1.0 255.255.255.0
+object-group network BU4-LAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.100
+ network-object host 10.0.1.12
  network-object 192.168.1.0 255.255.255.0
 object network Server-192-168-1-10
  host 192.168.1.10
@@ -726,6 +929,21 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25'
  network-object host 10.0.0.1
  network-object host 10.0.1.2
  network-object 192.168.1.0 255.255.255.0
+object-group network BU2-WIRELESS
+ description Corporate HQ Subnets
+ network-object host 10.0.0.10
+ network-object host 10.0.1.200
+ network-object 192.168.1.0 255.255.255.0
+object-group network BU3-WAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.11
+ network-object host 10.0.1.112
+ network-object 192.168.1.0 255.255.255.0
+object-group network BU4-LAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.100
+ network-object host 10.0.1.12
+ network-object 192.168.1.0 255.255.255.0
 object network Server-192-168-1-10
  host 192.168.1.10
  description Main Application Server
@@ -739,6 +957,21 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25 ]]
  network-object host 10.0.0.1
  network-object host 10.0.1.2
  network-object 192.168.1.0 255.255.255.0
+object-group network BU2-WIRELESS
+ description Corporate HQ Subnets
+ network-object host 10.0.0.10
+ network-object host 10.0.1.200
+ network-object 192.168.1.0 255.255.255.0
+object-group network BU3-WAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.11
+ network-object host 10.0.1.112
+ network-object 192.168.1.0 255.255.255.0
+object-group network BU4-LAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.100
+ network-object host 10.0.1.12
+ network-object 192.168.1.0 255.255.255.0
 object network Server-192-168-1-10
  host 192.168.1.10
  description Main Application Server
@@ -751,6 +984,21 @@ Sanitized Content: object-group network BU1-NETWORK
  description Corporate HQ Subnets
  network-object host 10.0.0.1
  network-object host 10.0.1.2
+ network-object 192.168.1.0 255.255.255.0
+object-group network BU2-WIRELESS
+ description Corporate HQ Subnets
+ network-object host 10.0.0.10
+ network-object host 10.0.1.200
+ network-object 192.168.1.0 255.255.255.0
+object-group network BU3-WAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.11
+ network-object host 10.0.1.112
+ network-object 192.168.1.0 255.255.255.0
+object-group network BU4-LAN
+ description Corporate HQ Subnets
+ network-object host 10.0.0.100
+ network-object host 10.0.1.12
  network-object 192.168.1.0 255.255.255.0
 object network Server-192-168-1-10
  host 192.168.1.10
@@ -767,16 +1015,16 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25+ ne
 
 + (( i++ ))
 + (( i < count ))
-++ perl -pe 's/\n/MTc0NzE0NjI2NTE1MzMxODAwMAo/g'
-+ local 'serialized_objects=object-group network BU1-NETWORKMTc0NzE0NjI2NTE1MzMxODAwMAo description Corporate HQ SubnetsMTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.0.1MTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.1.2MTc0NzE0NjI2NTE1MzMxODAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE0NjI2NTE1MzMxODAwMAoobject network Server-192-168-1-10MTc0NzE0NjI2NTE1MzMxODAwMAo host 192.168.1.10MTc0NzE0NjI2NTE1MzMxODAwMAo description Main Application ServerMTc0NzE0NjI2NTE1MzMxODAwMAoobject network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25MTc0NzE0NjI2NTE1MzMxODAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE0NjI2NTE1MzMxODAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE0NjI2NTE1MzMxODAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo'
+++ perl -pe 's/\n/MTc0NzE2NzYzMTUxMjI3NDAwMAo/g'
++ local 'serialized_objects=object-group network BU1-NETWORKMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.1MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.2MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU2-WIRELESSMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.10MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.200MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU3-WANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.11MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.112MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU4-LANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.100MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.12MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject network Server-192-168-1-10MTc0NzE2NzYzMTUxMjI3NDAwMAo host 192.168.1.10MTc0NzE2NzYzMTUxMjI3NDAwMAo description Main Application ServerMTc0NzE2NzYzMTUxMjI3NDAwMAoobject network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25MTc0NzE2NzYzMTUxMjI3NDAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE2NzYzMTUxMjI3NDAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE2NzYzMTUxMjI3NDAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo'
 + [[ true == true ]]
-+ message 'Serialized Objects: object-group network BU1-NETWORKMTc0NzE0NjI2NTE1MzMxODAwMAo description Corporate HQ SubnetsMTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.0.1MTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.1.2MTc0NzE0NjI2NTE1MzMxODAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE0NjI2NTE1MzMxODAwMAoobject network Server-192-168-1-10MTc0NzE0NjI2NTE1MzMxODAwMAo host 192.168.1.10MTc0NzE0NjI2NTE1MzMxODAwMAo description Main Application ServerMTc0NzE0NjI2NTE1MzMxODAwMAoobject network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25MTc0NzE0NjI2NTE1MzMxODAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE0NjI2NTE1MzMxODAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE0NjI2NTE1MzMxODAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo'
-+ [[ -n Serialized Objects: object-group network BU1-NETWORKMTc0NzE0NjI2NTE1MzMxODAwMAo description Corporate HQ SubnetsMTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.0.1MTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.1.2MTc0NzE0NjI2NTE1MzMxODAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE0NjI2NTE1MzMxODAwMAoobject network Server-192-168-1-10MTc0NzE0NjI2NTE1MzMxODAwMAo host 192.168.1.10MTc0NzE0NjI2NTE1MzMxODAwMAo description Main Application ServerMTc0NzE0NjI2NTE1MzMxODAwMAoobject network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25MTc0NzE0NjI2NTE1MzMxODAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE0NjI2NTE1MzMxODAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE0NjI2NTE1MzMxODAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo ]]
-+ local 'message=Serialized Objects: object-group network BU1-NETWORKMTc0NzE0NjI2NTE1MzMxODAwMAo description Corporate HQ SubnetsMTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.0.1MTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.1.2MTc0NzE0NjI2NTE1MzMxODAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE0NjI2NTE1MzMxODAwMAoobject network Server-192-168-1-10MTc0NzE0NjI2NTE1MzMxODAwMAo host 192.168.1.10MTc0NzE0NjI2NTE1MzMxODAwMAo description Main Application ServerMTc0NzE0NjI2NTE1MzMxODAwMAoobject network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25MTc0NzE0NjI2NTE1MzMxODAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE0NjI2NTE1MzMxODAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE0NjI2NTE1MzMxODAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo'
-+ print 'Serialized Objects: object-group network BU1-NETWORKMTc0NzE0NjI2NTE1MzMxODAwMAo description Corporate HQ SubnetsMTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.0.1MTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.1.2MTc0NzE0NjI2NTE1MzMxODAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE0NjI2NTE1MzMxODAwMAoobject network Server-192-168-1-10MTc0NzE0NjI2NTE1MzMxODAwMAo host 192.168.1.10MTc0NzE0NjI2NTE1MzMxODAwMAo description Main Application ServerMTc0NzE0NjI2NTE1MzMxODAwMAoobject network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25MTc0NzE0NjI2NTE1MzMxODAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE0NjI2NTE1MzMxODAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE0NjI2NTE1MzMxODAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo'
-+ [[ -n Serialized Objects: object-group network BU1-NETWORKMTc0NzE0NjI2NTE1MzMxODAwMAo description Corporate HQ SubnetsMTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.0.1MTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.1.2MTc0NzE0NjI2NTE1MzMxODAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE0NjI2NTE1MzMxODAwMAoobject network Server-192-168-1-10MTc0NzE0NjI2NTE1MzMxODAwMAo host 192.168.1.10MTc0NzE0NjI2NTE1MzMxODAwMAo description Main Application ServerMTc0NzE0NjI2NTE1MzMxODAwMAoobject network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25MTc0NzE0NjI2NTE1MzMxODAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE0NjI2NTE1MzMxODAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE0NjI2NTE1MzMxODAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo ]]
-+ echo -en 'Serialized Objects: object-group network BU1-NETWORKMTc0NzE0NjI2NTE1MzMxODAwMAo description Corporate HQ SubnetsMTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.0.1MTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.1.2MTc0NzE0NjI2NTE1MzMxODAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE0NjI2NTE1MzMxODAwMAoobject network Server-192-168-1-10MTc0NzE0NjI2NTE1MzMxODAwMAo host 192.168.1.10MTc0NzE0NjI2NTE1MzMxODAwMAo description Main Application ServerMTc0NzE0NjI2NTE1MzMxODAwMAoobject network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25MTc0NzE0NjI2NTE1MzMxODAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE0NjI2NTE1MzMxODAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE0NjI2NTE1MzMxODAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo'
-Serialized Objects: object-group network BU1-NETWORKMTc0NzE0NjI2NTE1MzMxODAwMAo description Corporate HQ SubnetsMTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.0.1MTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.1.2MTc0NzE0NjI2NTE1MzMxODAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE0NjI2NTE1MzMxODAwMAoobject network Server-192-168-1-10MTc0NzE0NjI2NTE1MzMxODAwMAo host 192.168.1.10MTc0NzE0NjI2NTE1MzMxODAwMAo description Main Application ServerMTc0NzE0NjI2NTE1MzMxODAwMAoobject network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25MTc0NzE0NjI2NTE1MzMxODAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE0NjI2NTE1MzMxODAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE0NjI2NTE1MzMxODAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo+ newline
++ message 'Serialized Objects: object-group network BU1-NETWORKMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.1MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.2MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU2-WIRELESSMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.10MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.200MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU3-WANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.11MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.112MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU4-LANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.100MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.12MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject network Server-192-168-1-10MTc0NzE2NzYzMTUxMjI3NDAwMAo host 192.168.1.10MTc0NzE2NzYzMTUxMjI3NDAwMAo description Main Application ServerMTc0NzE2NzYzMTUxMjI3NDAwMAoobject network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25MTc0NzE2NzYzMTUxMjI3NDAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE2NzYzMTUxMjI3NDAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE2NzYzMTUxMjI3NDAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo'
++ [[ -n Serialized Objects: object-group network BU1-NETWORKMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.1MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.2MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU2-WIRELESSMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.10MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.200MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU3-WANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.11MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.112MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU4-LANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.100MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.12MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject network Server-192-168-1-10MTc0NzE2NzYzMTUxMjI3NDAwMAo host 192.168.1.10MTc0NzE2NzYzMTUxMjI3NDAwMAo description Main Application ServerMTc0NzE2NzYzMTUxMjI3NDAwMAoobject network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25MTc0NzE2NzYzMTUxMjI3NDAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE2NzYzMTUxMjI3NDAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE2NzYzMTUxMjI3NDAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo ]]
++ local 'message=Serialized Objects: object-group network BU1-NETWORKMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.1MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.2MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU2-WIRELESSMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.10MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.200MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU3-WANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.11MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.112MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU4-LANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.100MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.12MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject network Server-192-168-1-10MTc0NzE2NzYzMTUxMjI3NDAwMAo host 192.168.1.10MTc0NzE2NzYzMTUxMjI3NDAwMAo description Main Application ServerMTc0NzE2NzYzMTUxMjI3NDAwMAoobject network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25MTc0NzE2NzYzMTUxMjI3NDAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE2NzYzMTUxMjI3NDAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE2NzYzMTUxMjI3NDAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo'
++ print 'Serialized Objects: object-group network BU1-NETWORKMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.1MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.2MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU2-WIRELESSMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.10MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.200MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU3-WANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.11MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.112MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU4-LANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.100MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.12MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject network Server-192-168-1-10MTc0NzE2NzYzMTUxMjI3NDAwMAo host 192.168.1.10MTc0NzE2NzYzMTUxMjI3NDAwMAo description Main Application ServerMTc0NzE2NzYzMTUxMjI3NDAwMAoobject network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25MTc0NzE2NzYzMTUxMjI3NDAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE2NzYzMTUxMjI3NDAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE2NzYzMTUxMjI3NDAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo'
++ [[ -n Serialized Objects: object-group network BU1-NETWORKMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.1MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.2MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU2-WIRELESSMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.10MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.200MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU3-WANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.11MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.112MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU4-LANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.100MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.12MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject network Server-192-168-1-10MTc0NzE2NzYzMTUxMjI3NDAwMAo host 192.168.1.10MTc0NzE2NzYzMTUxMjI3NDAwMAo description Main Application ServerMTc0NzE2NzYzMTUxMjI3NDAwMAoobject network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25MTc0NzE2NzYzMTUxMjI3NDAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE2NzYzMTUxMjI3NDAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE2NzYzMTUxMjI3NDAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo ]]
++ echo -en 'Serialized Objects: object-group network BU1-NETWORKMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.1MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.2MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU2-WIRELESSMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.10MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.200MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU3-WANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.11MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.112MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU4-LANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.100MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.12MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject network Server-192-168-1-10MTc0NzE2NzYzMTUxMjI3NDAwMAo host 192.168.1.10MTc0NzE2NzYzMTUxMjI3NDAwMAo description Main Application ServerMTc0NzE2NzYzMTUxMjI3NDAwMAoobject network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25MTc0NzE2NzYzMTUxMjI3NDAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE2NzYzMTUxMjI3NDAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE2NzYzMTUxMjI3NDAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo'
+Serialized Objects: object-group network BU1-NETWORKMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.1MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.2MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU2-WIRELESSMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.10MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.200MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU3-WANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.11MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.112MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject-group network BU4-LANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.100MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.12MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE2NzYzMTUxMjI3NDAwMAoobject network Server-192-168-1-10MTc0NzE2NzYzMTUxMjI3NDAwMAo host 192.168.1.10MTc0NzE2NzYzMTUxMjI3NDAwMAo description Main Application ServerMTc0NzE2NzYzMTUxMjI3NDAwMAoobject network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25MTc0NzE2NzYzMTUxMjI3NDAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE2NzYzMTUxMjI3NDAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE2NzYzMTUxMjI3NDAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -784,33 +1032,39 @@ Serialized Objects: object-group network BU1-NETWORKMTc0NzE0NjI2NTE1MzMxODAwMAo 
 
 + (( i++ ))
 + (( i < count ))
-++ sed -E 's/MTc0NzE0NjI2NTE1MzMxODAwMAo([^[:space:]])/\n\1/g'
-+ local 'restored_lines=object-group network BU1-NETWORKMTc0NzE0NjI2NTE1MzMxODAwMAo description Corporate HQ SubnetsMTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.0.1MTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.1.2MTc0NzE0NjI2NTE1MzMxODAwMAo network-object 192.168.1.0 255.255.255.0
-object network Server-192-168-1-10MTc0NzE0NjI2NTE1MzMxODAwMAo host 192.168.1.10MTc0NzE0NjI2NTE1MzMxODAwMAo description Main Application Server
-object network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25
+++ sed -E 's/MTc0NzE2NzYzMTUxMjI3NDAwMAo([^[:space:]])/\n\1/g'
++ local 'restored_lines=object-group network BU1-NETWORKMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.1MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.2MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0
+object-group network BU2-WIRELESSMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.10MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.200MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0
+object-group network BU3-WANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.11MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.112MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0
+object-group network BU4-LANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.100MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.12MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0
+object network Server-192-168-1-10MTc0NzE2NzYzMTUxMjI3NDAwMAo host 192.168.1.10MTc0NzE2NzYzMTUxMjI3NDAwMAo description Main Application Server
+object network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25
 access-list OUTSIDE extended permit ip host 10.0.0.1 any
 access-list OUTSIDE extended deny ip any any
-nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo'
+nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo'
 + restored_lines+='
 '
 + IFS='
 '
 + read -r -d '' -a config_objects
-++ printf '%s\0' 'object-group network BU1-NETWORKMTc0NzE0NjI2NTE1MzMxODAwMAo description Corporate HQ SubnetsMTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.0.1MTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.1.2MTc0NzE0NjI2NTE1MzMxODAwMAo network-object 192.168.1.0 255.255.255.0
-object network Server-192-168-1-10MTc0NzE0NjI2NTE1MzMxODAwMAo host 192.168.1.10MTc0NzE0NjI2NTE1MzMxODAwMAo description Main Application Server
-object network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25
+++ printf '%s\0' 'object-group network BU1-NETWORKMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.1MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.2MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0
+object-group network BU2-WIRELESSMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.10MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.200MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0
+object-group network BU3-WANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.11MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.112MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0
+object-group network BU4-LANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.100MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.12MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0
+object network Server-192-168-1-10MTc0NzE2NzYzMTUxMjI3NDAwMAo host 192.168.1.10MTc0NzE2NzYzMTUxMjI3NDAwMAo description Main Application Server
+object network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25
 access-list OUTSIDE extended permit ip host 10.0.0.1 any
 access-list OUTSIDE extended deny ip any any
-nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo
+nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo
 '
 + [[ true == true ]]
-+ message 'Loaded 6 config blocks'
-+ [[ -n Loaded 6 config blocks ]]
-+ local 'message=Loaded 6 config blocks'
-+ print 'Loaded 6 config blocks'
-+ [[ -n Loaded 6 config blocks ]]
-+ echo -en 'Loaded 6 config blocks'
-Loaded 6 config blocks+ newline
++ message 'Loaded 9 config blocks'
++ [[ -n Loaded 9 config blocks ]]
++ local 'message=Loaded 9 config blocks'
++ print 'Loaded 9 config blocks'
++ [[ -n Loaded 9 config blocks ]]
++ echo -en 'Loaded 9 config blocks'
+Loaded 9 config blocks+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -819,14 +1073,14 @@ Loaded 6 config blocks+ newline
 + (( i++ ))
 + (( i < count ))
 + for i in "${!config_objects[@]}"
-+ message '|---> Block [0]\nobject-group network BU1-NETWORKMTc0NzE0NjI2NTE1MzMxODAwMAo description Corporate HQ SubnetsMTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.0.1MTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.1.2MTc0NzE0NjI2NTE1MzMxODAwMAo network-object 192.168.1.0 255.255.255.0'
-+ [[ -n |---> Block [0]\nobject-group network BU1-NETWORKMTc0NzE0NjI2NTE1MzMxODAwMAo description Corporate HQ SubnetsMTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.0.1MTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.1.2MTc0NzE0NjI2NTE1MzMxODAwMAo network-object 192.168.1.0 255.255.255.0 ]]
-+ local 'message=|---> Block [0]\nobject-group network BU1-NETWORKMTc0NzE0NjI2NTE1MzMxODAwMAo description Corporate HQ SubnetsMTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.0.1MTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.1.2MTc0NzE0NjI2NTE1MzMxODAwMAo network-object 192.168.1.0 255.255.255.0'
-+ print '|---> Block [0]\nobject-group network BU1-NETWORKMTc0NzE0NjI2NTE1MzMxODAwMAo description Corporate HQ SubnetsMTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.0.1MTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.1.2MTc0NzE0NjI2NTE1MzMxODAwMAo network-object 192.168.1.0 255.255.255.0'
-+ [[ -n |---> Block [0]\nobject-group network BU1-NETWORKMTc0NzE0NjI2NTE1MzMxODAwMAo description Corporate HQ SubnetsMTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.0.1MTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.1.2MTc0NzE0NjI2NTE1MzMxODAwMAo network-object 192.168.1.0 255.255.255.0 ]]
-+ echo -en '|---> Block [0]\nobject-group network BU1-NETWORKMTc0NzE0NjI2NTE1MzMxODAwMAo description Corporate HQ SubnetsMTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.0.1MTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.1.2MTc0NzE0NjI2NTE1MzMxODAwMAo network-object 192.168.1.0 255.255.255.0'
++ message '|---> Block [0]\nobject-group network BU1-NETWORKMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.1MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.2MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0'
++ [[ -n |---> Block [0]\nobject-group network BU1-NETWORKMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.1MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.2MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0 ]]
++ local 'message=|---> Block [0]\nobject-group network BU1-NETWORKMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.1MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.2MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0'
++ print '|---> Block [0]\nobject-group network BU1-NETWORKMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.1MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.2MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0'
++ [[ -n |---> Block [0]\nobject-group network BU1-NETWORKMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.1MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.2MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0 ]]
++ echo -en '|---> Block [0]\nobject-group network BU1-NETWORKMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.1MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.2MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0'
 |---> Block [0]
-object-group network BU1-NETWORKMTc0NzE0NjI2NTE1MzMxODAwMAo description Corporate HQ SubnetsMTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.0.1MTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.1.2MTc0NzE0NjI2NTE1MzMxODAwMAo network-object 192.168.1.0 255.255.255.0+ newline
+object-group network BU1-NETWORKMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.1MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.2MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -835,14 +1089,14 @@ object-group network BU1-NETWORKMTc0NzE0NjI2NTE1MzMxODAwMAo description Corporat
 + (( i++ ))
 + (( i < count ))
 + for i in "${!config_objects[@]}"
-+ message '|---> Block [1]\nobject network Server-192-168-1-10MTc0NzE0NjI2NTE1MzMxODAwMAo host 192.168.1.10MTc0NzE0NjI2NTE1MzMxODAwMAo description Main Application Server'
-+ [[ -n |---> Block [1]\nobject network Server-192-168-1-10MTc0NzE0NjI2NTE1MzMxODAwMAo host 192.168.1.10MTc0NzE0NjI2NTE1MzMxODAwMAo description Main Application Server ]]
-+ local 'message=|---> Block [1]\nobject network Server-192-168-1-10MTc0NzE0NjI2NTE1MzMxODAwMAo host 192.168.1.10MTc0NzE0NjI2NTE1MzMxODAwMAo description Main Application Server'
-+ print '|---> Block [1]\nobject network Server-192-168-1-10MTc0NzE0NjI2NTE1MzMxODAwMAo host 192.168.1.10MTc0NzE0NjI2NTE1MzMxODAwMAo description Main Application Server'
-+ [[ -n |---> Block [1]\nobject network Server-192-168-1-10MTc0NzE0NjI2NTE1MzMxODAwMAo host 192.168.1.10MTc0NzE0NjI2NTE1MzMxODAwMAo description Main Application Server ]]
-+ echo -en '|---> Block [1]\nobject network Server-192-168-1-10MTc0NzE0NjI2NTE1MzMxODAwMAo host 192.168.1.10MTc0NzE0NjI2NTE1MzMxODAwMAo description Main Application Server'
++ message '|---> Block [1]\nobject-group network BU2-WIRELESSMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.10MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.200MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0'
++ [[ -n |---> Block [1]\nobject-group network BU2-WIRELESSMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.10MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.200MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0 ]]
++ local 'message=|---> Block [1]\nobject-group network BU2-WIRELESSMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.10MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.200MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0'
++ print '|---> Block [1]\nobject-group network BU2-WIRELESSMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.10MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.200MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0'
++ [[ -n |---> Block [1]\nobject-group network BU2-WIRELESSMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.10MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.200MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0 ]]
++ echo -en '|---> Block [1]\nobject-group network BU2-WIRELESSMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.10MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.200MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0'
 |---> Block [1]
-object network Server-192-168-1-10MTc0NzE0NjI2NTE1MzMxODAwMAo host 192.168.1.10MTc0NzE0NjI2NTE1MzMxODAwMAo description Main Application Server+ newline
+object-group network BU2-WIRELESSMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.10MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.200MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -851,14 +1105,14 @@ object network Server-192-168-1-10MTc0NzE0NjI2NTE1MzMxODAwMAo host 192.168.1.10M
 + (( i++ ))
 + (( i < count ))
 + for i in "${!config_objects[@]}"
-+ message '|---> Block [2]\nobject network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25'
-+ [[ -n |---> Block [2]\nobject network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25 ]]
-+ local 'message=|---> Block [2]\nobject network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25'
-+ print '|---> Block [2]\nobject network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25'
-+ [[ -n |---> Block [2]\nobject network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25 ]]
-+ echo -en '|---> Block [2]\nobject network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25'
++ message '|---> Block [2]\nobject-group network BU3-WANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.11MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.112MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0'
++ [[ -n |---> Block [2]\nobject-group network BU3-WANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.11MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.112MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0 ]]
++ local 'message=|---> Block [2]\nobject-group network BU3-WANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.11MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.112MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0'
++ print '|---> Block [2]\nobject-group network BU3-WANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.11MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.112MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0'
++ [[ -n |---> Block [2]\nobject-group network BU3-WANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.11MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.112MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0 ]]
++ echo -en '|---> Block [2]\nobject-group network BU3-WANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.11MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.112MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0'
 |---> Block [2]
-object network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25+ newline
+object-group network BU3-WANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.11MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.112MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -867,13 +1121,61 @@ object network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.2
 + (( i++ ))
 + (( i < count ))
 + for i in "${!config_objects[@]}"
-+ message '|---> Block [3]\naccess-list OUTSIDE extended permit ip host 10.0.0.1 any'
-+ [[ -n |---> Block [3]\naccess-list OUTSIDE extended permit ip host 10.0.0.1 any ]]
-+ local 'message=|---> Block [3]\naccess-list OUTSIDE extended permit ip host 10.0.0.1 any'
-+ print '|---> Block [3]\naccess-list OUTSIDE extended permit ip host 10.0.0.1 any'
-+ [[ -n |---> Block [3]\naccess-list OUTSIDE extended permit ip host 10.0.0.1 any ]]
-+ echo -en '|---> Block [3]\naccess-list OUTSIDE extended permit ip host 10.0.0.1 any'
++ message '|---> Block [3]\nobject-group network BU4-LANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.100MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.12MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0'
++ [[ -n |---> Block [3]\nobject-group network BU4-LANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.100MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.12MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0 ]]
++ local 'message=|---> Block [3]\nobject-group network BU4-LANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.100MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.12MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0'
++ print '|---> Block [3]\nobject-group network BU4-LANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.100MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.12MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0'
++ [[ -n |---> Block [3]\nobject-group network BU4-LANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.100MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.12MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0 ]]
++ echo -en '|---> Block [3]\nobject-group network BU4-LANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.100MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.12MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0'
 |---> Block [3]
+object-group network BU4-LANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.100MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.12MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0+ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ for i in "${!config_objects[@]}"
++ message '|---> Block [4]\nobject network Server-192-168-1-10MTc0NzE2NzYzMTUxMjI3NDAwMAo host 192.168.1.10MTc0NzE2NzYzMTUxMjI3NDAwMAo description Main Application Server'
++ [[ -n |---> Block [4]\nobject network Server-192-168-1-10MTc0NzE2NzYzMTUxMjI3NDAwMAo host 192.168.1.10MTc0NzE2NzYzMTUxMjI3NDAwMAo description Main Application Server ]]
++ local 'message=|---> Block [4]\nobject network Server-192-168-1-10MTc0NzE2NzYzMTUxMjI3NDAwMAo host 192.168.1.10MTc0NzE2NzYzMTUxMjI3NDAwMAo description Main Application Server'
++ print '|---> Block [4]\nobject network Server-192-168-1-10MTc0NzE2NzYzMTUxMjI3NDAwMAo host 192.168.1.10MTc0NzE2NzYzMTUxMjI3NDAwMAo description Main Application Server'
++ [[ -n |---> Block [4]\nobject network Server-192-168-1-10MTc0NzE2NzYzMTUxMjI3NDAwMAo host 192.168.1.10MTc0NzE2NzYzMTUxMjI3NDAwMAo description Main Application Server ]]
++ echo -en '|---> Block [4]\nobject network Server-192-168-1-10MTc0NzE2NzYzMTUxMjI3NDAwMAo host 192.168.1.10MTc0NzE2NzYzMTUxMjI3NDAwMAo description Main Application Server'
+|---> Block [4]
+object network Server-192-168-1-10MTc0NzE2NzYzMTUxMjI3NDAwMAo host 192.168.1.10MTc0NzE2NzYzMTUxMjI3NDAwMAo description Main Application Server+ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ for i in "${!config_objects[@]}"
++ message '|---> Block [5]\nobject network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25'
++ [[ -n |---> Block [5]\nobject network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25 ]]
++ local 'message=|---> Block [5]\nobject network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25'
++ print '|---> Block [5]\nobject network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25'
++ [[ -n |---> Block [5]\nobject network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25 ]]
++ echo -en '|---> Block [5]\nobject network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25'
+|---> Block [5]
+object network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25+ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ for i in "${!config_objects[@]}"
++ message '|---> Block [6]\naccess-list OUTSIDE extended permit ip host 10.0.0.1 any'
++ [[ -n |---> Block [6]\naccess-list OUTSIDE extended permit ip host 10.0.0.1 any ]]
++ local 'message=|---> Block [6]\naccess-list OUTSIDE extended permit ip host 10.0.0.1 any'
++ print '|---> Block [6]\naccess-list OUTSIDE extended permit ip host 10.0.0.1 any'
++ [[ -n |---> Block [6]\naccess-list OUTSIDE extended permit ip host 10.0.0.1 any ]]
++ echo -en '|---> Block [6]\naccess-list OUTSIDE extended permit ip host 10.0.0.1 any'
+|---> Block [6]
 access-list OUTSIDE extended permit ip host 10.0.0.1 any+ newline
 + local count=1
 + (( i = 0 ))
@@ -883,13 +1185,13 @@ access-list OUTSIDE extended permit ip host 10.0.0.1 any+ newline
 + (( i++ ))
 + (( i < count ))
 + for i in "${!config_objects[@]}"
-+ message '|---> Block [4]\naccess-list OUTSIDE extended deny ip any any'
-+ [[ -n |---> Block [4]\naccess-list OUTSIDE extended deny ip any any ]]
-+ local 'message=|---> Block [4]\naccess-list OUTSIDE extended deny ip any any'
-+ print '|---> Block [4]\naccess-list OUTSIDE extended deny ip any any'
-+ [[ -n |---> Block [4]\naccess-list OUTSIDE extended deny ip any any ]]
-+ echo -en '|---> Block [4]\naccess-list OUTSIDE extended deny ip any any'
-|---> Block [4]
++ message '|---> Block [7]\naccess-list OUTSIDE extended deny ip any any'
++ [[ -n |---> Block [7]\naccess-list OUTSIDE extended deny ip any any ]]
++ local 'message=|---> Block [7]\naccess-list OUTSIDE extended deny ip any any'
++ print '|---> Block [7]\naccess-list OUTSIDE extended deny ip any any'
++ [[ -n |---> Block [7]\naccess-list OUTSIDE extended deny ip any any ]]
++ echo -en '|---> Block [7]\naccess-list OUTSIDE extended deny ip any any'
+|---> Block [7]
 access-list OUTSIDE extended deny ip any any+ newline
 + local count=1
 + (( i = 0 ))
@@ -899,14 +1201,14 @@ access-list OUTSIDE extended deny ip any any+ newline
 + (( i++ ))
 + (( i < count ))
 + for i in "${!config_objects[@]}"
-+ message '|---> Block [5]\nnat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo'
-+ [[ -n |---> Block [5]\nnat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo ]]
-+ local 'message=|---> Block [5]\nnat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo'
-+ print '|---> Block [5]\nnat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo'
-+ [[ -n |---> Block [5]\nnat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo ]]
-+ echo -en '|---> Block [5]\nnat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo'
-|---> Block [5]
-nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo+ newline
++ message '|---> Block [8]\nnat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo'
++ [[ -n |---> Block [8]\nnat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo ]]
++ local 'message=|---> Block [8]\nnat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo'
++ print '|---> Block [8]\nnat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo'
++ [[ -n |---> Block [8]\nnat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo ]]
++ echo -en '|---> Block [8]\nnat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo'
+|---> Block [8]
+nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -926,9 +1228,9 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0
 '
 + IFS='
 '
-++ printf '%s\n' 'object-group network BU1-NETWORKMTc0NzE0NjI2NTE1MzMxODAwMAo description Corporate HQ SubnetsMTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.0.1MTc0NzE0NjI2NTE1MzMxODAwMAo network-object host 10.0.1.2MTc0NzE0NjI2NTE1MzMxODAwMAo network-object 192.168.1.0 255.255.255.0' 'object network Server-192-168-1-10MTc0NzE0NjI2NTE1MzMxODAwMAo host 192.168.1.10MTc0NzE0NjI2NTE1MzMxODAwMAo description Main Application Server' 'object network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25' 'access-list OUTSIDE extended permit ip host 10.0.0.1 any' 'access-list OUTSIDE extended deny ip any any' 'nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo'
-++ grep -F 203.0.113.25
-+ matched_objects=('object network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25')
+++ printf '%s\n' 'object-group network BU1-NETWORKMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.1MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.2MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0' 'object-group network BU2-WIRELESSMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.10MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.200MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0' 'object-group network BU3-WANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.11MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.112MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0' 'object-group network BU4-LANMTc0NzE2NzYzMTUxMjI3NDAwMAo description Corporate HQ SubnetsMTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.0.100MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object host 10.0.1.12MTc0NzE2NzYzMTUxMjI3NDAwMAo network-object 192.168.1.0 255.255.255.0' 'object network Server-192-168-1-10MTc0NzE2NzYzMTUxMjI3NDAwMAo host 192.168.1.10MTc0NzE2NzYzMTUxMjI3NDAwMAo description Main Application Server' 'object network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25' 'access-list OUTSIDE extended permit ip host 10.0.0.1 any' 'access-list OUTSIDE extended deny ip any any' 'nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo'
+++ grep -E '(^|[^0-9.])203\.0\.113\.25([^0-9.]|$)'
++ matched_objects=('object network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25')
 + declare -a matched_objects
 + IFS=' 	
 '
@@ -948,14 +1250,14 @@ Loaded 1 config blocks+ newline
 + (( i++ ))
 + (( i < count ))
 + for i in "${!matched_objects[@]}"
-+ message '|---> Block [0]\nobject network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25'
-+ [[ -n |---> Block [0]\nobject network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25 ]]
-+ local 'message=|---> Block [0]\nobject network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25'
-+ print '|---> Block [0]\nobject network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25'
-+ [[ -n |---> Block [0]\nobject network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25 ]]
-+ echo -en '|---> Block [0]\nobject network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25'
++ message '|---> Block [0]\nobject network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25'
++ [[ -n |---> Block [0]\nobject network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25 ]]
++ local 'message=|---> Block [0]\nobject network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25'
++ print '|---> Block [0]\nobject network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25'
++ [[ -n |---> Block [0]\nobject network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25 ]]
++ echo -en '|---> Block [0]\nobject network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25'
 |---> Block [0]
-object network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25+ newline
+object network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -971,38 +1273,17 @@ object network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.2
 
 + (( i++ ))
 + (( i < count ))
-+ local site_part=configs/cisco
-+ local file_part=fw1.cfg
-++ jq -r --arg site cisco --arg file fw1.cfg '.configs[] | select(.config.site == $site and .config.device == $file) | .count' targets/203.0.113.25.json
-+ local expected_count=1
-+ [[ true == true ]]
-+ message 'Expected Matches (Count): 1'
-+ [[ -n Expected Matches (Count): 1 ]]
-+ local 'message=Expected Matches (Count): 1'
-+ print 'Expected Matches (Count): 1'
-+ [[ -n Expected Matches (Count): 1 ]]
-+ echo -en 'Expected Matches (Count): 1'
-Expected Matches (Count): 1+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-+ actual_count=1
-+ [[ 1 != \1 ]]
 + restored_block=()
 + declare -a restored_block
 + for serialized_line in "${matched_objects[@]}"
 + [[ true == true ]]
-+ message 'Serialized Line: object network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25'
-+ [[ -n Serialized Line: object network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25 ]]
-+ local 'message=Serialized Line: object network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25'
-+ print 'Serialized Line: object network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25'
-+ [[ -n Serialized Line: object network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25 ]]
-+ echo -en 'Serialized Line: object network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25'
-Serialized Line: object network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo host 203.0.113.25+ newline
++ message 'Serialized Line: object network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25'
++ [[ -n Serialized Line: object network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25 ]]
++ local 'message=Serialized Line: object network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25'
++ print 'Serialized Line: object network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25'
++ [[ -n Serialized Line: object network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25 ]]
++ echo -en 'Serialized Line: object network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25'
+Serialized Line: object network External-203-0-113-25MTc0NzE2NzYzMTUxMjI3NDAwMAo host 203.0.113.25+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -1010,7 +1291,7 @@ Serialized Line: object network External-203-0-113-25MTc0NzE0NjI2NTE1MzMxODAwMAo
 
 + (( i++ ))
 + (( i < count ))
-++ perl -pe 's/MTc0NzE0NjI2NTE1MzMxODAwMAo/\n/g'
+++ perl -pe 's/MTc0NzE2NzYzMTUxMjI3NDAwMAo/\n/g'
 + restored_block='object network External-203-0-113-25
  host 203.0.113.25'
 + [[ true == true ]]
@@ -1130,7 +1411,7 @@ object network External-203-0-113-25
 + [[ -n   - host 203.0.113.25 ]]
 + echo -en '  - host 203.0.113.25'
   - host 203.0.113.25+ local matched_line
-++ grep -wF 203.0.113.25
+++ grep -E '(^|[^0-9.])203\.0\.113\.25([^0-9.]|$)'
 ++ head -n 1
 ++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
 + matched_line='host 203.0.113.25'
@@ -1368,7 +1649,7 @@ object network External-203-0-113-25
   ]
 }'
 + [[ true == true ]]
-+ message 'Wrapped JSON Block:\n{
++ message '|-----> Config Objects:\n{
   "config": {
     "site": "cisco",
     "device": "fw1.cfg"
@@ -1385,7 +1666,7 @@ object network External-203-0-113-25
     }
   ]
 }'
-+ [[ -n Wrapped JSON Block:\n{
++ [[ -n |-----> Config Objects:\n{
   "config": {
     "site": "cisco",
     "device": "fw1.cfg"
@@ -1402,7 +1683,7 @@ object network External-203-0-113-25
     }
   ]
 } ]]
-+ local 'message=Wrapped JSON Block:\n{
++ local 'message=|-----> Config Objects:\n{
   "config": {
     "site": "cisco",
     "device": "fw1.cfg"
@@ -1419,7 +1700,7 @@ object network External-203-0-113-25
     }
   ]
 }'
-+ print 'Wrapped JSON Block:\n{
++ print '|-----> Config Objects:\n{
   "config": {
     "site": "cisco",
     "device": "fw1.cfg"
@@ -1436,7 +1717,7 @@ object network External-203-0-113-25
     }
   ]
 }'
-+ [[ -n Wrapped JSON Block:\n{
++ [[ -n |-----> Config Objects:\n{
   "config": {
     "site": "cisco",
     "device": "fw1.cfg"
@@ -1453,7 +1734,7 @@ object network External-203-0-113-25
     }
   ]
 } ]]
-+ echo -en 'Wrapped JSON Block:\n{
++ echo -en '|-----> Config Objects:\n{
   "config": {
     "site": "cisco",
     "device": "fw1.cfg"
@@ -1470,7 +1751,7 @@ object network External-203-0-113-25
     }
   ]
 }'
-Wrapped JSON Block:
+|-----> Config Objects:
 {
   "config": {
     "site": "cisco",
@@ -1549,8 +1830,8 @@ Wrapped JSON Block:
 + return 0
 + export json_outfile=reports/json/203.0.113.25.json
 + json_outfile=reports/json/203.0.113.25.json
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Rvv40K1axI/fragments.json ]]
-+ jq -s --arg target 203.0.113.25 '{ target: $target, configs: . }' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Rvv40K1axI/fragments.json
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L6wOlCXXhz/fragments.json ]]
++ jq -s --arg target 203.0.113.25 '{ target: $target, configs: . }' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L6wOlCXXhz/fragments.json
 + [[ true == true ]]
 + jq . reports/json/203.0.113.25.json
 {
@@ -1585,5 +1866,5 @@ Wrapped JSON Block:
 + (( i < count ))
 + return 0
 + unset verbose debug
-+ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Rvv40K1axI ]]
-+ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Rvv40K1axI
++ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L6wOlCXXhz ]]
++ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L6wOlCXXhz

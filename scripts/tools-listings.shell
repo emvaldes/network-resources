@@ -13,7 +13,8 @@ function generate_configslist () {
     local target_file="$2";
     ## Match configuration files for the current IP address
     local matched_files=$(
-      grep -lF "${ip_addr}" $( <"${configs_list_cache}" ) 2>/dev/null || true
+      grep -lE "(^|[^0-9.])${ip_addr//./\\.}([^0-9.]|$)" \
+               $( <"${configs_list_cache}" ) 2>/dev/null || true
     );
     # print "Matched files: ${matched_files}"
     ## If matched files exist, generate the JSON structure
@@ -37,7 +38,8 @@ function generate_configslist () {
         );
         ## Count how many times the IP appears in the config file
         match_count=$(
-          grep -oFw "${ip_addr}" "${configs_dirpath}/${config_file}" | \
+          grep -oE "(^|[^0-9.])${ip_addr//./\\.}([^0-9.]|$)" \
+                   "${configs_dirpath}/${config_file}" | \
           wc -l | tr -d ' '
         );
         ## Extracting target Site and Device items
