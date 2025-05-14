@@ -87,6 +87,7 @@ function list_file () {
       # Common prefix
       format_common+=$'File: '"${base}"$'\n';
       format_common+=$'Parent: '"${parent}"$'\n';
+      newline;
       # OS-specific body
       if [[ "$(uname)" == "Darwin" ]]; then
             format_os+=$'Size: %z bytes\n';
@@ -117,7 +118,7 @@ function print_file () {
     [[ -n ${1:-} ]] || return 0;
     local target_file="${1}";
     if [[ "${debug:-false}" == true && -f "${target_file}" ]]; then
-      list_file "${target_file}";
+      # list_file "${target_file}";
       case "${target_file}" in
         *.json)  jq . "${target_file}" 2>/dev/null || cat "${target_file}" ;;
         *.ya?ml) yq '.' "${target_file}" 2>/dev/null || cat "${target_file}" ;;
@@ -230,6 +231,7 @@ function display_help () {
         help_lines+=( "  -i, --ips-list     File containing list of target IP addresses" );
         help_lines+=( "  -j, --jobs         Count of concurrent jobs to run in parallel${nl}" );
         help_lines+=( "  -o, --logging      Enabling Logging-operations (files)${nl}" );
+        help_lines+=( "  -s, --sites        Custom list of locations to process (batching)" );
         ## Examples for listings
         help_lines+=( "Examples:${nl}" );
         help_lines+=( "${script_name} --interval=0.05 \\" );
@@ -354,6 +356,6 @@ export targets_logsfile="${stats_folder}/targets.jobs";
 export divisor="$(
   date +%s%N | base64 | tr -dc 'a-zA-Z0-9'
 )";
-print "DEBUG: divisor = '${divisor}'";
+# message "DEBUG: divisor = '${divisor}'";
 
 #------------------------------------------------------------------------------#

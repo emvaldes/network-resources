@@ -50,6 +50,7 @@ function main () {
       [[ $key =~ ^(jobs|j)$ ]] && local parallel_threads="${value}";
       [[ $key =~ ^(matrix|m)$ ]] && export matrix_filename="${value}";
       [[ $key =~ ^(reports|r)$ ]] && export reports_folder="${value}";
+      [[ $key =~ ^(sites|s)$ ]] && export target_sites="${value}";
       [[ $key =~ ^(validate|v)$ ]] && local validate_address=true;
 
       #### ---------------------------------------------------------------------
@@ -65,6 +66,7 @@ function main () {
     [[ -z ${delaying_factor:-} ]] && delaying_factor="0.05";
     [[ -z ${listing_filename:-} ]] && listing_filename="ips.list";
     [[ -z ${parallel_threads:-} ]] && parallel_threads=100;
+    [[ -z ${target_sites:-} ]] && target_sites=false;
 
     #### -----------------------------------------------------------------------
     ## Set default values if not supplied
@@ -96,8 +98,10 @@ function main () {
     ## Generate master list of config files only once
     ## Custom/Default configs folder:
     export configs_dirpath="${configs_dirpath:-configs}";
+
     ## Cache list of configuration files to avoid repeated find calls
     local configs_list_cache=".cache/configs.list";
+
     mkdir -p .cache;
     if [[ ! -f "${configs_list_cache}" ]]; then
             local -a find_cmd=( find "${configs_dirpath}" -type f \( );
@@ -108,10 +112,63 @@ function main () {
             find_cmd+=( \) );
             "${find_cmd[@]}" | sort > "${configs_list_cache}";
             [[ "${verbose}" == true ]] && \
-               print "Generated configs.list at ${configs_list_cache}";
+               message "Generated configs.list at ${configs_list_cache}";
       else  [[ "${verbose}" == true ]] && \
-               print "Using cached configs.list from ${configs_list_cache}";
+               message "Using cached configs.list from ${configs_list_cache}";
     fi;
+    newline;
+    # print_file "${configs_list_cache}";
+
+    #### -----------------------------------------------------------------------
+    ## Optional --sites filter: limit to specific site directories only
+    if [[ -n "${target_sites:-}" && "${target_sites}" != "false" ]]; then
+
+        oIFS="${IFS}"; IFS=',';
+        read -r -a site_filters <<< "${target_sites}";
+        # for site in ${site_filters[@]}; do message "Site: ${site}"; done;
+        IFS="${oIFS}";
+
+        # print_file "${configs_list_cache}";
+        declare -a filtered_configs=();
+        while IFS= read -r path; do
+          # message "Target Path: ${path}";
+          site_folder="$(
+            sed -E "s|^${configs_dirpath}/||" <<< "${path}" | \
+            sed -E 's|/.*||'
+          )";
+          # message "Site Folder: ${site_folder}";
+          for site in "${site_filters[@]}"; do
+            # message "Target Site: ${site}"
+            if [[ "${site_folder}" == "${site}" ]]; then
+              # message "Match Path: ${path}";
+              filtered_configs+=( "${path}" );
+              break;
+            fi;
+          done;
+        done < "${configs_list_cache}";
+        # printf '%s\n' "${filtered_configs[@]}";
+
+        #### -------------------------------------------------------------------
+        ## Overwrite the cached configs list with only the filtered entries
+        ## This ensures that downstream processing only sees site-matching files
+        if [[ "${#filtered_configs[@]}" -eq 0 ]]; then
+            message "[FILTER] No matching config files found for --sites=${target_sites}";
+            > "${configs_list_cache}";  ## Empty the file
+            newline;
+            exit 1;
+          else  printf '%s\n' "${filtered_configs[@]}" > "${configs_list_cache}";
+                if [[ "${verbose}" == true ]]; then
+                  message "[FILTER] Applied --sites=${target_sites}";
+                  message "[FILTER] Filtered configs.list now contains: $(
+                    wc -l < "${configs_list_cache}" | awk '{print $1}'
+                  ) entries";
+                fi;
+        fi;
+
+    fi;
+
+    newline;
+    print_file "${configs_list_cache}";
 
     #### -----------------------------------------------------------------------
     ## Processing Custom/Default the Translation-Matrix (source):
@@ -135,85 +192,234 @@ function main () {
 
     ## Initializing the log file
     : > "${reports_logsfile}";  ## Truncate report log
-    [[ "${debug}" == true ]] && list_file "${reports_logsfile}";
+    # [[ "${debug}" == true ]] && list_file "${reports_logsfile}";
 
     #### -----------------------------------------------------------------------
     ## Validating IP Addresses (Skipping?)
     [[ -z ${validate_address:-} ]] && export validate_address=false;
 
+    # #### -----------------------------------------------------------------------
+    # ## Processing Target Addresses Listing (default: ips.list)
+    # ## Load and validate IP address listing
+    # if [[ ! -f "${listing_filename}" ]]; then
+    #         error_message "Project Target IP-listing file not found: ${listing_filename}";
+    #         return 3;
+    #   else  ## Sort a list numerically, not lexicographically
+    #         mapfile -t target_listing < <(
+    #           grep -v '^\s*$' "${listing_filename}" | \
+    #           tr -d '\r' | \
+    #           sort -t . -k1,1n -k2,2n -k3,3n -k4,4n
+    #         )
+    #         if [[ ${#target_listing[@]} -eq 0 ]]; then
+    #                 error_message "No IP addresses to process.\n";
+    #                 return 4;
+    #           else  if [[ "${verbose}" == true ]]; then
+    #                   newline; print "IPS/CIDR Blocks: "; newline;
+    #                   for target in "${target_listing[@]}"; do
+    #                     print "  - ${target}"; newline;
+    #                   done; newline;
+    #                 fi;
+    #         fi;
+    # fi;
+
     #### -----------------------------------------------------------------------
-    ## Processing Target Addresses Listing (default: ips.list)
-    ## Load and validate IP address listing
-    if [[ ! -f "${listing_filename}" ]]; then
-            error_message "Project Target IP-listing file not found: ${listing_filename}";
+    ## Processing Target Addresses Listing (default: ips.list or inline string)
+    if [[ -z "${listing_filename}" ]]; then
+      listing_filename="ips.list";
+    fi;
+    declare -a target_listing_raw=();
+    if [[ -f "${listing_filename}" ]]; then
+            mapfile -t target_listing_raw < <(
+              grep -v '^\s*$' "${listing_filename}" | tr -d '\r'
+            );
+      elif [[ "${listing_filename}" =~ ^[0-9] ]]; then
+            mapfile -t target_listing_raw < <(
+              print "${listing_filename}" | tr ', ' '\n' | grep -v '^\s*$'
+            );
+      else  error_message "Project Target IP-listing file not found: ${listing_filename}";
             return 3;
-      else  ## Sort a list numerically, not lexicographically
-            mapfile -t target_listing < <(
-              grep -v '^\s*$' "${listing_filename}" | \
-              tr -d '\r' | \
-              sort -t . -k1,1n -k2,2n -k3,3n -k4,4n
-            )
-            if [[ ${#target_listing[@]} -eq 0 ]]; then
-                    error_message "No IP addresses to process.\n";
-                    return 4;
-              else  if [[ "${verbose}" == true ]]; then
-                      newline; print "IPS/CIDR Blocks: "; newline;
-                      for target in "${target_listing[@]}"; do
-                        print "  - ${target}"; newline;
-                      done; newline;
-                    fi;
-            fi;
     fi;
+    # list_file "${listing_filename}";
 
     #### -----------------------------------------------------------------------
-    ## Build mapping: which files reference which IP
-    ## Map each IP address to the config files it appears in (pre-scan phase)
-    mkdir -p targets;
-    if [[ "${verbose}" == true ]]; then
-      newline; print "Mapping IPs to config files (pre-scan phase)..."; newline;
-    fi;
-
-    ## Advanced Background Jobs management workflow
-    matching_configs;
-
-    #### -----------------------------------------------------------------------
-    ## Filter out IPs (Search Patterns) that had no matching config references
-    for ip_addr in "${target_listing[@]}"; do
-      ip_cleaned="$( print "${ip_addr}" | tr -d '\r' )";
-      if [[ -f "targets/${ip_cleaned}.json" ]]; then
-        filtered_target_listing+=( "${ip_cleaned}" );
+    ## Normalize and validate each IP using validate_address()
+    declare -a target_listing=();
+    for raw_ip in "${target_listing_raw[@]}"; do
+      target_address="${raw_ip}";
+      if validate_address; then
+        target_listing+=( "${target_address}" );
       fi;
     done;
 
-    #### -----------------------------------------------------------------------
-    local total_requested=${#target_listing[@]};
-    local total_mapped=${#filtered_target_listing[@]};
-    {
-      newline;
-      print "Total IPs requested: ${total_requested}"; newline;
-      print "Total IPs mapped:    ${total_mapped}"; newline;
-      print "Unmapped IPs:        $(( total_requested - total_mapped ))";
-      newline 2;
-    } >> "${reports_logsfile}";
-    print_file "${reports_logsfile}";
+    if [[ ${#target_listing[@]} -eq 0 ]]; then
+      error_message "No valid IP addresses to process.";
+      exit 2;
+    fi;
+
+################################################################################
+#### Starting Batch-Processing -------------------------------------------- ####
+
+message "STARTING BATCHING";
+message "#####################################################################";
 
     #### -----------------------------------------------------------------------
-    ## Log unmapped IPs explicitly (no matches found)
-    {
-      print "Unmapped IPs:"; newline 2;
-      for ip in "${target_listing[@]}"; do
-        ip_cleaned="$( print "${ip}" | tr -d '\r' | sed -E 's/[[:space:]]+//g' )";
-        if [[ -n "${ip_cleaned}" && ! -f "targets/${ip_cleaned}.json" ]]; then
-          print "  - ${ip_cleaned}"; newline;
+    ## Begin placeholder-only batch structure (no processing)
+    mapfile -t site_folders < <(
+      cut -d/ -f2 .cache/configs.list | sort -u
+    );
+    newline; message "Site Folders: $(
+      IFS=',' ; print "${site_folders[*]}"
+    )"; newline;
+
+    local batch_size=5;
+
+    ## Outter Batching (For-loop)
+    for site in "${site_folders[@]}"; do
+
+      oIFS="${IFS}"; IFS=$'\n';
+      read -r -d '' -a site_files < <(
+        grep -F "/${site}/" "${configs_list_cache}" && printf '\0'
+      );
+      IFS="${oIFS}";
+      total_files=${#site_files[@]};
+
+      if [[ "${verbose}" == true ]]; then
+        message "[BATCH] Processing folder: [${site}]";
+        message "[BATCH] Found ${total_files} config files";
+        # for site in "${site_files[@]}"; do message "Site: ${site}"; done;
+      fi;
+
+      ## Inner Batching (While-loop)
+      offset=0;
+
+      while [[ "${offset}" -lt "${total_files}" ]]; do
+
+        #### -------------------------------------------------------------------
+        ## Delete ./targets directory and wait until fully removed
+        rm -rf ./targets; while [[ -d ./targets ]]; do sleep 0.1; done;
+        ## Confirm ./targets is fully removed
+        if [[ -d ./targets ]]; then
+          error_message "[FATAL] Failed to delete ./targets directory.";
+          exit 3;
         fi;
-      done;
-      newline;
-    } >> "${reports_logsfile}";
-    print_file "${reports_logsfile}";
 
-    #### -----------------------------------------------------------------------
-    ## Launch and monitor parallel config parsing jobs for matched IPs
-    manage_configs;
+        #### -------------------------------------------------------------------
+        ## Delete .local/jobs directory and wait until fully removed
+        rm -rf .local/jobs; while [[ -d .local/jobs ]]; do sleep 0.1; done;
+        ## Confirm .local/jobs is fully removed
+        if [[ -d .local/jobs ]]; then
+          error_message "[FATAL] Failed to delete .local/jobs directory.";
+          exit 4;
+        fi;
+
+        #### -------------------------------------------------------------------
+        ## Overwrite and validate all .local/stats/*.stat files
+        stat_flush_success=true;
+        find .local/stats/ -type f -name '*.jobs' | \
+        while read -r stat_file; do
+          UTC_NOW="$(
+            date -u '+%Y-%m-%dT%H:%M:%SZ'
+          )";
+          timestamp="[${UTC_NOW}] Flushed";
+          UTC_NOW="$( date -u '+%Y-%m-%dT%H:%M:%SZ' )";
+          printf '%s\n' "${timestamp}" > "${stat_file}";
+          ## Validate flush was successful
+          if ! grep -qF "${timestamp}" "${stat_file}"; then
+            error_message "[ERROR] Failed to update: ${stat_file}";
+            stat_flush_success=false;
+          fi;
+        done;
+
+        ## Abort if any .stat file failed to flush properly
+        if [[ "${stat_flush_success}" != true ]]; then
+          error_message "[FATAL] One or more .jobs files failed to flush properly.";
+          exit 5;
+        fi;
+
+        ## Enforcing the creation of these file-structures
+        mkdir -p targets .local/{errors,jobs,stats};
+
+        batch_slice=( "${site_files[@]:offset:batch_size}" );
+        export batch_id="$(
+          printf '%s-%s' "$(date +%s%N)" "$RANDOM" | \
+          base64 | \
+          tr -dc 'a-zA-Z0-9' | \
+          cut -c1-12
+        )";
+
+        batch_suffix="$( date +%s )-${RANDOM}";
+        batch_configs_list="configs--${batch_id}-${batch_suffix}.list";
+        export BATCH_CONFIGS="$(
+          mktemp "${TMP_DIR}/${batch_configs_list}"
+        )";
+        printf '%s\n' "${batch_slice[@]}" > "${BATCH_CONFIGS}";
+
+        range_first=$(( offset+1 ));
+        range_last=$(( offset + ${#batch_slice[@]} ));
+        message "[ ${batch_id} ] Files ${range_first} -> ${range_last}";
+
+        list_file "${BATCH_CONFIGS}";
+        newline; message "Batch-Config file: [${batch_configs_list}]";
+        newline; print_file "${BATCH_CONFIGS}";
+
+        ## Advanced Background Jobs management workflow
+        matching_configs ${BATCH_CONFIGS};
+
+        #### -------------------------------------------------------------------
+        ## Clear previous match tracking array (fresh for this batch)
+        filtered_target_listing=();
+
+        #### -------------------------------------------------------------------
+        ## Filter out IPs (Search Patterns) that had no matching config references
+        for ip_addr in "${target_listing[@]}"; do
+          ip_cleaned="$( print "${ip_addr}" | tr -d '\r' )";
+          if [[ -f "targets/${ip_cleaned}.json" ]]; then
+            filtered_target_listing+=( "${ip_cleaned}" );
+          fi;
+        done;
+
+        #### -----------------------------------------------------------------------
+        local total_requested=${#target_listing[@]};
+        local total_mapped=${#filtered_target_listing[@]};
+        {
+          message "Total IPs requested: ${total_requested}";
+          message "Total IPs mapped:    ${total_mapped}";
+          message "${nl}Unmapped IPs:        $(( total_requested - total_mapped ))";
+          newline;
+        } >> "${reports_logsfile}";
+
+        #### -----------------------------------------------------------------------
+        ## Log unmapped IPs explicitly (no matches found)
+        {
+          for ip in "${target_listing[@]}"; do
+            ip_cleaned="$( print "${ip}" | tr -d '\r' | sed -E 's/[[:space:]]+//g' )";
+            if [[ -n "${ip_cleaned}" && ! -f "targets/${ip_cleaned}.json" ]]; then
+              message "  - ${ip_cleaned}";
+            fi;
+          done;
+          newline;
+        } >> "${reports_logsfile}";
+        # print_file "${reports_logsfile}";
+
+        ## Launch and monitor parallel config parsing jobs for matched IPs
+        manage_configs;
+
+        offset=$(( offset + batch_size ));
+
+      done;
+
+    done;
+
+    newline;
+    message ">>> [ALL OUTER BATCHES COMPLETE] Finished processing all site folders";
+    newline;
+
+message "#####################################################################";
+message "COMPLETED BATCHING";
+newline;
+
+#### Completed Batch-Processing ------------------------------------------- ####
+################################################################################
 
     #### -----------------------------------------------------------------------
     ## Strip base config path from all targets/*.json entries
@@ -270,7 +476,7 @@ function main () {
     done;
     if (( actual_reports < expected_reports )); then
       error_message "[ERROR] Only ${actual_reports} of ${expected_reports} reports were generated.";
-      exit 1;
+      exit 6;
     fi;
 
     #### -----------------------------------------------------------------------
@@ -281,7 +487,7 @@ function main () {
       );
       if (( ${#json_files[@]} > 0 )); then
         jq -s '.' "${json_files[@]}" > "${master_json}";
-        print_file "${master_json}";
+        # print_file "${master_json}";
       fi;
     fi;
 

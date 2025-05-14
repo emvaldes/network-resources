@@ -2,8 +2,8 @@
 + export LC_ALL=C
 + LC_ALL=C
 ++ mktemp -d
-+ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP
-+ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP
++ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qleH6EtT8f
++ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qleH6EtT8f
 + trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
 + source ./scripts/tools-devops.shell
 ++ [[ -n '' ]]
@@ -42,12 +42,9 @@
 +++ date +%s%N
 +++ base64
 +++ tr -dc a-zA-Z0-9
-++ export divisor=MTc0NzE4NDAxOTI3MTM2NDAwMAo
-++ divisor=MTc0NzE4NDAxOTI3MTM2NDAwMAo
-++ print 'DEBUG: divisor = '\''MTc0NzE4NDAxOTI3MTM2NDAwMAo'\'''
-++ [[ -n DEBUG: divisor = 'MTc0NzE4NDAxOTI3MTM2NDAwMAo' ]]
-++ echo -en 'DEBUG: divisor = '\''MTc0NzE4NDAxOTI3MTM2NDAwMAo'\'''
-DEBUG: divisor = 'MTc0NzE4NDAxOTI3MTM2NDAwMAo'+ source ./scripts/tools-extraction.shell
+++ export divisor=MTc0NzI1OTAzOTkxNjgzMjAwMAo
+++ divisor=MTc0NzI1OTAzOTkxNjgzMjAwMAo
++ source ./scripts/tools-extraction.shell
 ++ [[ -n '' ]]
 ++ readonly __TOOLS_EXTRACTION_SOURCED=1
 ++ __TOOLS_EXTRACTION_SOURCED=1
@@ -60,7 +57,7 @@ DEBUG: divisor = 'MTc0NzE4NDAxOTI3MTM2NDAwMAo'+ source ./scripts/tools-extractio
 + script_name=./scripts/parse-configs.shell
 + [[ 9 -ge 1 ]]
 + [[ --configs=configs =~ ^-*(h|help)$ ]]
-+ main --configs=configs --ip-addr=192.168.1.10 --index=4 --matrix=matrix.json --reports=reports --file-ext=cfg,conf,cnf --classify --verbose --debug
++ main --configs=configs --ip-addr=192.168.1.10 --index=04 --matrix=matrix.json --reports=reports --file-ext=cfg,conf,cnf --classify --verbose --debug
 + file_extensions=()
 + declare -a file_extensions
 + oIFS=' 	
@@ -107,13 +104,13 @@ DEBUG: divisor = 'MTc0NzE4NDAxOTI3MTM2NDAwMAo'+ source ./scripts/tools-extractio
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --index=4
+++ echo -e --index=04
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ index =~ ^(classify|g)$ ]]
 + [[ index =~ ^(file-ext|x)$ ]]
 + [[ index =~ ^(configs|c)$ ]]
 + [[ index =~ ^(index|n)$ ]]
-+ local target_index=4
++ local target_index=04
 + [[ index =~ ^(ip-addr|i)$ ]]
 + [[ index =~ ^(logs|o)$ ]]
 + [[ index =~ ^(matrix|m)$ ]]
@@ -261,8 +258,11 @@ DEBUG: divisor = 'MTc0NzE4NDAxOTI3MTM2NDAwMAo'+ source ./scripts/tools-extractio
 + mapfile -t source_configs
 ++ jq -r '.configs[] | "\(.config.site)/\(.config.device)"' targets/192.168.1.10.json
 + for i in "${!source_configs[@]}"
-+ [[ cisco/fw1.cfg != \c\o\n\f\i\g\s\/* ]]
-+ source_configs[$i]=configs/cisco/fw1.cfg
++ [[ misc/switch1.conf != \c\o\n\f\i\g\s\/* ]]
++ source_configs[$i]=configs/misc/switch1.conf
++ for i in "${!source_configs[@]}"
++ [[ misc/switch4.conf != \c\o\n\f\i\g\s\/* ]]
++ source_configs[$i]=configs/misc/switch4.conf
 + [[ true == true ]]
 + print 'Config JSON file used: targets/192.168.1.10.json'
 + [[ -n Config JSON file used: targets/192.168.1.10.json ]]
@@ -271,10 +271,14 @@ Config JSON file used: targets/192.168.1.10.json+ print 'Extracted config paths 
 + [[ -n Extracted config paths from JSON: ]]
 + echo -en 'Extracted config paths from JSON:'
 Extracted config paths from JSON:+ for cfg in "${source_configs[@]}"
-+ print ' - configs/cisco/fw1.cfg'
-+ [[ -n  - configs/cisco/fw1.cfg ]]
-+ echo -en ' - configs/cisco/fw1.cfg'
- - configs/cisco/fw1.cfg+ newline
++ print ' - configs/misc/switch1.conf'
++ [[ -n  - configs/misc/switch1.conf ]]
++ echo -en ' - configs/misc/switch1.conf'
+ - configs/misc/switch1.conf+ for cfg in "${source_configs[@]}"
++ print ' - configs/misc/switch4.conf'
++ [[ -n  - configs/misc/switch4.conf ]]
++ echo -en ' - configs/misc/switch4.conf'
+ - configs/misc/switch4.conf+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -365,7 +369,7 @@ Extracted config paths from JSON:+ for cfg in "${source_configs[@]}"
 + export reports_folder=reports
 + reports_folder=reports
 + mkdir -p reports/json reports/objects
-+ [[ -z 4 ]]
++ [[ -z 04 ]]
 + [[ -z false ]]
 + [[ -z 192.168.1.10 ]]
 ++ print 192.168.1.10
@@ -375,22 +379,22 @@ Extracted config paths from JSON:+ for cfg in "${source_configs[@]}"
 ++ tr -d '\r'
 + target_address=192.168.1.10
 + [[ false == true ]]
-+ export tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP/fragments.json
-+ tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP/fragments.json
++ export tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qleH6EtT8f/fragments.json
++ tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qleH6EtT8f/fragments.json
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs configs/cisco/fw1.cfg 192.168.1.10 targets/192.168.1.10.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP/fragments.json
-+ local config_file=configs/cisco/fw1.cfg
++ extract_configs configs/misc/switch1.conf 192.168.1.10 targets/192.168.1.10.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qleH6EtT8f/fragments.json
++ local config_file=configs/misc/switch1.conf
 + local target_pattern=192.168.1.10
 + local target_listing=targets/192.168.1.10.json
-+ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP/fragments.json
-+ [[ ! -f configs/cisco/fw1.cfg ]]
-+ message '[DEBUG] Checking if config file exists and is readable: configs/cisco/fw1.cfg'
-+ [[ -n [DEBUG] Checking if config file exists and is readable: configs/cisco/fw1.cfg ]]
-+ local 'message=[DEBUG] Checking if config file exists and is readable: configs/cisco/fw1.cfg'
-+ print '[DEBUG] Checking if config file exists and is readable: configs/cisco/fw1.cfg'
-+ [[ -n [DEBUG] Checking if config file exists and is readable: configs/cisco/fw1.cfg ]]
-+ echo -en '[DEBUG] Checking if config file exists and is readable: configs/cisco/fw1.cfg'
-[DEBUG] Checking if config file exists and is readable: configs/cisco/fw1.cfg+ newline
++ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qleH6EtT8f/fragments.json
++ [[ ! -f configs/misc/switch1.conf ]]
++ message '[DEBUG] Checking if config file exists and is readable: configs/misc/switch1.conf'
++ [[ -n [DEBUG] Checking if config file exists and is readable: configs/misc/switch1.conf ]]
++ local 'message=[DEBUG] Checking if config file exists and is readable: configs/misc/switch1.conf'
++ print '[DEBUG] Checking if config file exists and is readable: configs/misc/switch1.conf'
++ [[ -n [DEBUG] Checking if config file exists and is readable: configs/misc/switch1.conf ]]
++ echo -en '[DEBUG] Checking if config file exists and is readable: configs/misc/switch1.conf'
+[DEBUG] Checking if config file exists and is readable: configs/misc/switch1.conf+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -398,17 +402,17 @@ Extracted config paths from JSON:+ for cfg in "${source_configs[@]}"
 
 + (( i++ ))
 + (( i < count ))
-+ [[ ! -s configs/cisco/fw1.cfg ]]
-++ stat -c%s configs/cisco/fw1.cfg
++ [[ ! -s configs/misc/switch1.conf ]]
+++ stat -c%s configs/misc/switch1.conf
 stat: illegal option -- c
 usage: stat [-FLnq] [-f format | -l | -r | -s | -x] [-t timefmt] [file ...]
-+ message '[OK] File '\''configs/cisco/fw1.cfg'\'' is readable and size is  bytes'
-+ [[ -n [OK] File 'configs/cisco/fw1.cfg' is readable and size is  bytes ]]
-+ local 'message=[OK] File '\''configs/cisco/fw1.cfg'\'' is readable and size is  bytes'
-+ print '[OK] File '\''configs/cisco/fw1.cfg'\'' is readable and size is  bytes'
-+ [[ -n [OK] File 'configs/cisco/fw1.cfg' is readable and size is  bytes ]]
-+ echo -en '[OK] File '\''configs/cisco/fw1.cfg'\'' is readable and size is  bytes'
-[OK] File 'configs/cisco/fw1.cfg' is readable and size is  bytes+ newline
++ message '[OK] File '\''configs/misc/switch1.conf'\'' is readable and size is  bytes'
++ [[ -n [OK] File 'configs/misc/switch1.conf' is readable and size is  bytes ]]
++ local 'message=[OK] File '\''configs/misc/switch1.conf'\'' is readable and size is  bytes'
++ print '[OK] File '\''configs/misc/switch1.conf'\'' is readable and size is  bytes'
++ [[ -n [OK] File 'configs/misc/switch1.conf' is readable and size is  bytes ]]
++ echo -en '[OK] File '\''configs/misc/switch1.conf'\'' is readable and size is  bytes'
+[OK] File 'configs/misc/switch1.conf' is readable and size is  bytes+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -416,366 +420,118 @@ usage: stat [-FLnq] [-f format | -l | -r | -s | -x] [-t timefmt] [file ...]
 
 + (( i++ ))
 + (( i < count ))
-+ local 'imported_content=object-group network BU1-NETWORK
- description Corporate HQ Subnets
++ local 'imported_content=interface Vlan1
+ ip address 172.31.255.254 255.255.255.0
+
+interface Vlan10
+ ip address 10.0.1.2 255.255.255.0
+
+interface Vlan20
+ ip address 192.168.1.10 255.255.255.0
+
+object-group network Avengers-Office
+ description VLAN access layer
  network-object host 10.0.0.1
- network-object host 10.0.1.2
- network-object 192.168.1.0 255.255.255.0
-!
-
-object-group network BU2-WIRELESS
- description Corporate HQ Subnets
- network-object host 10.0.0.10
- network-object host 10.0.1.200
- network-object 192.168.1.0 255.255.255.0
-
-object-group network BU3-WAN
- description Corporate HQ Subnets
- network-object host 10.0.0.11
- network-object host 10.0.1.112
- network-object 192.168.1.0 255.255.255.0
-
-object-group network BU4-LAN
- description Corporate HQ Subnets
- network-object host 10.0.0.100
- network-object host 10.0.1.12
- network-object 192.168.1.0 255.255.255.0
-
-object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server
-!
-!!!!!
-
-!
-
-
-
-object network External-203-0-113-25
- host 203.0.113.25
-!
-
-
-access-list OUTSIDE extended permit ip host 10.0.0.1 any
-access-list OUTSIDE extended deny ip any any
-!
-nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25
+ network-object 192.168.12.0 255.255.255.0
 !'
 + [[ true == true ]]
-+ message 'Imported Content: object-group network BU1-NETWORK
- description Corporate HQ Subnets
++ message 'Imported Content: interface Vlan1
+ ip address 172.31.255.254 255.255.255.0
+
+interface Vlan10
+ ip address 10.0.1.2 255.255.255.0
+
+interface Vlan20
+ ip address 192.168.1.10 255.255.255.0
+
+object-group network Avengers-Office
+ description VLAN access layer
  network-object host 10.0.0.1
- network-object host 10.0.1.2
- network-object 192.168.1.0 255.255.255.0
-!
-
-object-group network BU2-WIRELESS
- description Corporate HQ Subnets
- network-object host 10.0.0.10
- network-object host 10.0.1.200
- network-object 192.168.1.0 255.255.255.0
-
-object-group network BU3-WAN
- description Corporate HQ Subnets
- network-object host 10.0.0.11
- network-object host 10.0.1.112
- network-object 192.168.1.0 255.255.255.0
-
-object-group network BU4-LAN
- description Corporate HQ Subnets
- network-object host 10.0.0.100
- network-object host 10.0.1.12
- network-object 192.168.1.0 255.255.255.0
-
-object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server
-!
-!!!!!
-
-!
-
-
-
-object network External-203-0-113-25
- host 203.0.113.25
-!
-
-
-access-list OUTSIDE extended permit ip host 10.0.0.1 any
-access-list OUTSIDE extended deny ip any any
-!
-nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25
+ network-object 192.168.12.0 255.255.255.0
 !'
-+ [[ -n Imported Content: object-group network BU1-NETWORK
- description Corporate HQ Subnets
++ [[ -n Imported Content: interface Vlan1
+ ip address 172.31.255.254 255.255.255.0
+
+interface Vlan10
+ ip address 10.0.1.2 255.255.255.0
+
+interface Vlan20
+ ip address 192.168.1.10 255.255.255.0
+
+object-group network Avengers-Office
+ description VLAN access layer
  network-object host 10.0.0.1
- network-object host 10.0.1.2
- network-object 192.168.1.0 255.255.255.0
-!
-
-object-group network BU2-WIRELESS
- description Corporate HQ Subnets
- network-object host 10.0.0.10
- network-object host 10.0.1.200
- network-object 192.168.1.0 255.255.255.0
-
-object-group network BU3-WAN
- description Corporate HQ Subnets
- network-object host 10.0.0.11
- network-object host 10.0.1.112
- network-object 192.168.1.0 255.255.255.0
-
-object-group network BU4-LAN
- description Corporate HQ Subnets
- network-object host 10.0.0.100
- network-object host 10.0.1.12
- network-object 192.168.1.0 255.255.255.0
-
-object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server
-!
-!!!!!
-
-!
-
-
-
-object network External-203-0-113-25
- host 203.0.113.25
-!
-
-
-access-list OUTSIDE extended permit ip host 10.0.0.1 any
-access-list OUTSIDE extended deny ip any any
-!
-nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25
+ network-object 192.168.12.0 255.255.255.0
 ! ]]
-+ local 'message=Imported Content: object-group network BU1-NETWORK
- description Corporate HQ Subnets
++ local 'message=Imported Content: interface Vlan1
+ ip address 172.31.255.254 255.255.255.0
+
+interface Vlan10
+ ip address 10.0.1.2 255.255.255.0
+
+interface Vlan20
+ ip address 192.168.1.10 255.255.255.0
+
+object-group network Avengers-Office
+ description VLAN access layer
  network-object host 10.0.0.1
- network-object host 10.0.1.2
- network-object 192.168.1.0 255.255.255.0
-!
-
-object-group network BU2-WIRELESS
- description Corporate HQ Subnets
- network-object host 10.0.0.10
- network-object host 10.0.1.200
- network-object 192.168.1.0 255.255.255.0
-
-object-group network BU3-WAN
- description Corporate HQ Subnets
- network-object host 10.0.0.11
- network-object host 10.0.1.112
- network-object 192.168.1.0 255.255.255.0
-
-object-group network BU4-LAN
- description Corporate HQ Subnets
- network-object host 10.0.0.100
- network-object host 10.0.1.12
- network-object 192.168.1.0 255.255.255.0
-
-object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server
-!
-!!!!!
-
-!
-
-
-
-object network External-203-0-113-25
- host 203.0.113.25
-!
-
-
-access-list OUTSIDE extended permit ip host 10.0.0.1 any
-access-list OUTSIDE extended deny ip any any
-!
-nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25
+ network-object 192.168.12.0 255.255.255.0
 !'
-+ print 'Imported Content: object-group network BU1-NETWORK
- description Corporate HQ Subnets
++ print 'Imported Content: interface Vlan1
+ ip address 172.31.255.254 255.255.255.0
+
+interface Vlan10
+ ip address 10.0.1.2 255.255.255.0
+
+interface Vlan20
+ ip address 192.168.1.10 255.255.255.0
+
+object-group network Avengers-Office
+ description VLAN access layer
  network-object host 10.0.0.1
- network-object host 10.0.1.2
- network-object 192.168.1.0 255.255.255.0
-!
-
-object-group network BU2-WIRELESS
- description Corporate HQ Subnets
- network-object host 10.0.0.10
- network-object host 10.0.1.200
- network-object 192.168.1.0 255.255.255.0
-
-object-group network BU3-WAN
- description Corporate HQ Subnets
- network-object host 10.0.0.11
- network-object host 10.0.1.112
- network-object 192.168.1.0 255.255.255.0
-
-object-group network BU4-LAN
- description Corporate HQ Subnets
- network-object host 10.0.0.100
- network-object host 10.0.1.12
- network-object 192.168.1.0 255.255.255.0
-
-object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server
-!
-!!!!!
-
-!
-
-
-
-object network External-203-0-113-25
- host 203.0.113.25
-!
-
-
-access-list OUTSIDE extended permit ip host 10.0.0.1 any
-access-list OUTSIDE extended deny ip any any
-!
-nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25
+ network-object 192.168.12.0 255.255.255.0
 !'
-+ [[ -n Imported Content: object-group network BU1-NETWORK
- description Corporate HQ Subnets
++ [[ -n Imported Content: interface Vlan1
+ ip address 172.31.255.254 255.255.255.0
+
+interface Vlan10
+ ip address 10.0.1.2 255.255.255.0
+
+interface Vlan20
+ ip address 192.168.1.10 255.255.255.0
+
+object-group network Avengers-Office
+ description VLAN access layer
  network-object host 10.0.0.1
- network-object host 10.0.1.2
- network-object 192.168.1.0 255.255.255.0
-!
-
-object-group network BU2-WIRELESS
- description Corporate HQ Subnets
- network-object host 10.0.0.10
- network-object host 10.0.1.200
- network-object 192.168.1.0 255.255.255.0
-
-object-group network BU3-WAN
- description Corporate HQ Subnets
- network-object host 10.0.0.11
- network-object host 10.0.1.112
- network-object 192.168.1.0 255.255.255.0
-
-object-group network BU4-LAN
- description Corporate HQ Subnets
- network-object host 10.0.0.100
- network-object host 10.0.1.12
- network-object 192.168.1.0 255.255.255.0
-
-object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server
-!
-!!!!!
-
-!
-
-
-
-object network External-203-0-113-25
- host 203.0.113.25
-!
-
-
-access-list OUTSIDE extended permit ip host 10.0.0.1 any
-access-list OUTSIDE extended deny ip any any
-!
-nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25
+ network-object 192.168.12.0 255.255.255.0
 ! ]]
-+ echo -en 'Imported Content: object-group network BU1-NETWORK
- description Corporate HQ Subnets
++ echo -en 'Imported Content: interface Vlan1
+ ip address 172.31.255.254 255.255.255.0
+
+interface Vlan10
+ ip address 10.0.1.2 255.255.255.0
+
+interface Vlan20
+ ip address 192.168.1.10 255.255.255.0
+
+object-group network Avengers-Office
+ description VLAN access layer
  network-object host 10.0.0.1
- network-object host 10.0.1.2
- network-object 192.168.1.0 255.255.255.0
-!
-
-object-group network BU2-WIRELESS
- description Corporate HQ Subnets
- network-object host 10.0.0.10
- network-object host 10.0.1.200
- network-object 192.168.1.0 255.255.255.0
-
-object-group network BU3-WAN
- description Corporate HQ Subnets
- network-object host 10.0.0.11
- network-object host 10.0.1.112
- network-object 192.168.1.0 255.255.255.0
-
-object-group network BU4-LAN
- description Corporate HQ Subnets
- network-object host 10.0.0.100
- network-object host 10.0.1.12
- network-object 192.168.1.0 255.255.255.0
-
-object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server
-!
-!!!!!
-
-!
-
-
-
-object network External-203-0-113-25
- host 203.0.113.25
-!
-
-
-access-list OUTSIDE extended permit ip host 10.0.0.1 any
-access-list OUTSIDE extended deny ip any any
-!
-nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25
+ network-object 192.168.12.0 255.255.255.0
 !'
-Imported Content: object-group network BU1-NETWORK
- description Corporate HQ Subnets
+Imported Content: interface Vlan1
+ ip address 172.31.255.254 255.255.255.0
+
+interface Vlan10
+ ip address 10.0.1.2 255.255.255.0
+
+interface Vlan20
+ ip address 192.168.1.10 255.255.255.0
+
+object-group network Avengers-Office
+ description VLAN access layer
  network-object host 10.0.0.1
- network-object host 10.0.1.2
- network-object 192.168.1.0 255.255.255.0
-!
-
-object-group network BU2-WIRELESS
- description Corporate HQ Subnets
- network-object host 10.0.0.10
- network-object host 10.0.1.200
- network-object 192.168.1.0 255.255.255.0
-
-object-group network BU3-WAN
- description Corporate HQ Subnets
- network-object host 10.0.0.11
- network-object host 10.0.1.112
- network-object 192.168.1.0 255.255.255.0
-
-object-group network BU4-LAN
- description Corporate HQ Subnets
- network-object host 10.0.0.100
- network-object host 10.0.1.12
- network-object 192.168.1.0 255.255.255.0
-
-object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server
-!
-!!!!!
-
-!
-
-
-
-object network External-203-0-113-25
- host 203.0.113.25
-!
-
-
-access-list OUTSIDE extended permit ip host 10.0.0.1 any
-access-list OUTSIDE extended deny ip any any
-!
-nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25
+ network-object 192.168.12.0 255.255.255.0
 !+ newline
 + local count=1
 + (( i = 0 ))
@@ -785,231 +541,87 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25
 + (( i++ ))
 + (( i < count ))
 ++ sed '/^\s*$/d;/^\s*!.*$/d'
-+ local 'sanitized_content=object-group network BU1-NETWORK
- description Corporate HQ Subnets
++ local 'sanitized_content=interface Vlan1
+ ip address 172.31.255.254 255.255.255.0
+interface Vlan10
+ ip address 10.0.1.2 255.255.255.0
+interface Vlan20
+ ip address 192.168.1.10 255.255.255.0
+object-group network Avengers-Office
+ description VLAN access layer
  network-object host 10.0.0.1
- network-object host 10.0.1.2
- network-object 192.168.1.0 255.255.255.0
-object-group network BU2-WIRELESS
- description Corporate HQ Subnets
- network-object host 10.0.0.10
- network-object host 10.0.1.200
- network-object 192.168.1.0 255.255.255.0
-object-group network BU3-WAN
- description Corporate HQ Subnets
- network-object host 10.0.0.11
- network-object host 10.0.1.112
- network-object 192.168.1.0 255.255.255.0
-object-group network BU4-LAN
- description Corporate HQ Subnets
- network-object host 10.0.0.100
- network-object host 10.0.1.12
- network-object 192.168.1.0 255.255.255.0
-object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server
-object network External-203-0-113-25
- host 203.0.113.25
-access-list OUTSIDE extended permit ip host 10.0.0.1 any
-access-list OUTSIDE extended deny ip any any
-nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25'
+ network-object 192.168.12.0 255.255.255.0'
 + [[ true == true ]]
-+ message 'Sanitized Content: object-group network BU1-NETWORK
- description Corporate HQ Subnets
++ message 'Sanitized Content: interface Vlan1
+ ip address 172.31.255.254 255.255.255.0
+interface Vlan10
+ ip address 10.0.1.2 255.255.255.0
+interface Vlan20
+ ip address 192.168.1.10 255.255.255.0
+object-group network Avengers-Office
+ description VLAN access layer
  network-object host 10.0.0.1
- network-object host 10.0.1.2
- network-object 192.168.1.0 255.255.255.0
-object-group network BU2-WIRELESS
- description Corporate HQ Subnets
- network-object host 10.0.0.10
- network-object host 10.0.1.200
- network-object 192.168.1.0 255.255.255.0
-object-group network BU3-WAN
- description Corporate HQ Subnets
- network-object host 10.0.0.11
- network-object host 10.0.1.112
- network-object 192.168.1.0 255.255.255.0
-object-group network BU4-LAN
- description Corporate HQ Subnets
- network-object host 10.0.0.100
- network-object host 10.0.1.12
- network-object 192.168.1.0 255.255.255.0
-object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server
-object network External-203-0-113-25
- host 203.0.113.25
-access-list OUTSIDE extended permit ip host 10.0.0.1 any
-access-list OUTSIDE extended deny ip any any
-nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25'
-+ [[ -n Sanitized Content: object-group network BU1-NETWORK
- description Corporate HQ Subnets
+ network-object 192.168.12.0 255.255.255.0'
++ [[ -n Sanitized Content: interface Vlan1
+ ip address 172.31.255.254 255.255.255.0
+interface Vlan10
+ ip address 10.0.1.2 255.255.255.0
+interface Vlan20
+ ip address 192.168.1.10 255.255.255.0
+object-group network Avengers-Office
+ description VLAN access layer
  network-object host 10.0.0.1
- network-object host 10.0.1.2
- network-object 192.168.1.0 255.255.255.0
-object-group network BU2-WIRELESS
- description Corporate HQ Subnets
- network-object host 10.0.0.10
- network-object host 10.0.1.200
- network-object 192.168.1.0 255.255.255.0
-object-group network BU3-WAN
- description Corporate HQ Subnets
- network-object host 10.0.0.11
- network-object host 10.0.1.112
- network-object 192.168.1.0 255.255.255.0
-object-group network BU4-LAN
- description Corporate HQ Subnets
- network-object host 10.0.0.100
- network-object host 10.0.1.12
- network-object 192.168.1.0 255.255.255.0
-object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server
-object network External-203-0-113-25
- host 203.0.113.25
-access-list OUTSIDE extended permit ip host 10.0.0.1 any
-access-list OUTSIDE extended deny ip any any
-nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25 ]]
-+ local 'message=Sanitized Content: object-group network BU1-NETWORK
- description Corporate HQ Subnets
+ network-object 192.168.12.0 255.255.255.0 ]]
++ local 'message=Sanitized Content: interface Vlan1
+ ip address 172.31.255.254 255.255.255.0
+interface Vlan10
+ ip address 10.0.1.2 255.255.255.0
+interface Vlan20
+ ip address 192.168.1.10 255.255.255.0
+object-group network Avengers-Office
+ description VLAN access layer
  network-object host 10.0.0.1
- network-object host 10.0.1.2
- network-object 192.168.1.0 255.255.255.0
-object-group network BU2-WIRELESS
- description Corporate HQ Subnets
- network-object host 10.0.0.10
- network-object host 10.0.1.200
- network-object 192.168.1.0 255.255.255.0
-object-group network BU3-WAN
- description Corporate HQ Subnets
- network-object host 10.0.0.11
- network-object host 10.0.1.112
- network-object 192.168.1.0 255.255.255.0
-object-group network BU4-LAN
- description Corporate HQ Subnets
- network-object host 10.0.0.100
- network-object host 10.0.1.12
- network-object 192.168.1.0 255.255.255.0
-object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server
-object network External-203-0-113-25
- host 203.0.113.25
-access-list OUTSIDE extended permit ip host 10.0.0.1 any
-access-list OUTSIDE extended deny ip any any
-nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25'
-+ print 'Sanitized Content: object-group network BU1-NETWORK
- description Corporate HQ Subnets
+ network-object 192.168.12.0 255.255.255.0'
++ print 'Sanitized Content: interface Vlan1
+ ip address 172.31.255.254 255.255.255.0
+interface Vlan10
+ ip address 10.0.1.2 255.255.255.0
+interface Vlan20
+ ip address 192.168.1.10 255.255.255.0
+object-group network Avengers-Office
+ description VLAN access layer
  network-object host 10.0.0.1
- network-object host 10.0.1.2
- network-object 192.168.1.0 255.255.255.0
-object-group network BU2-WIRELESS
- description Corporate HQ Subnets
- network-object host 10.0.0.10
- network-object host 10.0.1.200
- network-object 192.168.1.0 255.255.255.0
-object-group network BU3-WAN
- description Corporate HQ Subnets
- network-object host 10.0.0.11
- network-object host 10.0.1.112
- network-object 192.168.1.0 255.255.255.0
-object-group network BU4-LAN
- description Corporate HQ Subnets
- network-object host 10.0.0.100
- network-object host 10.0.1.12
- network-object 192.168.1.0 255.255.255.0
-object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server
-object network External-203-0-113-25
- host 203.0.113.25
-access-list OUTSIDE extended permit ip host 10.0.0.1 any
-access-list OUTSIDE extended deny ip any any
-nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25'
-+ [[ -n Sanitized Content: object-group network BU1-NETWORK
- description Corporate HQ Subnets
+ network-object 192.168.12.0 255.255.255.0'
++ [[ -n Sanitized Content: interface Vlan1
+ ip address 172.31.255.254 255.255.255.0
+interface Vlan10
+ ip address 10.0.1.2 255.255.255.0
+interface Vlan20
+ ip address 192.168.1.10 255.255.255.0
+object-group network Avengers-Office
+ description VLAN access layer
  network-object host 10.0.0.1
- network-object host 10.0.1.2
- network-object 192.168.1.0 255.255.255.0
-object-group network BU2-WIRELESS
- description Corporate HQ Subnets
- network-object host 10.0.0.10
- network-object host 10.0.1.200
- network-object 192.168.1.0 255.255.255.0
-object-group network BU3-WAN
- description Corporate HQ Subnets
- network-object host 10.0.0.11
- network-object host 10.0.1.112
- network-object 192.168.1.0 255.255.255.0
-object-group network BU4-LAN
- description Corporate HQ Subnets
- network-object host 10.0.0.100
- network-object host 10.0.1.12
- network-object 192.168.1.0 255.255.255.0
-object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server
-object network External-203-0-113-25
- host 203.0.113.25
-access-list OUTSIDE extended permit ip host 10.0.0.1 any
-access-list OUTSIDE extended deny ip any any
-nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25 ]]
-+ echo -en 'Sanitized Content: object-group network BU1-NETWORK
- description Corporate HQ Subnets
+ network-object 192.168.12.0 255.255.255.0 ]]
++ echo -en 'Sanitized Content: interface Vlan1
+ ip address 172.31.255.254 255.255.255.0
+interface Vlan10
+ ip address 10.0.1.2 255.255.255.0
+interface Vlan20
+ ip address 192.168.1.10 255.255.255.0
+object-group network Avengers-Office
+ description VLAN access layer
  network-object host 10.0.0.1
- network-object host 10.0.1.2
- network-object 192.168.1.0 255.255.255.0
-object-group network BU2-WIRELESS
- description Corporate HQ Subnets
- network-object host 10.0.0.10
- network-object host 10.0.1.200
- network-object 192.168.1.0 255.255.255.0
-object-group network BU3-WAN
- description Corporate HQ Subnets
- network-object host 10.0.0.11
- network-object host 10.0.1.112
- network-object 192.168.1.0 255.255.255.0
-object-group network BU4-LAN
- description Corporate HQ Subnets
- network-object host 10.0.0.100
- network-object host 10.0.1.12
- network-object 192.168.1.0 255.255.255.0
-object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server
-object network External-203-0-113-25
- host 203.0.113.25
-access-list OUTSIDE extended permit ip host 10.0.0.1 any
-access-list OUTSIDE extended deny ip any any
-nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25'
-Sanitized Content: object-group network BU1-NETWORK
- description Corporate HQ Subnets
+ network-object 192.168.12.0 255.255.255.0'
+Sanitized Content: interface Vlan1
+ ip address 172.31.255.254 255.255.255.0
+interface Vlan10
+ ip address 10.0.1.2 255.255.255.0
+interface Vlan20
+ ip address 192.168.1.10 255.255.255.0
+object-group network Avengers-Office
+ description VLAN access layer
  network-object host 10.0.0.1
- network-object host 10.0.1.2
- network-object 192.168.1.0 255.255.255.0
-object-group network BU2-WIRELESS
- description Corporate HQ Subnets
- network-object host 10.0.0.10
- network-object host 10.0.1.200
- network-object 192.168.1.0 255.255.255.0
-object-group network BU3-WAN
- description Corporate HQ Subnets
- network-object host 10.0.0.11
- network-object host 10.0.1.112
- network-object 192.168.1.0 255.255.255.0
-object-group network BU4-LAN
- description Corporate HQ Subnets
- network-object host 10.0.0.100
- network-object host 10.0.1.12
- network-object 192.168.1.0 255.255.255.0
-object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server
-object network External-203-0-113-25
- host 203.0.113.25
-access-list OUTSIDE extended permit ip host 10.0.0.1 any
-access-list OUTSIDE extended deny ip any any
-nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25+ newline
+ network-object 192.168.12.0 255.255.255.0+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -1017,16 +629,16 @@ nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25+ ne
 
 + (( i++ ))
 + (( i < count ))
-++ perl -pe 's/\n/MTc0NzE4NDAxOTI3MTM2NDAwMAo/g'
-+ local 'serialized_objects=object-group network BU1-NETWORKMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.1MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.2MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU2-WIRELESSMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.10MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.200MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU3-WANMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.11MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.112MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU4-LANMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.100MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.12MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject network Server-192-168-1-10MTc0NzE4NDAxOTI3MTM2NDAwMAo host 192.168.1.10MTc0NzE4NDAxOTI3MTM2NDAwMAo description Main Application ServerMTc0NzE4NDAxOTI3MTM2NDAwMAoobject network External-203-0-113-25MTc0NzE4NDAxOTI3MTM2NDAwMAo host 203.0.113.25MTc0NzE4NDAxOTI3MTM2NDAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE4NDAxOTI3MTM2NDAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE4NDAxOTI3MTM2NDAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE4NDAxOTI3MTM2NDAwMAo'
+++ perl -pe 's/\n/MTc0NzI1OTAzOTkxNjgzMjAwMAo/g'
++ local 'serialized_objects=interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan10MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan20MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAoobject-group network Avengers-OfficeMTc0NzI1OTAzOTkxNjgzMjAwMAo description VLAN access layerMTc0NzI1OTAzOTkxNjgzMjAwMAo network-object host 10.0.0.1MTc0NzI1OTAzOTkxNjgzMjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAo'
 + [[ true == true ]]
-+ message 'Serialized Objects: object-group network BU1-NETWORKMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.1MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.2MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU2-WIRELESSMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.10MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.200MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU3-WANMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.11MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.112MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU4-LANMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.100MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.12MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject network Server-192-168-1-10MTc0NzE4NDAxOTI3MTM2NDAwMAo host 192.168.1.10MTc0NzE4NDAxOTI3MTM2NDAwMAo description Main Application ServerMTc0NzE4NDAxOTI3MTM2NDAwMAoobject network External-203-0-113-25MTc0NzE4NDAxOTI3MTM2NDAwMAo host 203.0.113.25MTc0NzE4NDAxOTI3MTM2NDAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE4NDAxOTI3MTM2NDAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE4NDAxOTI3MTM2NDAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE4NDAxOTI3MTM2NDAwMAo'
-+ [[ -n Serialized Objects: object-group network BU1-NETWORKMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.1MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.2MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU2-WIRELESSMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.10MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.200MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU3-WANMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.11MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.112MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU4-LANMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.100MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.12MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject network Server-192-168-1-10MTc0NzE4NDAxOTI3MTM2NDAwMAo host 192.168.1.10MTc0NzE4NDAxOTI3MTM2NDAwMAo description Main Application ServerMTc0NzE4NDAxOTI3MTM2NDAwMAoobject network External-203-0-113-25MTc0NzE4NDAxOTI3MTM2NDAwMAo host 203.0.113.25MTc0NzE4NDAxOTI3MTM2NDAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE4NDAxOTI3MTM2NDAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE4NDAxOTI3MTM2NDAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE4NDAxOTI3MTM2NDAwMAo ]]
-+ local 'message=Serialized Objects: object-group network BU1-NETWORKMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.1MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.2MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU2-WIRELESSMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.10MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.200MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU3-WANMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.11MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.112MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU4-LANMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.100MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.12MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject network Server-192-168-1-10MTc0NzE4NDAxOTI3MTM2NDAwMAo host 192.168.1.10MTc0NzE4NDAxOTI3MTM2NDAwMAo description Main Application ServerMTc0NzE4NDAxOTI3MTM2NDAwMAoobject network External-203-0-113-25MTc0NzE4NDAxOTI3MTM2NDAwMAo host 203.0.113.25MTc0NzE4NDAxOTI3MTM2NDAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE4NDAxOTI3MTM2NDAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE4NDAxOTI3MTM2NDAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE4NDAxOTI3MTM2NDAwMAo'
-+ print 'Serialized Objects: object-group network BU1-NETWORKMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.1MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.2MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU2-WIRELESSMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.10MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.200MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU3-WANMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.11MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.112MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU4-LANMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.100MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.12MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject network Server-192-168-1-10MTc0NzE4NDAxOTI3MTM2NDAwMAo host 192.168.1.10MTc0NzE4NDAxOTI3MTM2NDAwMAo description Main Application ServerMTc0NzE4NDAxOTI3MTM2NDAwMAoobject network External-203-0-113-25MTc0NzE4NDAxOTI3MTM2NDAwMAo host 203.0.113.25MTc0NzE4NDAxOTI3MTM2NDAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE4NDAxOTI3MTM2NDAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE4NDAxOTI3MTM2NDAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE4NDAxOTI3MTM2NDAwMAo'
-+ [[ -n Serialized Objects: object-group network BU1-NETWORKMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.1MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.2MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU2-WIRELESSMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.10MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.200MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU3-WANMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.11MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.112MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU4-LANMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.100MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.12MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject network Server-192-168-1-10MTc0NzE4NDAxOTI3MTM2NDAwMAo host 192.168.1.10MTc0NzE4NDAxOTI3MTM2NDAwMAo description Main Application ServerMTc0NzE4NDAxOTI3MTM2NDAwMAoobject network External-203-0-113-25MTc0NzE4NDAxOTI3MTM2NDAwMAo host 203.0.113.25MTc0NzE4NDAxOTI3MTM2NDAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE4NDAxOTI3MTM2NDAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE4NDAxOTI3MTM2NDAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE4NDAxOTI3MTM2NDAwMAo ]]
-+ echo -en 'Serialized Objects: object-group network BU1-NETWORKMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.1MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.2MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU2-WIRELESSMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.10MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.200MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU3-WANMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.11MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.112MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU4-LANMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.100MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.12MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject network Server-192-168-1-10MTc0NzE4NDAxOTI3MTM2NDAwMAo host 192.168.1.10MTc0NzE4NDAxOTI3MTM2NDAwMAo description Main Application ServerMTc0NzE4NDAxOTI3MTM2NDAwMAoobject network External-203-0-113-25MTc0NzE4NDAxOTI3MTM2NDAwMAo host 203.0.113.25MTc0NzE4NDAxOTI3MTM2NDAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE4NDAxOTI3MTM2NDAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE4NDAxOTI3MTM2NDAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE4NDAxOTI3MTM2NDAwMAo'
-Serialized Objects: object-group network BU1-NETWORKMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.1MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.2MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU2-WIRELESSMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.10MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.200MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU3-WANMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.11MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.112MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject-group network BU4-LANMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.100MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.12MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzE4NDAxOTI3MTM2NDAwMAoobject network Server-192-168-1-10MTc0NzE4NDAxOTI3MTM2NDAwMAo host 192.168.1.10MTc0NzE4NDAxOTI3MTM2NDAwMAo description Main Application ServerMTc0NzE4NDAxOTI3MTM2NDAwMAoobject network External-203-0-113-25MTc0NzE4NDAxOTI3MTM2NDAwMAo host 203.0.113.25MTc0NzE4NDAxOTI3MTM2NDAwMAoaccess-list OUTSIDE extended permit ip host 10.0.0.1 anyMTc0NzE4NDAxOTI3MTM2NDAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzE4NDAxOTI3MTM2NDAwMAonat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE4NDAxOTI3MTM2NDAwMAo+ newline
++ message 'Serialized Objects: interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan10MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan20MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAoobject-group network Avengers-OfficeMTc0NzI1OTAzOTkxNjgzMjAwMAo description VLAN access layerMTc0NzI1OTAzOTkxNjgzMjAwMAo network-object host 10.0.0.1MTc0NzI1OTAzOTkxNjgzMjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAo'
++ [[ -n Serialized Objects: interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan10MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan20MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAoobject-group network Avengers-OfficeMTc0NzI1OTAzOTkxNjgzMjAwMAo description VLAN access layerMTc0NzI1OTAzOTkxNjgzMjAwMAo network-object host 10.0.0.1MTc0NzI1OTAzOTkxNjgzMjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAo ]]
++ local 'message=Serialized Objects: interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan10MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan20MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAoobject-group network Avengers-OfficeMTc0NzI1OTAzOTkxNjgzMjAwMAo description VLAN access layerMTc0NzI1OTAzOTkxNjgzMjAwMAo network-object host 10.0.0.1MTc0NzI1OTAzOTkxNjgzMjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAo'
++ print 'Serialized Objects: interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan10MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan20MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAoobject-group network Avengers-OfficeMTc0NzI1OTAzOTkxNjgzMjAwMAo description VLAN access layerMTc0NzI1OTAzOTkxNjgzMjAwMAo network-object host 10.0.0.1MTc0NzI1OTAzOTkxNjgzMjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAo'
++ [[ -n Serialized Objects: interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan10MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan20MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAoobject-group network Avengers-OfficeMTc0NzI1OTAzOTkxNjgzMjAwMAo description VLAN access layerMTc0NzI1OTAzOTkxNjgzMjAwMAo network-object host 10.0.0.1MTc0NzI1OTAzOTkxNjgzMjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAo ]]
++ echo -en 'Serialized Objects: interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan10MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan20MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAoobject-group network Avengers-OfficeMTc0NzI1OTAzOTkxNjgzMjAwMAo description VLAN access layerMTc0NzI1OTAzOTkxNjgzMjAwMAo network-object host 10.0.0.1MTc0NzI1OTAzOTkxNjgzMjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAo'
+Serialized Objects: interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan10MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan20MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAoobject-group network Avengers-OfficeMTc0NzI1OTAzOTkxNjgzMjAwMAo description VLAN access layerMTc0NzI1OTAzOTkxNjgzMjAwMAo network-object host 10.0.0.1MTc0NzI1OTAzOTkxNjgzMjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAo+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -1034,39 +646,29 @@ Serialized Objects: object-group network BU1-NETWORKMTc0NzE4NDAxOTI3MTM2NDAwMAo 
 
 + (( i++ ))
 + (( i < count ))
-++ sed -E 's/MTc0NzE4NDAxOTI3MTM2NDAwMAo([^[:space:]])/\n\1/g'
-+ local 'restored_lines=object-group network BU1-NETWORKMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.1MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.2MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0
-object-group network BU2-WIRELESSMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.10MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.200MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0
-object-group network BU3-WANMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.11MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.112MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0
-object-group network BU4-LANMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.100MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.12MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0
-object network Server-192-168-1-10MTc0NzE4NDAxOTI3MTM2NDAwMAo host 192.168.1.10MTc0NzE4NDAxOTI3MTM2NDAwMAo description Main Application Server
-object network External-203-0-113-25MTc0NzE4NDAxOTI3MTM2NDAwMAo host 203.0.113.25
-access-list OUTSIDE extended permit ip host 10.0.0.1 any
-access-list OUTSIDE extended deny ip any any
-nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE4NDAxOTI3MTM2NDAwMAo'
+++ sed -E 's/MTc0NzI1OTAzOTkxNjgzMjAwMAo([^[:space:]])/\n\1/g'
++ local 'restored_lines=interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.31.255.254 255.255.255.0
+interface Vlan10MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 10.0.1.2 255.255.255.0
+interface Vlan20MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0
+object-group network Avengers-OfficeMTc0NzI1OTAzOTkxNjgzMjAwMAo description VLAN access layerMTc0NzI1OTAzOTkxNjgzMjAwMAo network-object host 10.0.0.1MTc0NzI1OTAzOTkxNjgzMjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAo'
 + restored_lines+='
 '
 + IFS='
 '
 + read -r -d '' -a config_objects
-++ printf '%s\0' 'object-group network BU1-NETWORKMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.1MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.2MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0
-object-group network BU2-WIRELESSMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.10MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.200MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0
-object-group network BU3-WANMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.11MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.112MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0
-object-group network BU4-LANMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.100MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.12MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0
-object network Server-192-168-1-10MTc0NzE4NDAxOTI3MTM2NDAwMAo host 192.168.1.10MTc0NzE4NDAxOTI3MTM2NDAwMAo description Main Application Server
-object network External-203-0-113-25MTc0NzE4NDAxOTI3MTM2NDAwMAo host 203.0.113.25
-access-list OUTSIDE extended permit ip host 10.0.0.1 any
-access-list OUTSIDE extended deny ip any any
-nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE4NDAxOTI3MTM2NDAwMAo
+++ printf '%s\0' 'interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.31.255.254 255.255.255.0
+interface Vlan10MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 10.0.1.2 255.255.255.0
+interface Vlan20MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0
+object-group network Avengers-OfficeMTc0NzI1OTAzOTkxNjgzMjAwMAo description VLAN access layerMTc0NzI1OTAzOTkxNjgzMjAwMAo network-object host 10.0.0.1MTc0NzI1OTAzOTkxNjgzMjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAo
 '
 + [[ true == true ]]
-+ message 'Loaded 9 config blocks'
-+ [[ -n Loaded 9 config blocks ]]
-+ local 'message=Loaded 9 config blocks'
-+ print 'Loaded 9 config blocks'
-+ [[ -n Loaded 9 config blocks ]]
-+ echo -en 'Loaded 9 config blocks'
-Loaded 9 config blocks+ newline
++ message 'Loaded 4 config blocks'
++ [[ -n Loaded 4 config blocks ]]
++ local 'message=Loaded 4 config blocks'
++ print 'Loaded 4 config blocks'
++ [[ -n Loaded 4 config blocks ]]
++ echo -en 'Loaded 4 config blocks'
+Loaded 4 config blocks+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -1078,9 +680,9 @@ Loaded 9 config blocks+ newline
 '
 + IFS='
 '
-++ printf '%s\n' 'object-group network BU1-NETWORKMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.1MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.2MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0' 'object-group network BU2-WIRELESSMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.10MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.200MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0' 'object-group network BU3-WANMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.11MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.112MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0' 'object-group network BU4-LANMTc0NzE4NDAxOTI3MTM2NDAwMAo description Corporate HQ SubnetsMTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.0.100MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object host 10.0.1.12MTc0NzE4NDAxOTI3MTM2NDAwMAo network-object 192.168.1.0 255.255.255.0' 'object network Server-192-168-1-10MTc0NzE4NDAxOTI3MTM2NDAwMAo host 192.168.1.10MTc0NzE4NDAxOTI3MTM2NDAwMAo description Main Application Server' 'object network External-203-0-113-25MTc0NzE4NDAxOTI3MTM2NDAwMAo host 203.0.113.25' 'access-list OUTSIDE extended permit ip host 10.0.0.1 any' 'access-list OUTSIDE extended deny ip any any' 'nat (inside,outside) source static Server-192-168-1-10 External-203-0-113-25MTc0NzE4NDAxOTI3MTM2NDAwMAo'
+++ printf '%s\n' 'interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.31.255.254 255.255.255.0' 'interface Vlan10MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 10.0.1.2 255.255.255.0' 'interface Vlan20MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0' 'object-group network Avengers-OfficeMTc0NzI1OTAzOTkxNjgzMjAwMAo description VLAN access layerMTc0NzI1OTAzOTkxNjgzMjAwMAo network-object host 10.0.0.1MTc0NzI1OTAzOTkxNjgzMjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAo'
 ++ grep -E '(^|[^0-9.])192\.168\.1\.10([^0-9.]|$)'
-+ matched_objects=('object network Server-192-168-1-10MTc0NzE4NDAxOTI3MTM2NDAwMAo host 192.168.1.10MTc0NzE4NDAxOTI3MTM2NDAwMAo description Main Application Server')
++ matched_objects=('interface Vlan20MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0')
 + declare -a matched_objects
 + IFS=' 	
 '
@@ -1103,13 +705,13 @@ Loaded 1 config blocks+ newline
 + declare -a restored_block
 + for serialized_line in "${matched_objects[@]}"
 + [[ true == true ]]
-+ message 'Serialized Line: object network Server-192-168-1-10MTc0NzE4NDAxOTI3MTM2NDAwMAo host 192.168.1.10MTc0NzE4NDAxOTI3MTM2NDAwMAo description Main Application Server'
-+ [[ -n Serialized Line: object network Server-192-168-1-10MTc0NzE4NDAxOTI3MTM2NDAwMAo host 192.168.1.10MTc0NzE4NDAxOTI3MTM2NDAwMAo description Main Application Server ]]
-+ local 'message=Serialized Line: object network Server-192-168-1-10MTc0NzE4NDAxOTI3MTM2NDAwMAo host 192.168.1.10MTc0NzE4NDAxOTI3MTM2NDAwMAo description Main Application Server'
-+ print 'Serialized Line: object network Server-192-168-1-10MTc0NzE4NDAxOTI3MTM2NDAwMAo host 192.168.1.10MTc0NzE4NDAxOTI3MTM2NDAwMAo description Main Application Server'
-+ [[ -n Serialized Line: object network Server-192-168-1-10MTc0NzE4NDAxOTI3MTM2NDAwMAo host 192.168.1.10MTc0NzE4NDAxOTI3MTM2NDAwMAo description Main Application Server ]]
-+ echo -en 'Serialized Line: object network Server-192-168-1-10MTc0NzE4NDAxOTI3MTM2NDAwMAo host 192.168.1.10MTc0NzE4NDAxOTI3MTM2NDAwMAo description Main Application Server'
-Serialized Line: object network Server-192-168-1-10MTc0NzE4NDAxOTI3MTM2NDAwMAo host 192.168.1.10MTc0NzE4NDAxOTI3MTM2NDAwMAo description Main Application Server+ newline
++ message 'Serialized Line: interface Vlan20MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0'
++ [[ -n Serialized Line: interface Vlan20MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0 ]]
++ local 'message=Serialized Line: interface Vlan20MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0'
++ print 'Serialized Line: interface Vlan20MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0'
++ [[ -n Serialized Line: interface Vlan20MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0 ]]
++ echo -en 'Serialized Line: interface Vlan20MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0'
+Serialized Line: interface Vlan20MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -1117,33 +719,25 @@ Serialized Line: object network Server-192-168-1-10MTc0NzE4NDAxOTI3MTM2NDAwMAo h
 
 + (( i++ ))
 + (( i < count ))
-++ perl -pe 's/MTc0NzE4NDAxOTI3MTM2NDAwMAo/\n/g'
-+ restored_block='object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server'
+++ perl -pe 's/MTc0NzI1OTAzOTkxNjgzMjAwMAo/\n/g'
++ restored_block='interface Vlan20
+ ip address 192.168.1.10 255.255.255.0'
 + [[ true == true ]]
-+ message 'Restored Configuration:\nobject network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server'
-+ [[ -n Restored Configuration:\nobject network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server ]]
-+ local 'message=Restored Configuration:\nobject network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server'
-+ print 'Restored Configuration:\nobject network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server'
-+ [[ -n Restored Configuration:\nobject network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server ]]
-+ echo -en 'Restored Configuration:\nobject network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server'
++ message 'Restored Configuration:\ninterface Vlan20
+ ip address 192.168.1.10 255.255.255.0'
++ [[ -n Restored Configuration:\ninterface Vlan20
+ ip address 192.168.1.10 255.255.255.0 ]]
++ local 'message=Restored Configuration:\ninterface Vlan20
+ ip address 192.168.1.10 255.255.255.0'
++ print 'Restored Configuration:\ninterface Vlan20
+ ip address 192.168.1.10 255.255.255.0'
++ [[ -n Restored Configuration:\ninterface Vlan20
+ ip address 192.168.1.10 255.255.255.0 ]]
++ echo -en 'Restored Configuration:\ninterface Vlan20
+ ip address 192.168.1.10 255.255.255.0'
 Restored Configuration:
-object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server+ newline
+interface Vlan20
+ ip address 192.168.1.10 255.255.255.0+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -1151,45 +745,34 @@ object network Server-192-168-1-10
 
 + (( i++ ))
 + (( i < count ))
-+ process_configs 192.168.1.10 configs/cisco/fw1.cfg 'object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server'
++ process_configs 192.168.1.10 configs/misc/switch1.conf 'interface Vlan20
+ ip address 192.168.1.10 255.255.255.0'
 + local target_pattern=192.168.1.10
-+ local config_path=configs/cisco/fw1.cfg
-+ local 'restored_block=object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server'
++ local config_path=configs/misc/switch1.conf
++ local 'restored_block=interface Vlan20
+ ip address 192.168.1.10 255.255.255.0'
 + local cleaned_block
 ++ sed '/^[[:space:]]*$/d'
-+ cleaned_block='object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server'
-+ [[ -z object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server ]]
++ cleaned_block='interface Vlan20
+ ip address 192.168.1.10 255.255.255.0'
++ [[ -z interface Vlan20
+ ip address 192.168.1.10 255.255.255.0 ]]
 + [[ true == true ]]
-+ message '[process_configs] Raw Block:\nobject network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server'
-+ [[ -n [process_configs] Raw Block:\nobject network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server ]]
-+ local 'message=[process_configs] Raw Block:\nobject network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server'
-+ print '[process_configs] Raw Block:\nobject network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server'
-+ [[ -n [process_configs] Raw Block:\nobject network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server ]]
-+ echo -en '[process_configs] Raw Block:\nobject network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server'
++ message '[process_configs] Raw Block:\ninterface Vlan20
+ ip address 192.168.1.10 255.255.255.0'
++ [[ -n [process_configs] Raw Block:\ninterface Vlan20
+ ip address 192.168.1.10 255.255.255.0 ]]
++ local 'message=[process_configs] Raw Block:\ninterface Vlan20
+ ip address 192.168.1.10 255.255.255.0'
++ print '[process_configs] Raw Block:\ninterface Vlan20
+ ip address 192.168.1.10 255.255.255.0'
++ [[ -n [process_configs] Raw Block:\ninterface Vlan20
+ ip address 192.168.1.10 255.255.255.0 ]]
++ echo -en '[process_configs] Raw Block:\ninterface Vlan20
+ ip address 192.168.1.10 255.255.255.0'
 [process_configs] Raw Block:
-object network Server-192-168-1-10
- host 192.168.1.10
- description Main Application Server+ newline
+interface Vlan20
+ ip address 192.168.1.10 255.255.255.0+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -1200,46 +783,38 @@ object network Server-192-168-1-10
 + local object_line
 ++ head -n 1
 ++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
-+ object_line='object network Server-192-168-1-10'
-+ [[ -z object network Server-192-168-1-10 ]]
++ object_line='interface Vlan20'
++ [[ -z interface Vlan20 ]]
 + local object_keyword type_value
 ++ awk '{print $1}'
-+ object_keyword=object
++ object_keyword=interface
 ++ awk '{$1=""; print substr($0,2)}'
-+ type_value='network Server-192-168-1-10'
++ type_value=Vlan20
 + [[ true == true ]]
-+ print '[process_configs] object   : object'
-+ [[ -n [process_configs] object   : object ]]
-+ echo -en '[process_configs] object   : object'
-[process_configs] object   : object+ print '[process_configs] type     : network Server-192-168-1-10'
-+ [[ -n [process_configs] type     : network Server-192-168-1-10 ]]
-+ echo -en '[process_configs] type     : network Server-192-168-1-10'
-[process_configs] type     : network Server-192-168-1-10+ entries=()
++ print '[process_configs] object   : interface'
++ [[ -n [process_configs] object   : interface ]]
++ echo -en '[process_configs] object   : interface'
+[process_configs] object   : interface+ print '[process_configs] type     : Vlan20'
++ [[ -n [process_configs] type     : Vlan20 ]]
++ echo -en '[process_configs] type     : Vlan20'
+[process_configs] type     : Vlan20+ entries=()
 + local -a entries
 + IFS=
 + read -r line
 + local trimmed
 ++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
-+ trimmed='object network Server-192-168-1-10'
-+ [[ -z object network Server-192-168-1-10 ]]
-+ [[ object network server-192-168-1-10 =~ ^description[[:space:]] ]]
++ trimmed='interface Vlan20'
++ [[ -z interface Vlan20 ]]
++ [[ interface vlan20 =~ ^description[[:space:]] ]]
 + entries+=("${trimmed}")
 + IFS=
 + read -r line
 + local trimmed
 ++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
-+ trimmed='host 192.168.1.10'
-+ [[ -z host 192.168.1.10 ]]
-+ [[ host 192.168.1.10 =~ ^description[[:space:]] ]]
++ trimmed='ip address 192.168.1.10 255.255.255.0'
++ [[ -z ip address 192.168.1.10 255.255.255.0 ]]
++ [[ ip address 192.168.1.10 255.255.255.0 =~ ^description[[:space:]] ]]
 + entries+=("${trimmed}")
-+ IFS=
-+ read -r line
-+ local trimmed
-++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
-+ trimmed='description Main Application Server'
-+ [[ -z description Main Application Server ]]
-+ [[ description main application server =~ ^description[[:space:]] ]]
-+ continue
 + IFS=
 + read -r line
 + ((  2 > 1  ))
@@ -1260,23 +835,23 @@ object network Server-192-168-1-10
 + (( i++ ))
 + (( i < count ))
 + for e in "${entries[@]}"
-+ print '  - host 192.168.1.10'
-+ [[ -n   - host 192.168.1.10 ]]
-+ echo -en '  - host 192.168.1.10'
-  - host 192.168.1.10+ local matched_line
++ print '  - ip address 192.168.1.10 255.255.255.0'
++ [[ -n   - ip address 192.168.1.10 255.255.255.0 ]]
++ echo -en '  - ip address 192.168.1.10 255.255.255.0'
+  - ip address 192.168.1.10 255.255.255.0+ local matched_line
 ++ grep -E '(^|[^0-9.])192\.168\.1\.10([^0-9.]|$)'
 ++ head -n 1
 ++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
-+ matched_line='host 192.168.1.10'
-+ [[ -z host 192.168.1.10 ]]
++ matched_line='ip address 192.168.1.10 255.255.255.0'
++ [[ -z ip address 192.168.1.10 255.255.255.0 ]]
 + [[ true == true ]]
-+ message '[process_configs] Matched: host 192.168.1.10'
-+ [[ -n [process_configs] Matched: host 192.168.1.10 ]]
-+ local 'message=[process_configs] Matched: host 192.168.1.10'
-+ print '[process_configs] Matched: host 192.168.1.10'
-+ [[ -n [process_configs] Matched: host 192.168.1.10 ]]
-+ echo -en '[process_configs] Matched: host 192.168.1.10'
-[process_configs] Matched: host 192.168.1.10+ newline
++ message '[process_configs] Matched: ip address 192.168.1.10 255.255.255.0'
++ [[ -n [process_configs] Matched: ip address 192.168.1.10 255.255.255.0 ]]
++ local 'message=[process_configs] Matched: ip address 192.168.1.10 255.255.255.0'
++ print '[process_configs] Matched: ip address 192.168.1.10 255.255.255.0'
++ [[ -n [process_configs] Matched: ip address 192.168.1.10 255.255.255.0 ]]
++ echo -en '[process_configs] Matched: ip address 192.168.1.10 255.255.255.0'
+[process_configs] Matched: ip address 192.168.1.10 255.255.255.0+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -1306,21 +881,24 @@ object network Server-192-168-1-10
 + local object_key
 ++ awk '{print $NF}'
 ++ sed -E 's/[[:punct:]]*$//'
-+ object_key=Server-192-168-1-10
-++ jq -r --arg key Server-192-168-1-10 'map(select(.match[]? | contains($key))) | .[0].group'
-+ group_val=Business-Unit-HQ
-+ [[ -z Business-Unit-HQ ]]
-+ [[ Business-Unit-HQ == \n\u\l\l ]]
-+ [[ -z Business-Unit-HQ ]]
-+ [[ Business-Unit-HQ == \n\u\l\l ]]
++ object_key=Vlan20
+++ jq -r --arg key Vlan20 'map(select(.match[]? | contains($key))) | .[0].group'
++ group_val=null
++ [[ -z null ]]
++ [[ null == \n\u\l\l ]]
+++ jq -r --arg desc false 'map(select(.match[]? == $desc)) | .[0].group'
++ group_val=null
++ [[ -z null ]]
++ [[ null == \n\u\l\l ]]
++ group_val=Unclassified
 + [[ true == true ]]
-+ message '[process_configs] Group: Business-Unit-HQ'
-+ [[ -n [process_configs] Group: Business-Unit-HQ ]]
-+ local 'message=[process_configs] Group: Business-Unit-HQ'
-+ print '[process_configs] Group: Business-Unit-HQ'
-+ [[ -n [process_configs] Group: Business-Unit-HQ ]]
-+ echo -en '[process_configs] Group: Business-Unit-HQ'
-[process_configs] Group: Business-Unit-HQ+ newline
++ message '[process_configs] Group: Unclassified'
++ [[ -n [process_configs] Group: Unclassified ]]
++ local 'message=[process_configs] Group: Unclassified'
++ print '[process_configs] Group: Unclassified'
++ [[ -n [process_configs] Group: Unclassified ]]
++ echo -en '[process_configs] Group: Unclassified'
+[process_configs] Group: Unclassified+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -1328,16 +906,16 @@ object network Server-192-168-1-10
 
 + (( i++ ))
 + (( i < count ))
-++ printf '%s\n' 'host 192.168.1.10'
+++ printf '%s\n' 'ip address 192.168.1.10 255.255.255.0'
 ++ jq -R .
 ++ jq -s .
 + local 'entries_2json=[
-  "host 192.168.1.10"
+  "ip address 192.168.1.10 255.255.255.0"
 ]'
 + [[ 1 -eq 1 ]]
-++ jq -n --arg object object --arg description false --argjson entries '[
-  "host 192.168.1.10"
-]' --arg group Business-Unit-HQ '{
+++ jq -n --arg object interface --arg description false --argjson entries '[
+  "ip address 192.168.1.10 255.255.255.0"
+]' --arg group Unclassified '{
                   object: $object,
                   type: false,
                   description: ($description | select(. != "" and . != "null") // false),
@@ -1345,13 +923,13 @@ object network Server-192-168-1-10
                   group: $group
                 }'
 + target_object='{
-  "object": "object",
+  "object": "interface",
   "type": false,
   "description": "false",
   "entries": [
-    "host 192.168.1.10"
+    "ip address 192.168.1.10 255.255.255.0"
   ],
-  "group": "Business-Unit-HQ"
+  "group": "Unclassified"
 }'
 + export target_object
 + [[ true == true ]]
@@ -1370,41 +948,41 @@ object network Server-192-168-1-10
 + (( i++ ))
 + (( i < count ))
 + print '{
-  "object": "object",
+  "object": "interface",
   "type": false,
   "description": "false",
   "entries": [
-    "host 192.168.1.10"
+    "ip address 192.168.1.10 255.255.255.0"
   ],
-  "group": "Business-Unit-HQ"
+  "group": "Unclassified"
 }'
 + [[ -n {
-  "object": "object",
+  "object": "interface",
   "type": false,
   "description": "false",
   "entries": [
-    "host 192.168.1.10"
+    "ip address 192.168.1.10 255.255.255.0"
   ],
-  "group": "Business-Unit-HQ"
+  "group": "Unclassified"
 } ]]
 + jq .
 + echo -en '{
-  "object": "object",
+  "object": "interface",
   "type": false,
   "description": "false",
   "entries": [
-    "host 192.168.1.10"
+    "ip address 192.168.1.10 255.255.255.0"
   ],
-  "group": "Business-Unit-HQ"
+  "group": "Unclassified"
 }'
 {
-  "object": "object",
+  "object": "interface",
   "type": false,
   "description": "false",
   "entries": [
-    "host 192.168.1.10"
+    "ip address 192.168.1.10 255.255.255.0"
   ],
-  "group": "Business-Unit-HQ"
+  "group": "Unclassified"
 }
 + newline
 + local count=1
@@ -1416,77 +994,77 @@ object network Server-192-168-1-10
 + (( i < count ))
 + return 0
 + [[ -n {
-  "object": "object",
+  "object": "interface",
   "type": false,
   "description": "false",
   "entries": [
-    "host 192.168.1.10"
+    "ip address 192.168.1.10 255.255.255.0"
   ],
-  "group": "Business-Unit-HQ"
+  "group": "Unclassified"
 } ]]
 + [[ true == true ]]
 + message '|-----> Target Objects: {
-  "object": "object",
+  "object": "interface",
   "type": false,
   "description": "false",
   "entries": [
-    "host 192.168.1.10"
+    "ip address 192.168.1.10 255.255.255.0"
   ],
-  "group": "Business-Unit-HQ"
+  "group": "Unclassified"
 }'
 + [[ -n |-----> Target Objects: {
-  "object": "object",
+  "object": "interface",
   "type": false,
   "description": "false",
   "entries": [
-    "host 192.168.1.10"
+    "ip address 192.168.1.10 255.255.255.0"
   ],
-  "group": "Business-Unit-HQ"
+  "group": "Unclassified"
 } ]]
 + local 'message=|-----> Target Objects: {
-  "object": "object",
+  "object": "interface",
   "type": false,
   "description": "false",
   "entries": [
-    "host 192.168.1.10"
+    "ip address 192.168.1.10 255.255.255.0"
   ],
-  "group": "Business-Unit-HQ"
+  "group": "Unclassified"
 }'
 + print '|-----> Target Objects: {
-  "object": "object",
+  "object": "interface",
   "type": false,
   "description": "false",
   "entries": [
-    "host 192.168.1.10"
+    "ip address 192.168.1.10 255.255.255.0"
   ],
-  "group": "Business-Unit-HQ"
+  "group": "Unclassified"
 }'
 + [[ -n |-----> Target Objects: {
-  "object": "object",
+  "object": "interface",
   "type": false,
   "description": "false",
   "entries": [
-    "host 192.168.1.10"
+    "ip address 192.168.1.10 255.255.255.0"
   ],
-  "group": "Business-Unit-HQ"
+  "group": "Unclassified"
 } ]]
 + echo -en '|-----> Target Objects: {
-  "object": "object",
+  "object": "interface",
   "type": false,
   "description": "false",
   "entries": [
-    "host 192.168.1.10"
+    "ip address 192.168.1.10 255.255.255.0"
   ],
-  "group": "Business-Unit-HQ"
+  "group": "Unclassified"
 }'
 |-----> Target Objects: {
-  "object": "object",
+  "object": "interface",
   "type": false,
   "description": "false",
   "entries": [
-    "host 192.168.1.10"
+    "ip address 192.168.1.10 255.255.255.0"
   ],
-  "group": "Business-Unit-HQ"
+  "group": "Unclassified"
 }+ newline
 + local count=1
 + (( i = 0 ))
@@ -1496,24 +1074,24 @@ object network Server-192-168-1-10
 + (( i++ ))
 + (( i < count ))
 + [[ -n {
-  "object": "object",
+  "object": "interface",
   "type": false,
   "description": "false",
   "entries": [
-    "host 192.168.1.10"
+    "ip address 192.168.1.10 255.255.255.0"
   ],
-  "group": "Business-Unit-HQ"
+  "group": "Unclassified"
 } ]]
 ++ printf '%s\n' '{
-  "object": "object",
+  "object": "interface",
   "type": false,
   "description": "false",
   "entries": [
-    "host 192.168.1.10"
+    "ip address 192.168.1.10 255.255.255.0"
   ],
-  "group": "Business-Unit-HQ"
+  "group": "Unclassified"
 }'
-++ jq -s --arg site configs/cisco --arg device fw1.cfg '{
+++ jq -s --arg site configs/misc --arg device switch1.conf '{
               config: {
                 site: ($site | gsub("^.*/"; "")),
                 device: $device,
@@ -1522,17 +1100,17 @@ object network Server-192-168-1-10
             }'
 + wrapped_block='{
   "config": {
-    "site": "cisco",
-    "device": "fw1.cfg",
+    "site": "misc",
+    "device": "switch1.conf",
     "objects": [
       {
-        "object": "object",
+        "object": "interface",
         "type": false,
         "description": "false",
         "entries": [
-          "host 192.168.1.10"
+          "ip address 192.168.1.10 255.255.255.0"
         ],
-        "group": "Business-Unit-HQ"
+        "group": "Unclassified"
       }
     ]
   }
@@ -1540,102 +1118,102 @@ object network Server-192-168-1-10
 + [[ true == true ]]
 + message '|-----> Config Objects:\n{
   "config": {
-    "site": "cisco",
-    "device": "fw1.cfg",
+    "site": "misc",
+    "device": "switch1.conf",
     "objects": [
       {
-        "object": "object",
+        "object": "interface",
         "type": false,
         "description": "false",
         "entries": [
-          "host 192.168.1.10"
+          "ip address 192.168.1.10 255.255.255.0"
         ],
-        "group": "Business-Unit-HQ"
+        "group": "Unclassified"
       }
     ]
   }
 }'
 + [[ -n |-----> Config Objects:\n{
   "config": {
-    "site": "cisco",
-    "device": "fw1.cfg",
+    "site": "misc",
+    "device": "switch1.conf",
     "objects": [
       {
-        "object": "object",
+        "object": "interface",
         "type": false,
         "description": "false",
         "entries": [
-          "host 192.168.1.10"
+          "ip address 192.168.1.10 255.255.255.0"
         ],
-        "group": "Business-Unit-HQ"
+        "group": "Unclassified"
       }
     ]
   }
 } ]]
 + local 'message=|-----> Config Objects:\n{
   "config": {
-    "site": "cisco",
-    "device": "fw1.cfg",
+    "site": "misc",
+    "device": "switch1.conf",
     "objects": [
       {
-        "object": "object",
+        "object": "interface",
         "type": false,
         "description": "false",
         "entries": [
-          "host 192.168.1.10"
+          "ip address 192.168.1.10 255.255.255.0"
         ],
-        "group": "Business-Unit-HQ"
+        "group": "Unclassified"
       }
     ]
   }
 }'
 + print '|-----> Config Objects:\n{
   "config": {
-    "site": "cisco",
-    "device": "fw1.cfg",
+    "site": "misc",
+    "device": "switch1.conf",
     "objects": [
       {
-        "object": "object",
+        "object": "interface",
         "type": false,
         "description": "false",
         "entries": [
-          "host 192.168.1.10"
+          "ip address 192.168.1.10 255.255.255.0"
         ],
-        "group": "Business-Unit-HQ"
+        "group": "Unclassified"
       }
     ]
   }
 }'
 + [[ -n |-----> Config Objects:\n{
   "config": {
-    "site": "cisco",
-    "device": "fw1.cfg",
+    "site": "misc",
+    "device": "switch1.conf",
     "objects": [
       {
-        "object": "object",
+        "object": "interface",
         "type": false,
         "description": "false",
         "entries": [
-          "host 192.168.1.10"
+          "ip address 192.168.1.10 255.255.255.0"
         ],
-        "group": "Business-Unit-HQ"
+        "group": "Unclassified"
       }
     ]
   }
 } ]]
 + echo -en '|-----> Config Objects:\n{
   "config": {
-    "site": "cisco",
-    "device": "fw1.cfg",
+    "site": "misc",
+    "device": "switch1.conf",
     "objects": [
       {
-        "object": "object",
+        "object": "interface",
         "type": false,
         "description": "false",
         "entries": [
-          "host 192.168.1.10"
+          "ip address 192.168.1.10 255.255.255.0"
         ],
-        "group": "Business-Unit-HQ"
+        "group": "Unclassified"
       }
     ]
   }
@@ -1643,17 +1221,17 @@ object network Server-192-168-1-10
 |-----> Config Objects:
 {
   "config": {
-    "site": "cisco",
-    "device": "fw1.cfg",
+    "site": "misc",
+    "device": "switch1.conf",
     "objects": [
       {
-        "object": "object",
+        "object": "interface",
         "type": false,
         "description": "false",
         "entries": [
-          "host 192.168.1.10"
+          "ip address 192.168.1.10 255.255.255.0"
         ],
-        "group": "Business-Unit-HQ"
+        "group": "Unclassified"
       }
     ]
   }
@@ -1667,248 +1245,908 @@ object network Server-192-168-1-10
 + (( i < count ))
 + print '{
   "config": {
-    "site": "cisco",
-    "device": "fw1.cfg",
+    "site": "misc",
+    "device": "switch1.conf",
     "objects": [
       {
-        "object": "object",
+        "object": "interface",
         "type": false,
         "description": "false",
         "entries": [
-          "host 192.168.1.10"
+          "ip address 192.168.1.10 255.255.255.0"
         ],
-        "group": "Business-Unit-HQ"
+        "group": "Unclassified"
       }
     ]
   }
 }'
 + [[ -n {
   "config": {
-    "site": "cisco",
-    "device": "fw1.cfg",
+    "site": "misc",
+    "device": "switch1.conf",
     "objects": [
       {
-        "object": "object",
+        "object": "interface",
         "type": false,
         "description": "false",
         "entries": [
-          "host 192.168.1.10"
+          "ip address 192.168.1.10 255.255.255.0"
         ],
-        "group": "Business-Unit-HQ"
+        "group": "Unclassified"
       }
     ]
   }
 } ]]
 + echo -en '{
   "config": {
-    "site": "cisco",
-    "device": "fw1.cfg",
+    "site": "misc",
+    "device": "switch1.conf",
     "objects": [
       {
-        "object": "object",
+        "object": "interface",
         "type": false,
         "description": "false",
         "entries": [
-          "host 192.168.1.10"
+          "ip address 192.168.1.10 255.255.255.0"
         ],
-        "group": "Business-Unit-HQ"
+        "group": "Unclassified"
+      }
+    ]
+  }
+}'
++ return 0
++ for cfg_file in "${source_configs[@]}"
++ extract_configs configs/misc/switch4.conf 192.168.1.10 targets/192.168.1.10.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qleH6EtT8f/fragments.json
++ local config_file=configs/misc/switch4.conf
++ local target_pattern=192.168.1.10
++ local target_listing=targets/192.168.1.10.json
++ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qleH6EtT8f/fragments.json
++ [[ ! -f configs/misc/switch4.conf ]]
++ message '[DEBUG] Checking if config file exists and is readable: configs/misc/switch4.conf'
++ [[ -n [DEBUG] Checking if config file exists and is readable: configs/misc/switch4.conf ]]
++ local 'message=[DEBUG] Checking if config file exists and is readable: configs/misc/switch4.conf'
++ print '[DEBUG] Checking if config file exists and is readable: configs/misc/switch4.conf'
++ [[ -n [DEBUG] Checking if config file exists and is readable: configs/misc/switch4.conf ]]
++ echo -en '[DEBUG] Checking if config file exists and is readable: configs/misc/switch4.conf'
+[DEBUG] Checking if config file exists and is readable: configs/misc/switch4.conf+ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ [[ ! -s configs/misc/switch4.conf ]]
+++ stat -c%s configs/misc/switch4.conf
+stat: illegal option -- c
+usage: stat [-FLnq] [-f format | -l | -r | -s | -x] [-t timefmt] [file ...]
++ message '[OK] File '\''configs/misc/switch4.conf'\'' is readable and size is  bytes'
++ [[ -n [OK] File 'configs/misc/switch4.conf' is readable and size is  bytes ]]
++ local 'message=[OK] File '\''configs/misc/switch4.conf'\'' is readable and size is  bytes'
++ print '[OK] File '\''configs/misc/switch4.conf'\'' is readable and size is  bytes'
++ [[ -n [OK] File 'configs/misc/switch4.conf' is readable and size is  bytes ]]
++ echo -en '[OK] File '\''configs/misc/switch4.conf'\'' is readable and size is  bytes'
+[OK] File 'configs/misc/switch4.conf' is readable and size is  bytes+ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ local 'imported_content=interface Vlan1
+ ip address 192.168.1.10 255.255.255.0
+
+interface Vlan2
+ ip address 172.18.1.20 255.255.255.0
+
+interface Vlan3
+ ip address 172.16.0.5 255.255.255.0
+
+object-group network Guardians-Zone
+ description Multinetwork convergence
+ network-object host 10.0.1.2
+ network-object 192.168.12.0 255.255.255.0
+!'
++ [[ true == true ]]
++ message 'Imported Content: interface Vlan1
+ ip address 192.168.1.10 255.255.255.0
+
+interface Vlan2
+ ip address 172.18.1.20 255.255.255.0
+
+interface Vlan3
+ ip address 172.16.0.5 255.255.255.0
+
+object-group network Guardians-Zone
+ description Multinetwork convergence
+ network-object host 10.0.1.2
+ network-object 192.168.12.0 255.255.255.0
+!'
++ [[ -n Imported Content: interface Vlan1
+ ip address 192.168.1.10 255.255.255.0
+
+interface Vlan2
+ ip address 172.18.1.20 255.255.255.0
+
+interface Vlan3
+ ip address 172.16.0.5 255.255.255.0
+
+object-group network Guardians-Zone
+ description Multinetwork convergence
+ network-object host 10.0.1.2
+ network-object 192.168.12.0 255.255.255.0
+! ]]
++ local 'message=Imported Content: interface Vlan1
+ ip address 192.168.1.10 255.255.255.0
+
+interface Vlan2
+ ip address 172.18.1.20 255.255.255.0
+
+interface Vlan3
+ ip address 172.16.0.5 255.255.255.0
+
+object-group network Guardians-Zone
+ description Multinetwork convergence
+ network-object host 10.0.1.2
+ network-object 192.168.12.0 255.255.255.0
+!'
++ print 'Imported Content: interface Vlan1
+ ip address 192.168.1.10 255.255.255.0
+
+interface Vlan2
+ ip address 172.18.1.20 255.255.255.0
+
+interface Vlan3
+ ip address 172.16.0.5 255.255.255.0
+
+object-group network Guardians-Zone
+ description Multinetwork convergence
+ network-object host 10.0.1.2
+ network-object 192.168.12.0 255.255.255.0
+!'
++ [[ -n Imported Content: interface Vlan1
+ ip address 192.168.1.10 255.255.255.0
+
+interface Vlan2
+ ip address 172.18.1.20 255.255.255.0
+
+interface Vlan3
+ ip address 172.16.0.5 255.255.255.0
+
+object-group network Guardians-Zone
+ description Multinetwork convergence
+ network-object host 10.0.1.2
+ network-object 192.168.12.0 255.255.255.0
+! ]]
++ echo -en 'Imported Content: interface Vlan1
+ ip address 192.168.1.10 255.255.255.0
+
+interface Vlan2
+ ip address 172.18.1.20 255.255.255.0
+
+interface Vlan3
+ ip address 172.16.0.5 255.255.255.0
+
+object-group network Guardians-Zone
+ description Multinetwork convergence
+ network-object host 10.0.1.2
+ network-object 192.168.12.0 255.255.255.0
+!'
+Imported Content: interface Vlan1
+ ip address 192.168.1.10 255.255.255.0
+
+interface Vlan2
+ ip address 172.18.1.20 255.255.255.0
+
+interface Vlan3
+ ip address 172.16.0.5 255.255.255.0
+
+object-group network Guardians-Zone
+ description Multinetwork convergence
+ network-object host 10.0.1.2
+ network-object 192.168.12.0 255.255.255.0
+!+ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
+++ sed '/^\s*$/d;/^\s*!.*$/d'
++ local 'sanitized_content=interface Vlan1
+ ip address 192.168.1.10 255.255.255.0
+interface Vlan2
+ ip address 172.18.1.20 255.255.255.0
+interface Vlan3
+ ip address 172.16.0.5 255.255.255.0
+object-group network Guardians-Zone
+ description Multinetwork convergence
+ network-object host 10.0.1.2
+ network-object 192.168.12.0 255.255.255.0'
++ [[ true == true ]]
++ message 'Sanitized Content: interface Vlan1
+ ip address 192.168.1.10 255.255.255.0
+interface Vlan2
+ ip address 172.18.1.20 255.255.255.0
+interface Vlan3
+ ip address 172.16.0.5 255.255.255.0
+object-group network Guardians-Zone
+ description Multinetwork convergence
+ network-object host 10.0.1.2
+ network-object 192.168.12.0 255.255.255.0'
++ [[ -n Sanitized Content: interface Vlan1
+ ip address 192.168.1.10 255.255.255.0
+interface Vlan2
+ ip address 172.18.1.20 255.255.255.0
+interface Vlan3
+ ip address 172.16.0.5 255.255.255.0
+object-group network Guardians-Zone
+ description Multinetwork convergence
+ network-object host 10.0.1.2
+ network-object 192.168.12.0 255.255.255.0 ]]
++ local 'message=Sanitized Content: interface Vlan1
+ ip address 192.168.1.10 255.255.255.0
+interface Vlan2
+ ip address 172.18.1.20 255.255.255.0
+interface Vlan3
+ ip address 172.16.0.5 255.255.255.0
+object-group network Guardians-Zone
+ description Multinetwork convergence
+ network-object host 10.0.1.2
+ network-object 192.168.12.0 255.255.255.0'
++ print 'Sanitized Content: interface Vlan1
+ ip address 192.168.1.10 255.255.255.0
+interface Vlan2
+ ip address 172.18.1.20 255.255.255.0
+interface Vlan3
+ ip address 172.16.0.5 255.255.255.0
+object-group network Guardians-Zone
+ description Multinetwork convergence
+ network-object host 10.0.1.2
+ network-object 192.168.12.0 255.255.255.0'
++ [[ -n Sanitized Content: interface Vlan1
+ ip address 192.168.1.10 255.255.255.0
+interface Vlan2
+ ip address 172.18.1.20 255.255.255.0
+interface Vlan3
+ ip address 172.16.0.5 255.255.255.0
+object-group network Guardians-Zone
+ description Multinetwork convergence
+ network-object host 10.0.1.2
+ network-object 192.168.12.0 255.255.255.0 ]]
++ echo -en 'Sanitized Content: interface Vlan1
+ ip address 192.168.1.10 255.255.255.0
+interface Vlan2
+ ip address 172.18.1.20 255.255.255.0
+interface Vlan3
+ ip address 172.16.0.5 255.255.255.0
+object-group network Guardians-Zone
+ description Multinetwork convergence
+ network-object host 10.0.1.2
+ network-object 192.168.12.0 255.255.255.0'
+Sanitized Content: interface Vlan1
+ ip address 192.168.1.10 255.255.255.0
+interface Vlan2
+ ip address 172.18.1.20 255.255.255.0
+interface Vlan3
+ ip address 172.16.0.5 255.255.255.0
+object-group network Guardians-Zone
+ description Multinetwork convergence
+ network-object host 10.0.1.2
+ network-object 192.168.12.0 255.255.255.0+ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
+++ perl -pe 's/\n/MTc0NzI1OTAzOTkxNjgzMjAwMAo/g'
++ local 'serialized_objects=interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan2MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan3MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAoobject-group network Guardians-ZoneMTc0NzI1OTAzOTkxNjgzMjAwMAo description Multinetwork convergenceMTc0NzI1OTAzOTkxNjgzMjAwMAo network-object host 10.0.1.2MTc0NzI1OTAzOTkxNjgzMjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAo'
++ [[ true == true ]]
++ message 'Serialized Objects: interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan2MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan3MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAoobject-group network Guardians-ZoneMTc0NzI1OTAzOTkxNjgzMjAwMAo description Multinetwork convergenceMTc0NzI1OTAzOTkxNjgzMjAwMAo network-object host 10.0.1.2MTc0NzI1OTAzOTkxNjgzMjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAo'
++ [[ -n Serialized Objects: interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan2MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan3MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAoobject-group network Guardians-ZoneMTc0NzI1OTAzOTkxNjgzMjAwMAo description Multinetwork convergenceMTc0NzI1OTAzOTkxNjgzMjAwMAo network-object host 10.0.1.2MTc0NzI1OTAzOTkxNjgzMjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAo ]]
++ local 'message=Serialized Objects: interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan2MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan3MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAoobject-group network Guardians-ZoneMTc0NzI1OTAzOTkxNjgzMjAwMAo description Multinetwork convergenceMTc0NzI1OTAzOTkxNjgzMjAwMAo network-object host 10.0.1.2MTc0NzI1OTAzOTkxNjgzMjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAo'
++ print 'Serialized Objects: interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan2MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan3MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAoobject-group network Guardians-ZoneMTc0NzI1OTAzOTkxNjgzMjAwMAo description Multinetwork convergenceMTc0NzI1OTAzOTkxNjgzMjAwMAo network-object host 10.0.1.2MTc0NzI1OTAzOTkxNjgzMjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAo'
++ [[ -n Serialized Objects: interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan2MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan3MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAoobject-group network Guardians-ZoneMTc0NzI1OTAzOTkxNjgzMjAwMAo description Multinetwork convergenceMTc0NzI1OTAzOTkxNjgzMjAwMAo network-object host 10.0.1.2MTc0NzI1OTAzOTkxNjgzMjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAo ]]
++ echo -en 'Serialized Objects: interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan2MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan3MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAoobject-group network Guardians-ZoneMTc0NzI1OTAzOTkxNjgzMjAwMAo description Multinetwork convergenceMTc0NzI1OTAzOTkxNjgzMjAwMAo network-object host 10.0.1.2MTc0NzI1OTAzOTkxNjgzMjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAo'
+Serialized Objects: interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan2MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAointerface Vlan3MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAoobject-group network Guardians-ZoneMTc0NzI1OTAzOTkxNjgzMjAwMAo description Multinetwork convergenceMTc0NzI1OTAzOTkxNjgzMjAwMAo network-object host 10.0.1.2MTc0NzI1OTAzOTkxNjgzMjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAo+ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
+++ sed -E 's/MTc0NzI1OTAzOTkxNjgzMjAwMAo([^[:space:]])/\n\1/g'
++ local 'restored_lines=interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0
+interface Vlan2MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.18.1.20 255.255.255.0
+interface Vlan3MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.16.0.5 255.255.255.0
+object-group network Guardians-ZoneMTc0NzI1OTAzOTkxNjgzMjAwMAo description Multinetwork convergenceMTc0NzI1OTAzOTkxNjgzMjAwMAo network-object host 10.0.1.2MTc0NzI1OTAzOTkxNjgzMjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAo'
++ restored_lines+='
+'
++ IFS='
+'
++ read -r -d '' -a config_objects
+++ printf '%s\0' 'interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0
+interface Vlan2MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.18.1.20 255.255.255.0
+interface Vlan3MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.16.0.5 255.255.255.0
+object-group network Guardians-ZoneMTc0NzI1OTAzOTkxNjgzMjAwMAo description Multinetwork convergenceMTc0NzI1OTAzOTkxNjgzMjAwMAo network-object host 10.0.1.2MTc0NzI1OTAzOTkxNjgzMjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAo
+'
++ [[ true == true ]]
++ message 'Loaded 4 config blocks'
++ [[ -n Loaded 4 config blocks ]]
++ local 'message=Loaded 4 config blocks'
++ print 'Loaded 4 config blocks'
++ [[ -n Loaded 4 config blocks ]]
++ echo -en 'Loaded 4 config blocks'
+Loaded 4 config blocks+ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ oIFS=' 	
+'
++ IFS='
+'
+++ printf '%s\n' 'interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0' 'interface Vlan2MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.18.1.20 255.255.255.0' 'interface Vlan3MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 172.16.0.5 255.255.255.0' 'object-group network Guardians-ZoneMTc0NzI1OTAzOTkxNjgzMjAwMAo description Multinetwork convergenceMTc0NzI1OTAzOTkxNjgzMjAwMAo network-object host 10.0.1.2MTc0NzI1OTAzOTkxNjgzMjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzI1OTAzOTkxNjgzMjAwMAo'
+++ grep -E '(^|[^0-9.])192\.168\.1\.10([^0-9.]|$)'
++ matched_objects=('interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0')
++ declare -a matched_objects
++ IFS=' 	
+'
++ [[ true == true ]]
++ message 'Loaded 1 config blocks'
++ [[ -n Loaded 1 config blocks ]]
++ local 'message=Loaded 1 config blocks'
++ print 'Loaded 1 config blocks'
++ [[ -n Loaded 1 config blocks ]]
++ echo -en 'Loaded 1 config blocks'
+Loaded 1 config blocks+ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ restored_block=()
++ declare -a restored_block
++ for serialized_line in "${matched_objects[@]}"
++ [[ true == true ]]
++ message 'Serialized Line: interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0'
++ [[ -n Serialized Line: interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0 ]]
++ local 'message=Serialized Line: interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0'
++ print 'Serialized Line: interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0'
++ [[ -n Serialized Line: interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0 ]]
++ echo -en 'Serialized Line: interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0'
+Serialized Line: interface Vlan1MTc0NzI1OTAzOTkxNjgzMjAwMAo ip address 192.168.1.10 255.255.255.0+ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
+++ perl -pe 's/MTc0NzI1OTAzOTkxNjgzMjAwMAo/\n/g'
++ restored_block='interface Vlan1
+ ip address 192.168.1.10 255.255.255.0'
++ [[ true == true ]]
++ message 'Restored Configuration:\ninterface Vlan1
+ ip address 192.168.1.10 255.255.255.0'
++ [[ -n Restored Configuration:\ninterface Vlan1
+ ip address 192.168.1.10 255.255.255.0 ]]
++ local 'message=Restored Configuration:\ninterface Vlan1
+ ip address 192.168.1.10 255.255.255.0'
++ print 'Restored Configuration:\ninterface Vlan1
+ ip address 192.168.1.10 255.255.255.0'
++ [[ -n Restored Configuration:\ninterface Vlan1
+ ip address 192.168.1.10 255.255.255.0 ]]
++ echo -en 'Restored Configuration:\ninterface Vlan1
+ ip address 192.168.1.10 255.255.255.0'
+Restored Configuration:
+interface Vlan1
+ ip address 192.168.1.10 255.255.255.0+ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ process_configs 192.168.1.10 configs/misc/switch4.conf 'interface Vlan1
+ ip address 192.168.1.10 255.255.255.0'
++ local target_pattern=192.168.1.10
++ local config_path=configs/misc/switch4.conf
++ local 'restored_block=interface Vlan1
+ ip address 192.168.1.10 255.255.255.0'
++ local cleaned_block
+++ sed '/^[[:space:]]*$/d'
++ cleaned_block='interface Vlan1
+ ip address 192.168.1.10 255.255.255.0'
++ [[ -z interface Vlan1
+ ip address 192.168.1.10 255.255.255.0 ]]
++ [[ true == true ]]
++ message '[process_configs] Raw Block:\ninterface Vlan1
+ ip address 192.168.1.10 255.255.255.0'
++ [[ -n [process_configs] Raw Block:\ninterface Vlan1
+ ip address 192.168.1.10 255.255.255.0 ]]
++ local 'message=[process_configs] Raw Block:\ninterface Vlan1
+ ip address 192.168.1.10 255.255.255.0'
++ print '[process_configs] Raw Block:\ninterface Vlan1
+ ip address 192.168.1.10 255.255.255.0'
++ [[ -n [process_configs] Raw Block:\ninterface Vlan1
+ ip address 192.168.1.10 255.255.255.0 ]]
++ echo -en '[process_configs] Raw Block:\ninterface Vlan1
+ ip address 192.168.1.10 255.255.255.0'
+[process_configs] Raw Block:
+interface Vlan1
+ ip address 192.168.1.10 255.255.255.0+ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ local object_line
+++ head -n 1
+++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
++ object_line='interface Vlan1'
++ [[ -z interface Vlan1 ]]
++ local object_keyword type_value
+++ awk '{print $1}'
++ object_keyword=interface
+++ awk '{$1=""; print substr($0,2)}'
++ type_value=Vlan1
++ [[ true == true ]]
++ print '[process_configs] object   : interface'
++ [[ -n [process_configs] object   : interface ]]
++ echo -en '[process_configs] object   : interface'
+[process_configs] object   : interface+ print '[process_configs] type     : Vlan1'
++ [[ -n [process_configs] type     : Vlan1 ]]
++ echo -en '[process_configs] type     : Vlan1'
+[process_configs] type     : Vlan1+ entries=()
++ local -a entries
++ IFS=
++ read -r line
++ local trimmed
+++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
++ trimmed='interface Vlan1'
++ [[ -z interface Vlan1 ]]
++ [[ interface vlan1 =~ ^description[[:space:]] ]]
++ entries+=("${trimmed}")
++ IFS=
++ read -r line
++ local trimmed
+++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
++ trimmed='ip address 192.168.1.10 255.255.255.0'
++ [[ -z ip address 192.168.1.10 255.255.255.0 ]]
++ [[ ip address 192.168.1.10 255.255.255.0 =~ ^description[[:space:]] ]]
++ entries+=("${trimmed}")
++ IFS=
++ read -r line
++ ((  2 > 1  ))
++ entries=("${entries[@]:1}")
++ [[ true == true ]]
++ message '[process_configs] Entries:'
++ [[ -n [process_configs] Entries: ]]
++ local 'message=[process_configs] Entries:'
++ print '[process_configs] Entries:'
++ [[ -n [process_configs] Entries: ]]
++ echo -en '[process_configs] Entries:'
+[process_configs] Entries:+ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ for e in "${entries[@]}"
++ print '  - ip address 192.168.1.10 255.255.255.0'
++ [[ -n   - ip address 192.168.1.10 255.255.255.0 ]]
++ echo -en '  - ip address 192.168.1.10 255.255.255.0'
+  - ip address 192.168.1.10 255.255.255.0+ local matched_line
+++ grep -E '(^|[^0-9.])192\.168\.1\.10([^0-9.]|$)'
+++ head -n 1
+++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
++ matched_line='ip address 192.168.1.10 255.255.255.0'
++ [[ -z ip address 192.168.1.10 255.255.255.0 ]]
++ [[ true == true ]]
++ message '[process_configs] Matched: ip address 192.168.1.10 255.255.255.0'
++ [[ -n [process_configs] Matched: ip address 192.168.1.10 255.255.255.0 ]]
++ local 'message=[process_configs] Matched: ip address 192.168.1.10 255.255.255.0'
++ print '[process_configs] Matched: ip address 192.168.1.10 255.255.255.0'
++ [[ -n [process_configs] Matched: ip address 192.168.1.10 255.255.255.0 ]]
++ echo -en '[process_configs] Matched: ip address 192.168.1.10 255.255.255.0'
+[process_configs] Matched: ip address 192.168.1.10 255.255.255.0+ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ local desc_val=false
++ [[ -z false ]]
++ [[ true == true ]]
++ message '[process_configs] Description: false'
++ [[ -n [process_configs] Description: false ]]
++ local 'message=[process_configs] Description: false'
++ print '[process_configs] Description: false'
++ [[ -n [process_configs] Description: false ]]
++ echo -en '[process_configs] Description: false'
+[process_configs] Description: false+ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ local group_val=Unclassified
++ [[ true == true ]]
++ local object_key
+++ awk '{print $NF}'
+++ sed -E 's/[[:punct:]]*$//'
++ object_key=Vlan1
+++ jq -r --arg key Vlan1 'map(select(.match[]? | contains($key))) | .[0].group'
++ group_val=Business-Unit-Networks
++ [[ -z Business-Unit-Networks ]]
++ [[ Business-Unit-Networks == \n\u\l\l ]]
++ [[ -z Business-Unit-Networks ]]
++ [[ Business-Unit-Networks == \n\u\l\l ]]
++ [[ true == true ]]
++ message '[process_configs] Group: Business-Unit-Networks'
++ [[ -n [process_configs] Group: Business-Unit-Networks ]]
++ local 'message=[process_configs] Group: Business-Unit-Networks'
++ print '[process_configs] Group: Business-Unit-Networks'
++ [[ -n [process_configs] Group: Business-Unit-Networks ]]
++ echo -en '[process_configs] Group: Business-Unit-Networks'
+[process_configs] Group: Business-Unit-Networks+ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
+++ printf '%s\n' 'ip address 192.168.1.10 255.255.255.0'
+++ jq -R .
+++ jq -s .
++ local 'entries_2json=[
+  "ip address 192.168.1.10 255.255.255.0"
+]'
++ [[ 1 -eq 1 ]]
+++ jq -n --arg object interface --arg description false --argjson entries '[
+  "ip address 192.168.1.10 255.255.255.0"
+]' --arg group Business-Unit-Networks '{
+                  object: $object,
+                  type: false,
+                  description: ($description | select(. != "" and . != "null") // false),
+                  entries: $entries,
+                  group: $group
+                }'
++ target_object='{
+  "object": "interface",
+  "type": false,
+  "description": "false",
+  "entries": [
+    "ip address 192.168.1.10 255.255.255.0"
+  ],
+  "group": "Business-Unit-Networks"
+}'
++ export target_object
++ [[ true == true ]]
++ message '[process_configs] JSON Object (output):'
++ [[ -n [process_configs] JSON Object (output): ]]
++ local 'message=[process_configs] JSON Object (output):'
++ print '[process_configs] JSON Object (output):'
++ [[ -n [process_configs] JSON Object (output): ]]
++ echo -en '[process_configs] JSON Object (output):'
+[process_configs] JSON Object (output):+ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ print '{
+  "object": "interface",
+  "type": false,
+  "description": "false",
+  "entries": [
+    "ip address 192.168.1.10 255.255.255.0"
+  ],
+  "group": "Business-Unit-Networks"
+}'
++ [[ -n {
+  "object": "interface",
+  "type": false,
+  "description": "false",
+  "entries": [
+    "ip address 192.168.1.10 255.255.255.0"
+  ],
+  "group": "Business-Unit-Networks"
+} ]]
++ jq .
++ echo -en '{
+  "object": "interface",
+  "type": false,
+  "description": "false",
+  "entries": [
+    "ip address 192.168.1.10 255.255.255.0"
+  ],
+  "group": "Business-Unit-Networks"
+}'
+{
+  "object": "interface",
+  "type": false,
+  "description": "false",
+  "entries": [
+    "ip address 192.168.1.10 255.255.255.0"
+  ],
+  "group": "Business-Unit-Networks"
+}
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ return 0
++ [[ -n {
+  "object": "interface",
+  "type": false,
+  "description": "false",
+  "entries": [
+    "ip address 192.168.1.10 255.255.255.0"
+  ],
+  "group": "Business-Unit-Networks"
+} ]]
++ [[ true == true ]]
++ message '|-----> Target Objects: {
+  "object": "interface",
+  "type": false,
+  "description": "false",
+  "entries": [
+    "ip address 192.168.1.10 255.255.255.0"
+  ],
+  "group": "Business-Unit-Networks"
+}'
++ [[ -n |-----> Target Objects: {
+  "object": "interface",
+  "type": false,
+  "description": "false",
+  "entries": [
+    "ip address 192.168.1.10 255.255.255.0"
+  ],
+  "group": "Business-Unit-Networks"
+} ]]
++ local 'message=|-----> Target Objects: {
+  "object": "interface",
+  "type": false,
+  "description": "false",
+  "entries": [
+    "ip address 192.168.1.10 255.255.255.0"
+  ],
+  "group": "Business-Unit-Networks"
+}'
++ print '|-----> Target Objects: {
+  "object": "interface",
+  "type": false,
+  "description": "false",
+  "entries": [
+    "ip address 192.168.1.10 255.255.255.0"
+  ],
+  "group": "Business-Unit-Networks"
+}'
++ [[ -n |-----> Target Objects: {
+  "object": "interface",
+  "type": false,
+  "description": "false",
+  "entries": [
+    "ip address 192.168.1.10 255.255.255.0"
+  ],
+  "group": "Business-Unit-Networks"
+} ]]
++ echo -en '|-----> Target Objects: {
+  "object": "interface",
+  "type": false,
+  "description": "false",
+  "entries": [
+    "ip address 192.168.1.10 255.255.255.0"
+  ],
+  "group": "Business-Unit-Networks"
+}'
+|-----> Target Objects: {
+  "object": "interface",
+  "type": false,
+  "description": "false",
+  "entries": [
+    "ip address 192.168.1.10 255.255.255.0"
+  ],
+  "group": "Business-Unit-Networks"
+}+ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ [[ -n {
+  "object": "interface",
+  "type": false,
+  "description": "false",
+  "entries": [
+    "ip address 192.168.1.10 255.255.255.0"
+  ],
+  "group": "Business-Unit-Networks"
+} ]]
+++ printf '%s\n' '{
+  "object": "interface",
+  "type": false,
+  "description": "false",
+  "entries": [
+    "ip address 192.168.1.10 255.255.255.0"
+  ],
+  "group": "Business-Unit-Networks"
+}'
+++ jq -s --arg site configs/misc --arg device switch4.conf '{
+              config: {
+                site: ($site | gsub("^.*/"; "")),
+                device: $device,
+                objects: .
+              }
+            }'
++ wrapped_block='{
+  "config": {
+    "site": "misc",
+    "device": "switch4.conf",
+    "objects": [
+      {
+        "object": "interface",
+        "type": false,
+        "description": "false",
+        "entries": [
+          "ip address 192.168.1.10 255.255.255.0"
+        ],
+        "group": "Business-Unit-Networks"
       }
     ]
   }
 }'
 + [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP/fragments.json
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP/fragments.json ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP/fragments.json
-+ [[ true == true ]]
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP/fragments.json ]]
-+ list_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP/fragments.json
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP/fragments.json ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP/fragments.json
-++ basename /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP/fragments.json
-+ local base=fragments.json
-++ dirname /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP/fragments.json
-+ local parent=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP
-+ [[ true == true ]]
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP/fragments.json ]]
-+ local format_common=
-+ local format_os=
-+ local format=
-+ format_common+='File: fragments.json
-'
-+ format_common+='Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP
-'
-++ uname
-+ [[ Darwin == \D\a\r\w\i\n ]]
-+ format_os+='Size: %z bytes
-'
-+ format_os+='Blocks/Inode: %b / %i
-'
-+ format_os+='Mode: %Sp
-'
-+ format_os+='UID/GID: %u / %g
-'
-+ format_os+='Access: %Sa
-'
-+ format_os+='Modify: %Sm
-'
-+ format_os+='Change: %Sc
-'
-+ format='File: fragments.json
-Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP
-Size: %z bytes
-Blocks/Inode: %b / %i
-Mode: %Sp
-UID/GID: %u / %g
-Access: %Sa
-Modify: %Sm
-Change: %Sc
-'
-+ stat -f 'File: fragments.json
-Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP
-Size: %z bytes
-Blocks/Inode: %b / %i
-Mode: %Sp
-UID/GID: %u / %g
-Access: %Sa
-Modify: %Sm
-Change: %Sc
-' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP/fragments.json
-File: fragments.json
-Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP
-Size: 287 bytes
-Blocks/Inode: 8 / 236575977
-Mode: -rw-r--r--
-UID/GID: 501 / 20
-Access: May 13 17:53:39 2025
-Modify: May 13 17:53:39 2025
-Change: May 13 17:53:39 2025
-+ return 0
-+ case "${target_file}" in
-+ jq . /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP/fragments.json
-{
++ message '|-----> Config Objects:\n{
   "config": {
-    "site": "cisco",
-    "device": "fw1.cfg",
+    "site": "misc",
+    "device": "switch4.conf",
     "objects": [
       {
-        "object": "object",
+        "object": "interface",
         "type": false,
         "description": "false",
         "entries": [
-          "host 192.168.1.10"
+          "ip address 192.168.1.10 255.255.255.0"
         ],
-        "group": "Business-Unit-HQ"
+        "group": "Business-Unit-Networks"
       }
     ]
   }
-}
-+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-+ return 0
-+ return 0
-+ export json_outfile=reports/json/192.168.1.10.json
-+ json_outfile=reports/json/192.168.1.10.json
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP/fragments.json ]]
-+ jq -s --arg target 192.168.1.10 '{ target: $target, configs: . }' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP/fragments.json
-+ print_file reports/json/192.168.1.10.json
-+ [[ -n reports/json/192.168.1.10.json ]]
-+ local target_file=reports/json/192.168.1.10.json
-+ [[ true == true ]]
-+ [[ -f reports/json/192.168.1.10.json ]]
-+ list_file reports/json/192.168.1.10.json
-+ [[ -n reports/json/192.168.1.10.json ]]
-+ local target_file=reports/json/192.168.1.10.json
-++ basename reports/json/192.168.1.10.json
-+ local base=192.168.1.10.json
-++ dirname reports/json/192.168.1.10.json
-+ local parent=reports/json
-+ [[ true == true ]]
-+ [[ -f reports/json/192.168.1.10.json ]]
-+ local format_common=
-+ local format_os=
-+ local format=
-+ format_common+='File: 192.168.1.10.json
-'
-+ format_common+='Parent: reports/json
-'
-++ uname
-+ [[ Darwin == \D\a\r\w\i\n ]]
-+ format_os+='Size: %z bytes
-'
-+ format_os+='Blocks/Inode: %b / %i
-'
-+ format_os+='Mode: %Sp
-'
-+ format_os+='UID/GID: %u / %g
-'
-+ format_os+='Access: %Sa
-'
-+ format_os+='Modify: %Sm
-'
-+ format_os+='Change: %Sc
-'
-+ format='File: 192.168.1.10.json
-Parent: reports/json
-Size: %z bytes
-Blocks/Inode: %b / %i
-Mode: %Sp
-UID/GID: %u / %g
-Access: %Sa
-Modify: %Sm
-Change: %Sc
-'
-+ stat -f 'File: 192.168.1.10.json
-Parent: reports/json
-Size: %z bytes
-Blocks/Inode: %b / %i
-Mode: %Sp
-UID/GID: %u / %g
-Access: %Sa
-Modify: %Sm
-Change: %Sc
-' reports/json/192.168.1.10.json
-File: 192.168.1.10.json
-Parent: reports/json
-Size: 407 bytes
-Blocks/Inode: 8 / 236575982
-Mode: -rw-r--r--
-UID/GID: 501 / 20
-Access: May 13 17:53:39 2025
-Modify: May 13 17:53:39 2025
-Change: May 13 17:53:39 2025
-+ return 0
-+ case "${target_file}" in
-+ jq . reports/json/192.168.1.10.json
-{
-  "target": "192.168.1.10",
-  "configs": [
-    {
-      "config": {
-        "site": "cisco",
-        "device": "fw1.cfg",
-        "objects": [
-          {
-            "object": "object",
-            "type": false,
-            "description": "false",
-            "entries": [
-              "host 192.168.1.10"
-            ],
-            "group": "Business-Unit-HQ"
-          }
-        ]
+}'
++ [[ -n |-----> Config Objects:\n{
+  "config": {
+    "site": "misc",
+    "device": "switch4.conf",
+    "objects": [
+      {
+        "object": "interface",
+        "type": false,
+        "description": "false",
+        "entries": [
+          "ip address 192.168.1.10 255.255.255.0"
+        ],
+        "group": "Business-Unit-Networks"
       }
-    }
-  ]
-}
-+ newline
+    ]
+  }
+} ]]
++ local 'message=|-----> Config Objects:\n{
+  "config": {
+    "site": "misc",
+    "device": "switch4.conf",
+    "objects": [
+      {
+        "object": "interface",
+        "type": false,
+        "description": "false",
+        "entries": [
+          "ip address 192.168.1.10 255.255.255.0"
+        ],
+        "group": "Business-Unit-Networks"
+      }
+    ]
+  }
+}'
++ print '|-----> Config Objects:\n{
+  "config": {
+    "site": "misc",
+    "device": "switch4.conf",
+    "objects": [
+      {
+        "object": "interface",
+        "type": false,
+        "description": "false",
+        "entries": [
+          "ip address 192.168.1.10 255.255.255.0"
+        ],
+        "group": "Business-Unit-Networks"
+      }
+    ]
+  }
+}'
++ [[ -n |-----> Config Objects:\n{
+  "config": {
+    "site": "misc",
+    "device": "switch4.conf",
+    "objects": [
+      {
+        "object": "interface",
+        "type": false,
+        "description": "false",
+        "entries": [
+          "ip address 192.168.1.10 255.255.255.0"
+        ],
+        "group": "Business-Unit-Networks"
+      }
+    ]
+  }
+} ]]
++ echo -en '|-----> Config Objects:\n{
+  "config": {
+    "site": "misc",
+    "device": "switch4.conf",
+    "objects": [
+      {
+        "object": "interface",
+        "type": false,
+        "description": "false",
+        "entries": [
+          "ip address 192.168.1.10 255.255.255.0"
+        ],
+        "group": "Business-Unit-Networks"
+      }
+    ]
+  }
+}'
+|-----> Config Objects:
+{
+  "config": {
+    "site": "misc",
+    "device": "switch4.conf",
+    "objects": [
+      {
+        "object": "interface",
+        "type": false,
+        "description": "false",
+        "entries": [
+          "ip address 192.168.1.10 255.255.255.0"
+        ],
+        "group": "Business-Unit-Networks"
+      }
+    ]
+  }
+}+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -1916,27 +2154,67 @@ Change: May 13 17:53:39 2025
 
 + (( i++ ))
 + (( i < count ))
++ print '{
+  "config": {
+    "site": "misc",
+    "device": "switch4.conf",
+    "objects": [
+      {
+        "object": "interface",
+        "type": false,
+        "description": "false",
+        "entries": [
+          "ip address 192.168.1.10 255.255.255.0"
+        ],
+        "group": "Business-Unit-Networks"
+      }
+    ]
+  }
+}'
++ [[ -n {
+  "config": {
+    "site": "misc",
+    "device": "switch4.conf",
+    "objects": [
+      {
+        "object": "interface",
+        "type": false,
+        "description": "false",
+        "entries": [
+          "ip address 192.168.1.10 255.255.255.0"
+        ],
+        "group": "Business-Unit-Networks"
+      }
+    ]
+  }
+} ]]
++ echo -en '{
+  "config": {
+    "site": "misc",
+    "device": "switch4.conf",
+    "objects": [
+      {
+        "object": "interface",
+        "type": false,
+        "description": "false",
+        "entries": [
+          "ip address 192.168.1.10 255.255.255.0"
+        ],
+        "group": "Business-Unit-Networks"
+      }
+    ]
+  }
+}'
 + return 0
-+ [[ -s reports/json/192.168.1.10.json ]]
-+ tmp_normalized=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP/normalized.json
-+ jq -s '{
-                target: .[0].target,
-                configs:
-                  ( reduce (.[0].configs + .[1].configs)[] as $cfg
-                    ( [];
-                      if any( .[]; .config.site == $cfg.config.site and .config.device == $cfg.config.device )
-                        then map(
-                          if .config.site == $cfg.config.site and .config.device == $cfg.config.device
-                            then .config.objects += $cfg.config.objects
-                            else .
-                          end
-                        ) else . + [ $cfg ]
-                      end
-                    )
-                  )
-              }' reports/json/192.168.1.10.json
-+ mv /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP/normalized.json reports/json/192.168.1.10.json
++ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qleH6EtT8f/json
++ export json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qleH6EtT8f/json/192.168.1.10--MTc0NzI1OTAz.json
++ json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qleH6EtT8f/json/192.168.1.10--MTc0NzI1OTAz.json
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qleH6EtT8f/fragments.json ]]
++ jq -s --arg target 192.168.1.10 '{ target: $target, configs: . }' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qleH6EtT8f/fragments.json
++ final_outfile=reports/json/192.168.1.10.json
++ [[ ! -f reports/json/192.168.1.10.json ]]
++ mv /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qleH6EtT8f/json/192.168.1.10--MTc0NzI1OTAz.json reports/json/192.168.1.10.json
 + return 0
 + unset verbose debug
-+ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP ]]
-+ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.b4ZIafGCZP
++ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qleH6EtT8f ]]
++ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qleH6EtT8f

@@ -4,26 +4,16 @@
     "configs": [
       {
         "config": {
-          "site": "cisco",
-          "device": "fw1.cfg",
+          "site": "misc",
+          "device": "switch1.conf",
           "objects": [
             {
               "object": "object-group",
-              "type": "network BU1-NETWORK",
+              "type": "network Avengers-Office",
               "description": "false",
               "entries": [
                 "network-object host 10.0.0.1",
-                "network-object host 10.0.1.2",
-                "network-object 192.168.1.0 255.255.255.0"
-              ],
-              "group": "Identified Matching Entries"
-            },
-            {
-              "object": "access-list",
-              "type": false,
-              "description": "false",
-              "entries": [
-                "access-list OUTSIDE extended permit ip host 10.0.0.1 any"
+                "network-object 192.168.12.0 255.255.255.0"
               ],
               "group": "Unclassified"
             }
@@ -33,17 +23,34 @@
       {
         "config": {
           "site": "misc",
-          "device": "switch.conf",
+          "device": "switch3.conf",
+          "objects": [
+            {
+              "object": "interface",
+              "type": false,
+              "description": "false",
+              "entries": [
+                "ip address 10.0.0.1 255.255.255.0"
+              ],
+              "group": "Business-Unit-Networks"
+            }
+          ]
+        }
+      },
+      {
+        "config": {
+          "site": "misc",
+          "device": "switch3.conf",
           "objects": [
             {
               "object": "object-group",
-              "type": "network SOME-THING",
+              "type": "network Spider-Net",
               "description": "false",
               "entries": [
                 "network-object host 10.0.0.1",
                 "network-object 192.168.12.0 255.255.255.0"
               ],
-              "group": "Identified Matching Entries"
+              "group": "Unclassified"
             }
           ]
         }
@@ -55,27 +62,8 @@
     "configs": [
       {
         "config": {
-          "site": "cisco",
-          "device": "fw1.cfg",
-          "objects": [
-            {
-              "object": "object-group",
-              "type": "network BU1-NETWORK",
-              "description": "false",
-              "entries": [
-                "network-object host 10.0.0.1",
-                "network-object host 10.0.1.2",
-                "network-object 192.168.1.0 255.255.255.0"
-              ],
-              "group": "Identified Matching Entries"
-            }
-          ]
-        }
-      },
-      {
-        "config": {
           "site": "misc",
-          "device": "switch.conf",
+          "device": "switch1.conf",
           "objects": [
             {
               "object": "interface",
@@ -83,6 +71,135 @@
               "description": "false",
               "entries": [
                 "ip address 10.0.1.2 255.255.255.0"
+              ],
+              "group": "Unclassified"
+            }
+          ]
+        }
+      },
+      {
+        "config": {
+          "site": "misc",
+          "device": "switch4.conf",
+          "objects": [
+            {
+              "object": "object-group",
+              "type": "network Guardians-Zone",
+              "description": "false",
+              "entries": [
+                "network-object host 10.0.1.2",
+                "network-object 192.168.12.0 255.255.255.0"
+              ],
+              "group": "Unclassified"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "target": "10.0.2.3",
+    "configs": [
+      {
+        "config": {
+          "site": "misc",
+          "device": "switch2.conf",
+          "objects": [
+            {
+              "object": "object-group",
+              "type": "network Stark-WiFi",
+              "description": "false",
+              "entries": [
+                "network-object host 10.0.2.3",
+                "network-object 192.168.12.0 255.255.255.0"
+              ],
+              "group": "Unclassified"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "target": "10.10.10.10",
+    "configs": [
+      {
+        "config": {
+          "site": "misc",
+          "device": "switch2.conf",
+          "objects": [
+            {
+              "object": "interface",
+              "type": false,
+              "description": "false",
+              "entries": [
+                "ip address 10.10.10.10 255.255.255.0"
+              ],
+              "group": "Business-Unit-Networks"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "target": "172.16.0.5",
+    "configs": [
+      {
+        "config": {
+          "site": "misc",
+          "device": "switch4.conf",
+          "objects": [
+            {
+              "object": "interface",
+              "type": false,
+              "description": "false",
+              "entries": [
+                "ip address 172.16.0.5 255.255.255.0"
+              ],
+              "group": "Unclassified"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "target": "172.16.1.6",
+    "configs": [
+      {
+        "config": {
+          "site": "misc",
+          "device": "switch3.conf",
+          "objects": [
+            {
+              "object": "interface",
+              "type": false,
+              "description": "false",
+              "entries": [
+                "ip address 172.16.1.6 255.255.255.0"
+              ],
+              "group": "Business-Unit-Networks"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "target": "172.18.1.20",
+    "configs": [
+      {
+        "config": {
+          "site": "misc",
+          "device": "switch4.conf",
+          "objects": [
+            {
+              "object": "interface",
+              "type": false,
+              "description": "false",
+              "entries": [
+                "ip address 172.18.1.20 255.255.255.0"
               ],
               "group": "Business-Unit-Networks"
             }
@@ -97,7 +214,7 @@
       {
         "config": {
           "site": "misc",
-          "device": "switch.conf",
+          "device": "switch1.conf",
           "objects": [
             {
               "object": "interface",
@@ -118,17 +235,34 @@
     "configs": [
       {
         "config": {
-          "site": "cisco",
-          "device": "fw1.cfg",
+          "site": "misc",
+          "device": "switch1.conf",
           "objects": [
             {
-              "object": "object",
+              "object": "interface",
               "type": false,
               "description": "false",
               "entries": [
-                "host 192.168.1.10"
+                "ip address 192.168.1.10 255.255.255.0"
               ],
-              "group": "Business-Unit-HQ"
+              "group": "Unclassified"
+            }
+          ]
+        }
+      },
+      {
+        "config": {
+          "site": "misc",
+          "device": "switch4.conf",
+          "objects": [
+            {
+              "object": "interface",
+              "type": false,
+              "description": "false",
+              "entries": [
+                "ip address 192.168.1.10 255.255.255.0"
+              ],
+              "group": "Business-Unit-Networks"
             }
           ]
         }
@@ -136,21 +270,43 @@
     ]
   },
   {
-    "target": "203.0.113.25",
+    "target": "192.168.1.11",
     "configs": [
       {
         "config": {
-          "site": "cisco",
-          "device": "fw1.cfg",
+          "site": "misc",
+          "device": "switch2.conf",
           "objects": [
             {
-              "object": "object",
+              "object": "interface",
               "type": false,
               "description": "false",
               "entries": [
-                "host 203.0.113.25"
+                "ip address 192.168.1.11 255.255.255.0"
               ],
-              "group": "Business-Unit-External"
+              "group": "Business-Unit-Networks"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "target": "192.168.100.100",
+    "configs": [
+      {
+        "config": {
+          "site": "misc",
+          "device": "switch2.conf",
+          "objects": [
+            {
+              "object": "interface",
+              "type": false,
+              "description": "false",
+              "entries": [
+                "ip address 192.168.100.100 255.255.255.0"
+              ],
+              "group": "Unclassified"
             }
           ]
         }
