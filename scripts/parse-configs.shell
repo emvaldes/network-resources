@@ -184,6 +184,34 @@ function main () {
       print_file "${json_outfile}";
     fi;
 
+    # ------------------------------------------------------------------------------
+    # Post-processing step: Normalize the final IP-specific JSON output
+    # This ensures that multiple config blocks with the same site/device combination
+    # are merged into one, with all associated objects consolidated into a single array.
+    # This prevents duplicated config entries across batches or fragmented results.
+    # ------------------------------------------------------------------------------
+
+    if [[ -s "${json_outfile}" ]]; then
+      tmp_normalized="${TMP_DIR}/normalized.json";
+      jq -s '{
+                target: .[0].target,
+                configs:
+                  ( reduce (.[0].configs + .[1].configs)[] as $cfg
+                    ( [];
+                      if any( .[]; .config.site == $cfg.config.site and .config.device == $cfg.config.device )
+                        then map(
+                          if .config.site == $cfg.config.site and .config.device == $cfg.config.device
+                            then .config.objects += $cfg.config.objects
+                            else .
+                          end
+                        ) else . + [ $cfg ]
+                      end
+                    )
+                  )
+              }' "${json_outfile}" > "${tmp_normalized}" && \
+      mv "${tmp_normalized}" "${json_outfile}";
+    fi;
+
     return 0;
 }; alias parse-configs='main';
 
