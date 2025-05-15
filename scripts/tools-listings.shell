@@ -90,52 +90,53 @@ function generate_configslist () {
 function generate_csvoutput () {
     local output_csv="${reports_folder}/reports.csv";
     local json_dir="${reports_folder}/json";
+    local tmp_csv="${output_csv}.body";
 
     ## Ensure JSON directory exists and contains files
     if [[ ! -d "${json_dir}" ]]; then
             error_message "Missing ${json_dir}, cannot generate CSV.";
             return 1;
-      else  #ls -al "${json_dir}";
-            find "${json_dir}" -type f -name '*.json' | sort;
+      else  find "${json_dir}" -type f -name '*.json' | sort;
     fi;
 
-    ## Write header
-    {
-      message "target,site,device,object,entry,description,group";
-      newline;
-    } > "${output_csv}";
+    ## Write CSV body (excluding header)
+    : > "${tmp_csv}";
 
-    ## Stream and process each file individually
     find "${json_dir}" -type f -name '*.json' | sort | \
     while read -r json; do
       message "Processing ${json}" >&2;
-      jq -r . "${json}";
       jq -e -r '
-                .target as $target
-                | .configs[]
-                | .config as $cfg
-                | select($cfg.objects != null and ($cfg.objects | type == "array" and length > 0))
-                | $cfg.objects[]
-                | [
-                    $target,
-                    ($cfg.site // "none"),
-                    ($cfg.device // "none"),
-                    (.object // "none"),
-                    (.entries[0] // "none"),
-                    (.description // "none"),
-                    (.group // "none")
-                  ]
-                | @csv' "${json}" >> "${output_csv}" \
+        .target as $target
+        | .configs[]
+        | .config as $cfg
+        | select($cfg.objects != null and ($cfg.objects | type == "array" and length > 0))
+        | $cfg.objects[]
+        | [
+            $target,
+            ($cfg.site // "none"),
+            ($cfg.device // "none"),
+            (.object // "none"),
+            (.entries[0] // "none"),
+            (.description // "none"),
+            (.group // "none")
+          ]
+        | @csv' "${json}" >> "${tmp_csv}" \
       || echo "Skipped: ${json}" >&2;
     done;
-    print_file "${output_csv}";
+
+    ## Final output: header + deduplicated body
+    {
+      echo "target,site,device,object,entry,description,group";
+      sort -u "${tmp_csv}";
+    } > "${output_csv}";
+    rm -f "${tmp_csv}";
 
     ## Optionally print CSV as a formatted table to the terminal
     if [[ "${verbose}" == true && -s "${output_csv}" ]]; then
       newline;
       message "CSV Report Summary (tabulated):";
       column -t -s, "${output_csv}" | less -SFX;
-    fi
+    fi;
 
     return 0;
 }; alias generate-csvoutput='generate_csvoutput';

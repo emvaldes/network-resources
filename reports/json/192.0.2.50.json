@@ -1,18 +1,19 @@
 {
-  "target": "172.16.0.5",
+  "target": "192.0.2.50",
   "configs": [
     {
       "config": {
         "site": "cisco",
-        "device": "fw3.cfg",
+        "device": "fw1.cfg",
         "objects": [
           {
             "object": "object-group",
-            "type": "network Panther-Edge",
+            "type": "network Avengers-DMZ",
             "description": "false",
             "entries": [
+              "network-object host 192.0.2.50",
               "network-object host 203.0.113.25",
-              "network-object host 172.16.0.5"
+              "network-object 192.168.2.0 255.255.255.0"
             ],
             "group": "Unclassified"
           },
@@ -21,16 +22,7 @@
             "type": false,
             "description": "false",
             "entries": [
-              "host 172.16.0.5"
-            ],
-            "group": "Unclassified"
-          },
-          {
-            "object": "access-list",
-            "type": false,
-            "description": "false",
-            "entries": [
-              "access-list OUTSIDE extended permit ip any host 172.16.0.5"
+              "host 192.0.2.50"
             ],
             "group": "Unclassified"
           }
@@ -40,14 +32,14 @@
     {
       "config": {
         "site": "cisco",
-        "device": "fw8.cfg",
+        "device": "fw7.cfg",
         "objects": [
           {
             "object": "object-group",
             "type": false,
             "description": "false",
             "entries": [
-              "network-object host 172.16.0.5"
+              "network-object host 192.0.2.50"
             ],
             "group": "Unclassified"
           },
@@ -56,7 +48,7 @@
             "type": false,
             "description": "false",
             "entries": [
-              "host 172.16.0.5"
+              "host 192.0.2.50"
             ],
             "group": "Unclassified"
           },
@@ -65,7 +57,7 @@
             "type": false,
             "description": "false",
             "entries": [
-              "network-object host 172.16.0.5"
+              "network-object host 192.0.2.50"
             ],
             "group": "Unclassified"
           },
@@ -74,24 +66,7 @@
             "type": false,
             "description": "false",
             "entries": [
-              "host 172.16.0.5"
-            ],
-            "group": "Unclassified"
-          }
-        ]
-      }
-    },
-    {
-      "config": {
-        "site": "misc",
-        "device": "switch4.conf",
-        "objects": [
-          {
-            "object": "interface",
-            "type": false,
-            "description": "false",
-            "entries": [
-              "ip address 172.16.0.5 255.255.255.0"
+              "host 192.0.2.50"
             ],
             "group": "Unclassified"
           }

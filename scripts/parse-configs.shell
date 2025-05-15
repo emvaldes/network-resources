@@ -26,8 +26,7 @@ trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT;
 
 # Load common utility functions (logging, platform detection, etc.)
 source ./scripts/tools-devops.shell;
-# source ./scripts/tools-configs.shell;
-source ./scripts/tools-extraction.shell;
+source ./scripts/tools-configs.shell;
 
 #------------------------------------------------------------------------------#
 # Function: main
@@ -225,6 +224,7 @@ function main () {
     export json_outfile="${TMP_DIR}/json/${target_address}--${batch_id}.json";
 
     if [[ -s "${tmp_fragments}" ]]; then
+
       jq -s --arg target "${target_address}" \
              '{ target: $target, configs: . }' \
       "${tmp_fragments}" > "${json_outfile}";
@@ -232,47 +232,32 @@ function main () {
 
       #### -----------------------------------------------------------------------
       ## Merge batch result into persistent output for this IP
-      final_outfile="${reports_folder}/json/${target_address}.json";
-      if [[ ! -f "${final_outfile}" ]]; then
-              mv "${json_outfile}" "${final_outfile}";
-        else  tmp_merged="$( mktemp )"
-              # jq -s '{
-              #         target: .[0].target,
-              #         configs:
-              #           ( reduce .[].configs[] as $cfg (
-              #             [];
-              #             if any(.[]; .config.site == $cfg.config.site and .config.device == $cfg.config.device)
-              #             then map(
-              #               if .config.site == $cfg.config.site and .config.device == $cfg.config.device
-              #                 then .config.objects += $cfg.config.objects
-              #                 else .
-              #               end
-              #             )
-              #             else . + [ $cfg ]
-              #             end
-              #           ))
-              #       }' "${final_outfile}" "${json_outfile}" > "${tmp_merged}" && \
-              # mv "${tmp_merged}" "${final_outfile}" && \
-              # rm -f "${json_outfile}";
-              jq -s '{
-                      target: .[0].target,
-                      configs:
-                        ( reduce (.[0].configs + .[1].configs)[] as $cfg
-                          ( [];
-                            if any(.[]; .config.site == $cfg.config.site and .config.device == $cfg.config.device)
-                            then map(
-                              if .config.site == $cfg.config.site and .config.device == $cfg.config.device
-                                then .config.objects += $cfg.config.objects | .config.objects |= unique
-                                else .
-                              end
-                            )
-                            else . + [ $cfg ]
-                            end
-                          )
-                        )
-                    }' "${json_outfile}" > "${tmp_normalized}" && \
-              mv "${tmp_normalized}" "${reports_folder}/json/${target_address}.json";
+      tmp_merged="$( mktemp )";
+      local final_outfile="${reports_folder}/json/${target_address}.json";
+      local jq_merge_expr=$'{
+        target: .[0].target,
+        configs:
+          ( reduce .[].configs[] as $cfg (
+            [];
+            if any( .[]; .config.site == $cfg.config.site and .config.device == $cfg.config.device )
+              then map(
+                if .config.site == $cfg.config.site and .config.device == $cfg.config.device
+                  then .config.objects += $cfg.config.objects
+                else . end
+              )
+            else . + [ $cfg ] end
+          ))
+      }';
+      if [[ -f "${final_outfile}" ]]; then
+              jq -s "${jq_merge_expr}" \
+                    "${final_outfile}" \
+                    "${json_outfile}" > "${tmp_merged}";
+        else  jq -s "${jq_merge_expr}" \
+                    "${json_outfile}" > "${tmp_merged}";
       fi;
+      mv "${tmp_merged}" "${final_outfile}" && \
+      rm -f "${json_outfile}";
+
     fi;
 
     return 0;

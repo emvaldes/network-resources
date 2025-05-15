@@ -128,10 +128,9 @@ function main () {
         # for site in ${site_filters[@]}; do message "Site: ${site}"; done;
         IFS="${oIFS}";
 
-        # print_file "${configs_list_cache}";
         declare -a filtered_configs=();
         while IFS= read -r path; do
-          # message "Target Path: ${path}";
+          # message "Target Path: [${path}]";
           site_folder="$(
             sed -E "s|^${configs_dirpath}/||" <<< "${path}" | \
             sed -E 's|/.*||'
@@ -146,7 +145,9 @@ function main () {
             fi;
           done;
         done < "${configs_list_cache}";
-        # printf '%s\n' "${filtered_configs[@]}";
+
+        message "Filtered Configurations:";
+        printf '%s\n' "${filtered_configs[@]}";
 
         #### -------------------------------------------------------------------
         ## Overwrite the cached configs list with only the filtered entries
@@ -167,8 +168,10 @@ function main () {
 
     fi;
 
-    newline;
-    print_file "${configs_list_cache}";
+    if [[ "${verbose}" == true ]]; then
+      newline;
+      print_file "${configs_list_cache}";
+    fi;
 
     #### -----------------------------------------------------------------------
     ## Processing Custom/Default the Translation-Matrix (source):
@@ -197,30 +200,6 @@ function main () {
     #### -----------------------------------------------------------------------
     ## Validating IP Addresses (Skipping?)
     [[ -z ${validate_address:-} ]] && export validate_address=false;
-
-    # #### -----------------------------------------------------------------------
-    # ## Processing Target Addresses Listing (default: ips.list)
-    # ## Load and validate IP address listing
-    # if [[ ! -f "${listing_filename}" ]]; then
-    #         error_message "Project Target IP-listing file not found: ${listing_filename}";
-    #         return 3;
-    #   else  ## Sort a list numerically, not lexicographically
-    #         mapfile -t target_listing < <(
-    #           grep -v '^\s*$' "${listing_filename}" | \
-    #           tr -d '\r' | \
-    #           sort -t . -k1,1n -k2,2n -k3,3n -k4,4n
-    #         )
-    #         if [[ ${#target_listing[@]} -eq 0 ]]; then
-    #                 error_message "No IP addresses to process.\n";
-    #                 return 4;
-    #           else  if [[ "${verbose}" == true ]]; then
-    #                   newline; print "IPS/CIDR Blocks: "; newline;
-    #                   for target in "${target_listing[@]}"; do
-    #                     print "  - ${target}"; newline;
-    #                   done; newline;
-    #                 fi;
-    #         fi;
-    # fi;
 
     #### -----------------------------------------------------------------------
     ## Processing Target Addresses Listing (default: ips.list or inline string)
@@ -271,6 +250,7 @@ function main () {
 
     ## Outter Batching (For-loop)
     for site in "${site_folders[@]}"; do
+      filtered_target_listing=();
 
       oIFS="${IFS}"; IFS=$'\n';
       read -r -d '' -a site_files < <(
@@ -285,54 +265,54 @@ function main () {
         # for site in "${site_files[@]}"; do message "Site: ${site}"; done;
       fi;
 
+      #### -------------------------------------------------------------------
+      ## Delete ./targets directory and wait until fully removed
+      rm -rf ./targets; while [[ -d ./targets ]]; do sleep 0.1; done;
+      ## Confirm ./targets is fully removed
+      if [[ -d ./targets ]]; then
+        error_message "[FATAL] Failed to delete ./targets directory.";
+        exit 3;
+      fi;
+
+      #### -------------------------------------------------------------------
+      ## Delete .local/jobs directory and wait until fully removed
+      rm -rf .local/jobs; while [[ -d .local/jobs ]]; do sleep 0.1; done;
+      ## Confirm .local/jobs is fully removed
+      if [[ -d .local/jobs ]]; then
+        error_message "[FATAL] Failed to delete .local/jobs directory.";
+        exit 4;
+      fi;
+
+      #### -------------------------------------------------------------------
+      ## Overwrite and validate all .local/stats/*.stat files
+      stat_flush_success=true;
+      find .local/stats/ -type f -name '*.jobs' | \
+      while read -r stat_file; do
+        UTC_NOW="$(
+          date -u '+%Y-%m-%dT%H:%M:%SZ'
+        )";
+        timestamp="[${UTC_NOW}] Flushed";
+        UTC_NOW="$( date -u '+%Y-%m-%dT%H:%M:%SZ' )";
+        printf '%s\n' "${timestamp}" > "${stat_file}";
+        ## Validate flush was successful
+        if ! grep -qF "${timestamp}" "${stat_file}"; then
+          error_message "[ERROR] Failed to update: ${stat_file}";
+          stat_flush_success=false;
+        fi;
+      done;
+
+      ## Abort if any .stat file failed to flush properly
+      if [[ "${stat_flush_success}" != true ]]; then
+        error_message "[FATAL] One or more .jobs files failed to flush properly.";
+        exit 5;
+      fi;
+
+      ## Enforcing the creation of these file-structures
+      mkdir -p targets .local/{errors,jobs,stats};
+
       ## Inner Batching (While-loop)
       offset=0;
       while [[ "${offset}" -lt "${total_files}" ]]; do
-
-        #### -------------------------------------------------------------------
-        ## Delete ./targets directory and wait until fully removed
-        rm -rf ./targets; while [[ -d ./targets ]]; do sleep 0.1; done;
-        ## Confirm ./targets is fully removed
-        if [[ -d ./targets ]]; then
-          error_message "[FATAL] Failed to delete ./targets directory.";
-          exit 3;
-        fi;
-
-        #### -------------------------------------------------------------------
-        ## Delete .local/jobs directory and wait until fully removed
-        rm -rf .local/jobs; while [[ -d .local/jobs ]]; do sleep 0.1; done;
-        ## Confirm .local/jobs is fully removed
-        if [[ -d .local/jobs ]]; then
-          error_message "[FATAL] Failed to delete .local/jobs directory.";
-          exit 4;
-        fi;
-
-        #### -------------------------------------------------------------------
-        ## Overwrite and validate all .local/stats/*.stat files
-        stat_flush_success=true;
-        find .local/stats/ -type f -name '*.jobs' | \
-        while read -r stat_file; do
-          UTC_NOW="$(
-            date -u '+%Y-%m-%dT%H:%M:%SZ'
-          )";
-          timestamp="[${UTC_NOW}] Flushed";
-          UTC_NOW="$( date -u '+%Y-%m-%dT%H:%M:%SZ' )";
-          printf '%s\n' "${timestamp}" > "${stat_file}";
-          ## Validate flush was successful
-          if ! grep -qF "${timestamp}" "${stat_file}"; then
-            error_message "[ERROR] Failed to update: ${stat_file}";
-            stat_flush_success=false;
-          fi;
-        done;
-
-        ## Abort if any .stat file failed to flush properly
-        if [[ "${stat_flush_success}" != true ]]; then
-          error_message "[FATAL] One or more .jobs files failed to flush properly.";
-          exit 5;
-        fi;
-
-        ## Enforcing the creation of these file-structures
-        mkdir -p targets .local/{errors,jobs,stats};
 
         batch_slice=( "${site_files[@]:offset:batch_size}" );
         export batch_id="$(
@@ -367,11 +347,7 @@ function main () {
         matching_configs ${BATCH_CONFIGS};
 
         #### -------------------------------------------------------------------
-        ## Clear previous match tracking array (fresh for this batch)
-        filtered_target_listing=();
-
-        #### -------------------------------------------------------------------
-        ## Filter out IPs (Search Patterns) that had no matching config references
+        ## Track only the IPs that had a match during this batch
         for ip_addr in "${target_listing[@]}"; do
           ip_cleaned="$( print "${ip_addr}" | tr -d '\r' )";
           if [[ -f "targets/${ip_cleaned}.json" ]]; then
@@ -409,43 +385,44 @@ function main () {
 
       done;
 
+      #### -----------------------------------------------------------------------
+      ## Strip base config path from all targets/*.json entries
+
+      # if [[ -d targets ]]; then
+      #   local prefix="${configs_dirpath%/}/";
+      #   find targets -type f -name '*.json' | while read -r list_file; do
+      #     sed -i '' -E "s|^${prefix}||g" "${list_file}";
+      #   done;
+      # fi;
+
+      # if [[ -d targets ]]; then
+      #   local prefix="${configs_dirpath%/}/";
+      #   shopt -s nullglob;
+      #   local json_files=( targets/*.json );
+      #   shopt -u nullglob;
+      #   if (( ${#json_files[@]} > 0 )); then
+      #     for list_file in "${json_files[@]}"; do
+      #       sed -i '' -E "s|\"config\": \"${prefix}|\"config\": \"|g" "${list_file}";
+      #     done;
+      #   fi;
+      # fi;
+
+      #### -----------------------------------------------------------------------
+      ## Wait until all expected JSON report files are physically present on disk
+      local json_dir="${reports_folder}/json";
+
+      ## This guarantees that each parsed IP’s output is available before aggregation
+      expected_reports=${#filtered_target_listing[@]}
+      message "Expected Reports: ${expected_reports}";
+
+      actual_reports=$(
+        find "${json_dir}" -type f -name '*.json' | wc -l | sed -e 's|\ ||g'
+      );  ## Count current .json files in output directory
+      message "Actual Reports: ${expected_reports}";
+
     done;
 
 #### Completed Batch-Processing ------------------------------------------- ####
-
-    #### -----------------------------------------------------------------------
-    ## Strip base config path from all targets/*.json entries
-
-    # if [[ -d targets ]]; then
-    #   local prefix="${configs_dirpath%/}/";
-    #   find targets -type f -name '*.json' | while read -r list_file; do
-    #     sed -i '' -E "s|^${prefix}||g" "${list_file}";
-    #   done;
-    # fi;
-
-    # if [[ -d targets ]]; then
-    #   local prefix="${configs_dirpath%/}/";
-    #   shopt -s nullglob;
-    #   local json_files=( targets/*.json );
-    #   shopt -u nullglob;
-    #   if (( ${#json_files[@]} > 0 )); then
-    #     for list_file in "${json_files[@]}"; do
-    #       sed -i '' -E "s|\"config\": \"${prefix}|\"config\": \"|g" "${list_file}";
-    #     done;
-    #   fi;
-    # fi;
-
-    #### -----------------------------------------------------------------------
-    ## Wait until all expected JSON report files are physically present on disk
-    local json_dir="${reports_folder}/json";
-
-    ## This guarantees that each parsed IP’s output is available before aggregation
-    expected_reports=${#filtered_target_listing[@]};  ## Total IPs that should have a corresponding JSON report
-    actual_reports=$(
-      find "${json_dir}" -type f -name '*.json' | wc -l | sed -e 's|\ ||g'
-    );  ## Count current .json files in output directory
-
-    ## Poll loop: sleep until all JSON files are confirmed present
 
     # while (( actual_reports < expected_reports )); do
     #   sleep 0.2;  ## Short delay to avoid overloading the disk with find/wc calls
@@ -454,35 +431,21 @@ function main () {
     #   );  ## Recalculate number of completed reports
     # done;
 
-    ## Optional safeguard: wait up to 5s for all reports to be present
-    timeout=5;
-    elapsed=0;
-    while (( actual_reports < expected_reports && elapsed < timeout * 10 )); do
-      sleep 0.1;
-      (( elapsed++ ));
-      actual_reports="$(
-        find reports/json -type f -name '*.json' | \
-        wc -l | \
-        sed -e 's|\ ||g'
-      )";
-    done;
-    if (( actual_reports < expected_reports )); then
-      error_message "[ERROR] Only ${actual_reports} of ${expected_reports} reports were generated.";
-      exit 6;
-    fi;
-
-    #### -----------------------------------------------------------------------
-    ##  Object: Merge all per-IP JSONs into a single master report
-    ## Warning: Disabled this as it will become highly conflictive by its massive structure
-    # local master_json="${reports_folder}/reports.json";
-    # if [[ -d "${json_dir}" ]]; then
-    #   mapfile -t json_files < <(
-    #     find "${json_dir}" -type f -name '*.json' | sort
-    #   );
-    #   if (( ${#json_files[@]} > 0 )); then
-    #     jq -s '.' "${json_files[@]}" > "${master_json}";
-    #     # print_file "${master_json}";
-    #   fi;
+    # ## Optional safeguard: wait up to 5s for all reports to be present
+    # timeout=5;
+    # elapsed=0;
+    # while (( actual_reports < expected_reports && elapsed < timeout * 10 )); do
+    #   sleep 0.1;
+    #   (( elapsed++ ));
+    #   actual_reports="$(
+    #     find reports/json -type f -name '*.json' | \
+    #     wc -l | \
+    #     sed -e 's|\ ||g'
+    #   )";
+    # done;
+    # if (( actual_reports < expected_reports )); then
+    #   error_message "[ERROR] Only ${actual_reports} of ${expected_reports} reports were generated.";
+    #   exit 6;
     # fi;
 
     ## Exporting ./reports/reports.json data-sets into CSV output
