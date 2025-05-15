@@ -173,15 +173,14 @@ function extract_configs () {
       ## Append structured config object to fragments file (now final collector)
       if [[ -n "${target_object}" ]]; then
         wrapped_block="$(
-          printf '%s\n' "${target_object}" | jq -s \
+          printf '%s\n' "${target_object}" | \
+          jq -s \
             --arg site "${config_file%/*}" \
             --arg device "${config_file##*/}" \
             '{
-              config: {
-                site: ($site | gsub("^.*/"; "")),
-                device: $device,
-                objects: .
-              }
+              site: ( $site | gsub( "^.*/"; "" ) ),
+              device: $device,
+              objects: .
             }'
         )";
         # Optionally inspect it
@@ -348,11 +347,11 @@ function process_configs () {
       )";
       group_val="$(
         jq -r --arg key "${object_key}" \
-                        'map(select(.match[]? | contains($key))) | .[0].group' \
+                        'map( select( .match[]? | contains( $key ) ) ) | .[0].group' \
         <<< "${matrix_configs}" )";
       if [[ -z "${group_val}" || "${group_val}" == "null" ]]; then
         group_val="$(
-          jq -r --arg desc "${desc_val}" 'map(select(.match[]? == $desc)) | .[0].group' <<< "${matrix_configs}"
+          jq -r --arg desc "${desc_val}" 'map( select( .match[]? == $desc ) ) | .[0].group' <<< "${matrix_configs}"
         )";
       fi;
       [[ -z "${group_val}" || "${group_val}" == "null" ]] && group_val="Unclassified";

@@ -92,18 +92,16 @@ function main () {
     ## Processing Target Configurations (from JSON input only)
     export configs_dirpath="${configs_dirpath:-configs}";
     declare -ga source_configs=();
-    target_configlist_json="targets/${target_address%%/*}.json";
+    local target_configlist_json="targets/${target_address%%/*}.json";
+
     if [[ ! -f "${target_configlist_json}" ]]; then
       [[ "${verbose}" == true ]] && \
          error_message "Required config list not found: ${target_configlist_json}";
       return 3;
     fi;
 
-    # mapfile -t source_configs < <(
-    #   jq -r '.configs[].config' "${target_configlist_json}"
-    # );
     mapfile -t source_configs < <(
-      jq -r '.configs[] | "\(.config.site)/\(.config.device)"' "${target_configlist_json}"
+      jq -r '.configs[] | "\( .config.site )/\( .config.device )"' "${target_configlist_json}"
     );
 
     # Patch: Prepend configs_dirpath if not already absolute
@@ -173,49 +171,6 @@ function main () {
                       "${tmp_fragments}";
     done;
 
-    # #### -----------------------------------------------------------------------
-    # # export json_outfile="${reports_folder}/json/${target_address}.json";
-    # export json_outfile="${TMP_DIR}/json/${target_address}--${batch_id}.json";
-    #
-    # if [[ -s "${tmp_fragments}" ]]; then
-    #   jq -s --arg target "${target_address}" \
-    #                      '{ target: $target, configs: . }' \
-    #   "${tmp_fragments}" > "${json_outfile}";
-    #   print_file "${json_outfile}";
-    # fi;
-    #
-    # # ------------------------------------------------------------------------------
-    # # Post-processing step: Normalize the final IP-specific JSON output
-    # # This ensures that multiple config blocks with the same site/device combination
-    # # are merged into one, with all associated objects consolidated into a single array.
-    # # This prevents duplicated config entries across batches or fragmented results.
-    # # ------------------------------------------------------------------------------
-    #
-    # if [[ -s "${json_outfile}" ]]; then
-    #   tmp_normalized="${TMP_DIR}/normalized.json";
-    #   jq -s '{
-    #             target: .[0].target,
-    #             configs:
-    #               ( reduce (.[0].configs + .[1].configs)[] as $cfg
-    #                 ( [];
-    #                   if any( .[]; .config.site == $cfg.config.site and .config.device == $cfg.config.device )
-    #                     then map(
-    #                       if .config.site == $cfg.config.site and .config.device == $cfg.config.device
-    #                         then .config.objects += $cfg.config.objects
-    #                         else .
-    #                       end
-    #                     ) else . + [ $cfg ]
-    #                   end
-    #                 )
-    #               )
-    #           }' "${json_outfile}" > "${tmp_normalized}" && \
-    #   mv "${tmp_normalized}" "${json_outfile}";
-    # fi;
-
-    #### -----------------------------------------------------------------------
-    ## Create a temporary batch-specific output file for this IP
-    # export json_outfile="${TMP_DIR}/json/${target_address}--${batch_id}.json";
-
     #### -----------------------------------------------------------------------
     ## Ensure batch output subdirectory exists
     mkdir -p "${TMP_DIR}/json";
@@ -230,7 +185,7 @@ function main () {
       "${tmp_fragments}" > "${json_outfile}";
       # print_file "${json_outfile}";
 
-      #### -----------------------------------------------------------------------
+      #### ---------------------------------------------------------------------
       ## Merge batch result into persistent output for this IP
       tmp_merged="$( mktemp )";
       local final_outfile="${reports_folder}/json/${target_address}.json";
@@ -239,10 +194,10 @@ function main () {
         configs:
           ( reduce .[].configs[] as $cfg (
             [];
-            if any( .[]; .config.site == $cfg.config.site and .config.device == $cfg.config.device )
+            if any( .[]; .site == $cfg.site and .device == $cfg.device )
               then map(
-                if .config.site == $cfg.config.site and .config.device == $cfg.config.device
-                  then .config.objects += $cfg.config.objects
+                if .site == $cfg.site and .device == $cfg.device
+                  then .objects += $cfg.objects
                 else . end
               )
             else . + [ $cfg ] end

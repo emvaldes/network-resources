@@ -51,25 +51,18 @@ function generate_configslist () {
         site="${config_file%%/*}"
         device="${config_file#*/}"
         ## Generate JSON entry for the current file and append it to the JSON array
-        # config_json=$(
-        #   print "${config_json}" |
-        #   jq --arg config "${config_file}" \
-        #      --argjson lines "${config_lines}" \
-        #      --argjson count "${match_count}" \
-        #      '. += [{"config": $config, "lines": $lines, "count": $count}]'
-        # );
         config_json=$(
           print "${config_json}" |
           jq --arg site "${site}" \
              --arg device "${device}" \
              --argjson lines "${config_lines}" \
              --argjson count "${match_count}" \
-             '. += [{"config": {"site": $site, "device": $device}, "lines": $lines, "count": $count}]'
+             '. += [ { "config": { "site": $site, "device": $device }, "lines": $lines, "count": $count } ]'
         )
       done <<< "${matched_files}";
       ## Wrap the array into the final structure with {configs: $configs}
       final_json=$(
-        print "${config_json}" | jq '{configs: .}'
+        print "${config_json}" | jq '{ configs: . }'
       );
       ## Save the final JSON to the target file
       jq -r <<< "${final_json}" > "${target_file}";
@@ -107,18 +100,17 @@ function generate_csvoutput () {
       message "Processing ${json}" >&2;
       jq -e -r '
         .target as $target
-        | .configs[]
-        | .config as $cfg
-        | select($cfg.objects != null and ($cfg.objects | type == "array" and length > 0))
+        | .configs[] as $cfg
+        | select( $cfg.objects != null and ( $cfg.objects | type == "array" and length > 0 ) )
         | $cfg.objects[]
         | [
             $target,
-            ($cfg.site // "none"),
-            ($cfg.device // "none"),
-            (.object // "none"),
-            (.entries[0] // "none"),
-            (.description // "none"),
-            (.group // "none")
+            ( $cfg.site // "none" ),
+            ( $cfg.device // "none" ),
+            ( .object // "none" ),
+            ( .entries[0] // "none" ),
+            ( .description // "none" ),
+            ( .group // "none" )
           ]
         | @csv' "${json}" >> "${tmp_csv}" \
       || echo "Skipped: ${json}" >&2;

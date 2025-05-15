@@ -386,28 +386,6 @@ function main () {
       done;
 
       #### -----------------------------------------------------------------------
-      ## Strip base config path from all targets/*.json entries
-
-      # if [[ -d targets ]]; then
-      #   local prefix="${configs_dirpath%/}/";
-      #   find targets -type f -name '*.json' | while read -r list_file; do
-      #     sed -i '' -E "s|^${prefix}||g" "${list_file}";
-      #   done;
-      # fi;
-
-      # if [[ -d targets ]]; then
-      #   local prefix="${configs_dirpath%/}/";
-      #   shopt -s nullglob;
-      #   local json_files=( targets/*.json );
-      #   shopt -u nullglob;
-      #   if (( ${#json_files[@]} > 0 )); then
-      #     for list_file in "${json_files[@]}"; do
-      #       sed -i '' -E "s|\"config\": \"${prefix}|\"config\": \"|g" "${list_file}";
-      #     done;
-      #   fi;
-      # fi;
-
-      #### -----------------------------------------------------------------------
       ## Wait until all expected JSON report files are physically present on disk
       local json_dir="${reports_folder}/json";
 
