@@ -85,68 +85,58 @@ function generate_configslist () {
 
 #### ---------------------------------------------------------------------------
 # Function: generate_csvoutput
-# Purpose: Converts final reports.json to a human-readable CSV file.
+# Purpose: Converts all per-IP JSON files into a single CSV output (stream-based).
 
 function generate_csvoutput () {
-    local input_json="${reports_folder}/reports.json";
     local output_csv="${reports_folder}/reports.csv";
-    ## Ensure the JSON file exists before proceeding
-    if [[ ! -f "${input_json}" ]]; then
-      error_message "Missing ${input_json}, cannot generate CSV.";
-      return 1;
+    local json_dir="${reports_folder}/json";
+
+    ## Ensure JSON directory exists and contains files
+    if [[ ! -d "${json_dir}" ]]; then
+            error_message "Missing ${json_dir}, cannot generate CSV.";
+            return 1;
+      else  #ls -al "${json_dir}";
+            find "${json_dir}" -type f -name '*.json' | sort;
     fi;
 
-    ## Build CSV header and extract values from JSON using jq
-
-    # {
-    #   message "target,config,object,entry,description,group"; newline;
-    #   ## Flatten nested JSON structure: one row per matched object per config per IP
-    #   jq -r --arg configs_dirpath "${configs_dirpath}" \
-    #     '.[] as $entry
-    #     | $entry.configs[]
-    #     | .config as $cfg
-    #     | .objects[]
-    #     | [
-    #         $entry.target,
-    #         ($cfg.site + "/" + $cfg.device | sub("^" + $configs_dirpath + "/"; "")),
-    #         (.object // "none" | tostring | select(length > 0) // "none"),
-    #         (.entry // "none" | tostring | select(length > 0) // "none"),
-    #         (.description // "none" | tostring | select(length > 0) // "none"),
-    #         (.group // "none" | tostring | select(length > 0) // "none")
-    #       ]
-    #     | @csv' \
-    #   "${input_json}";
-    # } > "${output_csv}";
-
+    ## Write header
     {
       message "target,site,device,object,entry,description,group";
-      ## Flatten nested JSON structure: one row per matched object per config per IP
-      jq -r '
-        .[] as $entry
-        | $entry.configs[]
-        | .config as $cfg
-        | .objects[]
-        | [
-            $entry.target,
-            $cfg.site,
-            $cfg.device,
-            (.object // "none"),
-            (.entries[0] // "none"),  # assuming you want the first entry
-            (.description // "none"),
-            (.group // "none")
-          ]
-        | @csv' "${input_json}";
+      newline;
     } > "${output_csv}";
-    # print_file "${output_csv}";
+
+    ## Stream and process each file individually
+    find "${json_dir}" -type f -name '*.json' | sort | \
+    while read -r json; do
+      message "Processing ${json}" >&2;
+      jq -r . "${json}";
+      jq -e -r '
+                .target as $target
+                | .configs[]
+                | .config as $cfg
+                | select($cfg.objects != null and ($cfg.objects | type == "array" and length > 0))
+                | $cfg.objects[]
+                | [
+                    $target,
+                    ($cfg.site // "none"),
+                    ($cfg.device // "none"),
+                    (.object // "none"),
+                    (.entries[0] // "none"),
+                    (.description // "none"),
+                    (.group // "none")
+                  ]
+                | @csv' "${json}" >> "${output_csv}" \
+      || echo "Skipped: ${json}" >&2;
+    done;
+    print_file "${output_csv}";
 
     ## Optionally print CSV as a formatted table to the terminal
-    if [[ "${verbose}" == true ]]; then
-      if [[ -s "${output_csv}" ]]; then
-        newline;
-        message "CSV Report Summary (tabulated):";
-        column -t -s, "${output_csv}" | less -SFX;
-      fi;
-    fi;
+    if [[ "${verbose}" == true && -s "${output_csv}" ]]; then
+      newline;
+      message "CSV Report Summary (tabulated):";
+      column -t -s, "${output_csv}" | less -SFX;
+    fi
+
     return 0;
 }; alias generate-csvoutput='generate_csvoutput';
 

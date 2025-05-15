@@ -256,11 +256,7 @@ function main () {
       exit 2;
     fi;
 
-################################################################################
 #### Starting Batch-Processing -------------------------------------------- ####
-
-message "STARTING BATCHING";
-message "#####################################################################";
 
     #### -----------------------------------------------------------------------
     ## Begin placeholder-only batch structure (no processing)
@@ -291,7 +287,6 @@ message "#####################################################################";
 
       ## Inner Batching (While-loop)
       offset=0;
-
       while [[ "${offset}" -lt "${total_files}" ]]; do
 
         #### -------------------------------------------------------------------
@@ -341,7 +336,7 @@ message "#####################################################################";
 
         batch_slice=( "${site_files[@]:offset:batch_size}" );
         export batch_id="$(
-          printf '%s-%s' "$(date +%s%N)" "$RANDOM" | \
+          printf '%s-%s' "$( date +%s%N )" "${RANDOM}" | \
           base64 | \
           tr -dc 'a-zA-Z0-9' | \
           cut -c1-12
@@ -349,9 +344,15 @@ message "#####################################################################";
 
         batch_suffix="$( date +%s )-${RANDOM}";
         batch_configs_list="configs--${batch_id}-${batch_suffix}.list";
-        export BATCH_CONFIGS="$(
-          mktemp "${TMP_DIR}/${batch_configs_list}"
-        )";
+
+        ## Create the temporary file correctly using mktemp (portable syntax)
+        # BATCH_CONFIGS="$(
+        #   mktemp --tmpdir="${TMP_DIR}" "${batch_configs_list}.XXXXXX";
+        # )";
+        BATCH_CONFIGS="${TMP_DIR}/${batch_configs_list}";
+        export BATCH_CONFIGS;
+        touch "${BATCH_CONFIGS}";
+
         printf '%s\n' "${batch_slice[@]}" > "${BATCH_CONFIGS}";
 
         range_first=$(( offset+1 ));
@@ -410,16 +411,7 @@ message "#####################################################################";
 
     done;
 
-    newline;
-    message ">>> [ALL OUTER BATCHES COMPLETE] Finished processing all site folders";
-    newline;
-
-message "#####################################################################";
-message "COMPLETED BATCHING";
-newline;
-
 #### Completed Batch-Processing ------------------------------------------- ####
-################################################################################
 
     #### -----------------------------------------------------------------------
     ## Strip base config path from all targets/*.json entries
@@ -445,9 +437,7 @@ newline;
 
     #### -----------------------------------------------------------------------
     ## Wait until all expected JSON report files are physically present on disk
-    ## Aggregate all JSON outputs into one reports.json
     local json_dir="${reports_folder}/json";
-    local master_json="${reports_folder}/reports.json";
 
     ## This guarantees that each parsed IP’s output is available before aggregation
     expected_reports=${#filtered_target_listing[@]};  ## Total IPs that should have a corresponding JSON report
@@ -471,7 +461,9 @@ newline;
       sleep 0.1;
       (( elapsed++ ));
       actual_reports="$(
-        find reports/json -type f -name '*.json' | wc -l | sed -e 's|\ ||g'
+        find reports/json -type f -name '*.json' | \
+        wc -l | \
+        sed -e 's|\ ||g'
       )";
     done;
     if (( actual_reports < expected_reports )); then
@@ -480,16 +472,18 @@ newline;
     fi;
 
     #### -----------------------------------------------------------------------
-    ## Merge all per-IP JSONs into a single master report
-    if [[ -d "${json_dir}" ]]; then
-      mapfile -t json_files < <(
-        find "${json_dir}" -type f -name '*.json' | sort
-      );
-      if (( ${#json_files[@]} > 0 )); then
-        jq -s '.' "${json_files[@]}" > "${master_json}";
-        # print_file "${master_json}";
-      fi;
-    fi;
+    ##  Object: Merge all per-IP JSONs into a single master report
+    ## Warning: Disabled this as it will become highly conflictive by its massive structure
+    # local master_json="${reports_folder}/reports.json";
+    # if [[ -d "${json_dir}" ]]; then
+    #   mapfile -t json_files < <(
+    #     find "${json_dir}" -type f -name '*.json' | sort
+    #   );
+    #   if (( ${#json_files[@]} > 0 )); then
+    #     jq -s '.' "${json_files[@]}" > "${master_json}";
+    #     # print_file "${master_json}";
+    #   fi;
+    # fi;
 
     ## Exporting ./reports/reports.json data-sets into CSV output
     generate_csvoutput;
