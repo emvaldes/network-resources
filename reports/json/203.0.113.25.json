@@ -6,13 +6,11 @@
       "device": "fw1.cfg",
       "objects": [
         {
-          "object": "object-group",
-          "type": "network Avengers-DMZ",
+          "object": "access-list",
+          "type": false,
           "description": "false",
           "entries": [
-            "network-object host 192.0.2.50",
-            "network-object host 203.0.113.25",
-            "network-object 192.168.2.0 255.255.255.0"
+            "access-list OUTSIDE extended permit ip any host 203.0.113.25"
           ],
           "group": "Unclassified"
         },
@@ -26,11 +24,13 @@
           "group": "Unclassified"
         },
         {
-          "object": "access-list",
-          "type": false,
+          "object": "object-group",
+          "type": "network Avengers-DMZ",
           "description": "false",
           "entries": [
-            "access-list OUTSIDE extended permit ip any host 203.0.113.25"
+            "network-object host 192.0.2.50",
+            "network-object host 203.0.113.25",
+            "network-object 192.168.2.0 255.255.255.0"
           ],
           "group": "Unclassified"
         }
@@ -41,12 +41,11 @@
       "device": "fw2.cfg",
       "objects": [
         {
-          "object": "object-group",
-          "type": "network Wayne-DMZ",
+          "object": "access-list",
+          "type": false,
           "description": "false",
           "entries": [
-            "network-object host 203.0.113.25",
-            "network-object host 198.51.100.75"
+            "access-list OUTSIDE extended permit ip any host 203.0.113.25"
           ],
           "group": "Unclassified"
         },
@@ -60,11 +59,12 @@
           "group": "Unclassified"
         },
         {
-          "object": "access-list",
-          "type": false,
+          "object": "object-group",
+          "type": "network Wayne-DMZ",
           "description": "false",
           "entries": [
-            "access-list OUTSIDE extended permit ip any host 203.0.113.25"
+            "network-object host 203.0.113.25",
+            "network-object host 198.51.100.75"
           ],
           "group": "Unclassified"
         }
@@ -91,15 +91,6 @@
       "device": "fw6.cfg",
       "objects": [
         {
-          "object": "object-group",
-          "type": false,
-          "description": "false",
-          "entries": [
-            "network-object host 203.0.113.25"
-          ],
-          "group": "Unclassified"
-        },
-        {
           "object": "object",
           "type": false,
           "description": "false",
@@ -114,15 +105,6 @@
           "description": "false",
           "entries": [
             "network-object host 203.0.113.25"
-          ],
-          "group": "Unclassified"
-        },
-        {
-          "object": "object",
-          "type": false,
-          "description": "false",
-          "entries": [
-            "host 203.0.113.25"
           ],
           "group": "Unclassified"
         }
@@ -132,15 +114,6 @@
       "site": "cisco",
       "device": "fw8.cfg",
       "objects": [
-        {
-          "object": "object",
-          "type": false,
-          "description": "false",
-          "entries": [
-            "host 203.0.113.25"
-          ],
-          "group": "Unclassified"
-        },
         {
           "object": "object",
           "type": false,

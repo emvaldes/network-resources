@@ -22,12 +22,11 @@
       "device": "fw3.cfg",
       "objects": [
         {
-          "object": "object-group",
-          "type": "network Shield-WiFi",
+          "object": "access-list",
+          "type": false,
           "description": "false",
           "entries": [
-            "network-object host 10.10.10.10",
-            "network-object 192.168.100.0 255.255.255.0"
+            "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
           ],
           "group": "Unclassified"
         },
@@ -41,11 +40,12 @@
           "group": "Unclassified"
         },
         {
-          "object": "access-list",
-          "type": false,
+          "object": "object-group",
+          "type": "network Shield-WiFi",
           "description": "false",
           "entries": [
-            "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
+            "network-object host 10.10.10.10",
+            "network-object 192.168.100.0 255.255.255.0"
           ],
           "group": "Unclassified"
         }
@@ -56,21 +56,21 @@
       "device": "fw4.cfg",
       "objects": [
         {
+          "object": "object",
+          "type": false,
+          "description": "false",
+          "entries": [
+            "host 10.10.10.10"
+          ],
+          "group": "Unclassified"
+        },
+        {
           "object": "object-group",
           "type": "network Sector-Wireless",
           "description": "false",
           "entries": [
             "network-object host 192.168.100.100",
             "network-object host 10.10.10.10"
-          ],
-          "group": "Unclassified"
-        },
-        {
-          "object": "object",
-          "type": false,
-          "description": "false",
-          "entries": [
-            "host 10.10.10.10"
           ],
           "group": "Unclassified"
         }
@@ -80,15 +80,6 @@
       "site": "cisco",
       "device": "fw6.cfg",
       "objects": [
-        {
-          "object": "object-group",
-          "type": false,
-          "description": "false",
-          "entries": [
-            "network-object host 10.10.10.10"
-          ],
-          "group": "Unclassified"
-        },
         {
           "object": "object-group",
           "type": false,

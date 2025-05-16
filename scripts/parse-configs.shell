@@ -189,6 +189,14 @@ function main () {
       ## Merge batch result into persistent output for this IP
       tmp_merged="$( mktemp )";
       local final_outfile="${reports_folder}/json/${target_address}.json";
+
+      #### ---------------------------------------------------------------------
+      # Objective: Merge logic for per-IP JSON output.
+      # Ensures that if a config (by site/device) already exists, its `.objects` array
+      # is merged with the incoming batch and deduplicated based on composite fields
+      # (.type, .name, .object, .entries). This prevents bloating caused by re-appending
+      # identical blocks across batches or multiple runs.
+
       local jq_merge_expr=$'{
         target: .[0].target,
         configs:
@@ -197,12 +205,16 @@ function main () {
             if any( .[]; .site == $cfg.site and .device == $cfg.device )
               then map(
                 if .site == $cfg.site and .device == $cfg.device
-                  then .objects += $cfg.objects
+                  then .objects = (
+                    ( .objects + $cfg.objects )
+                    | unique_by( .type, .name, .object, ( .entries | tostring ) )
+                  )
                 else . end
               )
             else . + [ $cfg ] end
           ))
       }';
+
       if [[ -f "${final_outfile}" ]]; then
               jq -s "${jq_merge_expr}" \
                     "${final_outfile}" \
