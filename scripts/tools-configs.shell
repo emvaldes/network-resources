@@ -68,7 +68,9 @@ function extract_configs () {
     message "[DEBUG] Checking if config file exists and is readable: ${config_file}";
     if [[ ! -s "${config_file}" ]]; then
             error_message "File '${config_file}' is missing or empty";
-      else  message "[OK] File '${config_file}' is readable and size is $(stat -c%s "${config_file}") bytes";
+      else  message "[OK] File '${config_file}' is readable and size is $(
+              stat -c%s "${config_file}"
+            ) bytes";
     fi;
 
     #### -----------------------------------------------------------------------
@@ -152,7 +154,8 @@ function extract_configs () {
     ## Deserializing matched_objects:
     declare -a restored_block=();
     for serialized_line in "${matched_objects[@]}"; do
-      [[ "${verbose}" == true ]] && message "Serialized Line: ${serialized_line[@]}";
+      [[ "${verbose}" == true ]] && \
+         message "Serialized Line: ${serialized_line[@]}";
       restored_block="$(
         perl -pe 's/'"${divisor}"'/\n/g' <<< "${serialized_line}"
       )"
