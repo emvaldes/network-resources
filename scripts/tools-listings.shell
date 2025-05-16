@@ -83,7 +83,6 @@ function generate_configslist () {
 function generate_csvoutput () {
     local output_csv="${reports_folder}/reports.csv";
     local json_dir="${reports_folder}/json";
-    local tmp_csv="${output_csv}.body";
 
     ## Ensure JSON directory exists and contains files
     if [[ ! -d "${json_dir}" ]]; then
@@ -92,13 +91,11 @@ function generate_csvoutput () {
       else  find "${json_dir}" -type f -name '*.json' | sort;
     fi;
 
-    ## Write CSV body (excluding header)
-    : > "${tmp_csv}";
-
     find "${json_dir}" -type f -name '*.json' | sort | \
     while read -r json; do
       message "Processing ${json}" >&2;
-      jq -e -r '
+
+      jq_json2csv='
         .target as $target
         | .configs[] as $cfg
         | select( $cfg.objects != null and ( $cfg.objects | type == "array" and length > 0 ) )
@@ -111,24 +108,15 @@ function generate_csvoutput () {
             ( .entries[0] // "none" ),
             ( .description // "none" ),
             ( .group // "none" )
-          ]
-        | @csv' "${json}" >> "${tmp_csv}" \
-      || echo "Skipped: ${json}" >&2;
+          ] | @csv';
+
+      ## Strategy: - Ensures progress is persisted incrementally and not lost on failure
+      ##           - Ideal for long-running jobs or unstable environments
+      ##           - Rows are written directly to the shared ./reports/reports.csv
+      jq -e -r "${jq_json2csv}" "${json}" >> "${output_csv}" \
+      || message "[WARN] Failed CSV append for ${output_csv}" >&2;
+
     done;
-
-    ## Final output: header + deduplicated body
-    {
-      echo "target,site,device,object,entry,description,group";
-      sort -u "${tmp_csv}";
-    } > "${output_csv}";
-    rm -f "${tmp_csv}";
-
-    ## Optionally print CSV as a formatted table to the terminal
-    if [[ "${verbose}" == true && -s "${output_csv}" ]]; then
-      newline;
-      message "CSV Report Summary (tabulated):";
-      column -t -s, "${output_csv}" | less -SFX;
-    fi;
 
     return 0;
 }; alias generate-csvoutput='generate_csvoutput';

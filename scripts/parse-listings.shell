@@ -193,6 +193,10 @@ function main () {
     export reports_folder="${reports_folder:-reports}";
     mkdir -p "${reports_folder}";
 
+    # Wipeout or create the CSV output file early
+    message "target,site,device,object,entry,description,group" \
+          > "${reports_folder}/reports.csv";
+
     ## Initializing the log file
     : > "${reports_logsfile}";  ## Truncate report log
     # [[ "${debug}" == true ]] && list_file "${reports_logsfile}";
@@ -235,7 +239,7 @@ function main () {
       exit 2;
     fi;
 
-#### Starting Batch-Processing -------------------------------------------- ####
+#### Starting: Batch-Processing - Outer Loop ------------------------------ ####
 
     #### -----------------------------------------------------------------------
     ## Begin placeholder-only batch structure (no processing)
@@ -287,6 +291,8 @@ function main () {
       ## Overwrite and validate all .local/stats/*.stat files
       stat_flush_success=true;
       find .local/stats/ -type f -name '*.jobs' | \
+
+#### Starting: Batch-Processing - Inner Loop ------------------------------ ####
       while read -r stat_file; do
         UTC_NOW="$(
           date -u '+%Y-%m-%dT%H:%M:%SZ'
@@ -383,7 +389,11 @@ function main () {
 
         offset=$(( offset + batch_size ));
 
+        ## Exporting ./reports/reports.json data-sets into CSV output
+        generate_csvoutput;
+
       done;
+#### Completed: Batch-Processing - Inner Loop ----------------------------- ####
 
       #### -----------------------------------------------------------------------
       ## Wait until all expected JSON report files are physically present on disk
@@ -399,8 +409,15 @@ function main () {
       message "Actual Reports: ${expected_reports}";
 
     done;
+#### Completed:  Batch-Processing - Outer Loop ---------------------------- ####
 
-#### Completed Batch-Processing ------------------------------------------- ####
+    ## Optionally print CSV as a formatted table to the terminal
+    if [[ "${verbose}" == true && -s "${output_csv}" ]]; then
+      newline;
+      message "CSV Report Summary (tabulated):";
+      # column -t -s, "${output_csv}" | less -SFX;
+      cat "${output_csv}";  ## | less -NFSX;
+    fi;
 
     # while (( actual_reports < expected_reports )); do
     #   sleep 0.2;  ## Short delay to avoid overloading the disk with find/wc calls
@@ -426,15 +443,12 @@ function main () {
     #   exit 6;
     # fi;
 
-    ## Exporting ./reports/reports.json data-sets into CSV output
-    generate_csvoutput;
-
     #### -----------------------------------------------------------------------
     local elapsed="${SECONDS}";
     newline;
     printf "[INFO] Started at: %s\n" "${start_time}";
     printf "[INFO] Total runtime: %02d:%02d:%02d\n" \
-           $((elapsed/3600)) $(( (elapsed%3600)/60 )) $((elapsed%60));
+           $(( elapsed / 3600 )) $(( ( elapsed % 3600 ) / 60 )) $(( elapsed % 60 ));
 
     return 0;
 }; alias parse-listings='main';
