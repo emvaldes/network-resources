@@ -193,9 +193,11 @@ function main () {
     export reports_folder="${reports_folder:-reports}";
     mkdir -p "${reports_folder}";
 
+    export output_csv="${reports_folder}/reports.csv";
+
     # Wipeout or create the CSV output file early
     message "target,site,device,object,entry,description,group" \
-          > "${reports_folder}/reports.csv";
+          > "${output_csv}";
 
     ## Initializing the log file
     : > "${reports_logsfile}";  ## Truncate report log
