@@ -1,0 +1,92 @@
+{
+  "target": "192.168.100.100",
+  "configs": [
+    {
+      "site": "cisco",
+      "device": "fw1.cfg",
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network Rogers-WiFi",
+          "description": "Wireless guest segment",
+          "sets": [
+            "network-object host 10.10.10.10",
+            "network-object host 192.168.100.100"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
+      "device": "fw2.cfg",
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network Batcave-Wireless",
+          "description": "Secure wireless endpoints",
+          "sets": [
+            "network-object host 172.16.1.6",
+            "network-object host 192.168.100.100"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
+      "device": "fw4.cfg",
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network Sector-Wireless",
+          "description": "Staff WiFi clients",
+          "sets": [
+            "network-object host 192.168.100.100",
+            "network-object host 10.10.10.10"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
+      "device": "fw7.cfg",
+      "objects": [
+        {
+          "object": "object",
+          "type": "network Titan-WLAN-Host",
+          "description": false,
+          "sets": [
+            "host 192.168.100.100"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Titan-Wireless",
+          "description": "Young heroes WiFi",
+          "sets": [
+            "network-object host 192.168.100.100"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "switch2.conf",
+      "objects": [
+        {
+          "object": "interface",
+          "type": "Vlan3",
+          "description": false,
+          "sets": [
+            "ip address 192.168.100.100 255.255.255.0"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    }
+  ]
+}

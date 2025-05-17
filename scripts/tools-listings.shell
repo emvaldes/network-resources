@@ -82,16 +82,20 @@ function generate_configslist () {
 
 function generate_csvoutput () {
 
-    local json_dir="${reports_folder}/json";
     local tmp_csv="$( mktemp )";  ## Temporary file for accumulating unsorted CSV rows
 
     ## Ensure JSON directory exists and contains files
-    if [[ ! -d "${json_dir}" ]]; then
-      error_message "Missing ${json_dir}, cannot generate CSV.";
+    if [[ ! -d "${reports_folder}" ]]; then
+      error_message "Missing ${reports_folder}, cannot generate CSV.";
       return 1;
     fi;
 
-    find "${json_dir}" -type f -name '*.json' | sort | \
+    find "${reports_folder}" \
+         -type f \
+         -name '*.json' \
+         -mindepth 2 \
+         -maxdepth 2 | \
+    sort | \
     while read -r json; do
         message "Processing ${json}" >&2;
         jq_json2csv='.target as $target
@@ -103,7 +107,7 @@ function generate_csvoutput () {
                         ( .site // "none" ),
                         ( .device // "none" ),
                         ( $obj.object // "none" ),
-                        ( $obj.entries[0] // "none" ),
+                        ( $obj.sets[0] // "none" ),
                         ( $obj.description // "none" ),
                         ( $obj.group // "none" )
                       ]
@@ -119,7 +123,7 @@ function generate_csvoutput () {
 
     ## Sort the CSV (preserve header)
     {
-      message "target,site,device,object,entry,description,group";
+      message "target,site,device,object,sets,description,group";
       sort -t',' -k1,1 -k2,2 -k3,3 -k4,4 "${tmp_csv}";
     } > "${output_csv}" && rm -f "${tmp_csv}";
 
@@ -265,8 +269,8 @@ function parse_configs () {
               print "  See: ${logfile}";
             } >> "${errors_logfile}";
             # list_file "${errors_logfile}";
-      else  print "${nl}[DONE] IP: ${ip_addr}" >> "${reports_logsfile}";
-            # list_file "${reports_logsfile}";
+      # else  print "${nl}[DONE] IP: ${ip_addr}" >> "${reports_logsfile}";
+      #       # list_file "${reports_logsfile}";
     fi;
     return "${status}";
 }; alias parse-configs='parse_configs';

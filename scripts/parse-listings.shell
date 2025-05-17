@@ -353,34 +353,38 @@ function main () {
         #### -------------------------------------------------------------------
         ## Track only the IPs that had a match during this batch
         for ip_addr in "${target_listing[@]}"; do
-          ip_cleaned="$( print "${ip_addr}" | tr -d '\r' )";
+          ip_cleaned="$(
+            print "${ip_addr}" | tr -d '\r'
+          )";
           if [[ -f "targets/${ip_cleaned}.json" ]]; then
             filtered_target_listing+=( "${ip_cleaned}" );
           fi;
         done;
 
-        #### -----------------------------------------------------------------------
-        local total_requested=${#target_listing[@]};
-        local total_mapped=${#filtered_target_listing[@]};
-        {
-          message "Total IPs requested: ${total_requested}";
-          message "Total IPs mapped:    ${total_mapped}";
-          message "${nl}Unmapped IPs:        $(( total_requested - total_mapped ))";
-          newline;
-        } >> "${reports_logsfile}";
+        # #### -----------------------------------------------------------------------
+        # local total_requested=${#target_listing[@]};
+        # local total_mapped=${#filtered_target_listing[@]};
+        # {
+        #   message "Total IPs requested: ${total_requested}";
+        #   message "Total IPs mapped:    ${total_mapped}";
+        #   message "${nl}Unmapped IPs:        $(( total_requested - total_mapped ))";
+        #   newline;
+        # } >> "${reports_logsfile}";
 
-        #### -----------------------------------------------------------------------
-        ## Log unmapped IPs explicitly (no matches found)
-        {
-          for ip in "${target_listing[@]}"; do
-            ip_cleaned="$( print "${ip}" | tr -d '\r' | sed -E 's/[[:space:]]+//g' )";
-            if [[ -n "${ip_cleaned}" && ! -f "targets/${ip_cleaned}.json" ]]; then
-              message "  - ${ip_cleaned}";
-            fi;
-          done;
-          newline;
-        } >> "${reports_logsfile}";
-        # print_file "${reports_logsfile}";
+        # #### -----------------------------------------------------------------------
+        # ## Log unmapped IPs explicitly (no matches found)
+        # {
+        #   for ip in "${target_listing[@]}"; do
+        #     ip_cleaned="$(
+        #       print "${ip}" | tr -d '\r' | sed -E 's/[[:space:]]+//g'
+        #     )";
+        #     if [[ -n "${ip_cleaned}" && ! -f "targets/${ip_cleaned}.json" ]]; then
+        #       message "  - ${ip_cleaned}";
+        #     fi;
+        #   done;
+        #   newline;
+        # } >> "${reports_logsfile}";
+        # # print_file "${reports_logsfile}";
 
         ## Launch and monitor parallel config parsing jobs for matched IPs
         manage_configs;
@@ -393,19 +397,6 @@ function main () {
       ## Exporting ./reports/reports.json data-sets into CSV output
       generate_csvoutput;
 
-      #### -----------------------------------------------------------------------
-      ## Wait until all expected JSON report files are physically present on disk
-      local json_dir="${reports_folder}/json";
-
-      ## This guarantees that each parsed IP’s output is available before aggregation
-      expected_reports=${#filtered_target_listing[@]}
-      message "Expected Reports: ${expected_reports}";
-
-      actual_reports=$(
-        find "${json_dir}" -type f -name '*.json' | wc -l | sed -e 's|\ ||g'
-      );  ## Count current .json files in output directory
-      message "Actual Reports: ${expected_reports}";
-
     done;
 #### Completed:  Batch-Processing - Outer Loop ---------------------------- ####
 
@@ -415,30 +406,6 @@ function main () {
       # column -t -s, "${output_csv}" | less -SFX;
       cat "${output_csv}";  ## | less -NFSX;
     fi;
-
-    # while (( actual_reports < expected_reports )); do
-    #   sleep 0.2;  ## Short delay to avoid overloading the disk with find/wc calls
-    #   actual_reports=$(
-    #     find "${json_dir}" -type f -name '*.json' | wc -l
-    #   );  ## Recalculate number of completed reports
-    # done;
-
-    # ## Optional safeguard: wait up to 5s for all reports to be present
-    # timeout=5;
-    # elapsed=0;
-    # while (( actual_reports < expected_reports && elapsed < timeout * 10 )); do
-    #   sleep 0.1;
-    #   (( elapsed++ ));
-    #   actual_reports="$(
-    #     find reports/json -type f -name '*.json' | \
-    #     wc -l | \
-    #     sed -e 's|\ ||g'
-    #   )";
-    # done;
-    # if (( actual_reports < expected_reports )); then
-    #   error_message "[ERROR] Only ${actual_reports} of ${expected_reports} reports were generated.";
-    #   exit 6;
-    # fi;
 
     #### -----------------------------------------------------------------------
     local elapsed="${SECONDS}";

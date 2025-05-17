@@ -1,0 +1,78 @@
+{
+  "target": "172.16.0.5",
+  "configs": [
+    {
+      "site": "cisco",
+      "device": "fw3.cfg",
+      "objects": [
+        {
+          "object": "access-list",
+          "type": false,
+          "description": false,
+          "sets": [
+            "access-list OUTSIDE extended permit ip any host 172.16.0.5"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network Edge-Terminal",
+          "description": "Internet firewall handoff",
+          "sets": [
+            "host 172.16.0.5"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Panther-Edge",
+          "description": "Internet-facing proxy systems",
+          "sets": [
+            "network-object host 203.0.113.25",
+            "network-object host 172.16.0.5"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
+      "device": "fw8.cfg",
+      "objects": [
+        {
+          "object": "object",
+          "type": "network Magneto-Core",
+          "description": false,
+          "sets": [
+            "host 172.16.0.5"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Magneto-Wifi",
+          "description": "Guest access",
+          "sets": [
+            "network-object host 172.16.0.5"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "switch4.conf",
+      "objects": [
+        {
+          "object": "interface",
+          "type": "Vlan3",
+          "description": false,
+          "sets": [
+            "ip address 172.16.0.5 255.255.255.0"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    }
+  ]
+}

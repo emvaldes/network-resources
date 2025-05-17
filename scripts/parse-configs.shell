@@ -138,8 +138,7 @@ function main () {
     #### -----------------------------------------------------------------------
     ## Custom/Default reports folder:
     export reports_folder="${reports_folder:-reports}";
-    mkdir -p ${reports_folder}/{json,objects};
-
+    
     #### -----------------------------------------------------------------------
     ## Presetting Target-Index Marker
     [[ -z ${target_index:-} ]] && target_index='';
@@ -173,10 +172,10 @@ function main () {
 
     #### -----------------------------------------------------------------------
     ## Ensure batch output subdirectory exists
-    mkdir -p "${TMP_DIR}/json";
+    mkdir -p "${TMP_DIR}/${target_address}";
 
     ## Create a temporary batch-specific output file for this IP
-    export json_outfile="${TMP_DIR}/json/${target_address}--${batch_id}.json";
+    export json_outfile="${TMP_DIR}/${target_address}/${target_address}--${batch_id}.json";
 
     if [[ -s "${tmp_fragments}" ]]; then
 
@@ -188,13 +187,17 @@ function main () {
       #### ---------------------------------------------------------------------
       ## Merge batch result into persistent output for this IP
       tmp_merged="$( mktemp )";
-      local final_outfile="${reports_folder}/json/${target_address}.json";
+
+      local final_outfile="${reports_folder}/${target_address}/${target_address}.json";
+      mkdir -p "$(
+        dirname "${final_outfile}"
+      )";
 
       #### ---------------------------------------------------------------------
       # Objective: Merge logic for per-IP JSON output.
       # Ensures that if a config (by site/device) already exists, its `.objects` array
       # is merged with the incoming batch and deduplicated based on composite fields
-      # (.type, .name, .object, .entries). This prevents bloating caused by re-appending
+      # (.type, .name, .object, .sets). This prevents bloating caused by re-appending
       # identical blocks across batches or multiple runs.
 
       local jq_merge_expr=$'{
@@ -207,7 +210,7 @@ function main () {
                 if .site == $cfg.site and .device == $cfg.device
                   then .objects = (
                     ( .objects + $cfg.objects )
-                    | unique_by( .type, .name, .object, ( .entries | tostring ) )
+                    | unique_by( .type, .name, .object, ( .sets | tostring ) )
                   )
                 else . end
               )

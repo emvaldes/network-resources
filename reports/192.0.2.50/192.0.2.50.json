@@ -1,0 +1,78 @@
+{
+  "target": "192.0.2.50",
+  "configs": [
+    {
+      "site": "cisco",
+      "device": "fw1.cfg",
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network Avengers-DMZ",
+          "description": "Public access layer",
+          "sets": [
+            "network-object host 192.0.2.50",
+            "network-object host 203.0.113.25",
+            "network-object 192.168.2.0 255.255.255.0"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Avengers-DMZ",
+          "description": "Public access layer",
+          "sets": [
+            "network-object host 192.0.2.50",
+            "network-object host 203.0.113.26",
+            "network-object 192.168.2.0 255.255.255.0",
+            "network-object host 192.0.2.51",
+            "network-object host 203.0.113.27",
+            "network-object 192.168.2.0 255.255.255.0",
+            "network-object host 192.0.2.52",
+            "network-object host 203.0.113.28",
+            "network-object 192.168.2.0 255.255.255.0",
+            "network-object host 192.0.2.53",
+            "network-object host 203.0.113.29",
+            "network-object 192.168.2.0 255.255.255.0",
+            "network-object host 192.0.2.54",
+            "network-object host 203.0.113.30",
+            "network-object 192.168.2.0 255.255.255.0"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network Public-Terminal",
+          "description": "Untrusted guest access",
+          "sets": [
+            "host 192.0.2.50"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
+      "device": "fw7.cfg",
+      "objects": [
+        {
+          "object": "object",
+          "type": "network Watchtower-Core",
+          "description": false,
+          "sets": [
+            "host 192.0.2.50"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Watchtower-DMZ",
+          "description": "Global secure relay",
+          "sets": [
+            "network-object host 192.0.2.50"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    }
+  ]
+}

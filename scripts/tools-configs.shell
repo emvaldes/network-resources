@@ -152,7 +152,7 @@ function extract_configs () {
 
     #### -----------------------------------------------------------------------
     ## Deserializing matched_objects:
-    declare -a restored_block=();
+    # declare -a restored_block=();
     for serialized_line in "${matched_objects[@]}"; do
       [[ "${verbose}" == true ]] && \
          message "Serialized Line: ${serialized_line[@]}";
@@ -160,6 +160,25 @@ function extract_configs () {
         perl -pe 's/'"${divisor}"'/\n/g' <<< "${serialized_line}"
       )"
       # restored_block="${restored_block}"$'\n';
+
+      ## Derive site/device/ext from config path
+      local cfg_path="${config_file}";
+      local rel_path="${cfg_path#${configs_dirpath}/}";  ## e.g., cisco/fw1.cfg
+      local site="${rel_path%%/*}";                      ## -> cisco
+      local device_filename="${rel_path#*/}";            ## -> fw1.cfg
+      local extension="${device_filename##*.}";          ## -> cfg
+
+      ## Construct output path: ./reports/<ip>/<site>/<device>.<ext>
+      local objects_dir="${reports_folder}/${target_address}/${site}";
+      local objects_file="${objects_dir}/${device_filename}";
+
+      mkdir -p "${objects_dir}";
+      {
+        message "${restored_block}";
+        message "!";
+        newline;
+      } >> "${objects_file}";
+
       if [[ "${verbose}" == true ]]; then
         message "Restored Configuration:\n${restored_block[@]}";
       fi;
@@ -216,18 +235,23 @@ function extract_configs () {
 ##   - Sanitizes the block (removes blank lines).
 ##   - Identifies:
 ##       - `object`: The main header line of the block
-##       - `entries`: All lines containing the target IP (can be multiple)
 ##       - `description`: First valid description if found, or `false`
+##       - `sets`: All lines containing the target IP (can be multiple)
 ##       - `group`: Classification group if matrix matching is enabled
 ##   - Appends a JSON object to the shared `object_store` array, formatted as:
 ##       {
 ##         "object": "object-group",
 ##         "type": "network BU1-NETWORK",
 ##         "description": "Corporate HQ Subnets",
-##         "entries": [
+##         "items": [
 ##           "network-object host 10.0.0.1",
 ##           ...
 ##         ],
+##         "sets": {
+##           "network-object": 1,
+##           ...
+##         },
+##         "data": "< compressed + encoded objects"
 ##         "group": "Business-Unit-HQ"
 ##       }
 ##
@@ -295,8 +319,8 @@ function process_configs () {
     fi;
 
     #### -----------------------------------------------------------------------
-    ## Extract all lines (entries) except description
-    local -a entries=();
+    ## Extract all lines (object memebers) except description
+    local -a data_sets=();
     while IFS= read -r line; do
       local trimmed;
       trimmed="$(
@@ -304,17 +328,17 @@ function process_configs () {
       )";
       [[ -z "${trimmed}" ]] && continue;
       [[ "${trimmed,,}" =~ ^description[[:space:]] ]] && continue;
-      entries+=( "${trimmed}" );
+      data_sets+=( "${trimmed}" );
     done <<< "${cleaned_block}";
 
     ## Remove object header line if multiple entries
-    if (( ${#entries[@]} > 1 )); then
-      entries=( "${entries[@]:1}" );
+    if (( ${#data_sets[@]} > 1 )); then
+      data_sets=( "${data_sets[@]:1}" );
     fi;
 
     if [[ "${verbose}" == true ]]; then
-      message "[process_configs] Entries:";
-      for e in "${entries[@]}"; do
+      message "[process_configs] Object Sets:";
+      for e in "${data_sets[@]}"; do
         print "  - ${e}";
       done;
     fi;
@@ -379,9 +403,9 @@ function process_configs () {
        message "[process_configs] Group: ${group_val}";
 
     ## -----------------------------------------------------------------------
-    ## Convert Bash array entries[] to JSON-safe array string
-    local entries_2json="$(
-      printf '%s\n' "${entries[@]}" | jq -R . | jq -s .
+    ## Convert Bash array data_sets[] to JSON-safe array string
+    local items_2json="$(
+      printf '%s\n' "${data_sets[@]}" | jq -R . | jq -s .
     )";
 
     target_object="$(
@@ -389,13 +413,13 @@ function process_configs () {
         --arg object "${object_keyword}" \
         --arg type "${type_value}" \
         --arg description "${desc_val}" \
-        --argjson entries "${entries_2json}" \
+        --argjson sets "${items_2json}" \
         --arg group "${group_val}" \
         '{
           object: $object,
           type: ( $type | select( . != "" and . != "null" and . != "false" ) // false ),
           description: ( $description | select( . != "" and . != "null" and . != "false" ) // false ),
-          entries: $entries,
+          sets: $sets,
           group: $group
         }'
     )";
@@ -405,7 +429,7 @@ function process_configs () {
     ##          of a single matched configuration block.
     ##
     ## Notes:
-    ## - It contains all extracted metadata: object type, description, entries, etc.
+    ## - It contains all extracted metadata: object type, description, items, sets, data, group.
     ## - It is intended to be collected by `extract_configs()`, NOT written here.
     ## - This variable must be exported only after it's been properly constructed.
     ## - Centralizing the output logic in `extract_configs()` enables proper
