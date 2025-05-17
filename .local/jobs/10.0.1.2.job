@@ -2,8 +2,8 @@
 + export LC_ALL=C
 + LC_ALL=C
 ++ mktemp -d
-+ export TMP_DIR=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.gqvPPEmKPI
-+ TMP_DIR=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.gqvPPEmKPI
++ export TMP_DIR=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.MabbS64OEy
++ TMP_DIR=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.MabbS64OEy
 + trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
 + source ./scripts/tools-devops.shell
 ++ [[ -n '' ]]
@@ -42,8 +42,8 @@
 +++ date +%s%N
 +++ base64
 +++ tr -dc a-zA-Z0-9
-++ export divisor=MTc0NzQ0NTQ3MTg0MDc5NjAwMAo
-++ divisor=MTc0NzQ0NTQ3MTg0MDc5NjAwMAo
+++ export divisor=MTc0NzQ0ODA1NDc1NDk0NjAwMAo
+++ divisor=MTc0NzQ0ODA1NDc1NDk0NjAwMAo
 + source ./scripts/tools-configs.shell
 ++ [[ -n '' ]]
 ++ readonly __TOOLS_EXTRACTION_SOURCED=1
@@ -166,10 +166,10 @@
 + [[ file-ext =~ ^(classify|g)$ ]]
 + [[ file-ext =~ ^(file-ext|x)$ ]]
 + file_extensions+=($(print "${value}" | tr ':,;\n ' '\n'))
-++ tr ':,;\n ' '\n'
 ++ print cfg,conf,cnf
 ++ [[ -n cfg,conf,cnf ]]
 ++ echo -en cfg,conf,cnf
+++ tr ':,;\n ' '\n'
 + [[ file-ext =~ ^(configs|c)$ ]]
 + [[ file-ext =~ ^(index|n)$ ]]
 + [[ file-ext =~ ^(ip-addr|i)$ ]]
@@ -372,21 +372,21 @@ Extracted config paths from JSON:+ for cfg in "${source_configs[@]}"
 + [[ -z 02 ]]
 + [[ -z false ]]
 + [[ -z 10.0.1.2 ]]
+++ sed -E 's/[[:space:]]+//g'
 ++ print 10.0.1.2
+++ tr -d '\r'
 ++ [[ -n 10.0.1.2 ]]
 ++ echo -en 10.0.1.2
-++ sed -E 's/[[:space:]]+//g'
-++ tr -d '\r'
 + target_address=10.0.1.2
 + [[ false == true ]]
-+ export tmp_fragments=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.gqvPPEmKPI/fragments.json
-+ tmp_fragments=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.gqvPPEmKPI/fragments.json
++ export tmp_fragments=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.MabbS64OEy/fragments.json
++ tmp_fragments=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.MabbS64OEy/fragments.json
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs configs/misc/switch1.conf 10.0.1.2 targets/10.0.1.2.json /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.gqvPPEmKPI/fragments.json
++ extract_configs configs/misc/switch1.conf 10.0.1.2 targets/10.0.1.2.json /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.MabbS64OEy/fragments.json
 + local config_file=configs/misc/switch1.conf
 + local target_pattern=10.0.1.2
 + local target_listing=targets/10.0.1.2.json
-+ local json_output=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.gqvPPEmKPI/fragments.json
++ local json_output=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.MabbS64OEy/fragments.json
 + [[ ! -f configs/misc/switch1.conf ]]
 + message '[DEBUG] Checking if config file exists and is readable: configs/misc/switch1.conf'
 + [[ -n [DEBUG] Checking if config file exists and is readable: configs/misc/switch1.conf ]]
@@ -629,16 +629,16 @@ object-group network Avengers-Office
 
 + (( i++ ))
 + (( i < count ))
-++ perl -pe 's/\n/MTc0NzQ0NTQ3MTg0MDc5NjAwMAo/g'
-+ local 'serialized_objects=interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan10MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan20MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAoobject-group network Avengers-OfficeMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description VLAN access layerMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.0.1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo'
+++ perl -pe 's/\n/MTc0NzQ0ODA1NDc1NDk0NjAwMAo/g'
++ local 'serialized_objects=interface Vlan1MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan10MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan20MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAoobject-group network Avengers-OfficeMTc0NzQ0ODA1NDc1NDk0NjAwMAo description VLAN access layerMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.0.1MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo'
 + [[ true == true ]]
-+ message 'Serialized Objects: interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan10MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan20MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAoobject-group network Avengers-OfficeMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description VLAN access layerMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.0.1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo'
-+ [[ -n Serialized Objects: interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan10MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan20MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAoobject-group network Avengers-OfficeMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description VLAN access layerMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.0.1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ]]
-+ local 'message=Serialized Objects: interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan10MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan20MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAoobject-group network Avengers-OfficeMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description VLAN access layerMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.0.1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo'
-+ print 'Serialized Objects: interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan10MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan20MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAoobject-group network Avengers-OfficeMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description VLAN access layerMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.0.1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo'
-+ [[ -n Serialized Objects: interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan10MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan20MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAoobject-group network Avengers-OfficeMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description VLAN access layerMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.0.1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ]]
-+ echo -en 'Serialized Objects: interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan10MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan20MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAoobject-group network Avengers-OfficeMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description VLAN access layerMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.0.1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo'
-Serialized Objects: interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan10MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan20MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAoobject-group network Avengers-OfficeMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description VLAN access layerMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.0.1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo+ newline
++ message 'Serialized Objects: interface Vlan1MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan10MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan20MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAoobject-group network Avengers-OfficeMTc0NzQ0ODA1NDc1NDk0NjAwMAo description VLAN access layerMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.0.1MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo'
++ [[ -n Serialized Objects: interface Vlan1MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan10MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan20MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAoobject-group network Avengers-OfficeMTc0NzQ0ODA1NDc1NDk0NjAwMAo description VLAN access layerMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.0.1MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo ]]
++ local 'message=Serialized Objects: interface Vlan1MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan10MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan20MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAoobject-group network Avengers-OfficeMTc0NzQ0ODA1NDc1NDk0NjAwMAo description VLAN access layerMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.0.1MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo'
++ print 'Serialized Objects: interface Vlan1MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan10MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan20MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAoobject-group network Avengers-OfficeMTc0NzQ0ODA1NDc1NDk0NjAwMAo description VLAN access layerMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.0.1MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo'
++ [[ -n Serialized Objects: interface Vlan1MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan10MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan20MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAoobject-group network Avengers-OfficeMTc0NzQ0ODA1NDc1NDk0NjAwMAo description VLAN access layerMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.0.1MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo ]]
++ echo -en 'Serialized Objects: interface Vlan1MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan10MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan20MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAoobject-group network Avengers-OfficeMTc0NzQ0ODA1NDc1NDk0NjAwMAo description VLAN access layerMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.0.1MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo'
+Serialized Objects: interface Vlan1MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan10MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan20MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAoobject-group network Avengers-OfficeMTc0NzQ0ODA1NDc1NDk0NjAwMAo description VLAN access layerMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.0.1MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -646,20 +646,20 @@ Serialized Objects: interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.31
 
 + (( i++ ))
 + (( i < count ))
-++ sed -E 's/MTc0NzQ0NTQ3MTg0MDc5NjAwMAo([^[:space:]])/\n\1/g'
-+ local 'restored_lines=interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.31.255.254 255.255.255.0
-interface Vlan10MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 10.0.1.2 255.255.255.0
-interface Vlan20MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.168.1.10 255.255.255.0
-object-group network Avengers-OfficeMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description VLAN access layerMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.0.1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo'
+++ sed -E 's/MTc0NzQ0ODA1NDc1NDk0NjAwMAo([^[:space:]])/\n\1/g'
++ local 'restored_lines=interface Vlan1MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.31.255.254 255.255.255.0
+interface Vlan10MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 10.0.1.2 255.255.255.0
+interface Vlan20MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 192.168.1.10 255.255.255.0
+object-group network Avengers-OfficeMTc0NzQ0ODA1NDc1NDk0NjAwMAo description VLAN access layerMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.0.1MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo'
 + restored_lines+='
 '
 + IFS='
 '
 + read -r -d '' -a config_objects
-++ printf '%s\0' 'interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.31.255.254 255.255.255.0
-interface Vlan10MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 10.0.1.2 255.255.255.0
-interface Vlan20MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.168.1.10 255.255.255.0
-object-group network Avengers-OfficeMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description VLAN access layerMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.0.1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo
+++ printf '%s\0' 'interface Vlan1MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.31.255.254 255.255.255.0
+interface Vlan10MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 10.0.1.2 255.255.255.0
+interface Vlan20MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 192.168.1.10 255.255.255.0
+object-group network Avengers-OfficeMTc0NzQ0ODA1NDc1NDk0NjAwMAo description VLAN access layerMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.0.1MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo
 '
 + [[ true == true ]]
 + message 'Loaded 4 config blocks'
@@ -680,9 +680,9 @@ Loaded 4 config blocks+ newline
 '
 + IFS='
 '
-++ printf '%s\n' 'interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.31.255.254 255.255.255.0' 'interface Vlan10MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 10.0.1.2 255.255.255.0' 'interface Vlan20MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.168.1.10 255.255.255.0' 'object-group network Avengers-OfficeMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description VLAN access layerMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.0.1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo'
+++ printf '%s\n' 'interface Vlan1MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.31.255.254 255.255.255.0' 'interface Vlan10MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 10.0.1.2 255.255.255.0' 'interface Vlan20MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 192.168.1.10 255.255.255.0' 'object-group network Avengers-OfficeMTc0NzQ0ODA1NDc1NDk0NjAwMAo description VLAN access layerMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.0.1MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo'
 ++ grep -E '(^|[^0-9.])10\.0\.1\.2([^0-9.]|$)'
-+ matched_objects=('interface Vlan10MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 10.0.1.2 255.255.255.0')
++ matched_objects=('interface Vlan10MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 10.0.1.2 255.255.255.0')
 + declare -a matched_objects
 + IFS=' 	
 '
@@ -705,13 +705,13 @@ Loaded 1 config blocks+ newline
 + declare -a restored_block
 + for serialized_line in "${matched_objects[@]}"
 + [[ true == true ]]
-+ message 'Serialized Line: interface Vlan10MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 10.0.1.2 255.255.255.0'
-+ [[ -n Serialized Line: interface Vlan10MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 10.0.1.2 255.255.255.0 ]]
-+ local 'message=Serialized Line: interface Vlan10MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 10.0.1.2 255.255.255.0'
-+ print 'Serialized Line: interface Vlan10MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 10.0.1.2 255.255.255.0'
-+ [[ -n Serialized Line: interface Vlan10MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 10.0.1.2 255.255.255.0 ]]
-+ echo -en 'Serialized Line: interface Vlan10MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 10.0.1.2 255.255.255.0'
-Serialized Line: interface Vlan10MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 10.0.1.2 255.255.255.0+ newline
++ message 'Serialized Line: interface Vlan10MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 10.0.1.2 255.255.255.0'
++ [[ -n Serialized Line: interface Vlan10MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 10.0.1.2 255.255.255.0 ]]
++ local 'message=Serialized Line: interface Vlan10MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 10.0.1.2 255.255.255.0'
++ print 'Serialized Line: interface Vlan10MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 10.0.1.2 255.255.255.0'
++ [[ -n Serialized Line: interface Vlan10MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 10.0.1.2 255.255.255.0 ]]
++ echo -en 'Serialized Line: interface Vlan10MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 10.0.1.2 255.255.255.0'
+Serialized Line: interface Vlan10MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 10.0.1.2 255.255.255.0+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -719,7 +719,7 @@ Serialized Line: interface Vlan10MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 10.0.1.2
 
 + (( i++ ))
 + (( i < count ))
-++ perl -pe 's/MTc0NzQ0NTQ3MTg0MDc5NjAwMAo/\n/g'
+++ perl -pe 's/MTc0NzQ0ODA1NDc1NDk0NjAwMAo/\n/g'
 + restored_block='interface Vlan10
  ip address 10.0.1.2 255.255.255.0'
 + [[ true == true ]]
@@ -859,8 +859,14 @@ interface Vlan10
 
 + (( i++ ))
 + (( i < count ))
-+ local desc_val=false
-+ [[ -z false ]]
+++ grep -i '^[[:space:]]*description'
+++ head -n 1
+++ sed -E 's/^[^"]*"?description"?[[:space:]]*//I; s/^[[:space:]]*//; s/[[:space:]]*$//'
++ local desc_val=
++ [[ -z '' ]]
++ desc_val=false
++ [[ false =~ 
+ ]]
 + [[ true == true ]]
 + message '[process_configs] Description: false'
 + [[ -n [process_configs] Description: false ]]
@@ -907,8 +913,8 @@ interface Vlan10
 + (( i++ ))
 + (( i < count ))
 ++ printf '%s\n' 'ip address 10.0.1.2 255.255.255.0'
-++ jq -R .
 ++ jq -s .
+++ jq -R .
 + local 'entries_2json=[
   "ip address 10.0.1.2 255.255.255.0"
 ]'
@@ -1082,11 +1088,6 @@ interface Vlan10
   ],
   "group": "Unclassified"
 } ]]
-++ jq -s --arg site configs/misc --arg device switch1.conf '{
-              site: ( $site | gsub( "^.*/"; "" ) ),
-              device: $device,
-              objects: .
-            }'
 ++ printf '%s\n' '{
   "object": "interface",
   "type": false,
@@ -1096,6 +1097,11 @@ interface Vlan10
   ],
   "group": "Unclassified"
 }'
+++ jq -s --arg site configs/misc --arg device switch1.conf '{
+              site: ( $site | gsub( "^.*/"; "" ) ),
+              device: $device,
+              objects: .
+            }'
 + wrapped_block='{
   "site": "misc",
   "device": "switch1.conf",
@@ -1272,11 +1278,11 @@ interface Vlan10
 }'
 + return 0
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs configs/misc/switch4.conf 10.0.1.2 targets/10.0.1.2.json /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.gqvPPEmKPI/fragments.json
++ extract_configs configs/misc/switch4.conf 10.0.1.2 targets/10.0.1.2.json /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.MabbS64OEy/fragments.json
 + local config_file=configs/misc/switch4.conf
 + local target_pattern=10.0.1.2
 + local target_listing=targets/10.0.1.2.json
-+ local json_output=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.gqvPPEmKPI/fragments.json
++ local json_output=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.MabbS64OEy/fragments.json
 + [[ ! -f configs/misc/switch4.conf ]]
 + message '[DEBUG] Checking if config file exists and is readable: configs/misc/switch4.conf'
 + [[ -n [DEBUG] Checking if config file exists and is readable: configs/misc/switch4.conf ]]
@@ -1519,16 +1525,16 @@ object-group network Guardians-Zone
 
 + (( i++ ))
 + (( i < count ))
-++ perl -pe 's/\n/MTc0NzQ0NTQ3MTg0MDc5NjAwMAo/g'
-+ local 'serialized_objects=interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan3MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAoobject-group network Guardians-ZoneMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description Multinetwork convergenceMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.1.2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo'
+++ perl -pe 's/\n/MTc0NzQ0ODA1NDc1NDk0NjAwMAo/g'
++ local 'serialized_objects=interface Vlan1MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan2MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan3MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAoobject-group network Guardians-ZoneMTc0NzQ0ODA1NDc1NDk0NjAwMAo description Multinetwork convergenceMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.1.2MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo'
 + [[ true == true ]]
-+ message 'Serialized Objects: interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan3MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAoobject-group network Guardians-ZoneMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description Multinetwork convergenceMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.1.2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo'
-+ [[ -n Serialized Objects: interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan3MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAoobject-group network Guardians-ZoneMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description Multinetwork convergenceMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.1.2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ]]
-+ local 'message=Serialized Objects: interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan3MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAoobject-group network Guardians-ZoneMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description Multinetwork convergenceMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.1.2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo'
-+ print 'Serialized Objects: interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan3MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAoobject-group network Guardians-ZoneMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description Multinetwork convergenceMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.1.2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo'
-+ [[ -n Serialized Objects: interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan3MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAoobject-group network Guardians-ZoneMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description Multinetwork convergenceMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.1.2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ]]
-+ echo -en 'Serialized Objects: interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan3MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAoobject-group network Guardians-ZoneMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description Multinetwork convergenceMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.1.2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo'
-Serialized Objects: interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAointerface Vlan3MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAoobject-group network Guardians-ZoneMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description Multinetwork convergenceMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.1.2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo+ newline
++ message 'Serialized Objects: interface Vlan1MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan2MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan3MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAoobject-group network Guardians-ZoneMTc0NzQ0ODA1NDc1NDk0NjAwMAo description Multinetwork convergenceMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.1.2MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo'
++ [[ -n Serialized Objects: interface Vlan1MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan2MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan3MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAoobject-group network Guardians-ZoneMTc0NzQ0ODA1NDc1NDk0NjAwMAo description Multinetwork convergenceMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.1.2MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo ]]
++ local 'message=Serialized Objects: interface Vlan1MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan2MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan3MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAoobject-group network Guardians-ZoneMTc0NzQ0ODA1NDc1NDk0NjAwMAo description Multinetwork convergenceMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.1.2MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo'
++ print 'Serialized Objects: interface Vlan1MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan2MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan3MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAoobject-group network Guardians-ZoneMTc0NzQ0ODA1NDc1NDk0NjAwMAo description Multinetwork convergenceMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.1.2MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo'
++ [[ -n Serialized Objects: interface Vlan1MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan2MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan3MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAoobject-group network Guardians-ZoneMTc0NzQ0ODA1NDc1NDk0NjAwMAo description Multinetwork convergenceMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.1.2MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo ]]
++ echo -en 'Serialized Objects: interface Vlan1MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan2MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan3MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAoobject-group network Guardians-ZoneMTc0NzQ0ODA1NDc1NDk0NjAwMAo description Multinetwork convergenceMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.1.2MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo'
+Serialized Objects: interface Vlan1MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan2MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.18.1.20 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAointerface Vlan3MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.16.0.5 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAoobject-group network Guardians-ZoneMTc0NzQ0ODA1NDc1NDk0NjAwMAo description Multinetwork convergenceMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.1.2MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -1536,20 +1542,20 @@ Serialized Objects: interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.16
 
 + (( i++ ))
 + (( i < count ))
-++ sed -E 's/MTc0NzQ0NTQ3MTg0MDc5NjAwMAo([^[:space:]])/\n\1/g'
-+ local 'restored_lines=interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.168.1.10 255.255.255.0
-interface Vlan2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.18.1.20 255.255.255.0
-interface Vlan3MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.16.0.5 255.255.255.0
-object-group network Guardians-ZoneMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description Multinetwork convergenceMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.1.2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo'
+++ sed -E 's/MTc0NzQ0ODA1NDc1NDk0NjAwMAo([^[:space:]])/\n\1/g'
++ local 'restored_lines=interface Vlan1MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 192.168.1.10 255.255.255.0
+interface Vlan2MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.18.1.20 255.255.255.0
+interface Vlan3MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.16.0.5 255.255.255.0
+object-group network Guardians-ZoneMTc0NzQ0ODA1NDc1NDk0NjAwMAo description Multinetwork convergenceMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.1.2MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo'
 + restored_lines+='
 '
 + IFS='
 '
 + read -r -d '' -a config_objects
-++ printf '%s\0' 'interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.168.1.10 255.255.255.0
-interface Vlan2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.18.1.20 255.255.255.0
-interface Vlan3MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.16.0.5 255.255.255.0
-object-group network Guardians-ZoneMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description Multinetwork convergenceMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.1.2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo
+++ printf '%s\0' 'interface Vlan1MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 192.168.1.10 255.255.255.0
+interface Vlan2MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.18.1.20 255.255.255.0
+interface Vlan3MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.16.0.5 255.255.255.0
+object-group network Guardians-ZoneMTc0NzQ0ODA1NDc1NDk0NjAwMAo description Multinetwork convergenceMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.1.2MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo
 '
 + [[ true == true ]]
 + message 'Loaded 4 config blocks'
@@ -1570,9 +1576,9 @@ Loaded 4 config blocks+ newline
 '
 + IFS='
 '
-++ printf '%s\n' 'interface Vlan1MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 192.168.1.10 255.255.255.0' 'interface Vlan2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.18.1.20 255.255.255.0' 'interface Vlan3MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ip address 172.16.0.5 255.255.255.0' 'object-group network Guardians-ZoneMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description Multinetwork convergenceMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.1.2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo'
+++ printf '%s\n' 'interface Vlan1MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 192.168.1.10 255.255.255.0' 'interface Vlan2MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.18.1.20 255.255.255.0' 'interface Vlan3MTc0NzQ0ODA1NDc1NDk0NjAwMAo ip address 172.16.0.5 255.255.255.0' 'object-group network Guardians-ZoneMTc0NzQ0ODA1NDc1NDk0NjAwMAo description Multinetwork convergenceMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.1.2MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo'
 ++ grep -E '(^|[^0-9.])10\.0\.1\.2([^0-9.]|$)'
-+ matched_objects=('object-group network Guardians-ZoneMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description Multinetwork convergenceMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.1.2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo')
++ matched_objects=('object-group network Guardians-ZoneMTc0NzQ0ODA1NDc1NDk0NjAwMAo description Multinetwork convergenceMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.1.2MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo')
 + declare -a matched_objects
 + IFS=' 	
 '
@@ -1595,13 +1601,13 @@ Loaded 1 config blocks+ newline
 + declare -a restored_block
 + for serialized_line in "${matched_objects[@]}"
 + [[ true == true ]]
-+ message 'Serialized Line: object-group network Guardians-ZoneMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description Multinetwork convergenceMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.1.2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo'
-+ [[ -n Serialized Line: object-group network Guardians-ZoneMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description Multinetwork convergenceMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.1.2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ]]
-+ local 'message=Serialized Line: object-group network Guardians-ZoneMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description Multinetwork convergenceMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.1.2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo'
-+ print 'Serialized Line: object-group network Guardians-ZoneMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description Multinetwork convergenceMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.1.2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo'
-+ [[ -n Serialized Line: object-group network Guardians-ZoneMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description Multinetwork convergenceMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.1.2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo ]]
-+ echo -en 'Serialized Line: object-group network Guardians-ZoneMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description Multinetwork convergenceMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.1.2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo'
-Serialized Line: object-group network Guardians-ZoneMTc0NzQ0NTQ3MTg0MDc5NjAwMAo description Multinetwork convergenceMTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object host 10.0.1.2MTc0NzQ0NTQ3MTg0MDc5NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0NTQ3MTg0MDc5NjAwMAo+ newline
++ message 'Serialized Line: object-group network Guardians-ZoneMTc0NzQ0ODA1NDc1NDk0NjAwMAo description Multinetwork convergenceMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.1.2MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo'
++ [[ -n Serialized Line: object-group network Guardians-ZoneMTc0NzQ0ODA1NDc1NDk0NjAwMAo description Multinetwork convergenceMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.1.2MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo ]]
++ local 'message=Serialized Line: object-group network Guardians-ZoneMTc0NzQ0ODA1NDc1NDk0NjAwMAo description Multinetwork convergenceMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.1.2MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo'
++ print 'Serialized Line: object-group network Guardians-ZoneMTc0NzQ0ODA1NDc1NDk0NjAwMAo description Multinetwork convergenceMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.1.2MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo'
++ [[ -n Serialized Line: object-group network Guardians-ZoneMTc0NzQ0ODA1NDc1NDk0NjAwMAo description Multinetwork convergenceMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.1.2MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo ]]
++ echo -en 'Serialized Line: object-group network Guardians-ZoneMTc0NzQ0ODA1NDc1NDk0NjAwMAo description Multinetwork convergenceMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.1.2MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo'
+Serialized Line: object-group network Guardians-ZoneMTc0NzQ0ODA1NDc1NDk0NjAwMAo description Multinetwork convergenceMTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object host 10.0.1.2MTc0NzQ0ODA1NDc1NDk0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzQ0ODA1NDc1NDk0NjAwMAo+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -1609,7 +1615,7 @@ Serialized Line: object-group network Guardians-ZoneMTc0NzQ0NTQ3MTg0MDc5NjAwMAo 
 
 + (( i++ ))
 + (( i < count ))
-++ perl -pe 's/MTc0NzQ0NTQ3MTg0MDc5NjAwMAo/\n/g'
+++ perl -pe 's/MTc0NzQ0ODA1NDc1NDk0NjAwMAo/\n/g'
 + restored_block='object-group network Guardians-Zone
  description Multinetwork convergence
  network-object host 10.0.1.2
@@ -1788,8 +1794,8 @@ object-group network Guardians-Zone
 + echo -en '  - network-object 192.168.12.0 255.255.255.0'
   - network-object 192.168.12.0 255.255.255.0+ local matched_line
 ++ grep -E '(^|[^0-9.])10\.0\.1\.2([^0-9.]|$)'
-++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
 ++ head -n 1
+++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
 + matched_line='network-object host 10.0.1.2'
 + [[ -z network-object host 10.0.1.2 ]]
 + [[ true == true ]]
@@ -1807,16 +1813,21 @@ object-group network Guardians-Zone
 
 + (( i++ ))
 + (( i < count ))
-+ local desc_val=false
-+ [[ -z false ]]
+++ grep -i '^[[:space:]]*description'
+++ head -n 1
+++ sed -E 's/^[^"]*"?description"?[[:space:]]*//I; s/^[[:space:]]*//; s/[[:space:]]*$//'
++ local 'desc_val=Multinetwork convergence'
++ [[ -z Multinetwork convergence ]]
++ [[ Multinetwork convergence =~ 
+ ]]
 + [[ true == true ]]
-+ message '[process_configs] Description: false'
-+ [[ -n [process_configs] Description: false ]]
-+ local 'message=[process_configs] Description: false'
-+ print '[process_configs] Description: false'
-+ [[ -n [process_configs] Description: false ]]
-+ echo -en '[process_configs] Description: false'
-[process_configs] Description: false+ newline
++ message '[process_configs] Description: Multinetwork convergence'
++ [[ -n [process_configs] Description: Multinetwork convergence ]]
++ local 'message=[process_configs] Description: Multinetwork convergence'
++ print '[process_configs] Description: Multinetwork convergence'
++ [[ -n [process_configs] Description: Multinetwork convergence ]]
++ echo -en '[process_configs] Description: Multinetwork convergence'
+[process_configs] Description: Multinetwork convergence+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -1834,7 +1845,7 @@ object-group network Guardians-Zone
 + group_val=null
 + [[ -z null ]]
 + [[ null == \n\u\l\l ]]
-++ jq -r --arg desc false 'map( select( .match[]? == $desc ) ) | .[0].group'
+++ jq -r --arg desc 'Multinetwork convergence' 'map( select( .match[]? == $desc ) ) | .[0].group'
 + group_val=null
 + [[ -z null ]]
 + [[ null == \n\u\l\l ]]
@@ -1862,7 +1873,7 @@ object-group network Guardians-Zone
   "network-object 192.168.12.0 255.255.255.0"
 ]'
 + [[ 2 -eq 1 ]]
-++ jq -n --arg object object-group --arg type 'network Guardians-Zone' --arg description false --argjson entries '[
+++ jq -n --arg object object-group --arg type 'network Guardians-Zone' --arg description 'Multinetwork convergence' --argjson entries '[
   "network-object host 10.0.1.2",
   "network-object 192.168.12.0 255.255.255.0"
 ]' --arg group Unclassified '{
@@ -1875,7 +1886,7 @@ object-group network Guardians-Zone
 + target_object='{
   "object": "object-group",
   "type": "network Guardians-Zone",
-  "description": "false",
+  "description": "Multinetwork convergence",
   "entries": [
     "network-object host 10.0.1.2",
     "network-object 192.168.12.0 255.255.255.0"
@@ -1901,7 +1912,7 @@ object-group network Guardians-Zone
 + print '{
   "object": "object-group",
   "type": "network Guardians-Zone",
-  "description": "false",
+  "description": "Multinetwork convergence",
   "entries": [
     "network-object host 10.0.1.2",
     "network-object 192.168.12.0 255.255.255.0"
@@ -1911,7 +1922,7 @@ object-group network Guardians-Zone
 + [[ -n {
   "object": "object-group",
   "type": "network Guardians-Zone",
-  "description": "false",
+  "description": "Multinetwork convergence",
   "entries": [
     "network-object host 10.0.1.2",
     "network-object 192.168.12.0 255.255.255.0"
@@ -1921,7 +1932,7 @@ object-group network Guardians-Zone
 + echo -en '{
   "object": "object-group",
   "type": "network Guardians-Zone",
-  "description": "false",
+  "description": "Multinetwork convergence",
   "entries": [
     "network-object host 10.0.1.2",
     "network-object 192.168.12.0 255.255.255.0"
@@ -1932,7 +1943,7 @@ object-group network Guardians-Zone
 {
   "object": "object-group",
   "type": "network Guardians-Zone",
-  "description": "false",
+  "description": "Multinetwork convergence",
   "entries": [
     "network-object host 10.0.1.2",
     "network-object 192.168.12.0 255.255.255.0"
@@ -1951,7 +1962,7 @@ object-group network Guardians-Zone
 + [[ -n {
   "object": "object-group",
   "type": "network Guardians-Zone",
-  "description": "false",
+  "description": "Multinetwork convergence",
   "entries": [
     "network-object host 10.0.1.2",
     "network-object 192.168.12.0 255.255.255.0"
@@ -1962,7 +1973,7 @@ object-group network Guardians-Zone
 + message '|-----> Target Objects: {
   "object": "object-group",
   "type": "network Guardians-Zone",
-  "description": "false",
+  "description": "Multinetwork convergence",
   "entries": [
     "network-object host 10.0.1.2",
     "network-object 192.168.12.0 255.255.255.0"
@@ -1972,7 +1983,7 @@ object-group network Guardians-Zone
 + [[ -n |-----> Target Objects: {
   "object": "object-group",
   "type": "network Guardians-Zone",
-  "description": "false",
+  "description": "Multinetwork convergence",
   "entries": [
     "network-object host 10.0.1.2",
     "network-object 192.168.12.0 255.255.255.0"
@@ -1982,7 +1993,7 @@ object-group network Guardians-Zone
 + local 'message=|-----> Target Objects: {
   "object": "object-group",
   "type": "network Guardians-Zone",
-  "description": "false",
+  "description": "Multinetwork convergence",
   "entries": [
     "network-object host 10.0.1.2",
     "network-object 192.168.12.0 255.255.255.0"
@@ -1992,7 +2003,7 @@ object-group network Guardians-Zone
 + print '|-----> Target Objects: {
   "object": "object-group",
   "type": "network Guardians-Zone",
-  "description": "false",
+  "description": "Multinetwork convergence",
   "entries": [
     "network-object host 10.0.1.2",
     "network-object 192.168.12.0 255.255.255.0"
@@ -2002,7 +2013,7 @@ object-group network Guardians-Zone
 + [[ -n |-----> Target Objects: {
   "object": "object-group",
   "type": "network Guardians-Zone",
-  "description": "false",
+  "description": "Multinetwork convergence",
   "entries": [
     "network-object host 10.0.1.2",
     "network-object 192.168.12.0 255.255.255.0"
@@ -2012,7 +2023,7 @@ object-group network Guardians-Zone
 + echo -en '|-----> Target Objects: {
   "object": "object-group",
   "type": "network Guardians-Zone",
-  "description": "false",
+  "description": "Multinetwork convergence",
   "entries": [
     "network-object host 10.0.1.2",
     "network-object 192.168.12.0 255.255.255.0"
@@ -2022,7 +2033,7 @@ object-group network Guardians-Zone
 |-----> Target Objects: {
   "object": "object-group",
   "type": "network Guardians-Zone",
-  "description": "false",
+  "description": "Multinetwork convergence",
   "entries": [
     "network-object host 10.0.1.2",
     "network-object 192.168.12.0 255.255.255.0"
@@ -2039,7 +2050,7 @@ object-group network Guardians-Zone
 + [[ -n {
   "object": "object-group",
   "type": "network Guardians-Zone",
-  "description": "false",
+  "description": "Multinetwork convergence",
   "entries": [
     "network-object host 10.0.1.2",
     "network-object 192.168.12.0 255.255.255.0"
@@ -2049,7 +2060,7 @@ object-group network Guardians-Zone
 ++ printf '%s\n' '{
   "object": "object-group",
   "type": "network Guardians-Zone",
-  "description": "false",
+  "description": "Multinetwork convergence",
   "entries": [
     "network-object host 10.0.1.2",
     "network-object 192.168.12.0 255.255.255.0"
@@ -2068,7 +2079,7 @@ object-group network Guardians-Zone
     {
       "object": "object-group",
       "type": "network Guardians-Zone",
-      "description": "false",
+      "description": "Multinetwork convergence",
       "entries": [
         "network-object host 10.0.1.2",
         "network-object 192.168.12.0 255.255.255.0"
@@ -2085,7 +2096,7 @@ object-group network Guardians-Zone
     {
       "object": "object-group",
       "type": "network Guardians-Zone",
-      "description": "false",
+      "description": "Multinetwork convergence",
       "entries": [
         "network-object host 10.0.1.2",
         "network-object 192.168.12.0 255.255.255.0"
@@ -2101,7 +2112,7 @@ object-group network Guardians-Zone
     {
       "object": "object-group",
       "type": "network Guardians-Zone",
-      "description": "false",
+      "description": "Multinetwork convergence",
       "entries": [
         "network-object host 10.0.1.2",
         "network-object 192.168.12.0 255.255.255.0"
@@ -2117,7 +2128,7 @@ object-group network Guardians-Zone
     {
       "object": "object-group",
       "type": "network Guardians-Zone",
-      "description": "false",
+      "description": "Multinetwork convergence",
       "entries": [
         "network-object host 10.0.1.2",
         "network-object 192.168.12.0 255.255.255.0"
@@ -2133,7 +2144,7 @@ object-group network Guardians-Zone
     {
       "object": "object-group",
       "type": "network Guardians-Zone",
-      "description": "false",
+      "description": "Multinetwork convergence",
       "entries": [
         "network-object host 10.0.1.2",
         "network-object 192.168.12.0 255.255.255.0"
@@ -2149,7 +2160,7 @@ object-group network Guardians-Zone
     {
       "object": "object-group",
       "type": "network Guardians-Zone",
-      "description": "false",
+      "description": "Multinetwork convergence",
       "entries": [
         "network-object host 10.0.1.2",
         "network-object 192.168.12.0 255.255.255.0"
@@ -2165,7 +2176,7 @@ object-group network Guardians-Zone
     {
       "object": "object-group",
       "type": "network Guardians-Zone",
-      "description": "false",
+      "description": "Multinetwork convergence",
       "entries": [
         "network-object host 10.0.1.2",
         "network-object 192.168.12.0 255.255.255.0"
@@ -2182,7 +2193,7 @@ object-group network Guardians-Zone
     {
       "object": "object-group",
       "type": "network Guardians-Zone",
-      "description": "false",
+      "description": "Multinetwork convergence",
       "entries": [
         "network-object host 10.0.1.2",
         "network-object 192.168.12.0 255.255.255.0"
@@ -2205,7 +2216,7 @@ object-group network Guardians-Zone
     {
       "object": "object-group",
       "type": "network Guardians-Zone",
-      "description": "false",
+      "description": "Multinetwork convergence",
       "entries": [
         "network-object host 10.0.1.2",
         "network-object 192.168.12.0 255.255.255.0"
@@ -2221,7 +2232,7 @@ object-group network Guardians-Zone
     {
       "object": "object-group",
       "type": "network Guardians-Zone",
-      "description": "false",
+      "description": "Multinetwork convergence",
       "entries": [
         "network-object host 10.0.1.2",
         "network-object 192.168.12.0 255.255.255.0"
@@ -2237,7 +2248,7 @@ object-group network Guardians-Zone
     {
       "object": "object-group",
       "type": "network Guardians-Zone",
-      "description": "false",
+      "description": "Multinetwork convergence",
       "entries": [
         "network-object host 10.0.1.2",
         "network-object 192.168.12.0 255.255.255.0"
@@ -2247,13 +2258,13 @@ object-group network Guardians-Zone
   ]
 }'
 + return 0
-+ mkdir -p /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.gqvPPEmKPI/json
-+ export json_outfile=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.gqvPPEmKPI/json/10.0.1.2--MTc0NzQ0NTQ3.json
-+ json_outfile=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.gqvPPEmKPI/json/10.0.1.2--MTc0NzQ0NTQ3.json
-+ [[ -s /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.gqvPPEmKPI/fragments.json ]]
-+ jq -s --arg target 10.0.1.2 '{ target: $target, configs: . }' /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.gqvPPEmKPI/fragments.json
++ mkdir -p /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.MabbS64OEy/json
++ export json_outfile=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.MabbS64OEy/json/10.0.1.2--MTc0NzQ0ODA1.json
++ json_outfile=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.MabbS64OEy/json/10.0.1.2--MTc0NzQ0ODA1.json
++ [[ -s /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.MabbS64OEy/fragments.json ]]
++ jq -s --arg target 10.0.1.2 '{ target: $target, configs: . }' /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.MabbS64OEy/fragments.json
 ++ mktemp
-+ tmp_merged=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.w3fyqZimTG
++ tmp_merged=/var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.BgWfkzD8E0
 + local final_outfile=reports/json/10.0.1.2.json
 + local 'jq_merge_expr={
         target: .[0].target,
@@ -2289,10 +2300,10 @@ object-group network Guardians-Zone
               )
             else . + [ $cfg ] end
           ))
-      }' reports/json/10.0.1.2.json /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.gqvPPEmKPI/json/10.0.1.2--MTc0NzQ0NTQ3.json
-+ mv /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.w3fyqZimTG reports/json/10.0.1.2.json
-+ rm -f /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.gqvPPEmKPI/json/10.0.1.2--MTc0NzQ0NTQ3.json
+      }' reports/json/10.0.1.2.json /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.MabbS64OEy/json/10.0.1.2--MTc0NzQ0ODA1.json
++ mv /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.BgWfkzD8E0 reports/json/10.0.1.2.json
++ rm -f /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.MabbS64OEy/json/10.0.1.2--MTc0NzQ0ODA1.json
 + return 0
 + unset verbose debug
-+ [[ -d /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.gqvPPEmKPI ]]
-+ rm -rf /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.gqvPPEmKPI
++ [[ -d /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.MabbS64OEy ]]
++ rm -rf /var/folders/c8/432hrczx7zdbrwp9ypjq5sf80000gn/T/tmp.MabbS64OEy

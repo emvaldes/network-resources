@@ -328,14 +328,23 @@ function process_configs () {
 
     #### -----------------------------------------------------------------------
     ## Extract optional description (if present)
-    local desc_val="false";
+
+    # local desc_val="false";
     # desc_val="$(
     #   grep -i '^[[:space:]]*description' <<< "${cleaned_block}" | \
     #   head -n 1 | \
     #   sed -E 's/^[^"]*"?description"?[[:space:]]*//I; s/^[[:space:]]*//; s/[[:space:]]*$//'
     # )";
+    # [[ -z "${desc_val}" ]] && desc_val="false";
 
+    local desc_val="$(
+      grep -i '^[[:space:]]*description' <<< "${cleaned_block}" | \
+      head -n 1 | \
+      sed -E 's/^[^"]*"?description"?[[:space:]]*//I; s/^[[:space:]]*//; s/[[:space:]]*$//'
+    )";
     [[ -z "${desc_val}" ]] && desc_val="false";
+    [[ "${desc_val}" =~ $'\n' ]] && desc_val="$( head -n 1 <<< "${desc_val}" )";
+
     [[ "${verbose}" == true ]] && \
        message "[process_configs] Description: ${desc_val}";
 
