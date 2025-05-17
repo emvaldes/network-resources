@@ -195,10 +195,6 @@ function main () {
 
     export output_csv="${reports_folder}/reports.csv";
 
-    # Wipeout or create the CSV output file early
-    message "target,site,device,object,entry,description,group" \
-          > "${output_csv}";
-
     ## Initializing the log file
     : > "${reports_logsfile}";  ## Truncate report log
     # [[ "${debug}" == true ]] && list_file "${reports_logsfile}";
@@ -391,11 +387,11 @@ function main () {
 
         offset=$(( offset + batch_size ));
 
-        ## Exporting ./reports/reports.json data-sets into CSV output
-        generate_csvoutput;
-
       done;
 #### Completed: Batch-Processing - Inner Loop ----------------------------- ####
+
+      ## Exporting ./reports/reports.json data-sets into CSV output
+      generate_csvoutput;
 
       #### -----------------------------------------------------------------------
       ## Wait until all expected JSON report files are physically present on disk
@@ -415,8 +411,7 @@ function main () {
 
     ## Optionally print CSV as a formatted table to the terminal
     if [[ "${verbose}" == true && -s "${output_csv}" ]]; then
-      newline;
-      message "CSV Report Summary (tabulated):";
+      message "${nl}CSV Report Summary (tabulated):";
       # column -t -s, "${output_csv}" | less -SFX;
       cat "${output_csv}";  ## | less -NFSX;
     fi;

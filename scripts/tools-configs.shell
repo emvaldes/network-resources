@@ -279,9 +279,15 @@ function process_configs () {
     object_keyword="$(
       awk '{print $1}' <<< "${object_line}"
     )";
-    type_value="$(
-      awk '{$1=""; print substr($0,2)}' <<< "${object_line}"
-    )";
+
+    # Only extract type if the block is multiline (has more than one non-empty line)
+    if (( $(wc -l <<< "${cleaned_block}") > 1 )); then
+            type_value="$(
+              sed -E 's/^[^[:space:]]+[[:space:]]+//' <<< "${object_line}"
+            )";
+            [[ -z "${type_value}" ]] && type_value="false";
+      else  type_value="false";
+    fi;
 
     if [[ "${verbose}" == true ]]; then
       print "[process_configs] object   : ${object_keyword}";
@@ -378,39 +384,21 @@ function process_configs () {
       printf '%s\n' "${entries[@]}" | jq -R . | jq -s .
     )";
 
-    if [[ "${#entries[@]}" -eq 1 ]]; then
-            # Single-line object: omit "type"
-            target_object="$(
-              jq -n \
-                --arg object "${object_keyword}" \
-                --arg description "${desc_val}" \
-                --argjson entries "${entries_2json}" \
-                --arg group "${group_val}" \
-                '{
-                  object: $object,
-                  type: false,
-                  description: ($description | select(. != "" and . != "null") // false),
-                  entries: $entries,
-                  group: $group
-                }'
-            )";
-      else  # Multi-line object: keep "type"
-            target_object="$(
-              jq -n \
-                --arg object "${object_keyword}" \
-                --arg type "${type_value}" \
-                --arg description "${desc_val}" \
-                --argjson entries "${entries_2json}" \
-                --arg group "${group_val}" \
-                '{
-                  object: $object,
-                  type: $type,
-                  description: ($description | select(. != "" and . != "null") // false),
-                  entries: $entries,
-                  group: $group
-                }'
-            )";
-    fi;
+    target_object="$(
+      jq -n \
+        --arg object "${object_keyword}" \
+        --arg type "${type_value}" \
+        --arg description "${desc_val}" \
+        --argjson entries "${entries_2json}" \
+        --arg group "${group_val}" \
+        '{
+          object: $object,
+          type: ( $type | select( . != "" and . != "null" and . != "false" ) // false ),
+          description: ( $description | select( . != "" and . != "null" and . != "false" ) // false ),
+          entries: $entries,
+          group: $group
+        }'
+    )";
 
     #### -----------------------------------------------------------------------
     ## Purpose: `target_object` holds the final structured JSON representation

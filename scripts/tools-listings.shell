@@ -82,42 +82,46 @@ function generate_configslist () {
 
 function generate_csvoutput () {
 
-    # local output_csv="${reports_folder}/reports.csv";
     local json_dir="${reports_folder}/json";
+    local tmp_csv="$( mktemp )";  ## Temporary file for accumulating unsorted CSV rows
 
     ## Ensure JSON directory exists and contains files
     if [[ ! -d "${json_dir}" ]]; then
-            error_message "Missing ${json_dir}, cannot generate CSV.";
-            return 1;
-      else  find "${json_dir}" -type f -name '*.json' | sort;
+      error_message "Missing ${json_dir}, cannot generate CSV.";
+      return 1;
     fi;
 
     find "${json_dir}" -type f -name '*.json' | sort | \
     while read -r json; do
-      message "Processing ${json}" >&2;
+        message "Processing ${json}" >&2;
+        jq_json2csv='.target as $target
+                    | .configs[]
+                    | select( .objects != null and ( .objects | type == "array" and length > 0 ) )
+                    | .objects[] as $obj
+                    | [
+                        $target,
+                        ( .site // "none" ),
+                        ( .device // "none" ),
+                        ( $obj.object // "none" ),
+                        ( $obj.entries[0] // "none" ),
+                        ( $obj.description // "none" ),
+                        ( $obj.group // "none" )
+                      ]
+                    | @csv';
 
-      jq_json2csv='
-        .target as $target
-        | .configs[] as $cfg
-        | select( $cfg.objects != null and ( $cfg.objects | type == "array" and length > 0 ) )
-        | $cfg.objects[]
-        | [
-            $target,
-            ( $cfg.site // "none" ),
-            ( $cfg.device // "none" ),
-            ( .object // "none" ),
-            ( .entries[0] // "none" ),
-            ( .description // "none" ),
-            ( .group // "none" )
-          ] | @csv';
-
-      ## Strategy: - Ensures progress is persisted incrementally and not lost on failure
-      ##           - Ideal for long-running jobs or unstable environments
-      ##           - Rows are written directly to the shared ./reports/reports.csv
-      jq -e -r "${jq_json2csv}" "${json}" >> "${output_csv}" \
-      || message "[WARN] Failed CSV append for ${output_csv}" >&2;
+        ## Strategy: Ensures progress is persisted incrementally and not lost on failure
+        ##           Ideal for long-running jobs or unstable environments
+        ##           Rows are written directly to the shared ./reports/reports.csv
+        jq -e -r "${jq_json2csv}" "${json}" >> "${tmp_csv}" \
+        || message "[WARN] Failed CSV append for ${json}" >&2;
 
     done;
+
+    ## Sort the CSV (preserve header)
+    {
+      message "target,site,device,object,entry,description,group";
+      sort -t',' -k1,1 -k2,2 -k3,3 -k4,4 "${tmp_csv}";
+    } > "${output_csv}" && rm -f "${tmp_csv}";
 
     return 0;
 }; alias generate-csvoutput='generate_csvoutput';
