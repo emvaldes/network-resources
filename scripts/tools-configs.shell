@@ -273,6 +273,7 @@ function extract_configs () {
 #### ---------------------------------------------------------------------------
 
 function process_configs () {
+
     local target_pattern="$1";
     local config_path="$2";
     local restored_block="$3";
@@ -283,8 +284,8 @@ function process_configs () {
     cleaned_block="$(
       sed '/^[[:space:]]*$/d' <<< "${restored_block}"
     )";
-
     [[ -z "${cleaned_block}" ]] && return;
+
     if [[ "${verbose}" == true ]]; then
       message "[process_configs] Raw Block:\n${restored_block}";
     fi;
@@ -293,7 +294,8 @@ function process_configs () {
     ## Extract object line (first non-empty line)
     local object_line;
     object_line="$(
-      head -n 1 <<< "${cleaned_block}" | sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
+      head -n 1 <<< "${cleaned_block}" | \
+      sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
     )";
     [[ -z "${object_line}" ]] && return;
 
@@ -305,7 +307,7 @@ function process_configs () {
     )";
 
     # Only extract type if the block is multiline (has more than one non-empty line)
-    if (( $(wc -l <<< "${cleaned_block}") > 1 )); then
+    if (( $( wc -l <<< "${cleaned_block}" ) > 1 )); then
             type_value="$(
               sed -E 's/^[^[:space:]]+[[:space:]]+//' <<< "${object_line}"
             )";
@@ -322,8 +324,7 @@ function process_configs () {
     ## Extract all lines (object memebers) except description
     local -a data_sets=();
     while IFS= read -r line; do
-      local trimmed;
-      trimmed="$(
+      local trimmed="$(
         sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//' <<< "${line}"
       )";
       [[ -z "${trimmed}" ]] && continue;
@@ -345,28 +346,36 @@ function process_configs () {
 
     #### -----------------------------------------------------------------------
     ## Extract first line containing target IP
-    local matched_line;
-    matched_line="$(
+    local matched_line="$(
       grep -E "(^|[^0-9.])${target_pattern//./\\.}([^0-9.]|$)" <<< "${cleaned_block}" | \
       head -n 1 | \
       sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
     )";
-
     [[ -z "${matched_line}" ]] && return;
+
     [[ "${verbose}" == true ]] && \
        message "[process_configs] Matched: ${matched_line}";
 
     #### -----------------------------------------------------------------------
+    ## Extract only lines from the block that match the IP pattern
+    local -a matched_items=();
+    while IFS= read -r line; do
+      if grep -Eq "(^|[^0-9.])${target_pattern//./\\.}([^0-9.]|$)" <<< "${line}"; then
+        matched_items+=("$(
+          sed -E 's/^[[:space:]]+//;s/[[:space:]]+$//' \
+          <<< "${line}"
+        )");
+      fi;
+    done <<< "${cleaned_block}";
+
+    local matched_items_json="$(
+      printf '%s\n' "${matched_items[@]}" | \
+      jq -R . | \
+      jq -s .
+    )";
+
+    #### -----------------------------------------------------------------------
     ## Extract optional description (if present)
-
-    # local desc_val="false";
-    # desc_val="$(
-    #   grep -i '^[[:space:]]*description' <<< "${cleaned_block}" | \
-    #   head -n 1 | \
-    #   sed -E 's/^[^"]*"?description"?[[:space:]]*//I; s/^[[:space:]]*//; s/[[:space:]]*$//'
-    # )";
-    # [[ -z "${desc_val}" ]] && desc_val="false";
-
     local desc_val="$(
       grep -i '^[[:space:]]*description' <<< "${cleaned_block}" | \
       head -n 1 | \
@@ -393,7 +402,8 @@ function process_configs () {
         <<< "${matrix_configs}" )";
       if [[ -z "${group_val}" || "${group_val}" == "null" ]]; then
         group_val="$(
-          jq -r --arg desc "${desc_val}" 'map( select( .match[]? == $desc ) ) | .[0].group' <<< "${matrix_configs}"
+          jq -r --arg desc "${desc_val}" 'map( select( .match[]? == $desc ) ) | .[0].group' \
+          <<< "${matrix_configs}"
         )";
       fi;
       [[ -z "${group_val}" || "${group_val}" == "null" ]] && group_val="Unclassified";
@@ -413,12 +423,14 @@ function process_configs () {
         --arg object "${object_keyword}" \
         --arg type "${type_value}" \
         --arg description "${desc_val}" \
+        --argjson items "${matched_items_json}" \
         --argjson sets "${items_2json}" \
         --arg group "${group_val}" \
         '{
           object: $object,
           type: ( $type | select( . != "" and . != "null" and . != "false" ) // false ),
           description: ( $description | select( . != "" and . != "null" and . != "false" ) // false ),
+          items: $items,
           sets: $sets,
           group: $group
         }'

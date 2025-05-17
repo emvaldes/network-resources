@@ -2,8 +2,8 @@
 + export LC_ALL=C
 + LC_ALL=C
 ++ mktemp -d
-+ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.4rfXvGTYw9
-+ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.4rfXvGTYw9
++ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.MOzVCrDxr2
++ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.MOzVCrDxr2
 + trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
 + source ./scripts/tools-devops.shell
 ++ [[ -n '' ]]
@@ -42,8 +42,8 @@
 +++ date +%s%N
 +++ base64
 +++ tr -dc a-zA-Z0-9
-++ export divisor=MTc0NzUxNzYwNzMzNjU3NjAwMAo
-++ divisor=MTc0NzUxNzYwNzMzNjU3NjAwMAo
+++ export divisor=MTc0NzUyNjA1MzI2ODc2NDAwMAo
+++ divisor=MTc0NzUyNjA1MzI2ODc2NDAwMAo
 + source ./scripts/tools-configs.shell
 ++ [[ -n '' ]]
 ++ readonly __TOOLS_EXTRACTION_SOURCED=1
@@ -371,14 +371,14 @@ Extracted config paths from JSON:+ for cfg in "${source_configs[@]}"
 ++ tr -d '\r'
 + target_address=10.10.10.10
 + [[ false == true ]]
-+ export tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.4rfXvGTYw9/fragments.json
-+ tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.4rfXvGTYw9/fragments.json
++ export tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.MOzVCrDxr2/fragments.json
++ tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.MOzVCrDxr2/fragments.json
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs configs/misc/switch2.conf 10.10.10.10 targets/10.10.10.10.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.4rfXvGTYw9/fragments.json
++ extract_configs configs/misc/switch2.conf 10.10.10.10 targets/10.10.10.10.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.MOzVCrDxr2/fragments.json
 + local config_file=configs/misc/switch2.conf
 + local target_pattern=10.10.10.10
 + local target_listing=targets/10.10.10.10.json
-+ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.4rfXvGTYw9/fragments.json
++ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.MOzVCrDxr2/fragments.json
 + [[ ! -f configs/misc/switch2.conf ]]
 + message '[DEBUG] Checking if config file exists and is readable: configs/misc/switch2.conf'
 + [[ -n [DEBUG] Checking if config file exists and is readable: configs/misc/switch2.conf ]]
@@ -621,16 +621,16 @@ object-group network Stark-WiFi
 
 + (( i++ ))
 + (( i < count ))
-++ perl -pe 's/\n/MTc0NzUxNzYwNzMzNjU3NjAwMAo/g'
-+ local 'serialized_objects=interface Vlan1MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAointerface Vlan2MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAointerface Vlan3MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAoobject-group network Stark-WiFiMTc0NzUxNzYwNzMzNjU3NjAwMAo description Internal wireless layoutMTc0NzUxNzYwNzMzNjU3NjAwMAo network-object host 10.0.2.3MTc0NzUxNzYwNzMzNjU3NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAo'
+++ perl -pe 's/\n/MTc0NzUyNjA1MzI2ODc2NDAwMAo/g'
++ local 'serialized_objects=interface Vlan1MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAointerface Vlan2MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAointerface Vlan3MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAoobject-group network Stark-WiFiMTc0NzUyNjA1MzI2ODc2NDAwMAo description Internal wireless layoutMTc0NzUyNjA1MzI2ODc2NDAwMAo network-object host 10.0.2.3MTc0NzUyNjA1MzI2ODc2NDAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAo'
 + [[ true == true ]]
-+ message 'Serialized Objects: interface Vlan1MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAointerface Vlan2MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAointerface Vlan3MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAoobject-group network Stark-WiFiMTc0NzUxNzYwNzMzNjU3NjAwMAo description Internal wireless layoutMTc0NzUxNzYwNzMzNjU3NjAwMAo network-object host 10.0.2.3MTc0NzUxNzYwNzMzNjU3NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAo'
-+ [[ -n Serialized Objects: interface Vlan1MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAointerface Vlan2MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAointerface Vlan3MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAoobject-group network Stark-WiFiMTc0NzUxNzYwNzMzNjU3NjAwMAo description Internal wireless layoutMTc0NzUxNzYwNzMzNjU3NjAwMAo network-object host 10.0.2.3MTc0NzUxNzYwNzMzNjU3NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAo ]]
-+ local 'message=Serialized Objects: interface Vlan1MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAointerface Vlan2MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAointerface Vlan3MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAoobject-group network Stark-WiFiMTc0NzUxNzYwNzMzNjU3NjAwMAo description Internal wireless layoutMTc0NzUxNzYwNzMzNjU3NjAwMAo network-object host 10.0.2.3MTc0NzUxNzYwNzMzNjU3NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAo'
-+ print 'Serialized Objects: interface Vlan1MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAointerface Vlan2MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAointerface Vlan3MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAoobject-group network Stark-WiFiMTc0NzUxNzYwNzMzNjU3NjAwMAo description Internal wireless layoutMTc0NzUxNzYwNzMzNjU3NjAwMAo network-object host 10.0.2.3MTc0NzUxNzYwNzMzNjU3NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAo'
-+ [[ -n Serialized Objects: interface Vlan1MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAointerface Vlan2MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAointerface Vlan3MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAoobject-group network Stark-WiFiMTc0NzUxNzYwNzMzNjU3NjAwMAo description Internal wireless layoutMTc0NzUxNzYwNzMzNjU3NjAwMAo network-object host 10.0.2.3MTc0NzUxNzYwNzMzNjU3NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAo ]]
-+ echo -en 'Serialized Objects: interface Vlan1MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAointerface Vlan2MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAointerface Vlan3MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAoobject-group network Stark-WiFiMTc0NzUxNzYwNzMzNjU3NjAwMAo description Internal wireless layoutMTc0NzUxNzYwNzMzNjU3NjAwMAo network-object host 10.0.2.3MTc0NzUxNzYwNzMzNjU3NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAo'
-Serialized Objects: interface Vlan1MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAointerface Vlan2MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAointerface Vlan3MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAoobject-group network Stark-WiFiMTc0NzUxNzYwNzMzNjU3NjAwMAo description Internal wireless layoutMTc0NzUxNzYwNzMzNjU3NjAwMAo network-object host 10.0.2.3MTc0NzUxNzYwNzMzNjU3NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAo+ newline
++ message 'Serialized Objects: interface Vlan1MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAointerface Vlan2MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAointerface Vlan3MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAoobject-group network Stark-WiFiMTc0NzUyNjA1MzI2ODc2NDAwMAo description Internal wireless layoutMTc0NzUyNjA1MzI2ODc2NDAwMAo network-object host 10.0.2.3MTc0NzUyNjA1MzI2ODc2NDAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAo'
++ [[ -n Serialized Objects: interface Vlan1MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAointerface Vlan2MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAointerface Vlan3MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAoobject-group network Stark-WiFiMTc0NzUyNjA1MzI2ODc2NDAwMAo description Internal wireless layoutMTc0NzUyNjA1MzI2ODc2NDAwMAo network-object host 10.0.2.3MTc0NzUyNjA1MzI2ODc2NDAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAo ]]
++ local 'message=Serialized Objects: interface Vlan1MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAointerface Vlan2MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAointerface Vlan3MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAoobject-group network Stark-WiFiMTc0NzUyNjA1MzI2ODc2NDAwMAo description Internal wireless layoutMTc0NzUyNjA1MzI2ODc2NDAwMAo network-object host 10.0.2.3MTc0NzUyNjA1MzI2ODc2NDAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAo'
++ print 'Serialized Objects: interface Vlan1MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAointerface Vlan2MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAointerface Vlan3MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAoobject-group network Stark-WiFiMTc0NzUyNjA1MzI2ODc2NDAwMAo description Internal wireless layoutMTc0NzUyNjA1MzI2ODc2NDAwMAo network-object host 10.0.2.3MTc0NzUyNjA1MzI2ODc2NDAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAo'
++ [[ -n Serialized Objects: interface Vlan1MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAointerface Vlan2MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAointerface Vlan3MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAoobject-group network Stark-WiFiMTc0NzUyNjA1MzI2ODc2NDAwMAo description Internal wireless layoutMTc0NzUyNjA1MzI2ODc2NDAwMAo network-object host 10.0.2.3MTc0NzUyNjA1MzI2ODc2NDAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAo ]]
++ echo -en 'Serialized Objects: interface Vlan1MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAointerface Vlan2MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAointerface Vlan3MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAoobject-group network Stark-WiFiMTc0NzUyNjA1MzI2ODc2NDAwMAo description Internal wireless layoutMTc0NzUyNjA1MzI2ODc2NDAwMAo network-object host 10.0.2.3MTc0NzUyNjA1MzI2ODc2NDAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAo'
+Serialized Objects: interface Vlan1MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAointerface Vlan2MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAointerface Vlan3MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAoobject-group network Stark-WiFiMTc0NzUyNjA1MzI2ODc2NDAwMAo description Internal wireless layoutMTc0NzUyNjA1MzI2ODc2NDAwMAo network-object host 10.0.2.3MTc0NzUyNjA1MzI2ODc2NDAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAo+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -638,20 +638,20 @@ Serialized Objects: interface Vlan1MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.16
 
 + (( i++ ))
 + (( i < count ))
-++ sed -E 's/MTc0NzUxNzYwNzMzNjU3NjAwMAo([^[:space:]])/\n\1/g'
-+ local 'restored_lines=interface Vlan1MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.168.1.11 255.255.255.0
-interface Vlan2MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 10.10.10.10 255.255.255.0
-interface Vlan3MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.168.100.100 255.255.255.0
-object-group network Stark-WiFiMTc0NzUxNzYwNzMzNjU3NjAwMAo description Internal wireless layoutMTc0NzUxNzYwNzMzNjU3NjAwMAo network-object host 10.0.2.3MTc0NzUxNzYwNzMzNjU3NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAo'
+++ sed -E 's/MTc0NzUyNjA1MzI2ODc2NDAwMAo([^[:space:]])/\n\1/g'
++ local 'restored_lines=interface Vlan1MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 192.168.1.11 255.255.255.0
+interface Vlan2MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 10.10.10.10 255.255.255.0
+interface Vlan3MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 192.168.100.100 255.255.255.0
+object-group network Stark-WiFiMTc0NzUyNjA1MzI2ODc2NDAwMAo description Internal wireless layoutMTc0NzUyNjA1MzI2ODc2NDAwMAo network-object host 10.0.2.3MTc0NzUyNjA1MzI2ODc2NDAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAo'
 + restored_lines+='
 '
 + IFS='
 '
 + read -r -d '' -a config_objects
-++ printf '%s\0' 'interface Vlan1MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.168.1.11 255.255.255.0
-interface Vlan2MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 10.10.10.10 255.255.255.0
-interface Vlan3MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.168.100.100 255.255.255.0
-object-group network Stark-WiFiMTc0NzUxNzYwNzMzNjU3NjAwMAo description Internal wireless layoutMTc0NzUxNzYwNzMzNjU3NjAwMAo network-object host 10.0.2.3MTc0NzUxNzYwNzMzNjU3NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAo
+++ printf '%s\0' 'interface Vlan1MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 192.168.1.11 255.255.255.0
+interface Vlan2MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 10.10.10.10 255.255.255.0
+interface Vlan3MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 192.168.100.100 255.255.255.0
+object-group network Stark-WiFiMTc0NzUyNjA1MzI2ODc2NDAwMAo description Internal wireless layoutMTc0NzUyNjA1MzI2ODc2NDAwMAo network-object host 10.0.2.3MTc0NzUyNjA1MzI2ODc2NDAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAo
 '
 + [[ true == true ]]
 + message 'Loaded 4 config blocks'
@@ -672,9 +672,9 @@ Loaded 4 config blocks+ newline
 '
 + IFS='
 '
-++ printf '%s\n' 'interface Vlan1MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.168.1.11 255.255.255.0' 'interface Vlan2MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 10.10.10.10 255.255.255.0' 'interface Vlan3MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 192.168.100.100 255.255.255.0' 'object-group network Stark-WiFiMTc0NzUxNzYwNzMzNjU3NjAwMAo description Internal wireless layoutMTc0NzUxNzYwNzMzNjU3NjAwMAo network-object host 10.0.2.3MTc0NzUxNzYwNzMzNjU3NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUxNzYwNzMzNjU3NjAwMAo'
+++ printf '%s\n' 'interface Vlan1MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 192.168.1.11 255.255.255.0' 'interface Vlan2MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 10.10.10.10 255.255.255.0' 'interface Vlan3MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 192.168.100.100 255.255.255.0' 'object-group network Stark-WiFiMTc0NzUyNjA1MzI2ODc2NDAwMAo description Internal wireless layoutMTc0NzUyNjA1MzI2ODc2NDAwMAo network-object host 10.0.2.3MTc0NzUyNjA1MzI2ODc2NDAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUyNjA1MzI2ODc2NDAwMAo'
 ++ grep -E '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
-+ matched_objects=('interface Vlan2MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 10.10.10.10 255.255.255.0')
++ matched_objects=('interface Vlan2MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 10.10.10.10 255.255.255.0')
 + declare -a matched_objects
 + IFS=' 	
 '
@@ -695,13 +695,13 @@ Loaded 1 config blocks+ newline
 + (( i < count ))
 + for serialized_line in "${matched_objects[@]}"
 + [[ true == true ]]
-+ message 'Serialized Line: interface Vlan2MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 10.10.10.10 255.255.255.0'
-+ [[ -n Serialized Line: interface Vlan2MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 10.10.10.10 255.255.255.0 ]]
-+ local 'message=Serialized Line: interface Vlan2MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 10.10.10.10 255.255.255.0'
-+ print 'Serialized Line: interface Vlan2MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 10.10.10.10 255.255.255.0'
-+ [[ -n Serialized Line: interface Vlan2MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 10.10.10.10 255.255.255.0 ]]
-+ echo -en 'Serialized Line: interface Vlan2MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 10.10.10.10 255.255.255.0'
-Serialized Line: interface Vlan2MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 10.10.10.10 255.255.255.0+ newline
++ message 'Serialized Line: interface Vlan2MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 10.10.10.10 255.255.255.0'
++ [[ -n Serialized Line: interface Vlan2MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 10.10.10.10 255.255.255.0 ]]
++ local 'message=Serialized Line: interface Vlan2MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 10.10.10.10 255.255.255.0'
++ print 'Serialized Line: interface Vlan2MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 10.10.10.10 255.255.255.0'
++ [[ -n Serialized Line: interface Vlan2MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 10.10.10.10 255.255.255.0 ]]
++ echo -en 'Serialized Line: interface Vlan2MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 10.10.10.10 255.255.255.0'
+Serialized Line: interface Vlan2MTc0NzUyNjA1MzI2ODc2NDAwMAo ip address 10.10.10.10 255.255.255.0+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -709,7 +709,7 @@ Serialized Line: interface Vlan2MTc0NzUxNzYwNzMzNjU3NjAwMAo ip address 10.10.10.
 
 + (( i++ ))
 + (( i < count ))
-++ perl -pe 's/MTc0NzUxNzYwNzMzNjU3NjAwMAo/\n/g'
+++ perl -pe 's/MTc0NzUyNjA1MzI2ODc2NDAwMAo/\n/g'
 + restored_block='interface Vlan2
  ip address 10.10.10.10 255.255.255.0'
 + local cfg_path=configs/misc/switch2.conf
@@ -841,17 +841,15 @@ interface Vlan2
 + local -a data_sets
 + IFS=
 + read -r line
-+ local trimmed
 ++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
-+ trimmed='interface Vlan2'
++ local 'trimmed=interface Vlan2'
 + [[ -z interface Vlan2 ]]
 + [[ interface vlan2 =~ ^description[[:space:]] ]]
 + data_sets+=("${trimmed}")
 + IFS=
 + read -r line
-+ local trimmed
 ++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
-+ trimmed='ip address 10.10.10.10 255.255.255.0'
++ local 'trimmed=ip address 10.10.10.10 255.255.255.0'
 + [[ -z ip address 10.10.10.10 255.255.255.0 ]]
 + [[ ip address 10.10.10.10 255.255.255.0 =~ ^description[[:space:]] ]]
 + data_sets+=("${trimmed}")
@@ -878,11 +876,10 @@ interface Vlan2
 + print '  - ip address 10.10.10.10 255.255.255.0'
 + [[ -n   - ip address 10.10.10.10 255.255.255.0 ]]
 + echo -en '  - ip address 10.10.10.10 255.255.255.0'
-  - ip address 10.10.10.10 255.255.255.0+ local matched_line
-++ grep -E '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
+  - ip address 10.10.10.10 255.255.255.0++ grep -E '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
 ++ head -n 1
 ++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
-+ matched_line='ip address 10.10.10.10 255.255.255.0'
++ local 'matched_line=ip address 10.10.10.10 255.255.255.0'
 + [[ -z ip address 10.10.10.10 255.255.255.0 ]]
 + [[ true == true ]]
 + message '[process_configs] Matched: ip address 10.10.10.10 255.255.255.0'
@@ -899,6 +896,24 @@ interface Vlan2
 
 + (( i++ ))
 + (( i < count ))
++ matched_items=()
++ local -a matched_items
++ IFS=
++ read -r line
++ grep -Eq '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
++ IFS=
++ read -r line
++ grep -Eq '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
++ matched_items+=("$(sed -E 's/^[[:space:]]+//;s/[[:space:]]+$//' <<< "${line}")")
+++ sed -E 's/^[[:space:]]+//;s/[[:space:]]+$//'
++ IFS=
++ read -r line
+++ printf '%s\n' 'ip address 10.10.10.10 255.255.255.0'
+++ jq -R .
+++ jq -s .
++ local 'matched_items_json=[
+  "ip address 10.10.10.10 255.255.255.0"
+]'
 ++ grep -i '^[[:space:]]*description'
 ++ head -n 1
 ++ sed -E 's/^[^"]*"?description"?[[:space:]]*//I; s/^[[:space:]]*//; s/[[:space:]]*$//'
@@ -955,12 +970,15 @@ interface Vlan2
 + local 'items_2json=[
   "ip address 10.10.10.10 255.255.255.0"
 ]'
-++ jq -n --arg object interface --arg type Vlan2 --arg description false --argjson sets '[
+++ jq -n --arg object interface --arg type Vlan2 --arg description false --argjson items '[
+  "ip address 10.10.10.10 255.255.255.0"
+]' --argjson sets '[
   "ip address 10.10.10.10 255.255.255.0"
 ]' --arg group Business-Unit-Networks '{
           object: $object,
           type: ( $type | select( . != "" and . != "null" and . != "false" ) // false ),
           description: ( $description | select( . != "" and . != "null" and . != "false" ) // false ),
+          items: $items,
           sets: $sets,
           group: $group
         }'
@@ -968,6 +986,9 @@ interface Vlan2
   "object": "interface",
   "type": "Vlan2",
   "description": false,
+  "items": [
+    "ip address 10.10.10.10 255.255.255.0"
+  ],
   "sets": [
     "ip address 10.10.10.10 255.255.255.0"
   ],
@@ -993,6 +1014,9 @@ interface Vlan2
   "object": "interface",
   "type": "Vlan2",
   "description": false,
+  "items": [
+    "ip address 10.10.10.10 255.255.255.0"
+  ],
   "sets": [
     "ip address 10.10.10.10 255.255.255.0"
   ],
@@ -1002,6 +1026,9 @@ interface Vlan2
   "object": "interface",
   "type": "Vlan2",
   "description": false,
+  "items": [
+    "ip address 10.10.10.10 255.255.255.0"
+  ],
   "sets": [
     "ip address 10.10.10.10 255.255.255.0"
   ],
@@ -1011,6 +1038,9 @@ interface Vlan2
   "object": "interface",
   "type": "Vlan2",
   "description": false,
+  "items": [
+    "ip address 10.10.10.10 255.255.255.0"
+  ],
   "sets": [
     "ip address 10.10.10.10 255.255.255.0"
   ],
@@ -1021,6 +1051,9 @@ interface Vlan2
   "object": "interface",
   "type": "Vlan2",
   "description": false,
+  "items": [
+    "ip address 10.10.10.10 255.255.255.0"
+  ],
   "sets": [
     "ip address 10.10.10.10 255.255.255.0"
   ],
@@ -1039,6 +1072,9 @@ interface Vlan2
   "object": "interface",
   "type": "Vlan2",
   "description": false,
+  "items": [
+    "ip address 10.10.10.10 255.255.255.0"
+  ],
   "sets": [
     "ip address 10.10.10.10 255.255.255.0"
   ],
@@ -1049,6 +1085,9 @@ interface Vlan2
   "object": "interface",
   "type": "Vlan2",
   "description": false,
+  "items": [
+    "ip address 10.10.10.10 255.255.255.0"
+  ],
   "sets": [
     "ip address 10.10.10.10 255.255.255.0"
   ],
@@ -1058,6 +1097,9 @@ interface Vlan2
   "object": "interface",
   "type": "Vlan2",
   "description": false,
+  "items": [
+    "ip address 10.10.10.10 255.255.255.0"
+  ],
   "sets": [
     "ip address 10.10.10.10 255.255.255.0"
   ],
@@ -1067,6 +1109,9 @@ interface Vlan2
   "object": "interface",
   "type": "Vlan2",
   "description": false,
+  "items": [
+    "ip address 10.10.10.10 255.255.255.0"
+  ],
   "sets": [
     "ip address 10.10.10.10 255.255.255.0"
   ],
@@ -1076,6 +1121,9 @@ interface Vlan2
   "object": "interface",
   "type": "Vlan2",
   "description": false,
+  "items": [
+    "ip address 10.10.10.10 255.255.255.0"
+  ],
   "sets": [
     "ip address 10.10.10.10 255.255.255.0"
   ],
@@ -1085,6 +1133,9 @@ interface Vlan2
   "object": "interface",
   "type": "Vlan2",
   "description": false,
+  "items": [
+    "ip address 10.10.10.10 255.255.255.0"
+  ],
   "sets": [
     "ip address 10.10.10.10 255.255.255.0"
   ],
@@ -1094,6 +1145,9 @@ interface Vlan2
   "object": "interface",
   "type": "Vlan2",
   "description": false,
+  "items": [
+    "ip address 10.10.10.10 255.255.255.0"
+  ],
   "sets": [
     "ip address 10.10.10.10 255.255.255.0"
   ],
@@ -1103,6 +1157,9 @@ interface Vlan2
   "object": "interface",
   "type": "Vlan2",
   "description": false,
+  "items": [
+    "ip address 10.10.10.10 255.255.255.0"
+  ],
   "sets": [
     "ip address 10.10.10.10 255.255.255.0"
   ],
@@ -1119,6 +1176,9 @@ interface Vlan2
   "object": "interface",
   "type": "Vlan2",
   "description": false,
+  "items": [
+    "ip address 10.10.10.10 255.255.255.0"
+  ],
   "sets": [
     "ip address 10.10.10.10 255.255.255.0"
   ],
@@ -1128,6 +1188,9 @@ interface Vlan2
   "object": "interface",
   "type": "Vlan2",
   "description": false,
+  "items": [
+    "ip address 10.10.10.10 255.255.255.0"
+  ],
   "sets": [
     "ip address 10.10.10.10 255.255.255.0"
   ],
@@ -1146,6 +1209,9 @@ interface Vlan2
       "object": "interface",
       "type": "Vlan2",
       "description": false,
+      "items": [
+        "ip address 10.10.10.10 255.255.255.0"
+      ],
       "sets": [
         "ip address 10.10.10.10 255.255.255.0"
       ],
@@ -1162,6 +1228,9 @@ interface Vlan2
       "object": "interface",
       "type": "Vlan2",
       "description": false,
+      "items": [
+        "ip address 10.10.10.10 255.255.255.0"
+      ],
       "sets": [
         "ip address 10.10.10.10 255.255.255.0"
       ],
@@ -1177,6 +1246,9 @@ interface Vlan2
       "object": "interface",
       "type": "Vlan2",
       "description": false,
+      "items": [
+        "ip address 10.10.10.10 255.255.255.0"
+      ],
       "sets": [
         "ip address 10.10.10.10 255.255.255.0"
       ],
@@ -1192,6 +1264,9 @@ interface Vlan2
       "object": "interface",
       "type": "Vlan2",
       "description": false,
+      "items": [
+        "ip address 10.10.10.10 255.255.255.0"
+      ],
       "sets": [
         "ip address 10.10.10.10 255.255.255.0"
       ],
@@ -1207,6 +1282,9 @@ interface Vlan2
       "object": "interface",
       "type": "Vlan2",
       "description": false,
+      "items": [
+        "ip address 10.10.10.10 255.255.255.0"
+      ],
       "sets": [
         "ip address 10.10.10.10 255.255.255.0"
       ],
@@ -1222,6 +1300,9 @@ interface Vlan2
       "object": "interface",
       "type": "Vlan2",
       "description": false,
+      "items": [
+        "ip address 10.10.10.10 255.255.255.0"
+      ],
       "sets": [
         "ip address 10.10.10.10 255.255.255.0"
       ],
@@ -1237,6 +1318,9 @@ interface Vlan2
       "object": "interface",
       "type": "Vlan2",
       "description": false,
+      "items": [
+        "ip address 10.10.10.10 255.255.255.0"
+      ],
       "sets": [
         "ip address 10.10.10.10 255.255.255.0"
       ],
@@ -1253,6 +1337,9 @@ interface Vlan2
       "object": "interface",
       "type": "Vlan2",
       "description": false,
+      "items": [
+        "ip address 10.10.10.10 255.255.255.0"
+      ],
       "sets": [
         "ip address 10.10.10.10 255.255.255.0"
       ],
@@ -1275,6 +1362,9 @@ interface Vlan2
       "object": "interface",
       "type": "Vlan2",
       "description": false,
+      "items": [
+        "ip address 10.10.10.10 255.255.255.0"
+      ],
       "sets": [
         "ip address 10.10.10.10 255.255.255.0"
       ],
@@ -1290,6 +1380,9 @@ interface Vlan2
       "object": "interface",
       "type": "Vlan2",
       "description": false,
+      "items": [
+        "ip address 10.10.10.10 255.255.255.0"
+      ],
       "sets": [
         "ip address 10.10.10.10 255.255.255.0"
       ],
@@ -1305,6 +1398,9 @@ interface Vlan2
       "object": "interface",
       "type": "Vlan2",
       "description": false,
+      "items": [
+        "ip address 10.10.10.10 255.255.255.0"
+      ],
       "sets": [
         "ip address 10.10.10.10 255.255.255.0"
       ],
@@ -1313,13 +1409,13 @@ interface Vlan2
   ]
 }'
 + return 0
-+ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.4rfXvGTYw9/10.10.10.10
-+ export json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.4rfXvGTYw9/10.10.10.10/10.10.10.10--MTc0NzUxNzYw.json
-+ json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.4rfXvGTYw9/10.10.10.10/10.10.10.10--MTc0NzUxNzYw.json
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.4rfXvGTYw9/fragments.json ]]
-+ jq -s --arg target 10.10.10.10 '{ target: $target, configs: . }' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.4rfXvGTYw9/fragments.json
++ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.MOzVCrDxr2/10.10.10.10
++ export json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.MOzVCrDxr2/10.10.10.10/10.10.10.10--MTc0NzUyNjA1.json
++ json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.MOzVCrDxr2/10.10.10.10/10.10.10.10--MTc0NzUyNjA1.json
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.MOzVCrDxr2/fragments.json ]]
++ jq -s --arg target 10.10.10.10 '{ target: $target, configs: . }' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.MOzVCrDxr2/fragments.json
 ++ mktemp
-+ tmp_merged=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.8Do7ggFdJ9
++ tmp_merged=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.ssblejTNcU
 + local final_outfile=reports/10.10.10.10/10.10.10.10.json
 ++ dirname reports/10.10.10.10/10.10.10.10.json
 + mkdir -p reports/10.10.10.10
@@ -1357,10 +1453,10 @@ interface Vlan2
               )
             else . + [ $cfg ] end
           ))
-      }' reports/10.10.10.10/10.10.10.10.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.4rfXvGTYw9/10.10.10.10/10.10.10.10--MTc0NzUxNzYw.json
-+ mv /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.8Do7ggFdJ9 reports/10.10.10.10/10.10.10.10.json
-+ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.4rfXvGTYw9/10.10.10.10/10.10.10.10--MTc0NzUxNzYw.json
+      }' reports/10.10.10.10/10.10.10.10.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.MOzVCrDxr2/10.10.10.10/10.10.10.10--MTc0NzUyNjA1.json
++ mv /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.ssblejTNcU reports/10.10.10.10/10.10.10.10.json
++ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.MOzVCrDxr2/10.10.10.10/10.10.10.10--MTc0NzUyNjA1.json
 + return 0
 + unset verbose debug
-+ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.4rfXvGTYw9 ]]
-+ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.4rfXvGTYw9
++ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.MOzVCrDxr2 ]]
++ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.MOzVCrDxr2
