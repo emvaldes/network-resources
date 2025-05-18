@@ -418,13 +418,49 @@ function process_configs () {
       printf '%s\n' "${data_sets[@]}" | jq -R . | jq -s .
     )";
 
+    #### -----------------------------------------------------------------------
+    ## Build sets_json from data_sets[]: summarize first word frequency with debug
+    declare -A sets_map;
+    for line in "${data_sets[@]}"; do
+      [[ -n "${line}" ]] || continue;
+      key="$(
+        awk '{print $1}' <<< "${line}"
+      )";
+      [[ -n "${key}" ]] || continue;
+      if [[ -z "${sets_map["$key"]+x}" ]]; then
+              sets_map["$key"]=1
+        else  (( sets_map["$key"]++ ))
+      fi;
+    done;
+
+    # local sets_json="$(
+    #   {
+    #     printf '{'
+    #     local first=true
+    #     for k in "${!sets_map[@]}"; do
+    #       $first || printf ', ';
+    #       printf '"%s": %d' "${k}" "${sets_map[$k]}";
+    #       first=false;
+    #     done;
+    #     printf '}';
+    #   }
+    # )";
+
+    ## Favoring a more robust JSON construction with jq
+    local sets_json="$(
+      for k in "${!sets_map[@]}"; do
+        printf '{ "key": "%s", "val": %d }\n' "$k" "${sets_map[$k]}"
+      done | jq -s 'map({(.key): .val}) | add'
+    )";
+
+    #### -----------------------------------------------------------------------
     target_object="$(
       jq -n \
         --arg object "${object_keyword}" \
         --arg type "${type_value}" \
         --arg description "${desc_val}" \
         --argjson items "${matched_items_json}" \
-        --argjson sets "${items_2json}" \
+        --argjson sets "${sets_json}" \
         --arg group "${group_val}" \
         '{
           object: $object,
