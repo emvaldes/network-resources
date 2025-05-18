@@ -114,6 +114,72 @@
           "group": "Unclassified"
         }
       ]
+    },
+    {
+      "site": "misc",
+      "device": "fw2.cfg",
+      "objects": [
+        {
+          "object": "access-list",
+          "type": false,
+          "description": false,
+          "items": [
+            "access-list OUTSIDE extended permit ip any host 203.0.113.25"
+          ],
+          "sets": {
+            "access-list": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Wayne-DMZ",
+          "description": "External public resources",
+          "items": [
+            "network-object host 203.0.113.25"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "fw3.cfg",
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network Panther-Edge",
+          "description": "Internet-facing proxy systems",
+          "items": [
+            "network-object host 203.0.113.25"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "fw6.cfg",
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network Sentinel-Edge",
+          "description": "WAN-facing systems",
+          "items": [
+            "network-object host 203.0.113.25"
+          ],
+          "sets": {
+            "network-object": 1
+          },
+          "group": "Unclassified"
+        }
+      ]
     }
   ]
 }

@@ -40,12 +40,13 @@ function main () {
       #### ---------------------------------------------------------------------
       ## Match accepted arguments
       [[ $key =~ ^(classify|g)$ ]] && local classify_targets=true;
+      [[ $key =~ ^(configs|c)$ ]] && export configs_dirpath="${value}";
+      [[ $key =~ ^(devices|d)$ ]] && local target_devices="${value}";
       [[ $key =~ ^(file-ext|x)$ ]] && file_extensions+=(
         $( print "${value}" | tr ':,;\n ' '\n' )
       );
-      [[ $key =~ ^(configs|c)$ ]] && export configs_dirpath="${value}";
       [[ $key =~ ^(interval|l)$ ]] && local delaying_factor="${value}";
-      [[ $key =~ ^(ips-list|i)$ ]] && local listing_filename="${value}";
+      [[ $key =~ ^(ips-list|i)$ ]] && local target_addresses="${value}";
       [[ $key =~ ^(logs|o)$ ]] && export enable_logging=true;
       [[ $key =~ ^(jobs|j)$ ]] && local parallel_threads="${value}";
       [[ $key =~ ^(matrix|m)$ ]] && export matrix_filename="${value}";
@@ -64,7 +65,8 @@ function main () {
     #### -----------------------------------------------------------------------
     ## Set custom values if not supplied
     [[ -z ${delaying_factor:-} ]] && delaying_factor="0.05";
-    [[ -z ${listing_filename:-} ]] && listing_filename="ips.list";
+    [[ -z ${target_addresses:-} ]] && local target_addresses="ips.list";
+    [[ -z ${target_devices:-} ]] && local target_devices=false;
     [[ -z ${parallel_threads:-} ]] && parallel_threads=100;
     [[ -z ${target_sites:-} ]] && target_sites=false;
 
@@ -95,6 +97,30 @@ function main () {
     fi;
 
     #### -----------------------------------------------------------------------
+    ## Processing Target Devices Listing (default: devices.list or inline string)
+    declare -a target_devices_source=();
+    if [[ -n "${target_devices:-}" && -f "${target_devices}" ]]; then
+            mapfile -t target_devices_source < <(
+              grep -v '^\s*$' "${target_devices}" | tr -d '\r'
+            );
+      elif [[ "${target_devices}" =~ ^[0-9] ]]; then
+            mapfile -t target_devices_source < <(
+              print "${target_devices}" | tr ', ' '\n' | grep -v '^\s*$'
+            );
+      else  error_message "Project Target Devices-Listing file not found: ${target_devices}";
+            # return 4;
+    fi;
+
+    if [[ "${verbose}" == true ]]; then
+      message "Displaying ${target_devices} listing:";
+      # list_file "${target_devices}";
+      # print_file "${target_devices}";
+      for device in "${target_devices_source[@]}"; do
+        message "Device: ${device}";
+      done;
+    fi;
+
+    #### -----------------------------------------------------------------------
     ## Generate master list of config files only once
     ## Custom/Default configs folder:
     export configs_dirpath="${configs_dirpath:-configs}";
@@ -103,19 +129,65 @@ function main () {
     local configs_list_cache=".cache/configs.list";
 
     mkdir -p .cache;
+
+    # if [[ ! -f "${configs_list_cache}" ]]; then
+    #         local -a find_cmd=( find "${configs_dirpath}" -type f \( );
+    #         for ext in "${file_extensions[@]}"; do
+    #           find_cmd+=( -iname "*.${ext}" -o );
+    #         done;
+    #         unset 'find_cmd[-1]';  ## Remove trailing -o
+    #         find_cmd+=( \) );
+    #         "${find_cmd[@]}" | sort > "${configs_list_cache}";
+    #         [[ "${verbose}" == true ]] && \
+    #            message "Generated configs.list at ${configs_list_cache}";
+    #   else  [[ "${verbose}" == true ]] && \
+    #            message "Using cached configs.list from ${configs_list_cache}";
+    # fi;
+
     if [[ ! -f "${configs_list_cache}" ]]; then
-            local -a find_cmd=( find "${configs_dirpath}" -type f \( );
+
+            local -a find_cmd=(
+              find "${configs_dirpath}" -type f \(
+            );
             for ext in "${file_extensions[@]}"; do
               find_cmd+=( -iname "*.${ext}" -o );
             done;
             unset 'find_cmd[-1]';  ## Remove trailing -o
             find_cmd+=( \) );
-            "${find_cmd[@]}" | sort > "${configs_list_cache}";
+
+            declare -a discovered_files=();
+            while IFS= read -r fullpath; do
+
+              filename="$(
+                basename "${fullpath}"
+              )";
+              device_name="${filename%.*}"  ## strip extension like .cfg
+
+              ## Apply --devices filter if present
+              if [[ "${#target_devices_source[@]}" -gt 0 ]]; then
+                matched=false;
+                for pattern in "${target_devices_source[@]}"; do
+                  if [[ "${device_name}" =~ ${pattern} ]]; then
+                    matched=true;
+                    break;
+                  fi;
+                done;
+                [[ "${matched}" == false ]] && \
+                  continue  # skip if no match
+              fi;
+
+              discovered_files+=( "${fullpath}" );
+
+            done < <( "${find_cmd[@]}" | sort )
+
+            printf '%s\n' "${discovered_files[@]}" > "${configs_list_cache}";
             [[ "${verbose}" == true ]] && \
-               message "Generated configs.list at ${configs_list_cache}";
+              message "Generated configs.list at ${configs_list_cache}";
+
       else  [[ "${verbose}" == true ]] && \
-               message "Using cached configs.list from ${configs_list_cache}";
-    fi;
+            message "Using cached configs.list from ${configs_list_cache}";
+    fi
+
     newline;
     # print_file "${configs_list_cache}";
 
@@ -205,27 +277,24 @@ function main () {
 
     #### -----------------------------------------------------------------------
     ## Processing Target Addresses Listing (default: ips.list or inline string)
-    if [[ -z "${listing_filename}" ]]; then
-      listing_filename="ips.list";
-    fi;
-    declare -a target_listing_raw=();
-    if [[ -f "${listing_filename}" ]]; then
-            mapfile -t target_listing_raw < <(
-              grep -v '^\s*$' "${listing_filename}" | tr -d '\r'
+    declare -a target_addresses_source=();
+    if [[ -f "${target_addresses}" ]]; then
+            mapfile -t target_addresses_source < <(
+              grep -v '^\s*$' "${target_addresses}" | tr -d '\r'
             );
-      elif [[ "${listing_filename}" =~ ^[0-9] ]]; then
-            mapfile -t target_listing_raw < <(
-              print "${listing_filename}" | tr ', ' '\n' | grep -v '^\s*$'
+      elif [[ "${target_addresses}" =~ ^[0-9] ]]; then
+            mapfile -t target_addresses_source < <(
+              print "${target_addresses}" | tr ', ' '\n' | grep -v '^\s*$'
             );
-      else  error_message "Project Target IP-listing file not found: ${listing_filename}";
-            return 3;
+      else  error_message "Project Target IP-listing file not found: ${target_addresses}";
+            # return 3;
     fi;
-    # list_file "${listing_filename}";
+    # list_file "${target_addresses}";
 
     #### -----------------------------------------------------------------------
     ## Normalize and validate each IP using validate_address()
     declare -a target_listing=();
-    for raw_ip in "${target_listing_raw[@]}"; do
+    for raw_ip in "${target_addresses_source[@]}"; do
       target_address="${raw_ip}";
       if validate_address; then
         target_listing+=( "${target_address}" );

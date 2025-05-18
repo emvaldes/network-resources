@@ -46,10 +46,10 @@ function main () {
       #### ---------------------------------------------------------------------
       ## Match accepted arguments
       [[ $key =~ ^(classify|g)$ ]] && export classify_targets=true;
+      [[ $key =~ ^(configs|c)$ ]] && export configs_dirpath="${value}";
       [[ $key =~ ^(file-ext|x)$ ]] && file_extensions+=(
         $( print "${value}" | tr ':,;\n ' '\n' )
       );
-      [[ $key =~ ^(configs|c)$ ]] && export configs_dirpath="${value}";
       [[ $key =~ ^(index|n)$ ]] && local target_index="${value}";
       [[ $key =~ ^(ip-addr|i)$ ]] && local target_address="${value}";
       [[ $key =~ ^(logs|o)$ ]] && export enable_logging=true;

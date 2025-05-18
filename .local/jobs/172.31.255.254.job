@@ -2,8 +2,8 @@
 + export LC_ALL=C
 + LC_ALL=C
 ++ mktemp -d
-+ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.0elA714Mpo
-+ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.0elA714Mpo
++ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.R9t3jAOvYW
++ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.R9t3jAOvYW
 + trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
 + source ./scripts/tools-devops.shell
 ++ [[ -n '' ]]
@@ -42,8 +42,8 @@
 +++ date +%s%N
 +++ base64
 +++ tr -dc a-zA-Z0-9
-++ export divisor=MTc0NzUzMjQxNzEyNzUzMzAwMAo
-++ divisor=MTc0NzUzMjQxNzEyNzUzMzAwMAo
+++ export divisor=MTc0NzU0MTY2ODE0ODE0NjAwMAo
+++ divisor=MTc0NzU0MTY2ODE0ODE0NjAwMAo
 + source ./scripts/tools-configs.shell
 ++ [[ -n '' ]]
 ++ readonly __TOOLS_EXTRACTION_SOURCED=1
@@ -57,7 +57,7 @@
 + script_name=./scripts/parse-configs.shell
 + [[ 9 -ge 1 ]]
 + [[ --configs=configs =~ ^-*(h|help)$ ]]
-+ main --configs=configs --ip-addr=172.31.255.254 --index=11 --matrix=matrix.json --reports=reports --file-ext=cfg,conf,cnf --classify --verbose --debug
++ main --configs=configs --ip-addr=172.31.255.254 --index=27 --matrix=matrix.json --reports=reports --file-ext=cfg,conf,cnf --classify --verbose --debug
 + file_extensions=()
 + declare -a file_extensions
 + oIFS=' 	
@@ -68,10 +68,10 @@
 ++ echo -e --configs=configs
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ configs =~ ^(classify|g)$ ]]
-+ [[ configs =~ ^(file-ext|x)$ ]]
 + [[ configs =~ ^(configs|c)$ ]]
 + export configs_dirpath=configs
 + configs_dirpath=configs
++ [[ configs =~ ^(file-ext|x)$ ]]
 + [[ configs =~ ^(index|n)$ ]]
 + [[ configs =~ ^(ip-addr|i)$ ]]
 + [[ configs =~ ^(logs|o)$ ]]
@@ -88,8 +88,8 @@
 ++ echo -e --ip-addr=172.31.255.254
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ ip-addr =~ ^(classify|g)$ ]]
-+ [[ ip-addr =~ ^(file-ext|x)$ ]]
 + [[ ip-addr =~ ^(configs|c)$ ]]
++ [[ ip-addr =~ ^(file-ext|x)$ ]]
 + [[ ip-addr =~ ^(index|n)$ ]]
 + [[ ip-addr =~ ^(ip-addr|i)$ ]]
 + local target_address=172.31.255.254
@@ -104,13 +104,13 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --index=11
+++ echo -e --index=27
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ index =~ ^(classify|g)$ ]]
-+ [[ index =~ ^(file-ext|x)$ ]]
 + [[ index =~ ^(configs|c)$ ]]
++ [[ index =~ ^(file-ext|x)$ ]]
 + [[ index =~ ^(index|n)$ ]]
-+ local target_index=11
++ local target_index=27
 + [[ index =~ ^(ip-addr|i)$ ]]
 + [[ index =~ ^(logs|o)$ ]]
 + [[ index =~ ^(matrix|m)$ ]]
@@ -126,8 +126,8 @@
 ++ echo -e --matrix=matrix.json
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ matrix =~ ^(classify|g)$ ]]
-+ [[ matrix =~ ^(file-ext|x)$ ]]
 + [[ matrix =~ ^(configs|c)$ ]]
++ [[ matrix =~ ^(file-ext|x)$ ]]
 + [[ matrix =~ ^(index|n)$ ]]
 + [[ matrix =~ ^(ip-addr|i)$ ]]
 + [[ matrix =~ ^(logs|o)$ ]]
@@ -145,8 +145,8 @@
 ++ echo -e --reports=reports
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ reports =~ ^(classify|g)$ ]]
-+ [[ reports =~ ^(file-ext|x)$ ]]
 + [[ reports =~ ^(configs|c)$ ]]
++ [[ reports =~ ^(file-ext|x)$ ]]
 + [[ reports =~ ^(index|n)$ ]]
 + [[ reports =~ ^(ip-addr|i)$ ]]
 + [[ reports =~ ^(logs|o)$ ]]
@@ -164,13 +164,13 @@
 ++ echo -e --file-ext=cfg,conf,cnf
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ file-ext =~ ^(classify|g)$ ]]
++ [[ file-ext =~ ^(configs|c)$ ]]
 + [[ file-ext =~ ^(file-ext|x)$ ]]
 + file_extensions+=($(print "${value}" | tr ':,;\n ' '\n'))
 ++ print cfg,conf,cnf
 ++ [[ -n cfg,conf,cnf ]]
 ++ echo -en cfg,conf,cnf
 ++ tr ':,;\n ' '\n'
-+ [[ file-ext =~ ^(configs|c)$ ]]
 + [[ file-ext =~ ^(index|n)$ ]]
 + [[ file-ext =~ ^(ip-addr|i)$ ]]
 + [[ file-ext =~ ^(logs|o)$ ]]
@@ -189,8 +189,8 @@
 + [[ classify =~ ^(classify|g)$ ]]
 + export classify_targets=true
 + classify_targets=true
-+ [[ classify =~ ^(file-ext|x)$ ]]
 + [[ classify =~ ^(configs|c)$ ]]
++ [[ classify =~ ^(file-ext|x)$ ]]
 + [[ classify =~ ^(index|n)$ ]]
 + [[ classify =~ ^(ip-addr|i)$ ]]
 + [[ classify =~ ^(logs|o)$ ]]
@@ -207,8 +207,8 @@
 ++ echo -e --verbose
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ verbose =~ ^(classify|g)$ ]]
-+ [[ verbose =~ ^(file-ext|x)$ ]]
 + [[ verbose =~ ^(configs|c)$ ]]
++ [[ verbose =~ ^(file-ext|x)$ ]]
 + [[ verbose =~ ^(index|n)$ ]]
 + [[ verbose =~ ^(ip-addr|i)$ ]]
 + [[ verbose =~ ^(logs|o)$ ]]
@@ -227,8 +227,8 @@
 ++ echo -e --debug
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ debug =~ ^(classify|g)$ ]]
-+ [[ debug =~ ^(file-ext|x)$ ]]
 + [[ debug =~ ^(configs|c)$ ]]
++ [[ debug =~ ^(file-ext|x)$ ]]
 + [[ debug =~ ^(index|n)$ ]]
 + [[ debug =~ ^(ip-addr|i)$ ]]
 + [[ debug =~ ^(logs|o)$ ]]
@@ -361,7 +361,7 @@ Extracted config paths from JSON:+ for cfg in "${source_configs[@]}"
 ]'
 + export reports_folder=reports
 + reports_folder=reports
-+ [[ -z 11 ]]
++ [[ -z 27 ]]
 + [[ -z false ]]
 + [[ -z 172.31.255.254 ]]
 ++ print 172.31.255.254
@@ -371,14 +371,14 @@ Extracted config paths from JSON:+ for cfg in "${source_configs[@]}"
 ++ tr -d '\r'
 + target_address=172.31.255.254
 + [[ false == true ]]
-+ export tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.0elA714Mpo/fragments.json
-+ tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.0elA714Mpo/fragments.json
++ export tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.R9t3jAOvYW/fragments.json
++ tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.R9t3jAOvYW/fragments.json
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs configs/misc/switch1.conf 172.31.255.254 targets/172.31.255.254.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.0elA714Mpo/fragments.json
++ extract_configs configs/misc/switch1.conf 172.31.255.254 targets/172.31.255.254.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.R9t3jAOvYW/fragments.json
 + local config_file=configs/misc/switch1.conf
 + local target_pattern=172.31.255.254
 + local target_listing=targets/172.31.255.254.json
-+ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.0elA714Mpo/fragments.json
++ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.R9t3jAOvYW/fragments.json
 + [[ ! -f configs/misc/switch1.conf ]]
 + message '[DEBUG] Checking if config file exists and is readable: configs/misc/switch1.conf'
 + [[ -n [DEBUG] Checking if config file exists and is readable: configs/misc/switch1.conf ]]
@@ -621,16 +621,16 @@ object-group network Avengers-Office
 
 + (( i++ ))
 + (( i < count ))
-++ perl -pe 's/\n/MTc0NzUzMjQxNzEyNzUzMzAwMAo/g'
-+ local 'serialized_objects=interface Vlan1MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAointerface Vlan10MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAointerface Vlan20MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAoobject-group network Avengers-OfficeMTc0NzUzMjQxNzEyNzUzMzAwMAo description VLAN access layerMTc0NzUzMjQxNzEyNzUzMzAwMAo network-object host 10.0.0.1MTc0NzUzMjQxNzEyNzUzMzAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAo'
+++ perl -pe 's/\n/MTc0NzU0MTY2ODE0ODE0NjAwMAo/g'
++ local 'serialized_objects=interface Vlan1MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAointerface Vlan10MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAointerface Vlan20MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAoobject-group network Avengers-OfficeMTc0NzU0MTY2ODE0ODE0NjAwMAo description VLAN access layerMTc0NzU0MTY2ODE0ODE0NjAwMAo network-object host 10.0.0.1MTc0NzU0MTY2ODE0ODE0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAo'
 + [[ true == true ]]
-+ message 'Serialized Objects: interface Vlan1MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAointerface Vlan10MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAointerface Vlan20MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAoobject-group network Avengers-OfficeMTc0NzUzMjQxNzEyNzUzMzAwMAo description VLAN access layerMTc0NzUzMjQxNzEyNzUzMzAwMAo network-object host 10.0.0.1MTc0NzUzMjQxNzEyNzUzMzAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAo'
-+ [[ -n Serialized Objects: interface Vlan1MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAointerface Vlan10MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAointerface Vlan20MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAoobject-group network Avengers-OfficeMTc0NzUzMjQxNzEyNzUzMzAwMAo description VLAN access layerMTc0NzUzMjQxNzEyNzUzMzAwMAo network-object host 10.0.0.1MTc0NzUzMjQxNzEyNzUzMzAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAo ]]
-+ local 'message=Serialized Objects: interface Vlan1MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAointerface Vlan10MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAointerface Vlan20MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAoobject-group network Avengers-OfficeMTc0NzUzMjQxNzEyNzUzMzAwMAo description VLAN access layerMTc0NzUzMjQxNzEyNzUzMzAwMAo network-object host 10.0.0.1MTc0NzUzMjQxNzEyNzUzMzAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAo'
-+ print 'Serialized Objects: interface Vlan1MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAointerface Vlan10MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAointerface Vlan20MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAoobject-group network Avengers-OfficeMTc0NzUzMjQxNzEyNzUzMzAwMAo description VLAN access layerMTc0NzUzMjQxNzEyNzUzMzAwMAo network-object host 10.0.0.1MTc0NzUzMjQxNzEyNzUzMzAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAo'
-+ [[ -n Serialized Objects: interface Vlan1MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAointerface Vlan10MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAointerface Vlan20MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAoobject-group network Avengers-OfficeMTc0NzUzMjQxNzEyNzUzMzAwMAo description VLAN access layerMTc0NzUzMjQxNzEyNzUzMzAwMAo network-object host 10.0.0.1MTc0NzUzMjQxNzEyNzUzMzAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAo ]]
-+ echo -en 'Serialized Objects: interface Vlan1MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAointerface Vlan10MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAointerface Vlan20MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAoobject-group network Avengers-OfficeMTc0NzUzMjQxNzEyNzUzMzAwMAo description VLAN access layerMTc0NzUzMjQxNzEyNzUzMzAwMAo network-object host 10.0.0.1MTc0NzUzMjQxNzEyNzUzMzAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAo'
-Serialized Objects: interface Vlan1MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAointerface Vlan10MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAointerface Vlan20MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAoobject-group network Avengers-OfficeMTc0NzUzMjQxNzEyNzUzMzAwMAo description VLAN access layerMTc0NzUzMjQxNzEyNzUzMzAwMAo network-object host 10.0.0.1MTc0NzUzMjQxNzEyNzUzMzAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAo+ newline
++ message 'Serialized Objects: interface Vlan1MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAointerface Vlan10MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAointerface Vlan20MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAoobject-group network Avengers-OfficeMTc0NzU0MTY2ODE0ODE0NjAwMAo description VLAN access layerMTc0NzU0MTY2ODE0ODE0NjAwMAo network-object host 10.0.0.1MTc0NzU0MTY2ODE0ODE0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAo'
++ [[ -n Serialized Objects: interface Vlan1MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAointerface Vlan10MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAointerface Vlan20MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAoobject-group network Avengers-OfficeMTc0NzU0MTY2ODE0ODE0NjAwMAo description VLAN access layerMTc0NzU0MTY2ODE0ODE0NjAwMAo network-object host 10.0.0.1MTc0NzU0MTY2ODE0ODE0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAo ]]
++ local 'message=Serialized Objects: interface Vlan1MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAointerface Vlan10MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAointerface Vlan20MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAoobject-group network Avengers-OfficeMTc0NzU0MTY2ODE0ODE0NjAwMAo description VLAN access layerMTc0NzU0MTY2ODE0ODE0NjAwMAo network-object host 10.0.0.1MTc0NzU0MTY2ODE0ODE0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAo'
++ print 'Serialized Objects: interface Vlan1MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAointerface Vlan10MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAointerface Vlan20MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAoobject-group network Avengers-OfficeMTc0NzU0MTY2ODE0ODE0NjAwMAo description VLAN access layerMTc0NzU0MTY2ODE0ODE0NjAwMAo network-object host 10.0.0.1MTc0NzU0MTY2ODE0ODE0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAo'
++ [[ -n Serialized Objects: interface Vlan1MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAointerface Vlan10MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAointerface Vlan20MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAoobject-group network Avengers-OfficeMTc0NzU0MTY2ODE0ODE0NjAwMAo description VLAN access layerMTc0NzU0MTY2ODE0ODE0NjAwMAo network-object host 10.0.0.1MTc0NzU0MTY2ODE0ODE0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAo ]]
++ echo -en 'Serialized Objects: interface Vlan1MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAointerface Vlan10MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAointerface Vlan20MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAoobject-group network Avengers-OfficeMTc0NzU0MTY2ODE0ODE0NjAwMAo description VLAN access layerMTc0NzU0MTY2ODE0ODE0NjAwMAo network-object host 10.0.0.1MTc0NzU0MTY2ODE0ODE0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAo'
+Serialized Objects: interface Vlan1MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 172.31.255.254 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAointerface Vlan10MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 10.0.1.2 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAointerface Vlan20MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 192.168.1.10 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAoobject-group network Avengers-OfficeMTc0NzU0MTY2ODE0ODE0NjAwMAo description VLAN access layerMTc0NzU0MTY2ODE0ODE0NjAwMAo network-object host 10.0.0.1MTc0NzU0MTY2ODE0ODE0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAo+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -638,20 +638,20 @@ Serialized Objects: interface Vlan1MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 172.31
 
 + (( i++ ))
 + (( i < count ))
-++ sed -E 's/MTc0NzUzMjQxNzEyNzUzMzAwMAo([^[:space:]])/\n\1/g'
-+ local 'restored_lines=interface Vlan1MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 172.31.255.254 255.255.255.0
-interface Vlan10MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 10.0.1.2 255.255.255.0
-interface Vlan20MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 192.168.1.10 255.255.255.0
-object-group network Avengers-OfficeMTc0NzUzMjQxNzEyNzUzMzAwMAo description VLAN access layerMTc0NzUzMjQxNzEyNzUzMzAwMAo network-object host 10.0.0.1MTc0NzUzMjQxNzEyNzUzMzAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAo'
+++ sed -E 's/MTc0NzU0MTY2ODE0ODE0NjAwMAo([^[:space:]])/\n\1/g'
++ local 'restored_lines=interface Vlan1MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 172.31.255.254 255.255.255.0
+interface Vlan10MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 10.0.1.2 255.255.255.0
+interface Vlan20MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 192.168.1.10 255.255.255.0
+object-group network Avengers-OfficeMTc0NzU0MTY2ODE0ODE0NjAwMAo description VLAN access layerMTc0NzU0MTY2ODE0ODE0NjAwMAo network-object host 10.0.0.1MTc0NzU0MTY2ODE0ODE0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAo'
 + restored_lines+='
 '
 + IFS='
 '
 + read -r -d '' -a config_objects
-++ printf '%s\0' 'interface Vlan1MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 172.31.255.254 255.255.255.0
-interface Vlan10MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 10.0.1.2 255.255.255.0
-interface Vlan20MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 192.168.1.10 255.255.255.0
-object-group network Avengers-OfficeMTc0NzUzMjQxNzEyNzUzMzAwMAo description VLAN access layerMTc0NzUzMjQxNzEyNzUzMzAwMAo network-object host 10.0.0.1MTc0NzUzMjQxNzEyNzUzMzAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAo
+++ printf '%s\0' 'interface Vlan1MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 172.31.255.254 255.255.255.0
+interface Vlan10MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 10.0.1.2 255.255.255.0
+interface Vlan20MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 192.168.1.10 255.255.255.0
+object-group network Avengers-OfficeMTc0NzU0MTY2ODE0ODE0NjAwMAo description VLAN access layerMTc0NzU0MTY2ODE0ODE0NjAwMAo network-object host 10.0.0.1MTc0NzU0MTY2ODE0ODE0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAo
 '
 + [[ true == true ]]
 + message 'Loaded 4 config blocks'
@@ -672,9 +672,9 @@ Loaded 4 config blocks+ newline
 '
 + IFS='
 '
-++ printf '%s\n' 'interface Vlan1MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 172.31.255.254 255.255.255.0' 'interface Vlan10MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 10.0.1.2 255.255.255.0' 'interface Vlan20MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 192.168.1.10 255.255.255.0' 'object-group network Avengers-OfficeMTc0NzUzMjQxNzEyNzUzMzAwMAo description VLAN access layerMTc0NzUzMjQxNzEyNzUzMzAwMAo network-object host 10.0.0.1MTc0NzUzMjQxNzEyNzUzMzAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzUzMjQxNzEyNzUzMzAwMAo'
+++ printf '%s\n' 'interface Vlan1MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 172.31.255.254 255.255.255.0' 'interface Vlan10MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 10.0.1.2 255.255.255.0' 'interface Vlan20MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 192.168.1.10 255.255.255.0' 'object-group network Avengers-OfficeMTc0NzU0MTY2ODE0ODE0NjAwMAo description VLAN access layerMTc0NzU0MTY2ODE0ODE0NjAwMAo network-object host 10.0.0.1MTc0NzU0MTY2ODE0ODE0NjAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzU0MTY2ODE0ODE0NjAwMAo'
 ++ grep -E '(^|[^0-9.])172\.31\.255\.254([^0-9.]|$)'
-+ matched_objects=('interface Vlan1MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 172.31.255.254 255.255.255.0')
++ matched_objects=('interface Vlan1MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 172.31.255.254 255.255.255.0')
 + declare -a matched_objects
 + IFS=' 	
 '
@@ -695,13 +695,13 @@ Loaded 1 config blocks+ newline
 + (( i < count ))
 + for serialized_line in "${matched_objects[@]}"
 + [[ true == true ]]
-+ message 'Serialized Line: interface Vlan1MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 172.31.255.254 255.255.255.0'
-+ [[ -n Serialized Line: interface Vlan1MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 172.31.255.254 255.255.255.0 ]]
-+ local 'message=Serialized Line: interface Vlan1MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 172.31.255.254 255.255.255.0'
-+ print 'Serialized Line: interface Vlan1MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 172.31.255.254 255.255.255.0'
-+ [[ -n Serialized Line: interface Vlan1MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 172.31.255.254 255.255.255.0 ]]
-+ echo -en 'Serialized Line: interface Vlan1MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 172.31.255.254 255.255.255.0'
-Serialized Line: interface Vlan1MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 172.31.255.254 255.255.255.0+ newline
++ message 'Serialized Line: interface Vlan1MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 172.31.255.254 255.255.255.0'
++ [[ -n Serialized Line: interface Vlan1MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 172.31.255.254 255.255.255.0 ]]
++ local 'message=Serialized Line: interface Vlan1MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 172.31.255.254 255.255.255.0'
++ print 'Serialized Line: interface Vlan1MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 172.31.255.254 255.255.255.0'
++ [[ -n Serialized Line: interface Vlan1MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 172.31.255.254 255.255.255.0 ]]
++ echo -en 'Serialized Line: interface Vlan1MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 172.31.255.254 255.255.255.0'
+Serialized Line: interface Vlan1MTc0NzU0MTY2ODE0ODE0NjAwMAo ip address 172.31.255.254 255.255.255.0+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -709,7 +709,7 @@ Serialized Line: interface Vlan1MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 172.31.25
 
 + (( i++ ))
 + (( i < count ))
-++ perl -pe 's/MTc0NzUzMjQxNzEyNzUzMzAwMAo/\n/g'
+++ perl -pe 's/MTc0NzU0MTY2ODE0ODE0NjAwMAo/\n/g'
 + restored_block='interface Vlan1
  ip address 172.31.255.254 255.255.255.0'
 + local cfg_path=configs/misc/switch1.conf
@@ -720,62 +720,16 @@ Serialized Line: interface Vlan1MTc0NzUzMjQxNzEyNzUzMzAwMAo ip address 172.31.25
 + local objects_dir=reports/172.31.255.254/misc
 + local objects_file=reports/172.31.255.254/misc/switch1.conf
 + [[ -s reports/172.31.255.254/misc/switch1.conf ]]
-+ mkdir -p reports/172.31.255.254/misc
-+ message 'interface Vlan1
- ip address 172.31.255.254 255.255.255.0'
-+ [[ -n interface Vlan1
- ip address 172.31.255.254 255.255.255.0 ]]
-+ local 'message=interface Vlan1
- ip address 172.31.255.254 255.255.255.0'
-+ print 'interface Vlan1
- ip address 172.31.255.254 255.255.255.0'
-+ [[ -n interface Vlan1
- ip address 172.31.255.254 255.255.255.0 ]]
-+ echo -en 'interface Vlan1
- ip address 172.31.255.254 255.255.255.0'
-+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-+ (( i++ ))
-+ (( i < count ))
-+ message '!'
-+ [[ -n ! ]]
-+ local 'message=!'
-+ print '!'
-+ [[ -n ! ]]
-+ echo -en '!'
-+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-+ (( i++ ))
-+ (( i < count ))
-+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-+ (( i++ ))
-+ (( i < count ))
++ grep -Fq -- 'interface Vlan1
+ ip address 172.31.255.254 255.255.255.0' reports/172.31.255.254/misc/switch1.conf
 + [[ true == true ]]
-+ message 'Restored Configuration:\ninterface Vlan1
- ip address 172.31.255.254 255.255.255.0'
-+ [[ -n Restored Configuration:\ninterface Vlan1
- ip address 172.31.255.254 255.255.255.0 ]]
-+ local 'message=Restored Configuration:\ninterface Vlan1
- ip address 172.31.255.254 255.255.255.0'
-+ print 'Restored Configuration:\ninterface Vlan1
- ip address 172.31.255.254 255.255.255.0'
-+ [[ -n Restored Configuration:\ninterface Vlan1
- ip address 172.31.255.254 255.255.255.0 ]]
-+ echo -en 'Restored Configuration:\ninterface Vlan1
- ip address 172.31.255.254 255.255.255.0'
-Restored Configuration:
-interface Vlan1
- ip address 172.31.255.254 255.255.255.0+ newline
++ message 'Skipping duplicate block in reports/172.31.255.254/misc/switch1.conf'
++ [[ -n Skipping duplicate block in reports/172.31.255.254/misc/switch1.conf ]]
++ local 'message=Skipping duplicate block in reports/172.31.255.254/misc/switch1.conf'
++ print 'Skipping duplicate block in reports/172.31.255.254/misc/switch1.conf'
++ [[ -n Skipping duplicate block in reports/172.31.255.254/misc/switch1.conf ]]
++ echo -en 'Skipping duplicate block in reports/172.31.255.254/misc/switch1.conf'
+Skipping duplicate block in reports/172.31.255.254/misc/switch1.conf+ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -783,695 +737,13 @@ interface Vlan1
 
 + (( i++ ))
 + (( i < count ))
-+ process_configs 172.31.255.254 configs/misc/switch1.conf 'interface Vlan1
- ip address 172.31.255.254 255.255.255.0'
-+ local target_pattern=172.31.255.254
-+ local config_path=configs/misc/switch1.conf
-+ local 'restored_block=interface Vlan1
- ip address 172.31.255.254 255.255.255.0'
-+ local cleaned_block
-++ sed '/^[[:space:]]*$/d'
-+ cleaned_block='interface Vlan1
- ip address 172.31.255.254 255.255.255.0'
-+ [[ -z interface Vlan1
- ip address 172.31.255.254 255.255.255.0 ]]
-+ [[ true == true ]]
-+ message '[process_configs] Raw Block:\ninterface Vlan1
- ip address 172.31.255.254 255.255.255.0'
-+ [[ -n [process_configs] Raw Block:\ninterface Vlan1
- ip address 172.31.255.254 255.255.255.0 ]]
-+ local 'message=[process_configs] Raw Block:\ninterface Vlan1
- ip address 172.31.255.254 255.255.255.0'
-+ print '[process_configs] Raw Block:\ninterface Vlan1
- ip address 172.31.255.254 255.255.255.0'
-+ [[ -n [process_configs] Raw Block:\ninterface Vlan1
- ip address 172.31.255.254 255.255.255.0 ]]
-+ echo -en '[process_configs] Raw Block:\ninterface Vlan1
- ip address 172.31.255.254 255.255.255.0'
-[process_configs] Raw Block:
-interface Vlan1
- ip address 172.31.255.254 255.255.255.0+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-+ local object_line
-++ head -n 1
-++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
-+ object_line='interface Vlan1'
-+ [[ -z interface Vlan1 ]]
-+ local object_keyword type_value
-++ awk '{print $1}'
-+ object_keyword=interface
-++ wc -l
-+ ((         2 > 1  ))
-++ sed -E 's/^[^[:space:]]+[[:space:]]+//'
-+ type_value=Vlan1
-+ [[ -z Vlan1 ]]
-+ [[ true == true ]]
-+ print '[process_configs] object   : interface'
-+ [[ -n [process_configs] object   : interface ]]
-+ echo -en '[process_configs] object   : interface'
-[process_configs] object   : interface+ print '[process_configs] type     : Vlan1'
-+ [[ -n [process_configs] type     : Vlan1 ]]
-+ echo -en '[process_configs] type     : Vlan1'
-[process_configs] type     : Vlan1+ data_sets=()
-+ local -a data_sets
-+ IFS=
-+ read -r line
-++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
-+ local 'trimmed=interface Vlan1'
-+ [[ -z interface Vlan1 ]]
-+ [[ interface vlan1 =~ ^description[[:space:]] ]]
-+ data_sets+=("${trimmed}")
-+ IFS=
-+ read -r line
-++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
-+ local 'trimmed=ip address 172.31.255.254 255.255.255.0'
-+ [[ -z ip address 172.31.255.254 255.255.255.0 ]]
-+ [[ ip address 172.31.255.254 255.255.255.0 =~ ^description[[:space:]] ]]
-+ data_sets+=("${trimmed}")
-+ IFS=
-+ read -r line
-+ ((  2 > 1  ))
-+ data_sets=("${data_sets[@]:1}")
-+ [[ true == true ]]
-+ message '[process_configs] Object Sets:'
-+ [[ -n [process_configs] Object Sets: ]]
-+ local 'message=[process_configs] Object Sets:'
-+ print '[process_configs] Object Sets:'
-+ [[ -n [process_configs] Object Sets: ]]
-+ echo -en '[process_configs] Object Sets:'
-[process_configs] Object Sets:+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-+ for e in "${data_sets[@]}"
-+ print '  - ip address 172.31.255.254 255.255.255.0'
-+ [[ -n   - ip address 172.31.255.254 255.255.255.0 ]]
-+ echo -en '  - ip address 172.31.255.254 255.255.255.0'
-  - ip address 172.31.255.254 255.255.255.0++ grep -E '(^|[^0-9.])172\.31\.255\.254([^0-9.]|$)'
-++ head -n 1
-++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
-+ local 'matched_line=ip address 172.31.255.254 255.255.255.0'
-+ [[ -z ip address 172.31.255.254 255.255.255.0 ]]
-+ [[ true == true ]]
-+ message '[process_configs] Matched: ip address 172.31.255.254 255.255.255.0'
-+ [[ -n [process_configs] Matched: ip address 172.31.255.254 255.255.255.0 ]]
-+ local 'message=[process_configs] Matched: ip address 172.31.255.254 255.255.255.0'
-+ print '[process_configs] Matched: ip address 172.31.255.254 255.255.255.0'
-+ [[ -n [process_configs] Matched: ip address 172.31.255.254 255.255.255.0 ]]
-+ echo -en '[process_configs] Matched: ip address 172.31.255.254 255.255.255.0'
-[process_configs] Matched: ip address 172.31.255.254 255.255.255.0+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-+ matched_items=()
-+ local -a matched_items
-+ IFS=
-+ read -r line
-+ grep -Eq '(^|[^0-9.])172\.31\.255\.254([^0-9.]|$)'
-+ IFS=
-+ read -r line
-+ grep -Eq '(^|[^0-9.])172\.31\.255\.254([^0-9.]|$)'
-+ matched_items+=("$(sed -E 's/^[[:space:]]+//;s/[[:space:]]+$//' <<< "${line}")")
-++ sed -E 's/^[[:space:]]+//;s/[[:space:]]+$//'
-+ IFS=
-+ read -r line
-++ printf '%s\n' 'ip address 172.31.255.254 255.255.255.0'
-++ jq -R .
-++ jq -s .
-+ local 'matched_items_json=[
-  "ip address 172.31.255.254 255.255.255.0"
-]'
-++ grep -i '^[[:space:]]*description'
-++ head -n 1
-++ sed -E 's/^[^"]*"?description"?[[:space:]]*//I; s/^[[:space:]]*//; s/[[:space:]]*$//'
-+ local desc_val=
-+ [[ -z '' ]]
-+ desc_val=false
-+ [[ false =~ 
- ]]
-+ [[ true == true ]]
-+ message '[process_configs] Description: false'
-+ [[ -n [process_configs] Description: false ]]
-+ local 'message=[process_configs] Description: false'
-+ print '[process_configs] Description: false'
-+ [[ -n [process_configs] Description: false ]]
-+ echo -en '[process_configs] Description: false'
-[process_configs] Description: false+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-+ local group_val=Unclassified
-+ [[ true == true ]]
-+ local object_key
-++ awk '{print $NF}'
-++ sed -E 's/[[:punct:]]*$//'
-+ object_key=Vlan1
-++ jq -r --arg key Vlan1 'map( select( .match[]? | contains( $key ) ) ) | .[0].group'
-+ group_val=Business-Unit-Networks
-+ [[ -z Business-Unit-Networks ]]
-+ [[ Business-Unit-Networks == \n\u\l\l ]]
-+ [[ -z Business-Unit-Networks ]]
-+ [[ Business-Unit-Networks == \n\u\l\l ]]
-+ [[ true == true ]]
-+ message '[process_configs] Group: Business-Unit-Networks'
-+ [[ -n [process_configs] Group: Business-Unit-Networks ]]
-+ local 'message=[process_configs] Group: Business-Unit-Networks'
-+ print '[process_configs] Group: Business-Unit-Networks'
-+ [[ -n [process_configs] Group: Business-Unit-Networks ]]
-+ echo -en '[process_configs] Group: Business-Unit-Networks'
-[process_configs] Group: Business-Unit-Networks+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-++ printf '%s\n' 'ip address 172.31.255.254 255.255.255.0'
-++ jq -R .
-++ jq -s .
-+ local 'items_2json=[
-  "ip address 172.31.255.254 255.255.255.0"
-]'
-+ declare -A sets_map
-+ for line in "${data_sets[@]}"
-+ [[ -n ip address 172.31.255.254 255.255.255.0 ]]
-++ awk '{print $1}'
-+ key=ip
-+ [[ -n ip ]]
-+ [[ -z '' ]]
-+ sets_map["$key"]=1
-++ for k in "${!sets_map[@]}"
-++ printf '{ "key": "%s", "val": %d }\n' ip 1
-++ jq -s 'map({(.key): .val}) | add'
-+ local 'sets_json={
-  "ip": 1
-}'
-++ jq -n --arg object interface --arg type Vlan1 --arg description false --argjson items '[
-  "ip address 172.31.255.254 255.255.255.0"
-]' --argjson sets '{
-  "ip": 1
-}' --arg group Business-Unit-Networks '{
-          object: $object,
-          type: ( $type | select( . != "" and . != "null" and . != "false" ) // false ),
-          description: ( $description | select( . != "" and . != "null" and . != "false" ) // false ),
-          items: $items,
-          sets: $sets,
-          group: $group
-        }'
-+ target_object='{
-  "object": "interface",
-  "type": "Vlan1",
-  "description": false,
-  "items": [
-    "ip address 172.31.255.254 255.255.255.0"
-  ],
-  "sets": {
-    "ip": 1
-  },
-  "group": "Business-Unit-Networks"
-}'
-+ export target_object
-+ [[ true == true ]]
-+ message '[process_configs] JSON Object (output):'
-+ [[ -n [process_configs] JSON Object (output): ]]
-+ local 'message=[process_configs] JSON Object (output):'
-+ print '[process_configs] JSON Object (output):'
-+ [[ -n [process_configs] JSON Object (output): ]]
-+ echo -en '[process_configs] JSON Object (output):'
-[process_configs] JSON Object (output):+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-+ print '{
-  "object": "interface",
-  "type": "Vlan1",
-  "description": false,
-  "items": [
-    "ip address 172.31.255.254 255.255.255.0"
-  ],
-  "sets": {
-    "ip": 1
-  },
-  "group": "Business-Unit-Networks"
-}'
-+ [[ -n {
-  "object": "interface",
-  "type": "Vlan1",
-  "description": false,
-  "items": [
-    "ip address 172.31.255.254 255.255.255.0"
-  ],
-  "sets": {
-    "ip": 1
-  },
-  "group": "Business-Unit-Networks"
-} ]]
-+ jq .
-+ echo -en '{
-  "object": "interface",
-  "type": "Vlan1",
-  "description": false,
-  "items": [
-    "ip address 172.31.255.254 255.255.255.0"
-  ],
-  "sets": {
-    "ip": 1
-  },
-  "group": "Business-Unit-Networks"
-}'
-{
-  "object": "interface",
-  "type": "Vlan1",
-  "description": false,
-  "items": [
-    "ip address 172.31.255.254 255.255.255.0"
-  ],
-  "sets": {
-    "ip": 1
-  },
-  "group": "Business-Unit-Networks"
-}
-+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
++ continue
 + return 0
-+ [[ -n {
-  "object": "interface",
-  "type": "Vlan1",
-  "description": false,
-  "items": [
-    "ip address 172.31.255.254 255.255.255.0"
-  ],
-  "sets": {
-    "ip": 1
-  },
-  "group": "Business-Unit-Networks"
-} ]]
-+ [[ true == true ]]
-+ message '|-----> Target Objects: {
-  "object": "interface",
-  "type": "Vlan1",
-  "description": false,
-  "items": [
-    "ip address 172.31.255.254 255.255.255.0"
-  ],
-  "sets": {
-    "ip": 1
-  },
-  "group": "Business-Unit-Networks"
-}'
-+ [[ -n |-----> Target Objects: {
-  "object": "interface",
-  "type": "Vlan1",
-  "description": false,
-  "items": [
-    "ip address 172.31.255.254 255.255.255.0"
-  ],
-  "sets": {
-    "ip": 1
-  },
-  "group": "Business-Unit-Networks"
-} ]]
-+ local 'message=|-----> Target Objects: {
-  "object": "interface",
-  "type": "Vlan1",
-  "description": false,
-  "items": [
-    "ip address 172.31.255.254 255.255.255.0"
-  ],
-  "sets": {
-    "ip": 1
-  },
-  "group": "Business-Unit-Networks"
-}'
-+ print '|-----> Target Objects: {
-  "object": "interface",
-  "type": "Vlan1",
-  "description": false,
-  "items": [
-    "ip address 172.31.255.254 255.255.255.0"
-  ],
-  "sets": {
-    "ip": 1
-  },
-  "group": "Business-Unit-Networks"
-}'
-+ [[ -n |-----> Target Objects: {
-  "object": "interface",
-  "type": "Vlan1",
-  "description": false,
-  "items": [
-    "ip address 172.31.255.254 255.255.255.0"
-  ],
-  "sets": {
-    "ip": 1
-  },
-  "group": "Business-Unit-Networks"
-} ]]
-+ echo -en '|-----> Target Objects: {
-  "object": "interface",
-  "type": "Vlan1",
-  "description": false,
-  "items": [
-    "ip address 172.31.255.254 255.255.255.0"
-  ],
-  "sets": {
-    "ip": 1
-  },
-  "group": "Business-Unit-Networks"
-}'
-|-----> Target Objects: {
-  "object": "interface",
-  "type": "Vlan1",
-  "description": false,
-  "items": [
-    "ip address 172.31.255.254 255.255.255.0"
-  ],
-  "sets": {
-    "ip": 1
-  },
-  "group": "Business-Unit-Networks"
-}+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-+ [[ -n {
-  "object": "interface",
-  "type": "Vlan1",
-  "description": false,
-  "items": [
-    "ip address 172.31.255.254 255.255.255.0"
-  ],
-  "sets": {
-    "ip": 1
-  },
-  "group": "Business-Unit-Networks"
-} ]]
-++ printf '%s\n' '{
-  "object": "interface",
-  "type": "Vlan1",
-  "description": false,
-  "items": [
-    "ip address 172.31.255.254 255.255.255.0"
-  ],
-  "sets": {
-    "ip": 1
-  },
-  "group": "Business-Unit-Networks"
-}'
-++ jq -s --arg site configs/misc --arg device switch1.conf '{
-              site: ( $site | gsub( "^.*/"; "" ) ),
-              device: $device,
-              objects: .
-            }'
-+ wrapped_block='{
-  "site": "misc",
-  "device": "switch1.conf",
-  "objects": [
-    {
-      "object": "interface",
-      "type": "Vlan1",
-      "description": false,
-      "items": [
-        "ip address 172.31.255.254 255.255.255.0"
-      ],
-      "sets": {
-        "ip": 1
-      },
-      "group": "Business-Unit-Networks"
-    }
-  ]
-}'
-+ [[ true == true ]]
-+ message '|-----> Config Objects:\n{
-  "site": "misc",
-  "device": "switch1.conf",
-  "objects": [
-    {
-      "object": "interface",
-      "type": "Vlan1",
-      "description": false,
-      "items": [
-        "ip address 172.31.255.254 255.255.255.0"
-      ],
-      "sets": {
-        "ip": 1
-      },
-      "group": "Business-Unit-Networks"
-    }
-  ]
-}'
-+ [[ -n |-----> Config Objects:\n{
-  "site": "misc",
-  "device": "switch1.conf",
-  "objects": [
-    {
-      "object": "interface",
-      "type": "Vlan1",
-      "description": false,
-      "items": [
-        "ip address 172.31.255.254 255.255.255.0"
-      ],
-      "sets": {
-        "ip": 1
-      },
-      "group": "Business-Unit-Networks"
-    }
-  ]
-} ]]
-+ local 'message=|-----> Config Objects:\n{
-  "site": "misc",
-  "device": "switch1.conf",
-  "objects": [
-    {
-      "object": "interface",
-      "type": "Vlan1",
-      "description": false,
-      "items": [
-        "ip address 172.31.255.254 255.255.255.0"
-      ],
-      "sets": {
-        "ip": 1
-      },
-      "group": "Business-Unit-Networks"
-    }
-  ]
-}'
-+ print '|-----> Config Objects:\n{
-  "site": "misc",
-  "device": "switch1.conf",
-  "objects": [
-    {
-      "object": "interface",
-      "type": "Vlan1",
-      "description": false,
-      "items": [
-        "ip address 172.31.255.254 255.255.255.0"
-      ],
-      "sets": {
-        "ip": 1
-      },
-      "group": "Business-Unit-Networks"
-    }
-  ]
-}'
-+ [[ -n |-----> Config Objects:\n{
-  "site": "misc",
-  "device": "switch1.conf",
-  "objects": [
-    {
-      "object": "interface",
-      "type": "Vlan1",
-      "description": false,
-      "items": [
-        "ip address 172.31.255.254 255.255.255.0"
-      ],
-      "sets": {
-        "ip": 1
-      },
-      "group": "Business-Unit-Networks"
-    }
-  ]
-} ]]
-+ echo -en '|-----> Config Objects:\n{
-  "site": "misc",
-  "device": "switch1.conf",
-  "objects": [
-    {
-      "object": "interface",
-      "type": "Vlan1",
-      "description": false,
-      "items": [
-        "ip address 172.31.255.254 255.255.255.0"
-      ],
-      "sets": {
-        "ip": 1
-      },
-      "group": "Business-Unit-Networks"
-    }
-  ]
-}'
-|-----> Config Objects:
-{
-  "site": "misc",
-  "device": "switch1.conf",
-  "objects": [
-    {
-      "object": "interface",
-      "type": "Vlan1",
-      "description": false,
-      "items": [
-        "ip address 172.31.255.254 255.255.255.0"
-      ],
-      "sets": {
-        "ip": 1
-      },
-      "group": "Business-Unit-Networks"
-    }
-  ]
-}+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-+ print '{
-  "site": "misc",
-  "device": "switch1.conf",
-  "objects": [
-    {
-      "object": "interface",
-      "type": "Vlan1",
-      "description": false,
-      "items": [
-        "ip address 172.31.255.254 255.255.255.0"
-      ],
-      "sets": {
-        "ip": 1
-      },
-      "group": "Business-Unit-Networks"
-    }
-  ]
-}'
-+ [[ -n {
-  "site": "misc",
-  "device": "switch1.conf",
-  "objects": [
-    {
-      "object": "interface",
-      "type": "Vlan1",
-      "description": false,
-      "items": [
-        "ip address 172.31.255.254 255.255.255.0"
-      ],
-      "sets": {
-        "ip": 1
-      },
-      "group": "Business-Unit-Networks"
-    }
-  ]
-} ]]
-+ echo -en '{
-  "site": "misc",
-  "device": "switch1.conf",
-  "objects": [
-    {
-      "object": "interface",
-      "type": "Vlan1",
-      "description": false,
-      "items": [
-        "ip address 172.31.255.254 255.255.255.0"
-      ],
-      "sets": {
-        "ip": 1
-      },
-      "group": "Business-Unit-Networks"
-    }
-  ]
-}'
-+ return 0
-+ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.0elA714Mpo/172.31.255.254
-+ export json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.0elA714Mpo/172.31.255.254/172.31.255.254--MTc0NzUzMjQx.json
-+ json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.0elA714Mpo/172.31.255.254/172.31.255.254--MTc0NzUzMjQx.json
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.0elA714Mpo/fragments.json ]]
-+ jq -s --arg target 172.31.255.254 '{ target: $target, configs: . }' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.0elA714Mpo/fragments.json
-++ mktemp
-+ tmp_merged=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.rMd20bQ7Jh
-+ local final_outfile=reports/172.31.255.254/172.31.255.254.json
-++ dirname reports/172.31.255.254/172.31.255.254.json
-+ mkdir -p reports/172.31.255.254
-+ local 'jq_merge_expr={
-        target: .[0].target,
-        configs:
-          ( reduce .[].configs[] as $cfg (
-            [];
-            if any( .[]; .site == $cfg.site and .device == $cfg.device )
-              then map(
-                if .site == $cfg.site and .device == $cfg.device
-                  then .objects = (
-                    ( .objects + $cfg.objects )
-                    | unique_by( .type, .name, .object, ( .sets | tostring ) )
-                  )
-                else . end
-              )
-            else . + [ $cfg ] end
-          ))
-      }'
-+ [[ -f reports/172.31.255.254/172.31.255.254.json ]]
-+ jq -s '{
-        target: .[0].target,
-        configs:
-          ( reduce .[].configs[] as $cfg (
-            [];
-            if any( .[]; .site == $cfg.site and .device == $cfg.device )
-              then map(
-                if .site == $cfg.site and .device == $cfg.device
-                  then .objects = (
-                    ( .objects + $cfg.objects )
-                    | unique_by( .type, .name, .object, ( .sets | tostring ) )
-                  )
-                else . end
-              )
-            else . + [ $cfg ] end
-          ))
-      }' reports/172.31.255.254/172.31.255.254.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.0elA714Mpo/172.31.255.254/172.31.255.254--MTc0NzUzMjQx.json
-+ mv /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.rMd20bQ7Jh reports/172.31.255.254/172.31.255.254.json
-+ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.0elA714Mpo/172.31.255.254/172.31.255.254--MTc0NzUzMjQx.json
++ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.R9t3jAOvYW/172.31.255.254
++ export json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.R9t3jAOvYW/172.31.255.254/172.31.255.254--MTc0NzU0MTY2.json
++ json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.R9t3jAOvYW/172.31.255.254/172.31.255.254--MTc0NzU0MTY2.json
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.R9t3jAOvYW/fragments.json ]]
 + return 0
 + unset verbose debug
-+ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.0elA714Mpo ]]
-+ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.0elA714Mpo
++ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.R9t3jAOvYW ]]
++ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.R9t3jAOvYW

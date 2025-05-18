@@ -48,6 +48,54 @@
           "group": "Unclassified"
         }
       ]
+    },
+    {
+      "site": "misc",
+      "device": "fw2.cfg",
+      "objects": [
+        {
+          "object": "access-list",
+          "type": false,
+          "description": false,
+          "items": [
+            "access-list OUTSIDE extended permit ip any host 198.51.100.75"
+          ],
+          "sets": {
+            "access-list": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Wayne-DMZ",
+          "description": "External public resources",
+          "items": [
+            "network-object host 198.51.100.75"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "fw5.cfg",
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network Hydra-Edge",
+          "description": "Remote site uplink",
+          "items": [
+            "network-object host 198.51.100.75"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        }
+      ]
     }
   ]
 }

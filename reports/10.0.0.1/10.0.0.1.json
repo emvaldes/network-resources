@@ -68,6 +68,54 @@
       ]
     },
     {
+      "site": "fortinet",
+      "device": "switch3.conf",
+      "objects": [
+        {
+          "object": "interface",
+          "type": "Vlan1",
+          "description": false,
+          "items": [
+            "ip address 10.0.0.1 255.255.255.0"
+          ],
+          "sets": {
+            "ip": 1
+          },
+          "group": "Business-Unit-Networks"
+        },
+        {
+          "object": "object-group",
+          "type": "network Spider-Net",
+          "description": "Web access switches",
+          "items": [
+            "network-object host 10.0.0.1"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "fw5.cfg",
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network RedRoom-Core",
+          "description": "Classified subnets",
+          "items": [
+            "network-object host 10.0.0.1"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
       "site": "misc",
       "device": "switch1.conf",
       "objects": [

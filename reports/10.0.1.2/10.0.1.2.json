@@ -68,6 +68,72 @@
       ]
     },
     {
+      "site": "fortinet",
+      "device": "switch4.conf",
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network Guardians-Zone",
+          "description": "Multinetwork convergence",
+          "items": [
+            "network-object host 10.0.1.2"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "fw2.cfg",
+      "objects": [
+        {
+          "object": "access-list",
+          "type": false,
+          "description": false,
+          "items": [
+            "access-list OUTSIDE extended permit ip host 10.0.1.2 any"
+          ],
+          "sets": {
+            "access-list": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Gotham-Internal",
+          "description": "Internal datacenter and backup LAN",
+          "items": [
+            "network-object host 10.0.1.2"
+          ],
+          "sets": {
+            "network-object": 3
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "fw6.cfg",
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network Xmen-LAN",
+          "description": "Secure base subnets",
+          "items": [
+            "network-object host 10.0.1.2"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
       "site": "misc",
       "device": "switch1.conf",
       "objects": [

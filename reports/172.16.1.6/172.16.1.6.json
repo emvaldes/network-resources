@@ -50,6 +50,72 @@
       ]
     },
     {
+      "site": "fortinet",
+      "device": "switch3.conf",
+      "objects": [
+        {
+          "object": "interface",
+          "type": "Vlan2",
+          "description": false,
+          "items": [
+            "ip address 172.16.1.6 255.255.255.0"
+          ],
+          "sets": {
+            "ip": 1
+          },
+          "group": "Business-Unit-Networks"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "fw2.cfg",
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network Batcave-Wireless",
+          "description": "Secure wireless endpoints",
+          "items": [
+            "network-object host 172.16.1.6"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "fw5.cfg",
+      "objects": [
+        {
+          "object": "access-list",
+          "type": false,
+          "description": false,
+          "items": [
+            "access-list OUTSIDE extended permit ip host 172.16.1.6 any"
+          ],
+          "sets": {
+            "access-list": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network RedRoom-Core",
+          "description": "Classified subnets",
+          "items": [
+            "network-object host 172.16.1.6"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
       "site": "misc",
       "device": "switch3.conf",
       "objects": [
