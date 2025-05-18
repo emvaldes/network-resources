@@ -156,6 +156,7 @@ function extract_configs () {
     for serialized_line in "${matched_objects[@]}"; do
       [[ "${verbose}" == true ]] && \
          message "Serialized Line: ${serialized_line[@]}";
+
       restored_block="$(
         perl -pe 's/'"${divisor}"'/\n/g' <<< "${serialized_line}"
       )"
@@ -172,6 +173,13 @@ function extract_configs () {
       local objects_dir="${reports_folder}/${target_address}/${site}";
       local objects_file="${objects_dir}/${device_filename}";
 
+      # ✅ Skip if this block already exists in the output file
+      if [[ -s "${objects_file}" ]] && grep -Fq -- "${restored_block}" "${objects_file}"; then
+        [[ "${debug}" == true ]] && \
+           message "Skipping duplicate block in ${objects_file}";
+        continue;
+      fi;
+
       mkdir -p "${objects_dir}";
       {
         message "${restored_block}";
@@ -182,15 +190,18 @@ function extract_configs () {
       if [[ "${verbose}" == true ]]; then
         message "Restored Configuration:\n${restored_block[@]}";
       fi;
+
       process_configs "${target_pattern}" \
                       "${config_file}" \
                       "${restored_block}" \
       ;
+
       if [[ -n "${target_object:-}" ]]; then
         if [[ "${debug}" == true ]]; then
           message "|-----> Target Objects: ${target_object}";
         fi;
       fi;
+
       #### -----------------------------------------------------------------------
       ## Append structured config object to fragments file (now final collector)
       if [[ -n "${target_object}" ]]; then
@@ -205,14 +216,18 @@ function extract_configs () {
               objects: .
             }'
         )";
+
         # Optionally inspect it
         [[ "${debug}" == true ]] && \
            message "|-----> Config Objects:\n${wrapped_block}";
+
         # Append to collector file
         print "${wrapped_block}" >> "${json_output}";
         # [[ "${debug}" == true ]] && \
         #    print_file "${json_output}";
+
       fi;
+
     done;
 
     return 0;
