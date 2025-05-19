@@ -2,8 +2,8 @@
 + export LC_ALL=C
 + LC_ALL=C
 ++ mktemp -d
-+ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.RZhl7jIzvP
-+ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.RZhl7jIzvP
++ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.acqc9mzDVr
++ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.acqc9mzDVr
 + trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
 + source ./scripts/tools-devops.shell
 ++ [[ -n '' ]]
@@ -20,6 +20,7 @@
 ++ alias detect-platform=detect_platform
 ++ alias install-packages=install_packages
 ++ alias install-missing=install_missing
+++ alias pause=pause
 ++ alias display-help=display_help_generic
 ++ alias relative-configpath=relative_configpath
 ++ alias validate-address=validate_address
@@ -31,6 +32,8 @@
 ++ mkdir -p .local/errors .local/jobs .local/stats
 ++ export stats_folder=.local/stats/
 ++ stats_folder=.local/stats/
+++ export actions_logsfile=.local/stats//actions.jobs
+++ actions_logsfile=.local/stats//actions.jobs
 ++ export reports_logsfile=.local/stats//reports.jobs
 ++ reports_logsfile=.local/stats//reports.jobs
 ++ export started_logsfile=.local/stats//started.jobs
@@ -42,8 +45,8 @@
 +++ date +%s%N
 +++ base64
 +++ tr -dc a-zA-Z0-9
-++ export divisor=MTc0NzU0MTY2ODEzMTM3MTAwMAo
-++ divisor=MTc0NzU0MTY2ODEzMTM3MTAwMAo
+++ export divisor=MTc0NzY0OTg0Mjk2OTE1NDAwMAo
+++ divisor=MTc0NzY0OTg0Mjk2OTE1NDAwMAo
 + source ./scripts/tools-configs.shell
 ++ [[ -n '' ]]
 ++ readonly __TOOLS_EXTRACTION_SOURCED=1
@@ -57,7 +60,7 @@
 + script_name=./scripts/parse-configs.shell
 + [[ 9 -ge 1 ]]
 + [[ --configs=configs =~ ^-*(h|help)$ ]]
-+ main --configs=configs --ip-addr=10.10.10.10 --index=25 --matrix=matrix.json --reports=reports --file-ext=cfg,conf,cnf --classify --verbose --debug
++ main --configs=configs --ip-addr=10.10.10.10 --index=04 --matrix=matrix.json --reports=reports --file-ext=cfg,conf,cnf --classify --verbose --debug
 + file_extensions=()
 + declare -a file_extensions
 + oIFS=' 	
@@ -104,13 +107,13 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --index=25
+++ echo -e --index=04
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ index =~ ^(classify|g)$ ]]
 + [[ index =~ ^(configs|c)$ ]]
 + [[ index =~ ^(file-ext|x)$ ]]
 + [[ index =~ ^(index|n)$ ]]
-+ local target_index=25
++ local target_index=04
 + [[ index =~ ^(ip-addr|i)$ ]]
 + [[ index =~ ^(logs|o)$ ]]
 + [[ index =~ ^(matrix|m)$ ]]
@@ -170,6 +173,7 @@
 ++ print cfg,conf,cnf
 ++ [[ -n cfg,conf,cnf ]]
 ++ echo -en cfg,conf,cnf
+++ return 0
 ++ tr ':,;\n ' '\n'
 + [[ file-ext =~ ^(index|n)$ ]]
 + [[ file-ext =~ ^(ip-addr|i)$ ]]
@@ -258,20 +262,23 @@
 + mapfile -t source_configs
 ++ jq -r '.configs[] | "\( .config.site )/\( .config.device )"' targets/10.10.10.10.json
 + for i in "${!source_configs[@]}"
-+ [[ misc/switch2.conf != \c\o\n\f\i\g\s\/* ]]
-+ source_configs[$i]=configs/misc/switch2.conf
++ [[ misc/fw3.cfg != \c\o\n\f\i\g\s\/* ]]
++ source_configs[$i]=configs/misc/fw3.cfg
 + [[ true == true ]]
 + print 'Config JSON file used: targets/10.10.10.10.json'
 + [[ -n Config JSON file used: targets/10.10.10.10.json ]]
 + echo -en 'Config JSON file used: targets/10.10.10.10.json'
-Config JSON file used: targets/10.10.10.10.json+ print 'Extracted config paths from JSON:'
+Config JSON file used: targets/10.10.10.10.json+ return 0
++ print 'Extracted config paths from JSON:'
 + [[ -n Extracted config paths from JSON: ]]
 + echo -en 'Extracted config paths from JSON:'
-Extracted config paths from JSON:+ for cfg in "${source_configs[@]}"
-+ print ' - configs/misc/switch2.conf'
-+ [[ -n  - configs/misc/switch2.conf ]]
-+ echo -en ' - configs/misc/switch2.conf'
- - configs/misc/switch2.conf+ newline
+Extracted config paths from JSON:+ return 0
++ for cfg in "${source_configs[@]}"
++ print ' - configs/misc/fw3.cfg'
++ [[ -n  - configs/misc/fw3.cfg ]]
++ echo -en ' - configs/misc/fw3.cfg'
+ - configs/misc/fw3.cfg+ return 0
++ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -279,6 +286,7 @@ Extracted config paths from JSON:+ for cfg in "${source_configs[@]}"
 
 + (( i++ ))
 + (( i < count ))
++ return 0
 + local matrix_filename=matrix.json
 + [[ ! -f matrix.json ]]
 + jq -e 'length > 0' matrix.json
@@ -361,473 +369,1570 @@ Extracted config paths from JSON:+ for cfg in "${source_configs[@]}"
 ]'
 + export reports_folder=reports
 + reports_folder=reports
-+ [[ -z 25 ]]
++ [[ -z 04 ]]
 + [[ -z false ]]
 + [[ -z 10.10.10.10 ]]
 ++ print 10.10.10.10
 ++ [[ -n 10.10.10.10 ]]
 ++ echo -en 10.10.10.10
+++ return 0
 ++ sed -E 's/[[:space:]]+//g'
 ++ tr -d '\r'
 + target_address=10.10.10.10
 + [[ false == true ]]
-+ export tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.RZhl7jIzvP/fragments.json
-+ tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.RZhl7jIzvP/fragments.json
++ export tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.acqc9mzDVr/fragments.json
++ tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.acqc9mzDVr/fragments.json
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs configs/misc/switch2.conf 10.10.10.10 targets/10.10.10.10.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.RZhl7jIzvP/fragments.json
-+ local config_file=configs/misc/switch2.conf
++ extract_configs configs/misc/fw3.cfg 10.10.10.10 targets/10.10.10.10.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.acqc9mzDVr/fragments.json
++ local config_file=configs/misc/fw3.cfg
 + local target_pattern=10.10.10.10
 + local target_listing=targets/10.10.10.10.json
-+ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.RZhl7jIzvP/fragments.json
-+ [[ ! -f configs/misc/switch2.conf ]]
-+ message '[DEBUG] Checking if config file exists and is readable: configs/misc/switch2.conf'
-+ [[ -n [DEBUG] Checking if config file exists and is readable: configs/misc/switch2.conf ]]
-+ local 'message=[DEBUG] Checking if config file exists and is readable: configs/misc/switch2.conf'
-+ print '[DEBUG] Checking if config file exists and is readable: configs/misc/switch2.conf'
-+ [[ -n [DEBUG] Checking if config file exists and is readable: configs/misc/switch2.conf ]]
-+ echo -en '[DEBUG] Checking if config file exists and is readable: configs/misc/switch2.conf'
-[DEBUG] Checking if config file exists and is readable: configs/misc/switch2.conf+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-+ [[ ! -s configs/misc/switch2.conf ]]
-++ stat -c%s configs/misc/switch2.conf
-stat: illegal option -- c
-usage: stat [-FLnq] [-f format | -l | -r | -s | -x] [-t timefmt] [file ...]
-+ message '[OK] File '\''configs/misc/switch2.conf'\'' is readable and size is  bytes'
-+ [[ -n [OK] File 'configs/misc/switch2.conf' is readable and size is  bytes ]]
-+ local 'message=[OK] File '\''configs/misc/switch2.conf'\'' is readable and size is  bytes'
-+ print '[OK] File '\''configs/misc/switch2.conf'\'' is readable and size is  bytes'
-+ [[ -n [OK] File 'configs/misc/switch2.conf' is readable and size is  bytes ]]
-+ echo -en '[OK] File '\''configs/misc/switch2.conf'\'' is readable and size is  bytes'
-[OK] File 'configs/misc/switch2.conf' is readable and size is  bytes+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-+ local 'imported_content=interface Vlan1
- ip address 192.168.1.11 255.255.255.0
-
-interface Vlan2
- ip address 10.10.10.10 255.255.255.0
-
-interface Vlan3
- ip address 192.168.100.100 255.255.255.0
-
-object-group network Stark-WiFi
- description Internal wireless layout
++ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.acqc9mzDVr/fragments.json
++ [[ ! -f configs/misc/fw3.cfg ]]
++ message '[DEBUG] Checking if config file exists and is readable: configs/misc/fw3.cfg'
++ [[ -n [DEBUG] Checking if config file exists and is readable: configs/misc/fw3.cfg ]]
++ local 'message=[DEBUG] Checking if config file exists and is readable: configs/misc/fw3.cfg'
++ echo -e '[DEBUG] Checking if config file exists and is readable: configs/misc/fw3.cfg'
+[DEBUG] Checking if config file exists and is readable: configs/misc/fw3.cfg
++ return 0
++ [[ ! -s configs/misc/fw3.cfg ]]
+++ stat -f %m configs/misc/fw3.cfg
++ message '[OK] File '\''configs/misc/fw3.cfg'\'' is readable and size is 1747533608 bytes'
++ [[ -n [OK] File 'configs/misc/fw3.cfg' is readable and size is 1747533608 bytes ]]
++ local 'message=[OK] File '\''configs/misc/fw3.cfg'\'' is readable and size is 1747533608 bytes'
++ echo -e '[OK] File '\''configs/misc/fw3.cfg'\'' is readable and size is 1747533608 bytes'
+[OK] File 'configs/misc/fw3.cfg' is readable and size is 1747533608 bytes
++ return 0
++ local 'imported_content=object-group network Wakanda-Core
+ description National Core Routing Zone
+ network-object host 192.168.1.10
  network-object host 10.0.2.3
- network-object 192.168.12.0 255.255.255.0
+ network-object 10.0.0.0 255.255.255.0
+!
+
+object-group network Panther-Edge
+ description Internet-facing proxy systems
+ network-object host 203.0.113.25
+ network-object host 172.16.0.5
+!
+
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+!
+
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+!
+
+object network Panther-Gateway
+ host 10.0.2.3
+ description Secure outbound concentrator
+!
+
+object network Edge-Terminal
+ host 172.16.0.5
+ description Internet firewall handoff
+!
+
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+!
+
+object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT
+!
+
+access-list OUTSIDE extended permit ip host 10.0.2.3 any
+access-list OUTSIDE extended permit ip any host 172.16.0.5
+access-list OUTSIDE extended permit ip host 10.10.10.10 any
+access-list OUTSIDE extended deny ip any any
+!
+
+nat (inside,outside) source static Panther-Gateway Edge-Terminal
+nat (inside,outside) source static Shield-WiFi-Alias Edge-Terminal
 !'
 + [[ true == true ]]
-+ message 'Imported Content: interface Vlan1
- ip address 192.168.1.11 255.255.255.0
-
-interface Vlan2
- ip address 10.10.10.10 255.255.255.0
-
-interface Vlan3
- ip address 192.168.100.100 255.255.255.0
-
-object-group network Stark-WiFi
- description Internal wireless layout
++ message 'Imported Content: object-group network Wakanda-Core
+ description National Core Routing Zone
+ network-object host 192.168.1.10
  network-object host 10.0.2.3
- network-object 192.168.12.0 255.255.255.0
+ network-object 10.0.0.0 255.255.255.0
+!
+
+object-group network Panther-Edge
+ description Internet-facing proxy systems
+ network-object host 203.0.113.25
+ network-object host 172.16.0.5
+!
+
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+!
+
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+!
+
+object network Panther-Gateway
+ host 10.0.2.3
+ description Secure outbound concentrator
+!
+
+object network Edge-Terminal
+ host 172.16.0.5
+ description Internet firewall handoff
+!
+
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+!
+
+object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT
+!
+
+access-list OUTSIDE extended permit ip host 10.0.2.3 any
+access-list OUTSIDE extended permit ip any host 172.16.0.5
+access-list OUTSIDE extended permit ip host 10.10.10.10 any
+access-list OUTSIDE extended deny ip any any
+!
+
+nat (inside,outside) source static Panther-Gateway Edge-Terminal
+nat (inside,outside) source static Shield-WiFi-Alias Edge-Terminal
 !'
-+ [[ -n Imported Content: interface Vlan1
- ip address 192.168.1.11 255.255.255.0
-
-interface Vlan2
- ip address 10.10.10.10 255.255.255.0
-
-interface Vlan3
- ip address 192.168.100.100 255.255.255.0
-
-object-group network Stark-WiFi
- description Internal wireless layout
++ [[ -n Imported Content: object-group network Wakanda-Core
+ description National Core Routing Zone
+ network-object host 192.168.1.10
  network-object host 10.0.2.3
- network-object 192.168.12.0 255.255.255.0
+ network-object 10.0.0.0 255.255.255.0
+!
+
+object-group network Panther-Edge
+ description Internet-facing proxy systems
+ network-object host 203.0.113.25
+ network-object host 172.16.0.5
+!
+
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+!
+
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+!
+
+object network Panther-Gateway
+ host 10.0.2.3
+ description Secure outbound concentrator
+!
+
+object network Edge-Terminal
+ host 172.16.0.5
+ description Internet firewall handoff
+!
+
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+!
+
+object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT
+!
+
+access-list OUTSIDE extended permit ip host 10.0.2.3 any
+access-list OUTSIDE extended permit ip any host 172.16.0.5
+access-list OUTSIDE extended permit ip host 10.10.10.10 any
+access-list OUTSIDE extended deny ip any any
+!
+
+nat (inside,outside) source static Panther-Gateway Edge-Terminal
+nat (inside,outside) source static Shield-WiFi-Alias Edge-Terminal
 ! ]]
-+ local 'message=Imported Content: interface Vlan1
- ip address 192.168.1.11 255.255.255.0
-
-interface Vlan2
- ip address 10.10.10.10 255.255.255.0
-
-interface Vlan3
- ip address 192.168.100.100 255.255.255.0
-
-object-group network Stark-WiFi
- description Internal wireless layout
++ local 'message=Imported Content: object-group network Wakanda-Core
+ description National Core Routing Zone
+ network-object host 192.168.1.10
  network-object host 10.0.2.3
- network-object 192.168.12.0 255.255.255.0
+ network-object 10.0.0.0 255.255.255.0
+!
+
+object-group network Panther-Edge
+ description Internet-facing proxy systems
+ network-object host 203.0.113.25
+ network-object host 172.16.0.5
+!
+
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+!
+
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+!
+
+object network Panther-Gateway
+ host 10.0.2.3
+ description Secure outbound concentrator
+!
+
+object network Edge-Terminal
+ host 172.16.0.5
+ description Internet firewall handoff
+!
+
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+!
+
+object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT
+!
+
+access-list OUTSIDE extended permit ip host 10.0.2.3 any
+access-list OUTSIDE extended permit ip any host 172.16.0.5
+access-list OUTSIDE extended permit ip host 10.10.10.10 any
+access-list OUTSIDE extended deny ip any any
+!
+
+nat (inside,outside) source static Panther-Gateway Edge-Terminal
+nat (inside,outside) source static Shield-WiFi-Alias Edge-Terminal
 !'
-+ print 'Imported Content: interface Vlan1
- ip address 192.168.1.11 255.255.255.0
-
-interface Vlan2
- ip address 10.10.10.10 255.255.255.0
-
-interface Vlan3
- ip address 192.168.100.100 255.255.255.0
-
-object-group network Stark-WiFi
- description Internal wireless layout
++ echo -e 'Imported Content: object-group network Wakanda-Core
+ description National Core Routing Zone
+ network-object host 192.168.1.10
  network-object host 10.0.2.3
- network-object 192.168.12.0 255.255.255.0
+ network-object 10.0.0.0 255.255.255.0
+!
+
+object-group network Panther-Edge
+ description Internet-facing proxy systems
+ network-object host 203.0.113.25
+ network-object host 172.16.0.5
+!
+
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+!
+
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+!
+
+object network Panther-Gateway
+ host 10.0.2.3
+ description Secure outbound concentrator
+!
+
+object network Edge-Terminal
+ host 172.16.0.5
+ description Internet firewall handoff
+!
+
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+!
+
+object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT
+!
+
+access-list OUTSIDE extended permit ip host 10.0.2.3 any
+access-list OUTSIDE extended permit ip any host 172.16.0.5
+access-list OUTSIDE extended permit ip host 10.10.10.10 any
+access-list OUTSIDE extended deny ip any any
+!
+
+nat (inside,outside) source static Panther-Gateway Edge-Terminal
+nat (inside,outside) source static Shield-WiFi-Alias Edge-Terminal
 !'
-+ [[ -n Imported Content: interface Vlan1
- ip address 192.168.1.11 255.255.255.0
-
-interface Vlan2
- ip address 10.10.10.10 255.255.255.0
-
-interface Vlan3
- ip address 192.168.100.100 255.255.255.0
-
-object-group network Stark-WiFi
- description Internal wireless layout
+Imported Content: object-group network Wakanda-Core
+ description National Core Routing Zone
+ network-object host 192.168.1.10
  network-object host 10.0.2.3
- network-object 192.168.12.0 255.255.255.0
-! ]]
-+ echo -en 'Imported Content: interface Vlan1
- ip address 192.168.1.11 255.255.255.0
+ network-object 10.0.0.0 255.255.255.0
+!
 
-interface Vlan2
- ip address 10.10.10.10 255.255.255.0
+object-group network Panther-Edge
+ description Internet-facing proxy systems
+ network-object host 203.0.113.25
+ network-object host 172.16.0.5
+!
 
-interface Vlan3
- ip address 192.168.100.100 255.255.255.0
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+!
 
-object-group network Stark-WiFi
- description Internal wireless layout
- network-object host 10.0.2.3
- network-object 192.168.12.0 255.255.255.0
-!'
-Imported Content: interface Vlan1
- ip address 192.168.1.11 255.255.255.0
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+!
 
-interface Vlan2
- ip address 10.10.10.10 255.255.255.0
+object network Panther-Gateway
+ host 10.0.2.3
+ description Secure outbound concentrator
+!
 
-interface Vlan3
- ip address 192.168.100.100 255.255.255.0
+object network Edge-Terminal
+ host 172.16.0.5
+ description Internet firewall handoff
+!
 
-object-group network Stark-WiFi
- description Internal wireless layout
- network-object host 10.0.2.3
- network-object 192.168.12.0 255.255.255.0
-!+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+!
 
-+ (( i++ ))
-+ (( i < count ))
+object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT
+!
+
+access-list OUTSIDE extended permit ip host 10.0.2.3 any
+access-list OUTSIDE extended permit ip any host 172.16.0.5
+access-list OUTSIDE extended permit ip host 10.10.10.10 any
+access-list OUTSIDE extended deny ip any any
+!
+
+nat (inside,outside) source static Panther-Gateway Edge-Terminal
+nat (inside,outside) source static Shield-WiFi-Alias Edge-Terminal
+!
++ return 0
 ++ sed '/^\s*$/d;/^\s*!.*$/d'
-+ local 'sanitized_content=interface Vlan1
- ip address 192.168.1.11 255.255.255.0
-interface Vlan2
- ip address 10.10.10.10 255.255.255.0
-interface Vlan3
- ip address 192.168.100.100 255.255.255.0
-object-group network Stark-WiFi
- description Internal wireless layout
++ local 'sanitized_content=object-group network Wakanda-Core
+ description National Core Routing Zone
+ network-object host 192.168.1.10
  network-object host 10.0.2.3
- network-object 192.168.12.0 255.255.255.0'
+ network-object 10.0.0.0 255.255.255.0
+object-group network Panther-Edge
+ description Internet-facing proxy systems
+ network-object host 203.0.113.25
+ network-object host 172.16.0.5
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+object network Panther-Gateway
+ host 10.0.2.3
+ description Secure outbound concentrator
+object network Edge-Terminal
+ host 172.16.0.5
+ description Internet firewall handoff
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT
+access-list OUTSIDE extended permit ip host 10.0.2.3 any
+access-list OUTSIDE extended permit ip any host 172.16.0.5
+access-list OUTSIDE extended permit ip host 10.10.10.10 any
+access-list OUTSIDE extended deny ip any any
+nat (inside,outside) source static Panther-Gateway Edge-Terminal
+nat (inside,outside) source static Shield-WiFi-Alias Edge-Terminal'
 + [[ true == true ]]
-+ message 'Sanitized Content: interface Vlan1
- ip address 192.168.1.11 255.255.255.0
-interface Vlan2
- ip address 10.10.10.10 255.255.255.0
-interface Vlan3
- ip address 192.168.100.100 255.255.255.0
-object-group network Stark-WiFi
- description Internal wireless layout
++ message 'Sanitized Content: object-group network Wakanda-Core
+ description National Core Routing Zone
+ network-object host 192.168.1.10
  network-object host 10.0.2.3
- network-object 192.168.12.0 255.255.255.0'
-+ [[ -n Sanitized Content: interface Vlan1
- ip address 192.168.1.11 255.255.255.0
-interface Vlan2
- ip address 10.10.10.10 255.255.255.0
-interface Vlan3
- ip address 192.168.100.100 255.255.255.0
-object-group network Stark-WiFi
- description Internal wireless layout
+ network-object 10.0.0.0 255.255.255.0
+object-group network Panther-Edge
+ description Internet-facing proxy systems
+ network-object host 203.0.113.25
+ network-object host 172.16.0.5
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+object network Panther-Gateway
+ host 10.0.2.3
+ description Secure outbound concentrator
+object network Edge-Terminal
+ host 172.16.0.5
+ description Internet firewall handoff
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT
+access-list OUTSIDE extended permit ip host 10.0.2.3 any
+access-list OUTSIDE extended permit ip any host 172.16.0.5
+access-list OUTSIDE extended permit ip host 10.10.10.10 any
+access-list OUTSIDE extended deny ip any any
+nat (inside,outside) source static Panther-Gateway Edge-Terminal
+nat (inside,outside) source static Shield-WiFi-Alias Edge-Terminal'
++ [[ -n Sanitized Content: object-group network Wakanda-Core
+ description National Core Routing Zone
+ network-object host 192.168.1.10
  network-object host 10.0.2.3
- network-object 192.168.12.0 255.255.255.0 ]]
-+ local 'message=Sanitized Content: interface Vlan1
- ip address 192.168.1.11 255.255.255.0
-interface Vlan2
- ip address 10.10.10.10 255.255.255.0
-interface Vlan3
- ip address 192.168.100.100 255.255.255.0
-object-group network Stark-WiFi
- description Internal wireless layout
+ network-object 10.0.0.0 255.255.255.0
+object-group network Panther-Edge
+ description Internet-facing proxy systems
+ network-object host 203.0.113.25
+ network-object host 172.16.0.5
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+object network Panther-Gateway
+ host 10.0.2.3
+ description Secure outbound concentrator
+object network Edge-Terminal
+ host 172.16.0.5
+ description Internet firewall handoff
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT
+access-list OUTSIDE extended permit ip host 10.0.2.3 any
+access-list OUTSIDE extended permit ip any host 172.16.0.5
+access-list OUTSIDE extended permit ip host 10.10.10.10 any
+access-list OUTSIDE extended deny ip any any
+nat (inside,outside) source static Panther-Gateway Edge-Terminal
+nat (inside,outside) source static Shield-WiFi-Alias Edge-Terminal ]]
++ local 'message=Sanitized Content: object-group network Wakanda-Core
+ description National Core Routing Zone
+ network-object host 192.168.1.10
  network-object host 10.0.2.3
- network-object 192.168.12.0 255.255.255.0'
-+ print 'Sanitized Content: interface Vlan1
- ip address 192.168.1.11 255.255.255.0
-interface Vlan2
- ip address 10.10.10.10 255.255.255.0
-interface Vlan3
- ip address 192.168.100.100 255.255.255.0
-object-group network Stark-WiFi
- description Internal wireless layout
+ network-object 10.0.0.0 255.255.255.0
+object-group network Panther-Edge
+ description Internet-facing proxy systems
+ network-object host 203.0.113.25
+ network-object host 172.16.0.5
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+object network Panther-Gateway
+ host 10.0.2.3
+ description Secure outbound concentrator
+object network Edge-Terminal
+ host 172.16.0.5
+ description Internet firewall handoff
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT
+access-list OUTSIDE extended permit ip host 10.0.2.3 any
+access-list OUTSIDE extended permit ip any host 172.16.0.5
+access-list OUTSIDE extended permit ip host 10.10.10.10 any
+access-list OUTSIDE extended deny ip any any
+nat (inside,outside) source static Panther-Gateway Edge-Terminal
+nat (inside,outside) source static Shield-WiFi-Alias Edge-Terminal'
++ echo -e 'Sanitized Content: object-group network Wakanda-Core
+ description National Core Routing Zone
+ network-object host 192.168.1.10
  network-object host 10.0.2.3
- network-object 192.168.12.0 255.255.255.0'
-+ [[ -n Sanitized Content: interface Vlan1
- ip address 192.168.1.11 255.255.255.0
-interface Vlan2
- ip address 10.10.10.10 255.255.255.0
-interface Vlan3
- ip address 192.168.100.100 255.255.255.0
-object-group network Stark-WiFi
- description Internal wireless layout
+ network-object 10.0.0.0 255.255.255.0
+object-group network Panther-Edge
+ description Internet-facing proxy systems
+ network-object host 203.0.113.25
+ network-object host 172.16.0.5
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+object network Panther-Gateway
+ host 10.0.2.3
+ description Secure outbound concentrator
+object network Edge-Terminal
+ host 172.16.0.5
+ description Internet firewall handoff
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT
+access-list OUTSIDE extended permit ip host 10.0.2.3 any
+access-list OUTSIDE extended permit ip any host 172.16.0.5
+access-list OUTSIDE extended permit ip host 10.10.10.10 any
+access-list OUTSIDE extended deny ip any any
+nat (inside,outside) source static Panther-Gateway Edge-Terminal
+nat (inside,outside) source static Shield-WiFi-Alias Edge-Terminal'
+Sanitized Content: object-group network Wakanda-Core
+ description National Core Routing Zone
+ network-object host 192.168.1.10
  network-object host 10.0.2.3
- network-object 192.168.12.0 255.255.255.0 ]]
-+ echo -en 'Sanitized Content: interface Vlan1
- ip address 192.168.1.11 255.255.255.0
-interface Vlan2
- ip address 10.10.10.10 255.255.255.0
-interface Vlan3
- ip address 192.168.100.100 255.255.255.0
-object-group network Stark-WiFi
- description Internal wireless layout
- network-object host 10.0.2.3
- network-object 192.168.12.0 255.255.255.0'
-Sanitized Content: interface Vlan1
- ip address 192.168.1.11 255.255.255.0
-interface Vlan2
- ip address 10.10.10.10 255.255.255.0
-interface Vlan3
- ip address 192.168.100.100 255.255.255.0
-object-group network Stark-WiFi
- description Internal wireless layout
- network-object host 10.0.2.3
- network-object 192.168.12.0 255.255.255.0+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-++ perl -pe 's/\n/MTc0NzU0MTY2ODEzMTM3MTAwMAo/g'
-+ local 'serialized_objects=interface Vlan1MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAointerface Vlan2MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAointerface Vlan3MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAoobject-group network Stark-WiFiMTc0NzU0MTY2ODEzMTM3MTAwMAo description Internal wireless layoutMTc0NzU0MTY2ODEzMTM3MTAwMAo network-object host 10.0.2.3MTc0NzU0MTY2ODEzMTM3MTAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAo'
+ network-object 10.0.0.0 255.255.255.0
+object-group network Panther-Edge
+ description Internet-facing proxy systems
+ network-object host 203.0.113.25
+ network-object host 172.16.0.5
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+object network Panther-Gateway
+ host 10.0.2.3
+ description Secure outbound concentrator
+object network Edge-Terminal
+ host 172.16.0.5
+ description Internet firewall handoff
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
+object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT
+access-list OUTSIDE extended permit ip host 10.0.2.3 any
+access-list OUTSIDE extended permit ip any host 172.16.0.5
+access-list OUTSIDE extended permit ip host 10.10.10.10 any
+access-list OUTSIDE extended deny ip any any
+nat (inside,outside) source static Panther-Gateway Edge-Terminal
+nat (inside,outside) source static Shield-WiFi-Alias Edge-Terminal
++ return 0
+++ perl -pe 's/\n/MTc0NzY0OTg0Mjk2OTE1NDAwMAo/g'
++ local 'serialized_objects=object-group network Wakanda-CoreMTc0NzY0OTg0Mjk2OTE1NDAwMAo description National Core Routing ZoneMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 192.168.1.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.0.2.3MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 10.0.0.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Panther-EdgeMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Internet-facing proxy systemsMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 172.16.0.5MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject network Panther-GatewayMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 10.0.2.3MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Secure outbound concentratorMTc0NzY0OTg0Mjk2OTE1NDAwMAoobject network Edge-TerminalMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 172.16.0.5MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Internet firewall handoffMTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject network Shield-WiFi-AliasMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Guest NATMTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended permit ip host 10.0.2.3 anyMTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended permit ip any host 172.16.0.5MTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended permit ip host 10.10.10.10 anyMTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY0OTg0Mjk2OTE1NDAwMAonat (inside,outside) source static Panther-Gateway Edge-TerminalMTc0NzY0OTg0Mjk2OTE1NDAwMAonat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY0OTg0Mjk2OTE1NDAwMAo'
 + [[ true == true ]]
-+ message 'Serialized Objects: interface Vlan1MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAointerface Vlan2MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAointerface Vlan3MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAoobject-group network Stark-WiFiMTc0NzU0MTY2ODEzMTM3MTAwMAo description Internal wireless layoutMTc0NzU0MTY2ODEzMTM3MTAwMAo network-object host 10.0.2.3MTc0NzU0MTY2ODEzMTM3MTAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAo'
-+ [[ -n Serialized Objects: interface Vlan1MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAointerface Vlan2MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAointerface Vlan3MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAoobject-group network Stark-WiFiMTc0NzU0MTY2ODEzMTM3MTAwMAo description Internal wireless layoutMTc0NzU0MTY2ODEzMTM3MTAwMAo network-object host 10.0.2.3MTc0NzU0MTY2ODEzMTM3MTAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAo ]]
-+ local 'message=Serialized Objects: interface Vlan1MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAointerface Vlan2MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAointerface Vlan3MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAoobject-group network Stark-WiFiMTc0NzU0MTY2ODEzMTM3MTAwMAo description Internal wireless layoutMTc0NzU0MTY2ODEzMTM3MTAwMAo network-object host 10.0.2.3MTc0NzU0MTY2ODEzMTM3MTAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAo'
-+ print 'Serialized Objects: interface Vlan1MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAointerface Vlan2MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAointerface Vlan3MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAoobject-group network Stark-WiFiMTc0NzU0MTY2ODEzMTM3MTAwMAo description Internal wireless layoutMTc0NzU0MTY2ODEzMTM3MTAwMAo network-object host 10.0.2.3MTc0NzU0MTY2ODEzMTM3MTAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAo'
-+ [[ -n Serialized Objects: interface Vlan1MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAointerface Vlan2MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAointerface Vlan3MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAoobject-group network Stark-WiFiMTc0NzU0MTY2ODEzMTM3MTAwMAo description Internal wireless layoutMTc0NzU0MTY2ODEzMTM3MTAwMAo network-object host 10.0.2.3MTc0NzU0MTY2ODEzMTM3MTAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAo ]]
-+ echo -en 'Serialized Objects: interface Vlan1MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAointerface Vlan2MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAointerface Vlan3MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAoobject-group network Stark-WiFiMTc0NzU0MTY2ODEzMTM3MTAwMAo description Internal wireless layoutMTc0NzU0MTY2ODEzMTM3MTAwMAo network-object host 10.0.2.3MTc0NzU0MTY2ODEzMTM3MTAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAo'
-Serialized Objects: interface Vlan1MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 192.168.1.11 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAointerface Vlan2MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 10.10.10.10 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAointerface Vlan3MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 192.168.100.100 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAoobject-group network Stark-WiFiMTc0NzU0MTY2ODEzMTM3MTAwMAo description Internal wireless layoutMTc0NzU0MTY2ODEzMTM3MTAwMAo network-object host 10.0.2.3MTc0NzU0MTY2ODEzMTM3MTAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAo+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-++ sed -E 's/MTc0NzU0MTY2ODEzMTM3MTAwMAo([^[:space:]])/\n\1/g'
-+ local 'restored_lines=interface Vlan1MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 192.168.1.11 255.255.255.0
-interface Vlan2MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 10.10.10.10 255.255.255.0
-interface Vlan3MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 192.168.100.100 255.255.255.0
-object-group network Stark-WiFiMTc0NzU0MTY2ODEzMTM3MTAwMAo description Internal wireless layoutMTc0NzU0MTY2ODEzMTM3MTAwMAo network-object host 10.0.2.3MTc0NzU0MTY2ODEzMTM3MTAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAo'
++ message 'Serialized Objects: object-group network Wakanda-CoreMTc0NzY0OTg0Mjk2OTE1NDAwMAo description National Core Routing ZoneMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 192.168.1.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.0.2.3MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 10.0.0.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Panther-EdgeMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Internet-facing proxy systemsMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 172.16.0.5MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject network Panther-GatewayMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 10.0.2.3MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Secure outbound concentratorMTc0NzY0OTg0Mjk2OTE1NDAwMAoobject network Edge-TerminalMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 172.16.0.5MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Internet firewall handoffMTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject network Shield-WiFi-AliasMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Guest NATMTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended permit ip host 10.0.2.3 anyMTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended permit ip any host 172.16.0.5MTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended permit ip host 10.10.10.10 anyMTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY0OTg0Mjk2OTE1NDAwMAonat (inside,outside) source static Panther-Gateway Edge-TerminalMTc0NzY0OTg0Mjk2OTE1NDAwMAonat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY0OTg0Mjk2OTE1NDAwMAo'
++ [[ -n Serialized Objects: object-group network Wakanda-CoreMTc0NzY0OTg0Mjk2OTE1NDAwMAo description National Core Routing ZoneMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 192.168.1.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.0.2.3MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 10.0.0.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Panther-EdgeMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Internet-facing proxy systemsMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 172.16.0.5MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject network Panther-GatewayMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 10.0.2.3MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Secure outbound concentratorMTc0NzY0OTg0Mjk2OTE1NDAwMAoobject network Edge-TerminalMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 172.16.0.5MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Internet firewall handoffMTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject network Shield-WiFi-AliasMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Guest NATMTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended permit ip host 10.0.2.3 anyMTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended permit ip any host 172.16.0.5MTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended permit ip host 10.10.10.10 anyMTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY0OTg0Mjk2OTE1NDAwMAonat (inside,outside) source static Panther-Gateway Edge-TerminalMTc0NzY0OTg0Mjk2OTE1NDAwMAonat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY0OTg0Mjk2OTE1NDAwMAo ]]
++ local 'message=Serialized Objects: object-group network Wakanda-CoreMTc0NzY0OTg0Mjk2OTE1NDAwMAo description National Core Routing ZoneMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 192.168.1.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.0.2.3MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 10.0.0.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Panther-EdgeMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Internet-facing proxy systemsMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 172.16.0.5MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject network Panther-GatewayMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 10.0.2.3MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Secure outbound concentratorMTc0NzY0OTg0Mjk2OTE1NDAwMAoobject network Edge-TerminalMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 172.16.0.5MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Internet firewall handoffMTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject network Shield-WiFi-AliasMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Guest NATMTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended permit ip host 10.0.2.3 anyMTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended permit ip any host 172.16.0.5MTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended permit ip host 10.10.10.10 anyMTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY0OTg0Mjk2OTE1NDAwMAonat (inside,outside) source static Panther-Gateway Edge-TerminalMTc0NzY0OTg0Mjk2OTE1NDAwMAonat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY0OTg0Mjk2OTE1NDAwMAo'
++ echo -e 'Serialized Objects: object-group network Wakanda-CoreMTc0NzY0OTg0Mjk2OTE1NDAwMAo description National Core Routing ZoneMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 192.168.1.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.0.2.3MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 10.0.0.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Panther-EdgeMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Internet-facing proxy systemsMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 172.16.0.5MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject network Panther-GatewayMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 10.0.2.3MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Secure outbound concentratorMTc0NzY0OTg0Mjk2OTE1NDAwMAoobject network Edge-TerminalMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 172.16.0.5MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Internet firewall handoffMTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject network Shield-WiFi-AliasMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Guest NATMTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended permit ip host 10.0.2.3 anyMTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended permit ip any host 172.16.0.5MTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended permit ip host 10.10.10.10 anyMTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY0OTg0Mjk2OTE1NDAwMAonat (inside,outside) source static Panther-Gateway Edge-TerminalMTc0NzY0OTg0Mjk2OTE1NDAwMAonat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY0OTg0Mjk2OTE1NDAwMAo'
+Serialized Objects: object-group network Wakanda-CoreMTc0NzY0OTg0Mjk2OTE1NDAwMAo description National Core Routing ZoneMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 192.168.1.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.0.2.3MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 10.0.0.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Panther-EdgeMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Internet-facing proxy systemsMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 172.16.0.5MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject network Panther-GatewayMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 10.0.2.3MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Secure outbound concentratorMTc0NzY0OTg0Mjk2OTE1NDAwMAoobject network Edge-TerminalMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 172.16.0.5MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Internet firewall handoffMTc0NzY0OTg0Mjk2OTE1NDAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk2OTE1NDAwMAoobject network Shield-WiFi-AliasMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Guest NATMTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended permit ip host 10.0.2.3 anyMTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended permit ip any host 172.16.0.5MTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended permit ip host 10.10.10.10 anyMTc0NzY0OTg0Mjk2OTE1NDAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY0OTg0Mjk2OTE1NDAwMAonat (inside,outside) source static Panther-Gateway Edge-TerminalMTc0NzY0OTg0Mjk2OTE1NDAwMAonat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY0OTg0Mjk2OTE1NDAwMAo
++ return 0
+++ sed -E 's/MTc0NzY0OTg0Mjk2OTE1NDAwMAo([^[:space:]])/\n\1/g'
++ local 'restored_lines=object-group network Wakanda-CoreMTc0NzY0OTg0Mjk2OTE1NDAwMAo description National Core Routing ZoneMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 192.168.1.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.0.2.3MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 10.0.0.0 255.255.255.0
+object-group network Panther-EdgeMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Internet-facing proxy systemsMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 172.16.0.5
+object-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0
+object-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0
+object network Panther-GatewayMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 10.0.2.3MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Secure outbound concentrator
+object network Edge-TerminalMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 172.16.0.5MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Internet firewall handoff
+object-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0
+object network Shield-WiFi-AliasMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Guest NAT
+access-list OUTSIDE extended permit ip host 10.0.2.3 any
+access-list OUTSIDE extended permit ip any host 172.16.0.5
+access-list OUTSIDE extended permit ip host 10.10.10.10 any
+access-list OUTSIDE extended deny ip any any
+nat (inside,outside) source static Panther-Gateway Edge-Terminal
+nat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY0OTg0Mjk2OTE1NDAwMAo'
 + restored_lines+='
 '
 + IFS='
 '
 + read -r -d '' -a config_objects
-++ printf '%s\0' 'interface Vlan1MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 192.168.1.11 255.255.255.0
-interface Vlan2MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 10.10.10.10 255.255.255.0
-interface Vlan3MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 192.168.100.100 255.255.255.0
-object-group network Stark-WiFiMTc0NzU0MTY2ODEzMTM3MTAwMAo description Internal wireless layoutMTc0NzU0MTY2ODEzMTM3MTAwMAo network-object host 10.0.2.3MTc0NzU0MTY2ODEzMTM3MTAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAo
+++ printf '%s\0' 'object-group network Wakanda-CoreMTc0NzY0OTg0Mjk2OTE1NDAwMAo description National Core Routing ZoneMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 192.168.1.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.0.2.3MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 10.0.0.0 255.255.255.0
+object-group network Panther-EdgeMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Internet-facing proxy systemsMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 172.16.0.5
+object-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0
+object-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0
+object network Panther-GatewayMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 10.0.2.3MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Secure outbound concentrator
+object network Edge-TerminalMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 172.16.0.5MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Internet firewall handoff
+object-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0
+object network Shield-WiFi-AliasMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Guest NAT
+access-list OUTSIDE extended permit ip host 10.0.2.3 any
+access-list OUTSIDE extended permit ip any host 172.16.0.5
+access-list OUTSIDE extended permit ip host 10.10.10.10 any
+access-list OUTSIDE extended deny ip any any
+nat (inside,outside) source static Panther-Gateway Edge-Terminal
+nat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY0OTg0Mjk2OTE1NDAwMAo
 '
 + [[ true == true ]]
-+ message 'Loaded 4 config blocks'
-+ [[ -n Loaded 4 config blocks ]]
-+ local 'message=Loaded 4 config blocks'
-+ print 'Loaded 4 config blocks'
-+ [[ -n Loaded 4 config blocks ]]
-+ echo -en 'Loaded 4 config blocks'
-Loaded 4 config blocks+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
++ message 'Loaded 14 config blocks'
++ [[ -n Loaded 14 config blocks ]]
++ local 'message=Loaded 14 config blocks'
++ echo -e 'Loaded 14 config blocks'
+Loaded 14 config blocks
++ return 0
 + oIFS=' 	
 '
 + IFS='
 '
-++ printf '%s\n' 'interface Vlan1MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 192.168.1.11 255.255.255.0' 'interface Vlan2MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 10.10.10.10 255.255.255.0' 'interface Vlan3MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 192.168.100.100 255.255.255.0' 'object-group network Stark-WiFiMTc0NzU0MTY2ODEzMTM3MTAwMAo description Internal wireless layoutMTc0NzU0MTY2ODEzMTM3MTAwMAo network-object host 10.0.2.3MTc0NzU0MTY2ODEzMTM3MTAwMAo network-object 192.168.12.0 255.255.255.0MTc0NzU0MTY2ODEzMTM3MTAwMAo'
-++ grep -E '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
-+ matched_objects=('interface Vlan2MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 10.10.10.10 255.255.255.0')
++ matched_objects=()
 + declare -a matched_objects
++ for block in "${config_objects[@]}"
++ grep -qE '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
++ for block in "${config_objects[@]}"
++ grep -qE '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
++ for block in "${config_objects[@]}"
++ grep -qE '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
++ matched_objects+=("${block}")
++ for block in "${config_objects[@]}"
++ grep -qE '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
++ matched_objects+=("${block}")
++ for block in "${config_objects[@]}"
++ grep -qE '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
++ for block in "${config_objects[@]}"
++ grep -qE '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
++ for block in "${config_objects[@]}"
++ grep -qE '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
++ matched_objects+=("${block}")
++ for block in "${config_objects[@]}"
++ grep -qE '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
++ matched_objects+=("${block}")
++ for block in "${config_objects[@]}"
++ grep -qE '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
++ for block in "${config_objects[@]}"
++ grep -qE '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
++ for block in "${config_objects[@]}"
++ grep -qE '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
++ matched_objects+=("${block}")
++ for block in "${config_objects[@]}"
++ grep -qE '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
++ for block in "${config_objects[@]}"
++ grep -qE '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
++ for block in "${config_objects[@]}"
++ grep -qE '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
 + IFS=' 	
 '
 + [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ print 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ echo -en 'Loaded 1 config blocks'
-Loaded 1 config blocks+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
++ message 'Loaded 5 config blocks'
++ [[ -n Loaded 5 config blocks ]]
++ local 'message=Loaded 5 config blocks'
++ echo -e 'Loaded 5 config blocks'
+Loaded 5 config blocks
++ return 0
 + for serialized_line in "${matched_objects[@]}"
 + [[ true == true ]]
-+ message 'Serialized Line: interface Vlan2MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 10.10.10.10 255.255.255.0'
-+ [[ -n Serialized Line: interface Vlan2MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 10.10.10.10 255.255.255.0 ]]
-+ local 'message=Serialized Line: interface Vlan2MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 10.10.10.10 255.255.255.0'
-+ print 'Serialized Line: interface Vlan2MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 10.10.10.10 255.255.255.0'
-+ [[ -n Serialized Line: interface Vlan2MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 10.10.10.10 255.255.255.0 ]]
-+ echo -en 'Serialized Line: interface Vlan2MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 10.10.10.10 255.255.255.0'
-Serialized Line: interface Vlan2MTc0NzU0MTY2ODEzMTM3MTAwMAo ip address 10.10.10.10 255.255.255.0+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-++ perl -pe 's/MTc0NzU0MTY2ODEzMTM3MTAwMAo/\n/g'
-+ restored_block='interface Vlan2
- ip address 10.10.10.10 255.255.255.0'
-+ local cfg_path=configs/misc/switch2.conf
-+ local rel_path=misc/switch2.conf
++ message 'Serialized Line: object-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0'
++ [[ -n Serialized Line: object-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0 ]]
++ local 'message=Serialized Line: object-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0'
++ echo -e 'Serialized Line: object-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0'
+Serialized Line: object-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0
++ return 0
+++ perl -pe 's/MTc0NzY0OTg0Mjk2OTE1NDAwMAo/\n/g'
++ restored_block='object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0'
++ local cfg_path=configs/misc/fw3.cfg
++ local rel_path=misc/fw3.cfg
 + local site=misc
-+ local device_filename=switch2.conf
-+ local extension=conf
++ local device_filename=fw3.cfg
++ local extension=cfg
 + local objects_dir=reports/10.10.10.10/misc
-+ local objects_file=reports/10.10.10.10/misc/switch2.conf
-+ [[ -s reports/10.10.10.10/misc/switch2.conf ]]
-+ grep -Fq -- 'interface Vlan2
- ip address 10.10.10.10 255.255.255.0' reports/10.10.10.10/misc/switch2.conf
++ local objects_file=reports/10.10.10.10/misc/fw3.cfg
++ [[ -s reports/10.10.10.10/misc/fw3.cfg ]]
++ mkdir -p reports/10.10.10.10/misc
++ message 'object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0'
++ [[ -n object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0 ]]
++ local 'message=object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0'
++ echo -e 'object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0'
++ return 0
++ message '!'
++ [[ -n ! ]]
++ local 'message=!'
++ echo -e '!'
++ return 0
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
++ (( i++ ))
++ (( i < count ))
++ return 0
 + [[ true == true ]]
-+ message 'Skipping duplicate block in reports/10.10.10.10/misc/switch2.conf'
-+ [[ -n Skipping duplicate block in reports/10.10.10.10/misc/switch2.conf ]]
-+ local 'message=Skipping duplicate block in reports/10.10.10.10/misc/switch2.conf'
-+ print 'Skipping duplicate block in reports/10.10.10.10/misc/switch2.conf'
-+ [[ -n Skipping duplicate block in reports/10.10.10.10/misc/switch2.conf ]]
-+ echo -en 'Skipping duplicate block in reports/10.10.10.10/misc/switch2.conf'
-Skipping duplicate block in reports/10.10.10.10/misc/switch2.conf+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-+ continue
++ message 'Restored Configuration:\nobject-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0'
++ [[ -n Restored Configuration:\nobject-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0 ]]
++ local 'message=Restored Configuration:\nobject-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0'
++ echo -e 'Restored Configuration:\nobject-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0'
+Restored Configuration:
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
 + return 0
-+ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.RZhl7jIzvP/10.10.10.10
-+ export json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.RZhl7jIzvP/10.10.10.10/10.10.10.10--MTc0NzU0MTY2.json
-+ json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.RZhl7jIzvP/10.10.10.10/10.10.10.10--MTc0NzU0MTY2.json
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.RZhl7jIzvP/fragments.json ]]
-+ return 0
-+ unset verbose debug
-+ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.RZhl7jIzvP ]]
-+ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.RZhl7jIzvP
-uration:
-interface Vlan2
- ip address 10.10.10.10 255.255.255.0+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-+ process_configs 10.10.10.10 configs/misc/switch2.conf 'interface Vlan2
- ip address 10.10.10.10 255.255.255.0'
++ process_configs 10.10.10.10 configs/misc/fw3.cfg 'object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0'
 + local target_pattern=10.10.10.10
-+ local config_path=configs/misc/switch2.conf
-+ local 'restored_block=interface Vlan2
- ip address 10.10.10.10 255.255.255.0'
++ local config_path=configs/misc/fw3.cfg
++ local 'restored_block=object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0'
 + local cleaned_block
 ++ sed '/^[[:space:]]*$/d'
-+ cleaned_block='interface Vlan2
- ip address 10.10.10.10 255.255.255.0'
-+ [[ -z interface Vlan2
- ip address 10.10.10.10 255.255.255.0 ]]
++ cleaned_block='object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0'
++ [[ -z object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0 ]]
 + [[ true == true ]]
-+ message '[process_configs] Raw Block:\ninterface Vlan2
- ip address 10.10.10.10 255.255.255.0'
-+ [[ -n [process_configs] Raw Block:\ninterface Vlan2
- ip address 10.10.10.10 255.255.255.0 ]]
-+ local 'message=[process_configs] Raw Block:\ninterface Vlan2
- ip address 10.10.10.10 255.255.255.0'
-+ print '[process_configs] Raw Block:\ninterface Vlan2
- ip address 10.10.10.10 255.255.255.0'
-+ [[ -n [process_configs] Raw Block:\ninterface Vlan2
- ip address 10.10.10.10 255.255.255.0 ]]
-+ echo -en '[process_configs] Raw Block:\ninterface Vlan2
- ip address 10.10.10.10 255.255.255.0'
++ message '[process_configs] Raw Block:\nobject-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0'
++ [[ -n [process_configs] Raw Block:\nobject-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0 ]]
++ local 'message=[process_configs] Raw Block:\nobject-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0'
++ echo -e '[process_configs] Raw Block:\nobject-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0'
 [process_configs] Raw Block:
-interface Vlan2
- ip address 10.10.10.10 255.255.255.0+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
+object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0
++ return 0
 + local object_line
 ++ head -n 1
 ++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
-+ object_line='interface Vlan2'
-+ [[ -z interface Vlan2 ]]
++ object_line='object-group network Shield-WiFi'
++ [[ -z object-group network Shield-WiFi ]]
 + local object_keyword type_value
 ++ awk '{print $1}'
-+ object_keyword=interface
++ object_keyword=object-group
 ++ wc -l
-+ ((         2 > 1  ))
++ ((         4 > 1  ))
 ++ sed -E 's/^[^[:space:]]+[[:space:]]+//'
-+ type_value=Vlan2
-+ [[ -z Vlan2 ]]
++ type_value='network Shield-WiFi'
++ [[ -z network Shield-WiFi ]]
 + [[ true == true ]]
-+ print '[process_configs] object   : interface'
-+ [[ -n [process_configs] object   : interface ]]
-+ echo -en '[process_configs] object   : interface'
-[process_configs] object   : interface+ print '[process_configs] type     : Vlan2'
-+ [[ -n [process_configs] type     : Vlan2 ]]
-+ echo -en '[process_configs] type     : Vlan2'
-[process_configs] type     : Vlan2+ data_sets=()
++ print '[process_configs] object   : object-group'
++ [[ -n [process_configs] object   : object-group ]]
++ echo -en '[process_configs] object   : object-group'
+[process_configs] object   : object-group+ return 0
++ print '[process_configs] type     : network Shield-WiFi'
++ [[ -n [process_configs] type     : network Shield-WiFi ]]
++ echo -en '[process_configs] type     : network Shield-WiFi'
+[process_configs] type     : network Shield-WiFi+ return 0
++ data_sets=()
 + local -a data_sets
 + IFS=
 + read -r line
 ++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
-+ local 'trimmed=interface Vlan2'
-+ [[ -z interface Vlan2 ]]
-+ [[ interface vlan2 =~ ^description[[:space:]] ]]
++ local 'trimmed=object-group network Shield-WiFi'
++ [[ -z object-group network Shield-WiFi ]]
++ [[ object-group network shield-wifi =~ ^description[[:space:]] ]]
 + data_sets+=("${trimmed}")
 + IFS=
 + read -r line
 ++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
-+ local 'trimmed=ip address 10.10.10.10 255.255.255.0'
-+ [[ -z ip address 10.10.10.10 255.255.255.0 ]]
-+ [[ ip address 10.10.10.10 255.255.255.0 =~ ^description[[:space:]] ]]
++ local 'trimmed=description Shield-controlled wireless network'
++ [[ -z description Shield-controlled wireless network ]]
++ [[ description shield-controlled wireless network =~ ^description[[:space:]] ]]
++ continue
++ IFS=
++ read -r line
+++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
++ local 'trimmed=network-object host 10.10.10.10'
++ [[ -z network-object host 10.10.10.10 ]]
++ [[ network-object host 10.10.10.10 =~ ^description[[:space:]] ]]
 + data_sets+=("${trimmed}")
++ IFS=
++ read -r line
+++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
++ local 'trimmed=network-object 192.168.100.0 255.255.255.0'
++ [[ -z network-object 192.168.100.0 255.255.255.0 ]]
++ [[ network-object 192.168.100.0 255.255.255.0 =~ ^description[[:space:]] ]]
++ data_sets+=("${trimmed}")
++ IFS=
++ read -r line
++ ((  3 > 1  ))
++ data_sets=("${data_sets[@]:1}")
++ [[ true == true ]]
++ message '[process_configs] Object Sets:'
++ [[ -n [process_configs] Object Sets: ]]
++ local 'message=[process_configs] Object Sets:'
++ echo -e '[process_configs] Object Sets:'
+[process_configs] Object Sets:
++ return 0
++ for e in "${data_sets[@]}"
++ print '  - network-object host 10.10.10.10'
++ [[ -n   - network-object host 10.10.10.10 ]]
++ echo -en '  - network-object host 10.10.10.10'
+  - network-object host 10.10.10.10+ return 0
++ for e in "${data_sets[@]}"
++ print '  - network-object 192.168.100.0 255.255.255.0'
++ [[ -n   - network-object 192.168.100.0 255.255.255.0 ]]
++ echo -en '  - network-object 192.168.100.0 255.255.255.0'
+  - network-object 192.168.100.0 255.255.255.0+ return 0
+++ grep -E '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
+++ head -n 1
+++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
++ local 'matched_line=network-object host 10.10.10.10'
++ [[ -z network-object host 10.10.10.10 ]]
++ [[ true == true ]]
++ message '[process_configs] Matched: network-object host 10.10.10.10'
++ [[ -n [process_configs] Matched: network-object host 10.10.10.10 ]]
++ local 'message=[process_configs] Matched: network-object host 10.10.10.10'
++ echo -e '[process_configs] Matched: network-object host 10.10.10.10'
+[process_configs] Matched: network-object host 10.10.10.10
++ return 0
++ matched_items=()
++ local -a matched_items
++ IFS=
++ read -r line
++ grep -Eq '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
++ IFS=
++ read -r line
++ grep -Eq '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
++ IFS=
++ read -r line
++ grep -Eq '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
++ matched_items+=("$(sed -E 's/^[[:space:]]+//;s/[[:space:]]+$//' <<< "${line}")")
+++ sed -E 's/^[[:space:]]+//;s/[[:space:]]+$//'
++ IFS=
++ read -r line
++ grep -Eq '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
++ IFS=
++ read -r line
+++ printf '%s\n' 'network-object host 10.10.10.10'
+++ jq -R .
+++ jq -s .
++ local 'matched_items_json=[
+  "network-object host 10.10.10.10"
+]'
+++ grep -i '^[[:space:]]*description'
+++ head -n 1
+++ sed -E 's/^[^"]*"?description"?[[:space:]]*//I; s/^[[:space:]]*//; s/[[:space:]]*$//'
++ local 'desc_val=Shield-controlled wireless network'
++ [[ -z Shield-controlled wireless network ]]
++ [[ Shield-controlled wireless network =~ 
+ ]]
++ [[ true == true ]]
++ message '[process_configs] Description: Shield-controlled wireless network'
++ [[ -n [process_configs] Description: Shield-controlled wireless network ]]
++ local 'message=[process_configs] Description: Shield-controlled wireless network'
++ echo -e '[process_configs] Description: Shield-controlled wireless network'
+[process_configs] Description: Shield-controlled wireless network
++ return 0
++ local group_val=Unclassified
++ [[ true == true ]]
++ local object_key
+++ awk '{print $NF}'
+++ sed -E 's/[[:punct:]]*$//'
++ object_key=Shield-WiFi
+++ jq -r --arg key Shield-WiFi 'map( select( .match[]? | contains( $key ) ) ) | .[0].group'
++ group_val=null
++ [[ -z null ]]
++ [[ null == \n\u\l\l ]]
+++ jq -r --arg desc 'Shield-controlled wireless network' 'map( select( .match[]? == $desc ) ) | .[0].group'
++ group_val=null
++ [[ -z null ]]
++ [[ null == \n\u\l\l ]]
++ group_val=Unclassified
++ [[ true == true ]]
++ message '[process_configs] Group: Unclassified'
++ [[ -n [process_configs] Group: Unclassified ]]
++ local 'message=[process_configs] Group: Unclassified'
++ echo -e '[process_configs] Group: Unclassified'
+[process_configs] Group: Unclassified
++ return 0
+++ printf '%s\n' 'network-object host 10.10.10.10' 'network-object 192.168.100.0 255.255.255.0'
+++ jq -R .
+++ jq -s .
++ local 'items_2json=[
+  "network-object host 10.10.10.10",
+  "network-object 192.168.100.0 255.255.255.0"
+]'
++ declare -A sets_map
++ for line in "${data_sets[@]}"
++ [[ -n network-object host 10.10.10.10 ]]
+++ awk '{print $1}'
++ key=network-object
++ [[ -n network-object ]]
++ [[ -z '' ]]
++ sets_map["$key"]=1
++ for line in "${data_sets[@]}"
++ [[ -n network-object 192.168.100.0 255.255.255.0 ]]
+++ awk '{print $1}'
++ key=network-object
++ [[ -n network-object ]]
++ [[ -z x ]]
++ ((  sets_map[network-object]++  ))
+++ for k in "${!sets_map[@]}"
+++ printf '{ "key": "%s", "val": %d }\n' network-object 2
+++ jq -s 'map({(.key): .val}) | add'
++ local 'sets_json={
+  "network-object": 2
+}'
+++ jq -n --arg object object-group --arg type 'network Shield-WiFi' --arg description 'Shield-controlled wireless network' --argjson items '[
+  "network-object host 10.10.10.10"
+]' --argjson sets '{
+  "network-object": 2
+}' --arg group Unclassified '{
+          object: $object,
+          type: ( $type | select( . != "" and . != "null" and . != "false" ) // false ),
+          description: ( $description | select( . != "" and . != "null" and . != "false" ) // false ),
+          items: $items,
+          sets: $sets,
+          group: $group
+        }'
++ target_object='{
+  "object": "object-group",
+  "type": "network Shield-WiFi",
+  "description": "Shield-controlled wireless network",
+  "items": [
+    "network-object host 10.10.10.10"
+  ],
+  "sets": {
+    "network-object": 2
+  },
+  "group": "Unclassified"
+}'
++ export target_object
++ [[ true == true ]]
++ message '[process_configs] JSON Object (output):'
++ [[ -n [process_configs] JSON Object (output): ]]
++ local 'message=[process_configs] JSON Object (output):'
++ echo -e '[process_configs] JSON Object (output):'
+[process_configs] JSON Object (output):
++ return 0
++ print '{
+  "object": "object-group",
+  "type": "network Shield-WiFi",
+  "description": "Shield-controlled wireless network",
+  "items": [
+    "network-object host 10.10.10.10"
+  ],
+  "sets": {
+    "network-object": 2
+  },
+  "group": "Unclassified"
+}'
++ [[ -n {
++ jq .
+  "object": "object-group",
+  "type": "network Shield-WiFi",
+  "description": "Shield-controlled wireless network",
+  "items": [
+    "network-object host 10.10.10.10"
+  ],
+  "sets": {
+    "network-object": 2
+  },
+  "group": "Unclassified"
+} ]]
++ echo -en '{
+  "object": "object-group",
+  "type": "network Shield-WiFi",
+  "description": "Shield-controlled wireless network",
+  "items": [
+    "network-object host 10.10.10.10"
+  ],
+  "sets": {
+    "network-object": 2
+  },
+  "group": "Unclassified"
+}'
++ return 0
+{
+  "object": "object-group",
+  "type": "network Shield-WiFi",
+  "description": "Shield-controlled wireless network",
+  "items": [
+    "network-object host 10.10.10.10"
+  ],
+  "sets": {
+    "network-object": 2
+  },
+  "group": "Unclassified"
+}
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ return 0
++ return 0
++ [[ -n {
+  "object": "object-group",
+  "type": "network Shield-WiFi",
+  "description": "Shield-controlled wireless network",
+  "items": [
+    "network-object host 10.10.10.10"
+  ],
+  "sets": {
+    "network-object": 2
+  },
+  "group": "Unclassified"
+} ]]
++ [[ true == true ]]
++ message '|-----> Target Objects: {
+  "object": "object-group",
+  "type": "network Shield-WiFi",
+  "description": "Shield-controlled wireless network",
+  "items": [
+    "network-object host 10.10.10.10"
+  ],
+  "sets": {
+    "network-object": 2
+  },
+  "group": "Unclassified"
+}'
++ [[ -n |-----> Target Objects: {
+  "object": "object-group",
+  "type": "network Shield-WiFi",
+  "description": "Shield-controlled wireless network",
+  "items": [
+    "network-object host 10.10.10.10"
+  ],
+  "sets": {
+    "network-object": 2
+  },
+  "group": "Unclassified"
+} ]]
++ local 'message=|-----> Target Objects: {
+  "object": "object-group",
+  "type": "network Shield-WiFi",
+  "description": "Shield-controlled wireless network",
+  "items": [
+    "network-object host 10.10.10.10"
+  ],
+  "sets": {
+    "network-object": 2
+  },
+  "group": "Unclassified"
+}'
++ echo -e '|-----> Target Objects: {
+  "object": "object-group",
+  "type": "network Shield-WiFi",
+  "description": "Shield-controlled wireless network",
+  "items": [
+    "network-object host 10.10.10.10"
+  ],
+  "sets": {
+    "network-object": 2
+  },
+  "group": "Unclassified"
+}'
+|-----> Target Objects: {
+  "object": "object-group",
+  "type": "network Shield-WiFi",
+  "description": "Shield-controlled wireless network",
+  "items": [
+    "network-object host 10.10.10.10"
+  ],
+  "sets": {
+    "network-object": 2
+  },
+  "group": "Unclassified"
+}
++ return 0
++ [[ -n {
+  "object": "object-group",
+  "type": "network Shield-WiFi",
+  "description": "Shield-controlled wireless network",
+  "items": [
+    "network-object host 10.10.10.10"
+  ],
+  "sets": {
+    "network-object": 2
+  },
+  "group": "Unclassified"
+} ]]
+++ printf '%s\n' '{
+  "object": "object-group",
+  "type": "network Shield-WiFi",
+  "description": "Shield-controlled wireless network",
+  "items": [
+    "network-object host 10.10.10.10"
+  ],
+  "sets": {
+    "network-object": 2
+  },
+  "group": "Unclassified"
+}'
+++ jq -s --arg site configs/misc --arg device fw3.cfg '{
+              site: ( $site | gsub( "^.*/"; "" ) ),
+              device: $device,
+              objects: .
+            }'
++ wrapped_block='{
+  "site": "misc",
+  "device": "fw3.cfg",
+  "objects": [
+    {
+      "object": "object-group",
+      "type": "network Shield-WiFi",
+      "description": "Shield-controlled wireless network",
+      "items": [
+        "network-object host 10.10.10.10"
+      ],
+      "sets": {
+        "network-object": 2
+      },
+      "group": "Unclassified"
+    }
+  ]
+}'
++ [[ true == true ]]
++ message '|-----> Config Objects:\n{
+  "site": "misc",
+  "device": "fw3.cfg",
+  "objects": [
+    {
+      "object": "object-group",
+      "type": "network Shield-WiFi",
+      "description": "Shield-controlled wireless network",
+      "items": [
+        "network-object host 10.10.10.10"
+      ],
+      "sets": {
+        "network-object": 2
+      },
+      "group": "Unclassified"
+    }
+  ]
+}'
++ [[ -n |-----> Config Objects:\n{
+  "site": "misc",
+  "device": "fw3.cfg",
+  "objects": [
+    {
+      "object": "object-group",
+      "type": "network Shield-WiFi",
+      "description": "Shield-controlled wireless network",
+      "items": [
+        "network-object host 10.10.10.10"
+      ],
+      "sets": {
+        "network-object": 2
+      },
+      "group": "Unclassified"
+    }
+  ]
+} ]]
++ local 'message=|-----> Config Objects:\n{
+  "site": "misc",
+  "device": "fw3.cfg",
+  "objects": [
+    {
+      "object": "object-group",
+      "type": "network Shield-WiFi",
+      "description": "Shield-controlled wireless network",
+      "items": [
+        "network-object host 10.10.10.10"
+      ],
+      "sets": {
+        "network-object": 2
+      },
+      "group": "Unclassified"
+    }
+  ]
+}'
++ echo -e '|-----> Config Objects:\n{
+  "site": "misc",
+  "device": "fw3.cfg",
+  "objects": [
+    {
+      "object": "object-group",
+      "type": "network Shield-WiFi",
+      "description": "Shield-controlled wireless network",
+      "items": [
+        "network-object host 10.10.10.10"
+      ],
+      "sets": {
+        "network-object": 2
+      },
+      "group": "Unclassified"
+    }
+  ]
+}'
+|-----> Config Objects:
+{
+  "site": "misc",
+  "device": "fw3.cfg",
+  "objects": [
+    {
+      "object": "object-group",
+      "type": "network Shield-WiFi",
+      "description": "Shield-controlled wireless network",
+      "items": [
+        "network-object host 10.10.10.10"
+      ],
+      "sets": {
+        "network-object": 2
+      },
+      "group": "Unclassified"
+    }
+  ]
+}
++ return 0
++ print '{
+  "site": "misc",
+  "device": "fw3.cfg",
+  "objects": [
+    {
+      "object": "object-group",
+      "type": "network Shield-WiFi",
+      "description": "Shield-controlled wireless network",
+      "items": [
+        "network-object host 10.10.10.10"
+      ],
+      "sets": {
+        "network-object": 2
+      },
+      "group": "Unclassified"
+    }
+  ]
+}'
++ [[ -n {
+  "site": "misc",
+  "device": "fw3.cfg",
+  "objects": [
+    {
+      "object": "object-group",
+      "type": "network Shield-WiFi",
+      "description": "Shield-controlled wireless network",
+      "items": [
+        "network-object host 10.10.10.10"
+      ],
+      "sets": {
+        "network-object": 2
+      },
+      "group": "Unclassified"
+    }
+  ]
+} ]]
++ echo -en '{
+  "site": "misc",
+  "device": "fw3.cfg",
+  "objects": [
+    {
+      "object": "object-group",
+      "type": "network Shield-WiFi",
+      "description": "Shield-controlled wireless network",
+      "items": [
+        "network-object host 10.10.10.10"
+      ],
+      "sets": {
+        "network-object": 2
+      },
+      "group": "Unclassified"
+    }
+  ]
+}'
++ return 0
++ for serialized_line in "${matched_objects[@]}"
++ [[ true == true ]]
++ message 'Serialized Line: object-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0'
++ [[ -n Serialized Line: object-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0 ]]
++ local 'message=Serialized Line: object-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0'
++ echo -e 'Serialized Line: object-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0'
+Serialized Line: object-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0
++ return 0
+++ perl -pe 's/MTc0NzY0OTg0Mjk2OTE1NDAwMAo/\n/g'
++ restored_block='object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0'
++ local cfg_path=configs/misc/fw3.cfg
++ local rel_path=misc/fw3.cfg
++ local site=misc
++ local device_filename=fw3.cfg
++ local extension=cfg
++ local objects_dir=reports/10.10.10.10/misc
++ local objects_file=reports/10.10.10.10/misc/fw3.cfg
++ [[ -s reports/10.10.10.10/misc/fw3.cfg ]]
+++ echo 'object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0'
+++ tr '\n' '\r'
++ local 'restored_flat=object-group network Shield-WiFi description Shield-controlled wireless network network-object host 10.10.10.10 network-object 192.168.100.0 255.255.255.0'
+++ tr '\n' '\r'
++ local 'objects_flat=object-group network Shield-WiFi description Shield-controlled wireless network network-object host 10.10.10.10 network-object 192.168.100.0 255.255.255.0!'
++ grep -Fq -- 'object-group network Shield-WiFi description Shield-controlled wireless network network-object host 10.10.10.10 network-object 192.168.100.0 255.255.255.0'
++ [[ true == true ]]
++ message 'Skipping duplicate block in reports/10.10.10.10/misc/fw3.cfg'
++ [[ -n Skipping duplicate block in reports/10.10.10.10/misc/fw3.cfg ]]
++ local 'message=Skipping duplicate block in reports/10.10.10.10/misc/fw3.cfg'
++ echo -e 'Skipping duplicate block in reports/10.10.10.10/misc/fw3.cfg'
+Skipping duplicate block in reports/10.10.10.10/misc/fw3.cfg
++ return 0
++ continue
++ for serialized_line in "${matched_objects[@]}"
++ [[ true == true ]]
++ message 'Serialized Line: object-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0'
++ [[ -n Serialized Line: object-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0 ]]
++ local 'message=Serialized Line: object-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0'
++ echo -e 'Serialized Line: object-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0'
+Serialized Line: object-group network Shield-WiFiMTc0NzY0OTg0Mjk2OTE1NDAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo network-object 192.168.100.0 255.255.255.0
++ return 0
+++ perl -pe 's/MTc0NzY0OTg0Mjk2OTE1NDAwMAo/\n/g'
++ restored_block='object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0'
++ local cfg_path=configs/misc/fw3.cfg
++ local rel_path=misc/fw3.cfg
++ local site=misc
++ local device_filename=fw3.cfg
++ local extension=cfg
++ local objects_dir=reports/10.10.10.10/misc
++ local objects_file=reports/10.10.10.10/misc/fw3.cfg
++ [[ -s reports/10.10.10.10/misc/fw3.cfg ]]
+++ echo 'object-group network Shield-WiFi
+ description Shield-controlled wireless network
+ network-object host 10.10.10.10
+ network-object 192.168.100.0 255.255.255.0'
+++ tr '\n' '\r'
++ local 'restored_flat=object-group network Shield-WiFi description Shield-controlled wireless network network-object host 10.10.10.10 network-object 192.168.100.0 255.255.255.0'
+++ tr '\n' '\r'
++ local 'objects_flat=object-group network Shield-WiFi description Shield-controlled wireless network network-object host 10.10.10.10 network-object 192.168.100.0 255.255.255.0!'
++ grep -Fq -- 'object-group network Shield-WiFi description Shield-controlled wireless network network-object host 10.10.10.10 network-object 192.168.100.0 255.255.255.0'
++ [[ true == true ]]
++ message 'Skipping duplicate block in reports/10.10.10.10/misc/fw3.cfg'
++ [[ -n Skipping duplicate block in reports/10.10.10.10/misc/fw3.cfg ]]
++ local 'message=Skipping duplicate block in reports/10.10.10.10/misc/fw3.cfg'
++ echo -e 'Skipping duplicate block in reports/10.10.10.10/misc/fw3.cfg'
+Skipping duplicate block in reports/10.10.10.10/misc/fw3.cfg
++ return 0
++ continue
++ for serialized_line in "${matched_objects[@]}"
++ [[ true == true ]]
++ message 'Serialized Line: object network Shield-WiFi-AliasMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Guest NAT'
++ [[ -n Serialized Line: object network Shield-WiFi-AliasMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Guest NAT ]]
++ local 'message=Serialized Line: object network Shield-WiFi-AliasMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Guest NAT'
++ echo -e 'Serialized Line: object network Shield-WiFi-AliasMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Guest NAT'
+Serialized Line: object network Shield-WiFi-AliasMTc0NzY0OTg0Mjk2OTE1NDAwMAo host 10.10.10.10MTc0NzY0OTg0Mjk2OTE1NDAwMAo description Guest NAT
++ return 0
+++ perl -pe 's/MTc0NzY0OTg0Mjk2OTE1NDAwMAo/\n/g'
++ restored_block='object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT'
++ local cfg_path=configs/misc/fw3.cfg
++ local rel_path=misc/fw3.cfg
++ local site=misc
++ local device_filename=fw3.cfg
++ local extension=cfg
++ local objects_dir=reports/10.10.10.10/misc
++ local objects_file=reports/10.10.10.10/misc/fw3.cfg
++ [[ -s reports/10.10.10.10/misc/fw3.cfg ]]
+++ echo 'object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT'
+++ tr '\n' '\r'
++ local 'restored_flat=object network Shield-WiFi-Alias host 10.10.10.10 description Guest NAT'
+++ tr '\n' '\r'
++ local 'objects_flat=object-group network Shield-WiFi description Shield-controlled wireless network network-object host 10.10.10.10 network-object 192.168.100.0 255.255.255.0!'
++ grep -Fq -- 'object network Shield-WiFi-Alias host 10.10.10.10 description Guest NAT'
++ mkdir -p reports/10.10.10.10/misc
++ message 'object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT'
++ [[ -n object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT ]]
++ local 'message=object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT'
++ echo -e 'object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT'
++ return 0
++ message '!'
++ [[ -n ! ]]
++ local 'message=!'
++ echo -e '!'
++ return 0
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
++ (( i++ ))
++ (( i < count ))
++ return 0
++ [[ true == true ]]
++ message 'Restored Configuration:\nobject network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT'
++ [[ -n Restored Configuration:\nobject network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT ]]
++ local 'message=Restored Configuration:\nobject network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT'
++ echo -e 'Restored Configuration:\nobject network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT'
+Restored Configuration:
+object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT
++ return 0
++ process_configs 10.10.10.10 configs/misc/fw3.cfg 'object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT'
++ local target_pattern=10.10.10.10
++ local config_path=configs/misc/fw3.cfg
++ local 'restored_block=object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT'
++ local cleaned_block
+++ sed '/^[[:space:]]*$/d'
++ cleaned_block='object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT'
++ [[ -z object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT ]]
++ [[ true == true ]]
++ message '[process_configs] Raw Block:\nobject network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT'
++ [[ -n [process_configs] Raw Block:\nobject network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT ]]
++ local 'message=[process_configs] Raw Block:\nobject network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT'
++ echo -e '[process_configs] Raw Block:\nobject network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT'
+[process_configs] Raw Block:
+object network Shield-WiFi-Alias
+ host 10.10.10.10
+ description Guest NAT
++ return 0
++ local object_line
+++ head -n 1
+++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
++ object_line='object network Shield-WiFi-Alias'
++ [[ -z object network Shield-WiFi-Alias ]]
++ local object_keyword type_value
+++ awk '{print $1}'
++ object_keyword=object
+++ wc -l
++ ((         3 > 1  ))
+++ sed -E 's/^[^[:space:]]+[[:space:]]+//'
++ type_value='network Shield-WiFi-Alias'
++ [[ -z network Shield-WiFi-Alias ]]
++ [[ true == true ]]
++ print '[process_configs] object   : object'
++ [[ -n [process_configs] object   : object ]]
++ echo -en '[process_configs] object   : object'
+[process_configs] object   : object+ return 0
++ print '[process_configs] type     : network Shield-WiFi-Alias'
++ [[ -n [process_configs] type     : network Shield-WiFi-Alias ]]
++ echo -en '[process_configs] type     : network Shield-WiFi-Alias'
+[process_configs] type     : network Shield-WiFi-Alias+ return 0
++ data_sets=()
++ local -a data_sets
++ IFS=
++ read -r line
+++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
++ local 'trimmed=object network Shield-WiFi-Alias'
++ [[ -z object network Shield-WiFi-Alias ]]
++ [[ object network shield-wifi-alias =~ ^description[[:space:]] ]]
++ data_sets+=("${trimmed}")
++ IFS=
++ read -r line
+++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
++ local 'trimmed=host 10.10.10.10'
++ [[ -z host 10.10.10.10 ]]
++ [[ host 10.10.10.10 =~ ^description[[:space:]] ]]
++ data_sets+=("${trimmed}")
++ IFS=
++ read -r line
+++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
++ local 'trimmed=description Guest NAT'
++ [[ -z description Guest NAT ]]
++ [[ description guest nat =~ ^description[[:space:]] ]]
++ continue
 + IFS=
 + read -r line
 + ((  2 > 1  ))
@@ -836,41 +1941,26 @@ interface Vlan2
 + message '[process_configs] Object Sets:'
 + [[ -n [process_configs] Object Sets: ]]
 + local 'message=[process_configs] Object Sets:'
-+ print '[process_configs] Object Sets:'
-+ [[ -n [process_configs] Object Sets: ]]
-+ echo -en '[process_configs] Object Sets:'
-[process_configs] Object Sets:+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
++ echo -e '[process_configs] Object Sets:'
+[process_configs] Object Sets:
++ return 0
 + for e in "${data_sets[@]}"
-+ print '  - ip address 10.10.10.10 255.255.255.0'
-+ [[ -n   - ip address 10.10.10.10 255.255.255.0 ]]
-+ echo -en '  - ip address 10.10.10.10 255.255.255.0'
-  - ip address 10.10.10.10 255.255.255.0++ grep -E '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
++ print '  - host 10.10.10.10'
++ [[ -n   - host 10.10.10.10 ]]
++ echo -en '  - host 10.10.10.10'
+  - host 10.10.10.10+ return 0
+++ grep -E '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
 ++ head -n 1
 ++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
-+ local 'matched_line=ip address 10.10.10.10 255.255.255.0'
-+ [[ -z ip address 10.10.10.10 255.255.255.0 ]]
++ local 'matched_line=host 10.10.10.10'
++ [[ -z host 10.10.10.10 ]]
 + [[ true == true ]]
-+ message '[process_configs] Matched: ip address 10.10.10.10 255.255.255.0'
-+ [[ -n [process_configs] Matched: ip address 10.10.10.10 255.255.255.0 ]]
-+ local 'message=[process_configs] Matched: ip address 10.10.10.10 255.255.255.0'
-+ print '[process_configs] Matched: ip address 10.10.10.10 255.255.255.0'
-+ [[ -n [process_configs] Matched: ip address 10.10.10.10 255.255.255.0 ]]
-+ echo -en '[process_configs] Matched: ip address 10.10.10.10 255.255.255.0'
-[process_configs] Matched: ip address 10.10.10.10 255.255.255.0+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
++ message '[process_configs] Matched: host 10.10.10.10'
++ [[ -n [process_configs] Matched: host 10.10.10.10 ]]
++ local 'message=[process_configs] Matched: host 10.10.10.10'
++ echo -e '[process_configs] Matched: host 10.10.10.10'
+[process_configs] Matched: host 10.10.10.10
++ return 0
 + matched_items=()
 + local -a matched_items
 + IFS=
@@ -883,11 +1973,569 @@ interface Vlan2
 ++ sed -E 's/^[[:space:]]+//;s/[[:space:]]+$//'
 + IFS=
 + read -r line
-++ printf '%s\n' 'ip address 10.10.10.10 255.255.255.0'
++ grep -Eq '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
++ IFS=
++ read -r line
+++ printf '%s\n' 'host 10.10.10.10'
 ++ jq -R .
 ++ jq -s .
 + local 'matched_items_json=[
-  "ip address 10.10.10.10 255.255.255.0"
+  "host 10.10.10.10"
+]'
+++ grep -i '^[[:space:]]*description'
+++ head -n 1
+++ sed -E 's/^[^"]*"?description"?[[:space:]]*//I; s/^[[:space:]]*//; s/[[:space:]]*$//'
++ local 'desc_val=Guest NAT'
++ [[ -z Guest NAT ]]
++ [[ Guest NAT =~ 
+ ]]
++ [[ true == true ]]
++ message '[process_configs] Description: Guest NAT'
++ [[ -n [process_configs] Description: Guest NAT ]]
++ local 'message=[process_configs] Description: Guest NAT'
++ echo -e '[process_configs] Description: Guest NAT'
+[process_configs] Description: Guest NAT
++ return 0
++ local group_val=Unclassified
++ [[ true == true ]]
++ local object_key
+++ awk '{print $NF}'
+++ sed -E 's/[[:punct:]]*$//'
++ object_key=Shield-WiFi-Alias
+++ jq -r --arg key Shield-WiFi-Alias 'map( select( .match[]? | contains( $key ) ) ) | .[0].group'
++ group_val=null
++ [[ -z null ]]
++ [[ null == \n\u\l\l ]]
+++ jq -r --arg desc 'Guest NAT' 'map( select( .match[]? == $desc ) ) | .[0].group'
++ group_val=null
++ [[ -z null ]]
++ [[ null == \n\u\l\l ]]
++ group_val=Unclassified
++ [[ true == true ]]
++ message '[process_configs] Group: Unclassified'
++ [[ -n [process_configs] Group: Unclassified ]]
++ local 'message=[process_configs] Group: Unclassified'
++ echo -e '[process_configs] Group: Unclassified'
+[process_configs] Group: Unclassified
++ return 0
+++ printf '%s\n' 'host 10.10.10.10'
+++ jq -R .
+++ jq -s .
++ local 'items_2json=[
+  "host 10.10.10.10"
+]'
++ declare -A sets_map
++ for line in "${data_sets[@]}"
++ [[ -n host 10.10.10.10 ]]
+++ awk '{print $1}'
++ key=host
++ [[ -n host ]]
++ [[ -z '' ]]
++ sets_map["$key"]=1
+++ for k in "${!sets_map[@]}"
+++ printf '{ "key": "%s", "val": %d }\n' host 1
+++ jq -s 'map({(.key): .val}) | add'
++ local 'sets_json={
+  "host": 1
+}'
+++ jq -n --arg object object --arg type 'network Shield-WiFi-Alias' --arg description 'Guest NAT' --argjson items '[
+  "host 10.10.10.10"
+]' --argjson sets '{
+  "host": 1
+}' --arg group Unclassified '{
+          object: $object,
+          type: ( $type | select( . != "" and . != "null" and . != "false" ) // false ),
+          description: ( $description | select( . != "" and . != "null" and . != "false" ) // false ),
+          items: $items,
+          sets: $sets,
+          group: $group
+        }'
++ target_object='{
+  "object": "object",
+  "type": "network Shield-WiFi-Alias",
+  "description": "Guest NAT",
+  "items": [
+    "host 10.10.10.10"
+  ],
+  "sets": {
+    "host": 1
+  },
+  "group": "Unclassified"
+}'
++ export target_object
++ [[ true == true ]]
++ message '[process_configs] JSON Object (output):'
++ [[ -n [process_configs] JSON Object (output): ]]
++ local 'message=[process_configs] JSON Object (output):'
++ echo -e '[process_configs] JSON Object (output):'
+[process_configs] JSON Object (output):
++ return 0
++ print '{
+  "object": "object",
+  "type": "network Shield-WiFi-Alias",
+  "description": "Guest NAT",
+  "items": [
+    "host 10.10.10.10"
+  ],
+  "sets": {
+    "host": 1
+  },
+  "group": "Unclassified"
+}'
++ [[ -n {
+  "object": "object",
+  "type": "network Shield-WiFi-Alias",
+  "description": "Guest NAT",
+  "items": [
+    "host 10.10.10.10"
+  ],
+  "sets": {
+    "host": 1
+  },
+  "group": "Unclassified"
+} ]]
++ echo -en '{
+  "object": "object",
+  "type": "network Shield-WiFi-Alias",
+  "description": "Guest NAT",
+  "items": [
+    "host 10.10.10.10"
+  ],
+  "sets": {
+    "host": 1
+  },
+  "group": "Unclassified"
+}'
++ jq .
++ return 0
+{
+  "object": "object",
+  "type": "network Shield-WiFi-Alias",
+  "description": "Guest NAT",
+  "items": [
+    "host 10.10.10.10"
+  ],
+  "sets": {
+    "host": 1
+  },
+  "group": "Unclassified"
+}
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ return 0
++ return 0
++ [[ -n {
+  "object": "object",
+  "type": "network Shield-WiFi-Alias",
+  "description": "Guest NAT",
+  "items": [
+    "host 10.10.10.10"
+  ],
+  "sets": {
+    "host": 1
+  },
+  "group": "Unclassified"
+} ]]
++ [[ true == true ]]
++ message '|-----> Target Objects: {
+  "object": "object",
+  "type": "network Shield-WiFi-Alias",
+  "description": "Guest NAT",
+  "items": [
+    "host 10.10.10.10"
+  ],
+  "sets": {
+    "host": 1
+  },
+  "group": "Unclassified"
+}'
++ [[ -n |-----> Target Objects: {
+  "object": "object",
+  "type": "network Shield-WiFi-Alias",
+  "description": "Guest NAT",
+  "items": [
+    "host 10.10.10.10"
+  ],
+  "sets": {
+    "host": 1
+  },
+  "group": "Unclassified"
+} ]]
++ local 'message=|-----> Target Objects: {
+  "object": "object",
+  "type": "network Shield-WiFi-Alias",
+  "description": "Guest NAT",
+  "items": [
+    "host 10.10.10.10"
+  ],
+  "sets": {
+    "host": 1
+  },
+  "group": "Unclassified"
+}'
++ echo -e '|-----> Target Objects: {
+  "object": "object",
+  "type": "network Shield-WiFi-Alias",
+  "description": "Guest NAT",
+  "items": [
+    "host 10.10.10.10"
+  ],
+  "sets": {
+    "host": 1
+  },
+  "group": "Unclassified"
+}'
+|-----> Target Objects: {
+  "object": "object",
+  "type": "network Shield-WiFi-Alias",
+  "description": "Guest NAT",
+  "items": [
+    "host 10.10.10.10"
+  ],
+  "sets": {
+    "host": 1
+  },
+  "group": "Unclassified"
+}
++ return 0
++ [[ -n {
+  "object": "object",
+  "type": "network Shield-WiFi-Alias",
+  "description": "Guest NAT",
+  "items": [
+    "host 10.10.10.10"
+  ],
+  "sets": {
+    "host": 1
+  },
+  "group": "Unclassified"
+} ]]
+++ printf '%s\n' '{
+  "object": "object",
+  "type": "network Shield-WiFi-Alias",
+  "description": "Guest NAT",
+  "items": [
+    "host 10.10.10.10"
+  ],
+  "sets": {
+    "host": 1
+  },
+  "group": "Unclassified"
+}'
+++ jq -s --arg site configs/misc --arg device fw3.cfg '{
+              site: ( $site | gsub( "^.*/"; "" ) ),
+              device: $device,
+              objects: .
+            }'
++ wrapped_block='{
+  "site": "misc",
+  "device": "fw3.cfg",
+  "objects": [
+    {
+      "object": "object",
+      "type": "network Shield-WiFi-Alias",
+      "description": "Guest NAT",
+      "items": [
+        "host 10.10.10.10"
+      ],
+      "sets": {
+        "host": 1
+      },
+      "group": "Unclassified"
+    }
+  ]
+}'
++ [[ true == true ]]
++ message '|-----> Config Objects:\n{
+  "site": "misc",
+  "device": "fw3.cfg",
+  "objects": [
+    {
+      "object": "object",
+      "type": "network Shield-WiFi-Alias",
+      "description": "Guest NAT",
+      "items": [
+        "host 10.10.10.10"
+      ],
+      "sets": {
+        "host": 1
+      },
+      "group": "Unclassified"
+    }
+  ]
+}'
++ [[ -n |-----> Config Objects:\n{
+  "site": "misc",
+  "device": "fw3.cfg",
+  "objects": [
+    {
+      "object": "object",
+      "type": "network Shield-WiFi-Alias",
+      "description": "Guest NAT",
+      "items": [
+        "host 10.10.10.10"
+      ],
+      "sets": {
+        "host": 1
+      },
+      "group": "Unclassified"
+    }
+  ]
+} ]]
++ local 'message=|-----> Config Objects:\n{
+  "site": "misc",
+  "device": "fw3.cfg",
+  "objects": [
+    {
+      "object": "object",
+      "type": "network Shield-WiFi-Alias",
+      "description": "Guest NAT",
+      "items": [
+        "host 10.10.10.10"
+      ],
+      "sets": {
+        "host": 1
+      },
+      "group": "Unclassified"
+    }
+  ]
+}'
++ echo -e '|-----> Config Objects:\n{
+  "site": "misc",
+  "device": "fw3.cfg",
+  "objects": [
+    {
+      "object": "object",
+      "type": "network Shield-WiFi-Alias",
+      "description": "Guest NAT",
+      "items": [
+        "host 10.10.10.10"
+      ],
+      "sets": {
+        "host": 1
+      },
+      "group": "Unclassified"
+    }
+  ]
+}'
+|-----> Config Objects:
+{
+  "site": "misc",
+  "device": "fw3.cfg",
+  "objects": [
+    {
+      "object": "object",
+      "type": "network Shield-WiFi-Alias",
+      "description": "Guest NAT",
+      "items": [
+        "host 10.10.10.10"
+      ],
+      "sets": {
+        "host": 1
+      },
+      "group": "Unclassified"
+    }
+  ]
+}
++ return 0
++ print '{
+  "site": "misc",
+  "device": "fw3.cfg",
+  "objects": [
+    {
+      "object": "object",
+      "type": "network Shield-WiFi-Alias",
+      "description": "Guest NAT",
+      "items": [
+        "host 10.10.10.10"
+      ],
+      "sets": {
+        "host": 1
+      },
+      "group": "Unclassified"
+    }
+  ]
+}'
++ [[ -n {
+  "site": "misc",
+  "device": "fw3.cfg",
+  "objects": [
+    {
+      "object": "object",
+      "type": "network Shield-WiFi-Alias",
+      "description": "Guest NAT",
+      "items": [
+        "host 10.10.10.10"
+      ],
+      "sets": {
+        "host": 1
+      },
+      "group": "Unclassified"
+    }
+  ]
+} ]]
++ echo -en '{
+  "site": "misc",
+  "device": "fw3.cfg",
+  "objects": [
+    {
+      "object": "object",
+      "type": "network Shield-WiFi-Alias",
+      "description": "Guest NAT",
+      "items": [
+        "host 10.10.10.10"
+      ],
+      "sets": {
+        "host": 1
+      },
+      "group": "Unclassified"
+    }
+  ]
+}'
++ return 0
++ for serialized_line in "${matched_objects[@]}"
++ [[ true == true ]]
++ message 'Serialized Line: access-list OUTSIDE extended permit ip host 10.10.10.10 any'
++ [[ -n Serialized Line: access-list OUTSIDE extended permit ip host 10.10.10.10 any ]]
++ local 'message=Serialized Line: access-list OUTSIDE extended permit ip host 10.10.10.10 any'
++ echo -e 'Serialized Line: access-list OUTSIDE extended permit ip host 10.10.10.10 any'
+Serialized Line: access-list OUTSIDE extended permit ip host 10.10.10.10 any
++ return 0
+++ perl -pe 's/MTc0NzY0OTg0Mjk2OTE1NDAwMAo/\n/g'
++ restored_block='access-list OUTSIDE extended permit ip host 10.10.10.10 any'
++ local cfg_path=configs/misc/fw3.cfg
++ local rel_path=misc/fw3.cfg
++ local site=misc
++ local device_filename=fw3.cfg
++ local extension=cfg
++ local objects_dir=reports/10.10.10.10/misc
++ local objects_file=reports/10.10.10.10/misc/fw3.cfg
++ [[ -s reports/10.10.10.10/misc/fw3.cfg ]]
+++ echo 'access-list OUTSIDE extended permit ip host 10.10.10.10 any'
+++ tr '\n' '\r'
++ local 'restored_flat=access-list OUTSIDE extended permit ip host 10.10.10.10 any'
+++ tr '\n' '\r'
++ local 'objects_flat=object-group network Shield-WiFi description Shield-controlled wireless network network-object host 10.10.10.10 network-object 192.168.100.0 255.255.255.0!object network Shield-WiFi-Alias host 10.10.10.10 description Guest NAT!'
++ grep -Fq -- 'access-list OUTSIDE extended permit ip host 10.10.10.10 any'
++ mkdir -p reports/10.10.10.10/misc
++ message 'access-list OUTSIDE extended permit ip host 10.10.10.10 any'
++ [[ -n access-list OUTSIDE extended permit ip host 10.10.10.10 any ]]
++ local 'message=access-list OUTSIDE extended permit ip host 10.10.10.10 any'
++ echo -e 'access-list OUTSIDE extended permit ip host 10.10.10.10 any'
++ return 0
++ message '!'
++ [[ -n ! ]]
++ local 'message=!'
++ echo -e '!'
++ return 0
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
++ (( i++ ))
++ (( i < count ))
++ return 0
++ [[ true == true ]]
++ message 'Restored Configuration:\naccess-list OUTSIDE extended permit ip host 10.10.10.10 any'
++ [[ -n Restored Configuration:\naccess-list OUTSIDE extended permit ip host 10.10.10.10 any ]]
++ local 'message=Restored Configuration:\naccess-list OUTSIDE extended permit ip host 10.10.10.10 any'
++ echo -e 'Restored Configuration:\naccess-list OUTSIDE extended permit ip host 10.10.10.10 any'
+Restored Configuration:
+access-list OUTSIDE extended permit ip host 10.10.10.10 any
++ return 0
++ process_configs 10.10.10.10 configs/misc/fw3.cfg 'access-list OUTSIDE extended permit ip host 10.10.10.10 any'
++ local target_pattern=10.10.10.10
++ local config_path=configs/misc/fw3.cfg
++ local 'restored_block=access-list OUTSIDE extended permit ip host 10.10.10.10 any'
++ local cleaned_block
+++ sed '/^[[:space:]]*$/d'
++ cleaned_block='access-list OUTSIDE extended permit ip host 10.10.10.10 any'
++ [[ -z access-list OUTSIDE extended permit ip host 10.10.10.10 any ]]
++ [[ true == true ]]
++ message '[process_configs] Raw Block:\naccess-list OUTSIDE extended permit ip host 10.10.10.10 any'
++ [[ -n [process_configs] Raw Block:\naccess-list OUTSIDE extended permit ip host 10.10.10.10 any ]]
++ local 'message=[process_configs] Raw Block:\naccess-list OUTSIDE extended permit ip host 10.10.10.10 any'
++ echo -e '[process_configs] Raw Block:\naccess-list OUTSIDE extended permit ip host 10.10.10.10 any'
+[process_configs] Raw Block:
+access-list OUTSIDE extended permit ip host 10.10.10.10 any
++ return 0
++ local object_line
+++ head -n 1
+++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
++ object_line='access-list OUTSIDE extended permit ip host 10.10.10.10 any'
++ [[ -z access-list OUTSIDE extended permit ip host 10.10.10.10 any ]]
++ local object_keyword type_value
+++ awk '{print $1}'
++ object_keyword=access-list
+++ wc -l
++ ((         1 > 1  ))
++ type_value=false
++ [[ true == true ]]
++ print '[process_configs] object   : access-list'
++ [[ -n [process_configs] object   : access-list ]]
++ echo -en '[process_configs] object   : access-list'
+[process_configs] object   : access-list+ return 0
++ print '[process_configs] type     : false'
++ [[ -n [process_configs] type     : false ]]
++ echo -en '[process_configs] type     : false'
+[process_configs] type     : false+ return 0
++ data_sets=()
++ local -a data_sets
++ IFS=
++ read -r line
+++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
++ local 'trimmed=access-list OUTSIDE extended permit ip host 10.10.10.10 any'
++ [[ -z access-list OUTSIDE extended permit ip host 10.10.10.10 any ]]
++ [[ access-list outside extended permit ip host 10.10.10.10 any =~ ^description[[:space:]] ]]
++ data_sets+=("${trimmed}")
++ IFS=
++ read -r line
++ ((  1 > 1  ))
++ [[ true == true ]]
++ message '[process_configs] Object Sets:'
++ [[ -n [process_configs] Object Sets: ]]
++ local 'message=[process_configs] Object Sets:'
++ echo -e '[process_configs] Object Sets:'
+[process_configs] Object Sets:
++ return 0
++ for e in "${data_sets[@]}"
++ print '  - access-list OUTSIDE extended permit ip host 10.10.10.10 any'
++ [[ -n   - access-list OUTSIDE extended permit ip host 10.10.10.10 any ]]
++ echo -en '  - access-list OUTSIDE extended permit ip host 10.10.10.10 any'
+  - access-list OUTSIDE extended permit ip host 10.10.10.10 any+ return 0
+++ grep -E '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
+++ head -n 1
+++ sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//'
++ local 'matched_line=access-list OUTSIDE extended permit ip host 10.10.10.10 any'
++ [[ -z access-list OUTSIDE extended permit ip host 10.10.10.10 any ]]
++ [[ true == true ]]
++ message '[process_configs] Matched: access-list OUTSIDE extended permit ip host 10.10.10.10 any'
++ [[ -n [process_configs] Matched: access-list OUTSIDE extended permit ip host 10.10.10.10 any ]]
++ local 'message=[process_configs] Matched: access-list OUTSIDE extended permit ip host 10.10.10.10 any'
++ echo -e '[process_configs] Matched: access-list OUTSIDE extended permit ip host 10.10.10.10 any'
+[process_configs] Matched: access-list OUTSIDE extended permit ip host 10.10.10.10 any
++ return 0
++ matched_items=()
++ local -a matched_items
++ IFS=
++ read -r line
++ grep -Eq '(^|[^0-9.])10\.10\.10\.10([^0-9.]|$)'
++ matched_items+=("$(sed -E 's/^[[:space:]]+//;s/[[:space:]]+$//' <<< "${line}")")
+++ sed -E 's/^[[:space:]]+//;s/[[:space:]]+$//'
++ IFS=
++ read -r line
+++ printf '%s\n' 'access-list OUTSIDE extended permit ip host 10.10.10.10 any'
+++ jq -R .
+++ jq -s .
++ local 'matched_items_json=[
+  "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
 ]'
 ++ grep -i '^[[:space:]]*description'
 ++ head -n 1
@@ -901,69 +2549,56 @@ interface Vlan2
 + message '[process_configs] Description: false'
 + [[ -n [process_configs] Description: false ]]
 + local 'message=[process_configs] Description: false'
-+ print '[process_configs] Description: false'
-+ [[ -n [process_configs] Description: false ]]
-+ echo -en '[process_configs] Description: false'
-[process_configs] Description: false+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
++ echo -e '[process_configs] Description: false'
+[process_configs] Description: false
++ return 0
 + local group_val=Unclassified
 + [[ true == true ]]
 + local object_key
 ++ awk '{print $NF}'
 ++ sed -E 's/[[:punct:]]*$//'
-+ object_key=Vlan2
-++ jq -r --arg key Vlan2 'map( select( .match[]? | contains( $key ) ) ) | .[0].group'
-+ group_val=Business-Unit-Networks
-+ [[ -z Business-Unit-Networks ]]
-+ [[ Business-Unit-Networks == \n\u\l\l ]]
-+ [[ -z Business-Unit-Networks ]]
-+ [[ Business-Unit-Networks == \n\u\l\l ]]
++ object_key=false
+++ jq -r --arg key false 'map( select( .match[]? | contains( $key ) ) ) | .[0].group'
++ group_val=null
++ [[ -z null ]]
++ [[ null == \n\u\l\l ]]
+++ jq -r --arg desc false 'map( select( .match[]? == $desc ) ) | .[0].group'
++ group_val=null
++ [[ -z null ]]
++ [[ null == \n\u\l\l ]]
++ group_val=Unclassified
 + [[ true == true ]]
-+ message '[process_configs] Group: Business-Unit-Networks'
-+ [[ -n [process_configs] Group: Business-Unit-Networks ]]
-+ local 'message=[process_configs] Group: Business-Unit-Networks'
-+ print '[process_configs] Group: Business-Unit-Networks'
-+ [[ -n [process_configs] Group: Business-Unit-Networks ]]
-+ echo -en '[process_configs] Group: Business-Unit-Networks'
-[process_configs] Group: Business-Unit-Networks+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-++ printf '%s\n' 'ip address 10.10.10.10 255.255.255.0'
++ message '[process_configs] Group: Unclassified'
++ [[ -n [process_configs] Group: Unclassified ]]
++ local 'message=[process_configs] Group: Unclassified'
++ echo -e '[process_configs] Group: Unclassified'
+[process_configs] Group: Unclassified
++ return 0
+++ printf '%s\n' 'access-list OUTSIDE extended permit ip host 10.10.10.10 any'
 ++ jq -R .
 ++ jq -s .
 + local 'items_2json=[
-  "ip address 10.10.10.10 255.255.255.0"
+  "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
 ]'
 + declare -A sets_map
 + for line in "${data_sets[@]}"
-+ [[ -n ip address 10.10.10.10 255.255.255.0 ]]
++ [[ -n access-list OUTSIDE extended permit ip host 10.10.10.10 any ]]
 ++ awk '{print $1}'
-+ key=ip
-+ [[ -n ip ]]
++ key=access-list
++ [[ -n access-list ]]
 + [[ -z '' ]]
 + sets_map["$key"]=1
 ++ for k in "${!sets_map[@]}"
-++ printf '{ "key": "%s", "val": %d }\n' ip 1
+++ printf '{ "key": "%s", "val": %d }\n' access-list 1
 ++ jq -s 'map({(.key): .val}) | add'
 + local 'sets_json={
-  "ip": 1
+  "access-list": 1
 }'
-++ jq -n --arg object interface --arg type Vlan2 --arg description false --argjson items '[
-  "ip address 10.10.10.10 255.255.255.0"
+++ jq -n --arg object access-list --arg type false --arg description false --argjson items '[
+  "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
 ]' --argjson sets '{
-  "ip": 1
-}' --arg group Business-Unit-Networks '{
+  "access-list": 1
+}' --arg group Unclassified '{
           object: $object,
           type: ( $type | select( . != "" and . != "null" and . != "false" ) // false ),
           description: ( $description | select( . != "" and . != "null" and . != "false" ) // false ),
@@ -972,81 +2607,74 @@ interface Vlan2
           group: $group
         }'
 + target_object='{
-  "object": "interface",
-  "type": "Vlan2",
+  "object": "access-list",
+  "type": false,
   "description": false,
   "items": [
-    "ip address 10.10.10.10 255.255.255.0"
+    "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
   ],
   "sets": {
-    "ip": 1
+    "access-list": 1
   },
-  "group": "Business-Unit-Networks"
+  "group": "Unclassified"
 }'
 + export target_object
 + [[ true == true ]]
 + message '[process_configs] JSON Object (output):'
 + [[ -n [process_configs] JSON Object (output): ]]
 + local 'message=[process_configs] JSON Object (output):'
-+ print '[process_configs] JSON Object (output):'
-+ [[ -n [process_configs] JSON Object (output): ]]
-+ echo -en '[process_configs] JSON Object (output):'
-[process_configs] JSON Object (output):+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
++ echo -e '[process_configs] JSON Object (output):'
+[process_configs] JSON Object (output):
++ return 0
 + print '{
-  "object": "interface",
-  "type": "Vlan2",
+  "object": "access-list",
+  "type": false,
   "description": false,
   "items": [
-    "ip address 10.10.10.10 255.255.255.0"
+    "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
   ],
   "sets": {
-    "ip": 1
+    "access-list": 1
   },
-  "group": "Business-Unit-Networks"
+  "group": "Unclassified"
 }'
 + [[ -n {
-  "object": "interface",
-  "type": "Vlan2",
+  "object": "access-list",
+  "type": false,
   "description": false,
   "items": [
-    "ip address 10.10.10.10 255.255.255.0"
+    "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
   ],
   "sets": {
-    "ip": 1
+    "access-list": 1
   },
-  "group": "Business-Unit-Networks"
+  "group": "Unclassified"
 } ]]
 + echo -en '{
-  "object": "interface",
-  "type": "Vlan2",
+  "object": "access-list",
+  "type": false,
   "description": false,
   "items": [
-    "ip address 10.10.10.10 255.255.255.0"
+    "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
   ],
   "sets": {
-    "ip": 1
+    "access-list": 1
   },
-  "group": "Business-Unit-Networks"
+  "group": "Unclassified"
 }'
 + jq .
++ return 0
 {
-  "object": "interface",
-  "type": "Vlan2",
+  "object": "access-list",
+  "type": false,
   "description": false,
   "items": [
-    "ip address 10.10.10.10 255.255.255.0"
+    "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
   ],
   "sets": {
-    "ip": 1
+    "access-list": 1
   },
-  "group": "Business-Unit-Networks"
+  "group": "Unclassified"
 }
 + newline
 + local count=1
@@ -1057,354 +2685,284 @@ interface Vlan2
 + (( i++ ))
 + (( i < count ))
 + return 0
++ return 0
 + [[ -n {
-  "object": "interface",
-  "type": "Vlan2",
+  "object": "access-list",
+  "type": false,
   "description": false,
   "items": [
-    "ip address 10.10.10.10 255.255.255.0"
+    "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
   ],
   "sets": {
-    "ip": 1
+    "access-list": 1
   },
-  "group": "Business-Unit-Networks"
+  "group": "Unclassified"
 } ]]
 + [[ true == true ]]
 + message '|-----> Target Objects: {
-  "object": "interface",
-  "type": "Vlan2",
+  "object": "access-list",
+  "type": false,
   "description": false,
   "items": [
-    "ip address 10.10.10.10 255.255.255.0"
+    "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
   ],
   "sets": {
-    "ip": 1
+    "access-list": 1
   },
-  "group": "Business-Unit-Networks"
+  "group": "Unclassified"
 }'
 + [[ -n |-----> Target Objects: {
-  "object": "interface",
-  "type": "Vlan2",
+  "object": "access-list",
+  "type": false,
   "description": false,
   "items": [
-    "ip address 10.10.10.10 255.255.255.0"
+    "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
   ],
   "sets": {
-    "ip": 1
+    "access-list": 1
   },
-  "group": "Business-Unit-Networks"
+  "group": "Unclassified"
 } ]]
 + local 'message=|-----> Target Objects: {
-  "object": "interface",
-  "type": "Vlan2",
+  "object": "access-list",
+  "type": false,
   "description": false,
   "items": [
-    "ip address 10.10.10.10 255.255.255.0"
+    "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
   ],
   "sets": {
-    "ip": 1
+    "access-list": 1
   },
-  "group": "Business-Unit-Networks"
+  "group": "Unclassified"
 }'
-+ print '|-----> Target Objects: {
-  "object": "interface",
-  "type": "Vlan2",
++ echo -e '|-----> Target Objects: {
+  "object": "access-list",
+  "type": false,
   "description": false,
   "items": [
-    "ip address 10.10.10.10 255.255.255.0"
+    "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
   ],
   "sets": {
-    "ip": 1
+    "access-list": 1
   },
-  "group": "Business-Unit-Networks"
-}'
-+ [[ -n |-----> Target Objects: {
-  "object": "interface",
-  "type": "Vlan2",
-  "description": false,
-  "items": [
-    "ip address 10.10.10.10 255.255.255.0"
-  ],
-  "sets": {
-    "ip": 1
-  },
-  "group": "Business-Unit-Networks"
-} ]]
-+ echo -en '|-----> Target Objects: {
-  "object": "interface",
-  "type": "Vlan2",
-  "description": false,
-  "items": [
-    "ip address 10.10.10.10 255.255.255.0"
-  ],
-  "sets": {
-    "ip": 1
-  },
-  "group": "Business-Unit-Networks"
+  "group": "Unclassified"
 }'
 |-----> Target Objects: {
-  "object": "interface",
-  "type": "Vlan2",
+  "object": "access-list",
+  "type": false,
   "description": false,
   "items": [
-    "ip address 10.10.10.10 255.255.255.0"
+    "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
   ],
   "sets": {
-    "ip": 1
+    "access-list": 1
   },
-  "group": "Business-Unit-Networks"
-}+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
+  "group": "Unclassified"
+}
++ return 0
 + [[ -n {
-  "object": "interface",
-  "type": "Vlan2",
+  "object": "access-list",
+  "type": false,
   "description": false,
   "items": [
-    "ip address 10.10.10.10 255.255.255.0"
+    "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
   ],
   "sets": {
-    "ip": 1
+    "access-list": 1
   },
-  "group": "Business-Unit-Networks"
+  "group": "Unclassified"
 } ]]
 ++ printf '%s\n' '{
-  "object": "interface",
-  "type": "Vlan2",
+  "object": "access-list",
+  "type": false,
   "description": false,
   "items": [
-    "ip address 10.10.10.10 255.255.255.0"
+    "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
   ],
   "sets": {
-    "ip": 1
+    "access-list": 1
   },
-  "group": "Business-Unit-Networks"
+  "group": "Unclassified"
 }'
-++ jq -s --arg site configs/misc --arg device switch2.conf '{
+++ jq -s --arg site configs/misc --arg device fw3.cfg '{
               site: ( $site | gsub( "^.*/"; "" ) ),
               device: $device,
               objects: .
             }'
 + wrapped_block='{
   "site": "misc",
-  "device": "switch2.conf",
+  "device": "fw3.cfg",
   "objects": [
     {
-      "object": "interface",
-      "type": "Vlan2",
+      "object": "access-list",
+      "type": false,
       "description": false,
       "items": [
-        "ip address 10.10.10.10 255.255.255.0"
+        "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
       ],
       "sets": {
-        "ip": 1
+        "access-list": 1
       },
-      "group": "Business-Unit-Networks"
+      "group": "Unclassified"
     }
   ]
 }'
 + [[ true == true ]]
 + message '|-----> Config Objects:\n{
   "site": "misc",
-  "device": "switch2.conf",
+  "device": "fw3.cfg",
   "objects": [
     {
-      "object": "interface",
-      "type": "Vlan2",
+      "object": "access-list",
+      "type": false,
       "description": false,
       "items": [
-        "ip address 10.10.10.10 255.255.255.0"
+        "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
       ],
       "sets": {
-        "ip": 1
+        "access-list": 1
       },
-      "group": "Business-Unit-Networks"
+      "group": "Unclassified"
     }
   ]
 }'
 + [[ -n |-----> Config Objects:\n{
   "site": "misc",
-  "device": "switch2.conf",
+  "device": "fw3.cfg",
   "objects": [
     {
-      "object": "interface",
-      "type": "Vlan2",
+      "object": "access-list",
+      "type": false,
       "description": false,
       "items": [
-        "ip address 10.10.10.10 255.255.255.0"
+        "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
       ],
       "sets": {
-        "ip": 1
+        "access-list": 1
       },
-      "group": "Business-Unit-Networks"
+      "group": "Unclassified"
     }
   ]
 } ]]
 + local 'message=|-----> Config Objects:\n{
   "site": "misc",
-  "device": "switch2.conf",
+  "device": "fw3.cfg",
   "objects": [
     {
-      "object": "interface",
-      "type": "Vlan2",
+      "object": "access-list",
+      "type": false,
       "description": false,
       "items": [
-        "ip address 10.10.10.10 255.255.255.0"
+        "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
       ],
       "sets": {
-        "ip": 1
+        "access-list": 1
       },
-      "group": "Business-Unit-Networks"
+      "group": "Unclassified"
     }
   ]
 }'
-+ print '|-----> Config Objects:\n{
++ echo -e '|-----> Config Objects:\n{
   "site": "misc",
-  "device": "switch2.conf",
+  "device": "fw3.cfg",
   "objects": [
     {
-      "object": "interface",
-      "type": "Vlan2",
+      "object": "access-list",
+      "type": false,
       "description": false,
       "items": [
-        "ip address 10.10.10.10 255.255.255.0"
+        "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
       ],
       "sets": {
-        "ip": 1
+        "access-list": 1
       },
-      "group": "Business-Unit-Networks"
-    }
-  ]
-}'
-+ [[ -n |-----> Config Objects:\n{
-  "site": "misc",
-  "device": "switch2.conf",
-  "objects": [
-    {
-      "object": "interface",
-      "type": "Vlan2",
-      "description": false,
-      "items": [
-        "ip address 10.10.10.10 255.255.255.0"
-      ],
-      "sets": {
-        "ip": 1
-      },
-      "group": "Business-Unit-Networks"
-    }
-  ]
-} ]]
-+ echo -en '|-----> Config Objects:\n{
-  "site": "misc",
-  "device": "switch2.conf",
-  "objects": [
-    {
-      "object": "interface",
-      "type": "Vlan2",
-      "description": false,
-      "items": [
-        "ip address 10.10.10.10 255.255.255.0"
-      ],
-      "sets": {
-        "ip": 1
-      },
-      "group": "Business-Unit-Networks"
+      "group": "Unclassified"
     }
   ]
 }'
 |-----> Config Objects:
 {
   "site": "misc",
-  "device": "switch2.conf",
+  "device": "fw3.cfg",
   "objects": [
     {
-      "object": "interface",
-      "type": "Vlan2",
+      "object": "access-list",
+      "type": false,
       "description": false,
       "items": [
-        "ip address 10.10.10.10 255.255.255.0"
+        "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
       ],
       "sets": {
-        "ip": 1
+        "access-list": 1
       },
-      "group": "Business-Unit-Networks"
+      "group": "Unclassified"
     }
   ]
-}+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
+}
++ return 0
 + print '{
   "site": "misc",
-  "device": "switch2.conf",
+  "device": "fw3.cfg",
   "objects": [
     {
-      "object": "interface",
-      "type": "Vlan2",
+      "object": "access-list",
+      "type": false,
       "description": false,
       "items": [
-        "ip address 10.10.10.10 255.255.255.0"
+        "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
       ],
       "sets": {
-        "ip": 1
+        "access-list": 1
       },
-      "group": "Business-Unit-Networks"
+      "group": "Unclassified"
     }
   ]
 }'
 + [[ -n {
   "site": "misc",
-  "device": "switch2.conf",
+  "device": "fw3.cfg",
   "objects": [
     {
-      "object": "interface",
-      "type": "Vlan2",
+      "object": "access-list",
+      "type": false,
       "description": false,
       "items": [
-        "ip address 10.10.10.10 255.255.255.0"
+        "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
       ],
       "sets": {
-        "ip": 1
+        "access-list": 1
       },
-      "group": "Business-Unit-Networks"
+      "group": "Unclassified"
     }
   ]
 } ]]
 + echo -en '{
   "site": "misc",
-  "device": "switch2.conf",
+  "device": "fw3.cfg",
   "objects": [
     {
-      "object": "interface",
-      "type": "Vlan2",
+      "object": "access-list",
+      "type": false,
       "description": false,
       "items": [
-        "ip address 10.10.10.10 255.255.255.0"
+        "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
       ],
       "sets": {
-        "ip": 1
+        "access-list": 1
       },
-      "group": "Business-Unit-Networks"
+      "group": "Unclassified"
     }
   ]
 }'
 + return 0
-+ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.exU6j5i99Y/10.10.10.10
-+ export json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.exU6j5i99Y/10.10.10.10/10.10.10.10--MTc0NzU0MTY2.json
-+ json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.exU6j5i99Y/10.10.10.10/10.10.10.10--MTc0NzU0MTY2.json
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.exU6j5i99Y/fragments.json ]]
-+ jq -s --arg target 10.10.10.10 '{ target: $target, configs: . }' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.exU6j5i99Y/fragments.json
++ return 0
++ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.acqc9mzDVr/10.10.10.10
++ export json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.acqc9mzDVr/10.10.10.10/10.10.10.10--MTc0NzY0OTg0.json
++ json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.acqc9mzDVr/10.10.10.10/10.10.10.10--MTc0NzY0OTg0.json
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.acqc9mzDVr/fragments.json ]]
++ jq -s --arg target 10.10.10.10 '{ target: $target, configs: . }' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.acqc9mzDVr/fragments.json
 ++ mktemp
-+ tmp_merged=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.bnpL6AugXw
++ tmp_merged=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.YxWzajOY5A
 + local final_outfile=reports/10.10.10.10/10.10.10.10.json
 ++ dirname reports/10.10.10.10/10.10.10.10.json
 + mkdir -p reports/10.10.10.10
@@ -1442,10 +3000,10 @@ interface Vlan2
               )
             else . + [ $cfg ] end
           ))
-      }' reports/10.10.10.10/10.10.10.10.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.exU6j5i99Y/10.10.10.10/10.10.10.10--MTc0NzU0MTY2.json
-+ mv /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.bnpL6AugXw reports/10.10.10.10/10.10.10.10.json
-+ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.exU6j5i99Y/10.10.10.10/10.10.10.10--MTc0NzU0MTY2.json
+      }' reports/10.10.10.10/10.10.10.10.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.acqc9mzDVr/10.10.10.10/10.10.10.10--MTc0NzY0OTg0.json
++ mv /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.YxWzajOY5A reports/10.10.10.10/10.10.10.10.json
++ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.acqc9mzDVr/10.10.10.10/10.10.10.10--MTc0NzY0OTg0.json
 + return 0
 + unset verbose debug
-+ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.exU6j5i99Y ]]
-+ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.exU6j5i99Y
++ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.acqc9mzDVr ]]
++ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.acqc9mzDVr

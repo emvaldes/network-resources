@@ -69,7 +69,7 @@ function extract_configs () {
     if [[ ! -s "${config_file}" ]]; then
             error_message "File '${config_file}' is missing or empty";
       else  message "[OK] File '${config_file}' is readable and size is $(
-              stat -c%s "${config_file}"
+              stat -f "%m" "${config_file}"
             ) bytes";
     fi;
 
@@ -120,10 +120,19 @@ function extract_configs () {
     #### -----------------------------------------------------------------------
     ## Match config-objects (blocks) containing search-pattern (e.g.: IP Address)
     oIFS="${IFS}"; IFS=$'\n';
-    declare -a matched_objects=($(
-      printf "%s\n" "${config_objects[@]}" | \
-      grep -E "(^|[^0-9.])${target_pattern//./\\.}([^0-9.]|$)"
-    ));
+
+    # declare -a matched_objects=($(
+    #   printf "%s\n" "${config_objects[@]}" | \
+    #   grep -E "(^|[^0-9.])${target_pattern//./\\.}([^0-9.]|$)"
+    # ));
+
+    declare -a matched_objects=();
+    for block in "${config_objects[@]}"; do
+      if grep -qE "(^|[^0-9.])${target_pattern//./\\.}([^0-9.]|$)" <<< "${block}"; then
+        matched_objects+=( "${block}" );
+      fi;
+    done;
+
     IFS="${oIFS}";
 
     if [[ "${debug}" == true ]]; then
@@ -173,11 +182,16 @@ function extract_configs () {
       local objects_dir="${reports_folder}/${target_address}/${site}";
       local objects_file="${objects_dir}/${device_filename}";
 
-      # ✅ Skip if this block already exists in the output file
-      if [[ -s "${objects_file}" ]] && grep -Fq -- "${restored_block}" "${objects_file}"; then
-        [[ "${debug}" == true ]] && \
-           message "Skipping duplicate block in ${objects_file}";
-        continue;
+      ## Skip if this block already exists in the output file (match as single line)
+      if [[ -s "${objects_file}" ]]; then
+        local restored_flat="$( echo "${restored_block}" | tr '\n' '\r' )";
+        local objects_flat="$( tr '\n' '\r' < "${objects_file}" )";
+
+        if grep -Fq -- "${restored_flat}" <<< "${objects_flat}"; then
+          [[ "${debug}" == true ]] && \
+            message "Skipping duplicate block in ${objects_file}";
+          continue;
+        fi;
       fi;
 
       mkdir -p "${objects_dir}";

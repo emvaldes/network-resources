@@ -39,20 +39,20 @@ function main () {
 
       #### ---------------------------------------------------------------------
       ## Match accepted arguments
-      [[ $key =~ ^(classify|g)$ ]] && local classify_targets=true;
+      [[ $key =~ ^(classify|g)$ ]] && export classify_targets=true;
       [[ $key =~ ^(configs|c)$ ]] && export configs_dirpath="${value}";
-      [[ $key =~ ^(devices|d)$ ]] && local target_devices="${value}";
-      [[ $key =~ ^(file-ext|x)$ ]] && file_extensions+=(
+      [[ $key =~ ^(devices|d)$ ]] && export target_devices="${value}";
+      [[ $key =~ ^(file-ext|x)$ ]] && export file_extensions+=(
         $( print "${value}" | tr ':,;\n ' '\n' )
       );
-      [[ $key =~ ^(interval|l)$ ]] && local delaying_factor="${value}";
-      [[ $key =~ ^(ips-list|i)$ ]] && local target_addresses="${value}";
+      [[ $key =~ ^(interval|l)$ ]] && export delaying_factor="${value}";
+      [[ $key =~ ^(ips-list|i)$ ]] && export target_addresses="${value}";
       [[ $key =~ ^(logs|o)$ ]] && export enable_logging=true;
-      [[ $key =~ ^(jobs|j)$ ]] && local parallel_threads="${value}";
+      [[ $key =~ ^(jobs|j)$ ]] && export parallel_threads="${value}";
       [[ $key =~ ^(matrix|m)$ ]] && export matrix_filename="${value}";
       [[ $key =~ ^(reports|r)$ ]] && export reports_folder="${value}";
       [[ $key =~ ^(sites|s)$ ]] && export target_sites="${value}";
-      [[ $key =~ ^(validate|v)$ ]] && local validate_address=true;
+      [[ $key =~ ^(validate|v)$ ]] && export validate_address=true;
 
       #### ---------------------------------------------------------------------
       ## Special options
@@ -64,15 +64,17 @@ function main () {
 
     #### -----------------------------------------------------------------------
     ## Set custom values if not supplied
-    [[ -z ${delaying_factor:-} ]] && delaying_factor="0.05";
-    [[ -z ${target_addresses:-} ]] && local target_addresses="ips.list";
-    [[ -z ${target_devices:-} ]] && local target_devices=false;
-    [[ -z ${parallel_threads:-} ]] && parallel_threads=100;
-    [[ -z ${target_sites:-} ]] && target_sites=false;
+    [[ -z ${delaying_factor:-} ]] && export delaying_factor="0.05";
+    [[ -z ${target_addresses:-} ]] && export target_addresses="ips.list";
+    [[ -z ${target_devices:-} ]] && export target_devices=false;
+    [[ -z ${parallel_threads:-} ]] && export parallel_threads=100;
+    [[ -z ${target_sites:-} ]] && export target_sites=false;
 
     #### -----------------------------------------------------------------------
     ## Set default values if not supplied
+    [[ -z ${script_helper:-} ]] && script_helper=false;
     [[ -z ${debug:-} ]] && debug=false;
+    [[ -z ${dry_run:-} ]] && dry_run=false;
     [[ -z ${verbose:-} ]] && verbose=false;
 
     #### -----------------------------------------------------------------------
@@ -88,6 +90,10 @@ function main () {
     #### -----------------------------------------------------------------------
     ## Enabling IP/CIDR Blocks Group Classification
     [[ -z ${classify_targets:-} ]] && local classify_targets=false;
+
+    ## Generate master list of config files only once
+    ## Custom/Default configs folder:
+    export configs_dirpath="${configs_dirpath:-configs}";
 
     #### -----------------------------------------------------------------------
     ## Target Configurations (file-extensions):
@@ -111,38 +117,88 @@ function main () {
             # return 4;
     fi;
 
-    if [[ "${verbose}" == true ]]; then
-      message "Displaying ${target_devices} listing:";
-      # list_file "${target_devices}";
-      # print_file "${target_devices}";
-      for device in "${target_devices_source[@]}"; do
-        message "Device: ${device}";
-      done;
+    #### -----------------------------------------------------------------------
+    ## Processing Custom/Default the Translation-Matrix (source):
+    ## Load and validate translation matrix (used for grouping logic)
+    [[ -z "${matrix_filename:-}" ]] && export matrix_filename="matrix.json";
+    if [[ ! -f "${matrix_filename}" ]]; then
+            error_message "Project Source Matrix-Configs file not found: ${matrix_filename}";
+            return 1;
+      elif  ! jq -e 'length > 0' "${matrix_filename}" &>/dev/null; then
+            error_message "Matrix file is missing, invalid, or empty: ${matrix_filename}";
+            return 2;
+      else  export matrix_configs="$(
+              cat "${matrix_filename}"
+            )";
     fi;
 
     #### -----------------------------------------------------------------------
-    ## Generate master list of config files only once
-    ## Custom/Default configs folder:
-    export configs_dirpath="${configs_dirpath:-configs}";
+    ## Custom/Default reports folder:
+    export reports_folder="${reports_folder:-reports}";
+    mkdir -p "${reports_folder}";
 
+    export output_csv="${reports_folder}/reports.csv";
+
+    ## Initializing the log file
+    : > "${reports_logsfile}";  ## Truncate report log
+    # [[ "${debug}" == true ]] && list_file "${reports_logsfile}";
+
+    #### -----------------------------------------------------------------------
+    ## Validating IP Addresses (Skipping?)
+    [[ -z ${validate_address:-} ]] && export validate_address=false;
+
+    #### -----------------------------------------------------------------------
+    if [[ "${verbose}" == true ]]; then
+      {
+        message "[INFO] Date: ${start_time}";
+        newline;
+        message "[INFO] Script: ${script_name}";
+        message "[INFO] PID: $$";
+        newline;
+        message "[INFO] User: $( whoami )";
+        message "[INFO] Host: $( hostname )";
+        message "[INFO] OS: ${OSTYPE}";
+        message "[INFO] Shell: ${BASH_VERSION}";
+        newline;
+        message "[INFO] Local State Directory: ${local_state_dir}";
+        message "[INFO] Logging Output Directory: ${stats_folder}";
+        message "[INFO] Temp Directory: ${TMP_DIR}";
+        newline;
+        message "[INFO] Classify Targets: ${classify_targets}";
+        message "[INFO] ${configs_dirpath}";
+        message "[INFO] ${target_devices}";
+        message "[INFO] File Extensions: ${file_extensions}";
+        message "[INFO] ${delaying_factor}";
+        message "[INFO] ${target_addresses}";
+        message "[INFO] Enable Logging: ${enable_logging}";
+        message "[INFO] ${parallel_threads}";
+        message "[INFO] Matrix Filename: ${matrix_filename}";
+        message "[INFO] Reports Folder: ${reports_folder}";
+        message "[INFO] ${target_sites}";
+        message "[INFO] Validate Address: ${validate_address}";
+        message "[INFO] ${script_helper}";
+        message "[INFO] Debug: ${debug}";
+        message "[INFO] ${dry_run}";
+        message "[INFO] Verbose: ${verbose}";
+        newline;
+      } >> "${actions_logsfile}";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    if [[ "${verbose}" == true ]]; then
+      {
+        message "Target (${target_devices}) (count): ${#target_devices_source[@]}";
+        newline;
+        for device in "${target_devices_source[@]}"; do
+          message "  - ${device}";
+        done; newline;
+      } >> "${actions_logsfile}";
+    fi;
+
+    #### -----------------------------------------------------------------------
     ## Cache list of configuration files to avoid repeated find calls
-    local configs_list_cache=".cache/configs.list";
-
     mkdir -p .cache;
-
-    # if [[ ! -f "${configs_list_cache}" ]]; then
-    #         local -a find_cmd=( find "${configs_dirpath}" -type f \( );
-    #         for ext in "${file_extensions[@]}"; do
-    #           find_cmd+=( -iname "*.${ext}" -o );
-    #         done;
-    #         unset 'find_cmd[-1]';  ## Remove trailing -o
-    #         find_cmd+=( \) );
-    #         "${find_cmd[@]}" | sort > "${configs_list_cache}";
-    #         [[ "${verbose}" == true ]] && \
-    #            message "Generated configs.list at ${configs_list_cache}";
-    #   else  [[ "${verbose}" == true ]] && \
-    #            message "Using cached configs.list from ${configs_list_cache}";
-    # fi;
+    local configs_list_cache=".cache/configs.list";
 
     if [[ ! -f "${configs_list_cache}" ]]; then
 
@@ -218,62 +274,37 @@ function main () {
           done;
         done < "${configs_list_cache}";
 
-        message "Filtered Configurations:";
-        printf '%s\n' "${filtered_configs[@]}";
+        #### -------------------------------------------------------------------
+        if [[ "${verbose}" == true ]]; then
+          {
+            message "Filtered Configurations (count): ${#filtered_configs[@]}";
+            newline;
+            for config in "${filtered_configs[@]}"; do
+              message "  - ${config}";
+            done; newline;
+          } >> "${actions_logsfile}";
+        fi;
 
         #### -------------------------------------------------------------------
         ## Overwrite the cached configs list with only the filtered entries
         ## This ensures that downstream processing only sees site-matching files
         if [[ "${#filtered_configs[@]}" -eq 0 ]]; then
-            message "[FILTER] No matching config files found for --sites=${target_sites}";
-            > "${configs_list_cache}";  ## Empty the file
-            newline;
-            exit 1;
+                message "[FILTER] No matching config files found for --sites=${target_sites}";
+                : > "${configs_list_cache}";  ## Empty the file
+                newline;
+                exit 1;
           else  printf '%s\n' "${filtered_configs[@]}" > "${configs_list_cache}";
-                if [[ "${verbose}" == true ]]; then
-                  message "[FILTER] Applied --sites=${target_sites}";
-                  message "[FILTER] Filtered configs.list now contains: $(
-                    wc -l < "${configs_list_cache}" | awk '{print $1}'
-                  ) entries";
-                fi;
+                # if [[ "${verbose}" == true ]]; then
+                #   {
+                #     message "[FILTER] Filtered configs.list at ${configs_list_cache}";
+                #     message "[FILTER] Filtered configs.list contains: $(
+                #       wc -l < "${configs_list_cache}" | awk '{print $1}'
+                #     ) entries";
+                #   } >> "${actions_logsfile}";
+                # fi;
         fi;
 
     fi;
-
-    if [[ "${verbose}" == true ]]; then
-      newline;
-      print_file "${configs_list_cache}";
-    fi;
-
-    #### -----------------------------------------------------------------------
-    ## Processing Custom/Default the Translation-Matrix (source):
-    ## Load and validate translation matrix (used for grouping logic)
-    [[ -z "${matrix_filename:-}" ]] && export matrix_filename="matrix.json";
-    if [[ ! -f "${matrix_filename}" ]]; then
-            error_message "Project Source Matrix-Configs file not found: ${matrix_filename}";
-            return 1;
-      elif  ! jq -e 'length > 0' "${matrix_filename}" &>/dev/null; then
-            error_message "Matrix file is missing, invalid, or empty: ${matrix_filename}";
-            return 2;
-      else  export matrix_configs="$(
-              cat "${matrix_filename}"
-            )";
-    fi;
-
-    #### -----------------------------------------------------------------------
-    ## Custom/Default reports folder:
-    export reports_folder="${reports_folder:-reports}";
-    mkdir -p "${reports_folder}";
-
-    export output_csv="${reports_folder}/reports.csv";
-
-    ## Initializing the log file
-    : > "${reports_logsfile}";  ## Truncate report log
-    # [[ "${debug}" == true ]] && list_file "${reports_logsfile}";
-
-    #### -----------------------------------------------------------------------
-    ## Validating IP Addresses (Skipping?)
-    [[ -z ${validate_address:-} ]] && export validate_address=false;
 
     #### -----------------------------------------------------------------------
     ## Processing Target Addresses Listing (default: ips.list or inline string)
@@ -289,7 +320,17 @@ function main () {
       else  error_message "Project Target IP-listing file not found: ${target_addresses}";
             # return 3;
     fi;
-    # list_file "${target_addresses}";
+
+    #### -----------------------------------------------------------------------
+    if [[ "${verbose}" == true ]]; then
+      {
+        message "Loaded (default) IPs addresses (count): ${#target_addresses_source[@]}";
+        newline;
+        for ip in "${target_addresses_source[@]}"; do
+          message "  - ${ip}";
+        done; newline;
+      } >> "${actions_logsfile}";
+    fi;
 
     #### -----------------------------------------------------------------------
     ## Normalize and validate each IP using validate_address()
@@ -301,10 +342,32 @@ function main () {
       fi;
     done;
 
-    if [[ ${#target_listing[@]} -eq 0 ]]; then
-      error_message "No valid IP addresses to process.";
-      exit 2;
-    fi;
+    rejected_logsfile=".local/errors/rejected.jobs";
+    touch "${rejected_logsfile}";
+
+    #### -------------------------------------------------------------------
+    ## Overwrite and validate all .local/stats/*.stat files
+    stat_flush_success=true;
+
+    find .local/stats/ -type f -name '*.jobs' | \
+    while read -r stat_file; do
+      timestamp="[$(
+        date -u '+%Y-%m-%dT%H:%M:%SZ'
+      )]";
+      printf '%s\n' "${timestamp}" >> "${stat_file}";
+      newline >> "${stat_file}";
+      ## Validate flush was successful
+      if ! grep -qF "${timestamp}" "${stat_file}"; then
+        error_message "[ERROR] Failed to update: ${stat_file}";
+        stat_flush_success=false;
+      fi;
+    done;
+
+    # ## Abort if any .stat file failed to flush properly
+    # if [[ "${stat_flush_success}" != true ]]; then
+    #   error_message "[FATAL] One or more .jobs files failed to flush properly.";
+    #   # exit 3;
+    # fi;
 
 #### Starting: Batch-Processing - Outer Loop ------------------------------ ####
 
@@ -313,15 +376,29 @@ function main () {
     mapfile -t site_folders < <(
       cut -d/ -f2 .cache/configs.list | sort -u
     );
-    newline; message "Site Folders: $(
-      IFS=',' ; print "${site_folders[*]}"
-    )"; newline;
 
     local batch_size=5;
 
+    #### -----------------------------------------------------------------------
+    if [[ "${verbose}" == true ]]; then
+      {
+        message "Site Folders:";
+        newline;
+        for site in "${site_folders[@]}"; do
+          message "  - ${site}";
+        done;
+        newline;
+        message "Batch processing (outer):";
+        message "Batch size: ${batch_size}";
+        newline;
+        message "Parallel threads:   ${parallel_threads}";
+        message "Target IPs (count): ${#target_listing[@]}";
+        newline;
+      } >> "${actions_logsfile}";
+    fi;
+
     ## Outter Batching (For-loop)
     for site in "${site_folders[@]}"; do
-      filtered_target_listing=();
 
       oIFS="${IFS}"; IFS=$'\n';
       read -r -d '' -a site_files < <(
@@ -330,9 +407,13 @@ function main () {
       IFS="${oIFS}";
       total_files=${#site_files[@]};
 
+      #### -------------------------------------------------------------------
       if [[ "${verbose}" == true ]]; then
-        message "[BATCH] Processing folder: [${site}]";
-        message "[BATCH] Found ${total_files} config files";
+        {
+          message "Target Site:   ${site}";
+          message "Total Configs: ${total_files}";
+          newline;
+        } >> "${actions_logsfile}";
         # for site in "${site_files[@]}"; do message "Site: ${site}"; done;
       fi;
 
@@ -354,31 +435,7 @@ function main () {
         exit 4;
       fi;
 
-      #### -------------------------------------------------------------------
-      ## Overwrite and validate all .local/stats/*.stat files
-      stat_flush_success=true;
-      find .local/stats/ -type f -name '*.jobs' | \
-
 #### Starting: Batch-Processing - Inner Loop ------------------------------ ####
-      while read -r stat_file; do
-        UTC_NOW="$(
-          date -u '+%Y-%m-%dT%H:%M:%SZ'
-        )";
-        timestamp="[${UTC_NOW}] Flushed";
-        UTC_NOW="$( date -u '+%Y-%m-%dT%H:%M:%SZ' )";
-        printf '%s\n' "${timestamp}" > "${stat_file}";
-        ## Validate flush was successful
-        if ! grep -qF "${timestamp}" "${stat_file}"; then
-          error_message "[ERROR] Failed to update: ${stat_file}";
-          stat_flush_success=false;
-        fi;
-      done;
-
-      ## Abort if any .stat file failed to flush properly
-      if [[ "${stat_flush_success}" != true ]]; then
-        error_message "[FATAL] One or more .jobs files failed to flush properly.";
-        exit 5;
-      fi;
 
       ## Enforcing the creation of these file-structures
       mkdir -p targets .local/{errors,jobs,stats};
@@ -398,10 +455,6 @@ function main () {
         batch_suffix="$( date +%s )-${RANDOM}";
         batch_configs_list="configs--${batch_id}-${batch_suffix}.list";
 
-        ## Create the temporary file correctly using mktemp (portable syntax)
-        # BATCH_CONFIGS="$(
-        #   mktemp --tmpdir="${TMP_DIR}" "${batch_configs_list}.XXXXXX";
-        # )";
         BATCH_CONFIGS="${TMP_DIR}/${batch_configs_list}";
         export BATCH_CONFIGS;
         touch "${BATCH_CONFIGS}";
@@ -410,50 +463,71 @@ function main () {
 
         range_first=$(( offset+1 ));
         range_last=$(( offset + ${#batch_slice[@]} ));
-        message "[ ${batch_id} ] Files ${range_first} -> ${range_last}";
 
-        list_file "${BATCH_CONFIGS}";
-        newline; message "Batch-Config file: [${batch_configs_list}]";
-        newline; print_file "${BATCH_CONFIGS}";
+        #### -------------------------------------------------------------------
+        if [[ "${verbose}" == true ]]; then
+          {
+            message "Batch processing (inner):";
+            message "Batch ID: ${batch_id}";
+            newline;
+            message "Batch offset:   ${offset}";
+            message "Batch Suffix:   ${batch_suffix}";
+            message "Batch FileName: ${batch_configs_list}";
+            message "Batch Configs:  ${BATCH_CONFIGS}";
+            list_file "${BATCH_CONFIGS}";
+            newline;
+            print_file "${BATCH_CONFIGS}";
+            message "Batch Size:     ${#batch_slice[@]}";
+            message "Batch Ranges:   ${range_first} -> ${range_last}";
+            newline;
+          } >> "${actions_logsfile}";
+        fi;
+
+        newline >> "${reports_logsfile}";
+        newline >> "${targets_logsfile}";
 
         ## Advanced Background Jobs management workflow
         matching_configs ${BATCH_CONFIGS};
 
-        #### -------------------------------------------------------------------
-        ## Track only the IPs that had a match during this batch
-        for ip_addr in "${target_listing[@]}"; do
-          ip_cleaned="$(
-            print "${ip_addr}" | tr -d '\r'
-          )";
-          if [[ -f "targets/${ip_cleaned}.json" ]]; then
-            filtered_target_listing+=( "${ip_cleaned}" );
+        # #### -------------------------------------------------------------------
+        # if [[ "${verbose}" == true ]]; then
+        #   {
+        #     message "Filtered IPs (count): ${#target_listing[@]}";
+        #     newline;
+        #     for ip in "${target_listing[@]}"; do
+        #       message "  - ${ip}";
+        #     done; newline;
+        #   } >> "${actions_logsfile}";
+        # fi;
+
+      #### -----------------------------------------------------------------------
+      ## Compute and log unmapped IPs directly from difference
+      declare -a discarded_ips=();
+
+      for ip in "${target_addresses_source[@]}"; do
+        found=false;
+        for current in "${target_listing[@]}"; do
+          if [[ "${ip}" == "${current}" ]]; then
+            found=true;
+            break;
           fi;
         done;
+        [[ "${found}" == false ]] && discarded_ips+=( "${ip}" );
+      done;
 
-        # #### -----------------------------------------------------------------------
-        # local total_requested=${#target_listing[@]};
-        # local total_mapped=${#filtered_target_listing[@]};
-        # {
-        #   message "Total IPs requested: ${total_requested}";
-        #   message "Total IPs mapped:    ${total_mapped}";
-        #   message "${nl}Unmapped IPs:        $(( total_requested - total_mapped ))";
-        #   newline;
-        # } >> "${reports_logsfile}";
-
-        # #### -----------------------------------------------------------------------
-        # ## Log unmapped IPs explicitly (no matches found)
-        # {
-        #   for ip in "${target_listing[@]}"; do
-        #     ip_cleaned="$(
-        #       print "${ip}" | tr -d '\r' | sed -E 's/[[:space:]]+//g'
-        #     )";
-        #     if [[ -n "${ip_cleaned}" && ! -f "targets/${ip_cleaned}.json" ]]; then
-        #       message "  - ${ip_cleaned}";
-        #     fi;
-        #   done;
-        #   newline;
-        # } >> "${reports_logsfile}";
-        # # print_file "${reports_logsfile}";
+        #### -------------------------------------------------------------------
+        if [[ "${verbose}" == true ]]; then
+          if [[ "${#discarded_ips[@]}" -gt 0 ]]; then
+            {
+              message "Unmapped IPs (count): ${#discarded_ips[@]}";
+              newline;
+              for ip in "${discarded_ips[@]}"; do
+                message "  - ${ip}";
+              done;
+              newline;
+            } >> "${actions_logsfile}";
+          fi;
+        fi;
 
         ## Launch and monitor parallel config parsing jobs for matched IPs
         manage_configs;
@@ -469,19 +543,27 @@ function main () {
     done;
 #### Completed:  Batch-Processing - Outer Loop ---------------------------- ####
 
-    ## Optionally print CSV as a formatted table to the terminal
     if [[ "${verbose}" == true && -s "${output_csv}" ]]; then
-      message "${nl}CSV Report Summary (tabulated):";
-      # column -t -s, "${output_csv}" | less -SFX;
-      cat "${output_csv}";  ## | less -NFSX;
+      {
+        message "CSV Report Summary (tabulated):";
+        message "-------------------------------";
+        print_file "${output_csv}" | cat -n;
+        newline;
+      } >> "${actions_logsfile}";
     fi;
 
     #### -----------------------------------------------------------------------
     local elapsed="${SECONDS}";
-    newline;
-    printf "[INFO] Started at: %s\n" "${start_time}";
-    printf "[INFO] Total runtime: %02d:%02d:%02d\n" \
-           $(( elapsed / 3600 )) $(( ( elapsed % 3600 ) / 60 )) $(( elapsed % 60 ));
+    {
+      message "Session Summary:";
+      message "-------------------------------";
+      message "Started at: ${start_time}";
+      printf  "[INFO] Total runtime: %02d:%02d:%02d\n" \
+              $(( elapsed / 3600 )) \
+              $(( ( elapsed % 3600 ) / 60 )) \
+              $(( elapsed % 60 ));
+      newline;
+    } >> "${actions_logsfile}";
 
     return 0;
 }; alias parse-listings='main';
@@ -493,18 +575,10 @@ function main () {
 
 export script_name="${0}";
 
-## Default/Custom configuration file's extensions: cfg conf cnf
-declare -a file_extensions=();
-
-# Description:
-#   This script parses a list of IP addresses, scans configuration files for matches,
-#   classifies matched entries, and generates structured JSON and CSV reports.
-declare -a filtered_target_listing=();
-
 if [[ ${#@} -ge 1 && "${1,,}" =~ ^-*(h|help)$ ]]; then
         main --help ;
   else  main "${@}";
-        ## newline; print "Done."; newline 2;
+        ## newline; message "Done."; newline;
 fi;
 
 #------------------------------------------------------------------------------#
