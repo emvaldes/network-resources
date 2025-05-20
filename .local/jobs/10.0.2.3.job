@@ -2,8 +2,8 @@
 + export LC_ALL=C
 + LC_ALL=C
 ++ mktemp -d
-+ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.mAVfUbpXeA
-+ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.mAVfUbpXeA
++ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.ajI9H4IaZL
++ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.ajI9H4IaZL
 + trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
 + source ./scripts/tools-devops.shell
 ++ [[ -n '' ]]
@@ -45,8 +45,8 @@
 +++ date +%s%N
 +++ base64
 +++ tr -dc a-zA-Z0-9
-++ export divisor=MTc0NzY0OTg0Mjk3MjExNzAwMAo
-++ divisor=MTc0NzY0OTg0Mjk3MjExNzAwMAo
+++ export divisor=MTc0NzY5OTkxNDY0MDEwMzAwMAo
+++ divisor=MTc0NzY5OTkxNDY0MDEwMzAwMAo
 + source ./scripts/tools-configs.shell
 ++ [[ -n '' ]]
 ++ readonly __TOOLS_EXTRACTION_SOURCED=1
@@ -60,7 +60,7 @@
 + script_name=./scripts/parse-configs.shell
 + [[ 9 -ge 1 ]]
 + [[ --configs=configs =~ ^-*(h|help)$ ]]
-+ main --configs=configs --ip-addr=10.0.2.3 --index=05 --matrix=matrix.json --reports=reports --file-ext=cfg,conf,cnf --classify --verbose --debug
++ main --configs=configs --ip-addr=10.0.2.3 --index=3 --matrix=matrix.json --reports=reports --file-ext=cfg,conf,cnf --classify --verbose --debug
 + file_extensions=()
 + declare -a file_extensions
 + oIFS=' 	
@@ -107,13 +107,13 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --index=05
+++ echo -e --index=3
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ index =~ ^(classify|g)$ ]]
 + [[ index =~ ^(configs|c)$ ]]
 + [[ index =~ ^(file-ext|x)$ ]]
 + [[ index =~ ^(index|n)$ ]]
-+ local target_index=05
++ local target_index=3
 + [[ index =~ ^(ip-addr|i)$ ]]
 + [[ index =~ ^(logs|o)$ ]]
 + [[ index =~ ^(matrix|m)$ ]]
@@ -171,10 +171,10 @@
 + [[ file-ext =~ ^(file-ext|x)$ ]]
 + file_extensions+=($(print "${value}" | tr ':,;\n ' '\n'))
 ++ print cfg,conf,cnf
+++ tr ':,;\n ' '\n'
 ++ [[ -n cfg,conf,cnf ]]
 ++ echo -en cfg,conf,cnf
 ++ return 0
-++ tr ':,;\n ' '\n'
 + [[ file-ext =~ ^(index|n)$ ]]
 + [[ file-ext =~ ^(ip-addr|i)$ ]]
 + [[ file-ext =~ ^(logs|o)$ ]]
@@ -369,7 +369,7 @@ Extracted config paths from JSON:+ return 0
 ]'
 + export reports_folder=reports
 + reports_folder=reports
-+ [[ -z 05 ]]
++ [[ -z 3 ]]
 + [[ -z false ]]
 + [[ -z 10.0.2.3 ]]
 ++ print 10.0.2.3
@@ -380,14 +380,14 @@ Extracted config paths from JSON:+ return 0
 ++ tr -d '\r'
 + target_address=10.0.2.3
 + [[ false == true ]]
-+ export tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.mAVfUbpXeA/fragments.json
-+ tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.mAVfUbpXeA/fragments.json
++ export tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.ajI9H4IaZL/fragments.json
++ tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.ajI9H4IaZL/fragments.json
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs configs/misc/fw3.cfg 10.0.2.3 targets/10.0.2.3.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.mAVfUbpXeA/fragments.json
++ extract_configs configs/misc/fw3.cfg 10.0.2.3 targets/10.0.2.3.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.ajI9H4IaZL/fragments.json
 + local config_file=configs/misc/fw3.cfg
 + local target_pattern=10.0.2.3
 + local target_listing=targets/10.0.2.3.json
-+ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.mAVfUbpXeA/fragments.json
++ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.ajI9H4IaZL/fragments.json
 + [[ ! -f configs/misc/fw3.cfg ]]
 + message '[DEBUG] Checking if config file exists and is readable: configs/misc/fw3.cfg'
 + [[ -n [DEBUG] Checking if config file exists and is readable: configs/misc/fw3.cfg ]]
@@ -954,49 +954,49 @@ access-list OUTSIDE extended deny ip any any
 nat (inside,outside) source static Panther-Gateway Edge-Terminal
 nat (inside,outside) source static Shield-WiFi-Alias Edge-Terminal
 + return 0
-++ perl -pe 's/\n/MTc0NzY0OTg0Mjk3MjExNzAwMAo/g'
-+ local 'serialized_objects=object-group network Wakanda-CoreMTc0NzY0OTg0Mjk3MjExNzAwMAo description National Core Routing ZoneMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 192.168.1.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 10.0.0.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Panther-EdgeMTc0NzY0OTg0Mjk3MjExNzAwMAo description Internet-facing proxy systemsMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 172.16.0.5MTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject network Panther-GatewayMTc0NzY0OTg0Mjk3MjExNzAwMAo host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo description Secure outbound concentratorMTc0NzY0OTg0Mjk3MjExNzAwMAoobject network Edge-TerminalMTc0NzY0OTg0Mjk3MjExNzAwMAo host 172.16.0.5MTc0NzY0OTg0Mjk3MjExNzAwMAo description Internet firewall handoffMTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject network Shield-WiFi-AliasMTc0NzY0OTg0Mjk3MjExNzAwMAo host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo description Guest NATMTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended permit ip host 10.0.2.3 anyMTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended permit ip any host 172.16.0.5MTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended permit ip host 10.10.10.10 anyMTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY0OTg0Mjk3MjExNzAwMAonat (inside,outside) source static Panther-Gateway Edge-TerminalMTc0NzY0OTg0Mjk3MjExNzAwMAonat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY0OTg0Mjk3MjExNzAwMAo'
+++ perl -pe 's/\n/MTc0NzY5OTkxNDY0MDEwMzAwMAo/g'
++ local 'serialized_objects=object-group network Wakanda-CoreMTc0NzY5OTkxNDY0MDEwMzAwMAo description National Core Routing ZoneMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 192.168.1.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 10.0.0.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Panther-EdgeMTc0NzY5OTkxNDY0MDEwMzAwMAo description Internet-facing proxy systemsMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 203.0.113.25MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 172.16.0.5MTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject network Panther-GatewayMTc0NzY5OTkxNDY0MDEwMzAwMAo host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo description Secure outbound concentratorMTc0NzY5OTkxNDY0MDEwMzAwMAoobject network Edge-TerminalMTc0NzY5OTkxNDY0MDEwMzAwMAo host 172.16.0.5MTc0NzY5OTkxNDY0MDEwMzAwMAo description Internet firewall handoffMTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject network Shield-WiFi-AliasMTc0NzY5OTkxNDY0MDEwMzAwMAo host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo description Guest NATMTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended permit ip host 10.0.2.3 anyMTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended permit ip any host 172.16.0.5MTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended permit ip host 10.10.10.10 anyMTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY5OTkxNDY0MDEwMzAwMAonat (inside,outside) source static Panther-Gateway Edge-TerminalMTc0NzY5OTkxNDY0MDEwMzAwMAonat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY5OTkxNDY0MDEwMzAwMAo'
 + [[ true == true ]]
-+ message 'Serialized Objects: object-group network Wakanda-CoreMTc0NzY0OTg0Mjk3MjExNzAwMAo description National Core Routing ZoneMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 192.168.1.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 10.0.0.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Panther-EdgeMTc0NzY0OTg0Mjk3MjExNzAwMAo description Internet-facing proxy systemsMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 172.16.0.5MTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject network Panther-GatewayMTc0NzY0OTg0Mjk3MjExNzAwMAo host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo description Secure outbound concentratorMTc0NzY0OTg0Mjk3MjExNzAwMAoobject network Edge-TerminalMTc0NzY0OTg0Mjk3MjExNzAwMAo host 172.16.0.5MTc0NzY0OTg0Mjk3MjExNzAwMAo description Internet firewall handoffMTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject network Shield-WiFi-AliasMTc0NzY0OTg0Mjk3MjExNzAwMAo host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo description Guest NATMTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended permit ip host 10.0.2.3 anyMTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended permit ip any host 172.16.0.5MTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended permit ip host 10.10.10.10 anyMTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY0OTg0Mjk3MjExNzAwMAonat (inside,outside) source static Panther-Gateway Edge-TerminalMTc0NzY0OTg0Mjk3MjExNzAwMAonat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY0OTg0Mjk3MjExNzAwMAo'
-+ [[ -n Serialized Objects: object-group network Wakanda-CoreMTc0NzY0OTg0Mjk3MjExNzAwMAo description National Core Routing ZoneMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 192.168.1.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 10.0.0.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Panther-EdgeMTc0NzY0OTg0Mjk3MjExNzAwMAo description Internet-facing proxy systemsMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 172.16.0.5MTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject network Panther-GatewayMTc0NzY0OTg0Mjk3MjExNzAwMAo host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo description Secure outbound concentratorMTc0NzY0OTg0Mjk3MjExNzAwMAoobject network Edge-TerminalMTc0NzY0OTg0Mjk3MjExNzAwMAo host 172.16.0.5MTc0NzY0OTg0Mjk3MjExNzAwMAo description Internet firewall handoffMTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject network Shield-WiFi-AliasMTc0NzY0OTg0Mjk3MjExNzAwMAo host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo description Guest NATMTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended permit ip host 10.0.2.3 anyMTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended permit ip any host 172.16.0.5MTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended permit ip host 10.10.10.10 anyMTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY0OTg0Mjk3MjExNzAwMAonat (inside,outside) source static Panther-Gateway Edge-TerminalMTc0NzY0OTg0Mjk3MjExNzAwMAonat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY0OTg0Mjk3MjExNzAwMAo ]]
-+ local 'message=Serialized Objects: object-group network Wakanda-CoreMTc0NzY0OTg0Mjk3MjExNzAwMAo description National Core Routing ZoneMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 192.168.1.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 10.0.0.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Panther-EdgeMTc0NzY0OTg0Mjk3MjExNzAwMAo description Internet-facing proxy systemsMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 172.16.0.5MTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject network Panther-GatewayMTc0NzY0OTg0Mjk3MjExNzAwMAo host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo description Secure outbound concentratorMTc0NzY0OTg0Mjk3MjExNzAwMAoobject network Edge-TerminalMTc0NzY0OTg0Mjk3MjExNzAwMAo host 172.16.0.5MTc0NzY0OTg0Mjk3MjExNzAwMAo description Internet firewall handoffMTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject network Shield-WiFi-AliasMTc0NzY0OTg0Mjk3MjExNzAwMAo host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo description Guest NATMTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended permit ip host 10.0.2.3 anyMTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended permit ip any host 172.16.0.5MTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended permit ip host 10.10.10.10 anyMTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY0OTg0Mjk3MjExNzAwMAonat (inside,outside) source static Panther-Gateway Edge-TerminalMTc0NzY0OTg0Mjk3MjExNzAwMAonat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY0OTg0Mjk3MjExNzAwMAo'
-+ echo -e 'Serialized Objects: object-group network Wakanda-CoreMTc0NzY0OTg0Mjk3MjExNzAwMAo description National Core Routing ZoneMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 192.168.1.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 10.0.0.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Panther-EdgeMTc0NzY0OTg0Mjk3MjExNzAwMAo description Internet-facing proxy systemsMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 172.16.0.5MTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject network Panther-GatewayMTc0NzY0OTg0Mjk3MjExNzAwMAo host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo description Secure outbound concentratorMTc0NzY0OTg0Mjk3MjExNzAwMAoobject network Edge-TerminalMTc0NzY0OTg0Mjk3MjExNzAwMAo host 172.16.0.5MTc0NzY0OTg0Mjk3MjExNzAwMAo description Internet firewall handoffMTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject network Shield-WiFi-AliasMTc0NzY0OTg0Mjk3MjExNzAwMAo host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo description Guest NATMTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended permit ip host 10.0.2.3 anyMTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended permit ip any host 172.16.0.5MTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended permit ip host 10.10.10.10 anyMTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY0OTg0Mjk3MjExNzAwMAonat (inside,outside) source static Panther-Gateway Edge-TerminalMTc0NzY0OTg0Mjk3MjExNzAwMAonat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY0OTg0Mjk3MjExNzAwMAo'
-Serialized Objects: object-group network Wakanda-CoreMTc0NzY0OTg0Mjk3MjExNzAwMAo description National Core Routing ZoneMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 192.168.1.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 10.0.0.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Panther-EdgeMTc0NzY0OTg0Mjk3MjExNzAwMAo description Internet-facing proxy systemsMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 172.16.0.5MTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject network Panther-GatewayMTc0NzY0OTg0Mjk3MjExNzAwMAo host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo description Secure outbound concentratorMTc0NzY0OTg0Mjk3MjExNzAwMAoobject network Edge-TerminalMTc0NzY0OTg0Mjk3MjExNzAwMAo host 172.16.0.5MTc0NzY0OTg0Mjk3MjExNzAwMAo description Internet firewall handoffMTc0NzY0OTg0Mjk3MjExNzAwMAoobject-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY0OTg0Mjk3MjExNzAwMAoobject network Shield-WiFi-AliasMTc0NzY0OTg0Mjk3MjExNzAwMAo host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo description Guest NATMTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended permit ip host 10.0.2.3 anyMTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended permit ip any host 172.16.0.5MTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended permit ip host 10.10.10.10 anyMTc0NzY0OTg0Mjk3MjExNzAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY0OTg0Mjk3MjExNzAwMAonat (inside,outside) source static Panther-Gateway Edge-TerminalMTc0NzY0OTg0Mjk3MjExNzAwMAonat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY0OTg0Mjk3MjExNzAwMAo
++ message 'Serialized Objects: object-group network Wakanda-CoreMTc0NzY5OTkxNDY0MDEwMzAwMAo description National Core Routing ZoneMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 192.168.1.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 10.0.0.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Panther-EdgeMTc0NzY5OTkxNDY0MDEwMzAwMAo description Internet-facing proxy systemsMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 203.0.113.25MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 172.16.0.5MTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject network Panther-GatewayMTc0NzY5OTkxNDY0MDEwMzAwMAo host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo description Secure outbound concentratorMTc0NzY5OTkxNDY0MDEwMzAwMAoobject network Edge-TerminalMTc0NzY5OTkxNDY0MDEwMzAwMAo host 172.16.0.5MTc0NzY5OTkxNDY0MDEwMzAwMAo description Internet firewall handoffMTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject network Shield-WiFi-AliasMTc0NzY5OTkxNDY0MDEwMzAwMAo host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo description Guest NATMTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended permit ip host 10.0.2.3 anyMTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended permit ip any host 172.16.0.5MTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended permit ip host 10.10.10.10 anyMTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY5OTkxNDY0MDEwMzAwMAonat (inside,outside) source static Panther-Gateway Edge-TerminalMTc0NzY5OTkxNDY0MDEwMzAwMAonat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY5OTkxNDY0MDEwMzAwMAo'
++ [[ -n Serialized Objects: object-group network Wakanda-CoreMTc0NzY5OTkxNDY0MDEwMzAwMAo description National Core Routing ZoneMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 192.168.1.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 10.0.0.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Panther-EdgeMTc0NzY5OTkxNDY0MDEwMzAwMAo description Internet-facing proxy systemsMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 203.0.113.25MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 172.16.0.5MTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject network Panther-GatewayMTc0NzY5OTkxNDY0MDEwMzAwMAo host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo description Secure outbound concentratorMTc0NzY5OTkxNDY0MDEwMzAwMAoobject network Edge-TerminalMTc0NzY5OTkxNDY0MDEwMzAwMAo host 172.16.0.5MTc0NzY5OTkxNDY0MDEwMzAwMAo description Internet firewall handoffMTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject network Shield-WiFi-AliasMTc0NzY5OTkxNDY0MDEwMzAwMAo host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo description Guest NATMTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended permit ip host 10.0.2.3 anyMTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended permit ip any host 172.16.0.5MTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended permit ip host 10.10.10.10 anyMTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY5OTkxNDY0MDEwMzAwMAonat (inside,outside) source static Panther-Gateway Edge-TerminalMTc0NzY5OTkxNDY0MDEwMzAwMAonat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY5OTkxNDY0MDEwMzAwMAo ]]
++ local 'message=Serialized Objects: object-group network Wakanda-CoreMTc0NzY5OTkxNDY0MDEwMzAwMAo description National Core Routing ZoneMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 192.168.1.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 10.0.0.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Panther-EdgeMTc0NzY5OTkxNDY0MDEwMzAwMAo description Internet-facing proxy systemsMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 203.0.113.25MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 172.16.0.5MTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject network Panther-GatewayMTc0NzY5OTkxNDY0MDEwMzAwMAo host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo description Secure outbound concentratorMTc0NzY5OTkxNDY0MDEwMzAwMAoobject network Edge-TerminalMTc0NzY5OTkxNDY0MDEwMzAwMAo host 172.16.0.5MTc0NzY5OTkxNDY0MDEwMzAwMAo description Internet firewall handoffMTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject network Shield-WiFi-AliasMTc0NzY5OTkxNDY0MDEwMzAwMAo host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo description Guest NATMTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended permit ip host 10.0.2.3 anyMTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended permit ip any host 172.16.0.5MTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended permit ip host 10.10.10.10 anyMTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY5OTkxNDY0MDEwMzAwMAonat (inside,outside) source static Panther-Gateway Edge-TerminalMTc0NzY5OTkxNDY0MDEwMzAwMAonat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY5OTkxNDY0MDEwMzAwMAo'
++ echo -e 'Serialized Objects: object-group network Wakanda-CoreMTc0NzY5OTkxNDY0MDEwMzAwMAo description National Core Routing ZoneMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 192.168.1.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 10.0.0.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Panther-EdgeMTc0NzY5OTkxNDY0MDEwMzAwMAo description Internet-facing proxy systemsMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 203.0.113.25MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 172.16.0.5MTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject network Panther-GatewayMTc0NzY5OTkxNDY0MDEwMzAwMAo host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo description Secure outbound concentratorMTc0NzY5OTkxNDY0MDEwMzAwMAoobject network Edge-TerminalMTc0NzY5OTkxNDY0MDEwMzAwMAo host 172.16.0.5MTc0NzY5OTkxNDY0MDEwMzAwMAo description Internet firewall handoffMTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject network Shield-WiFi-AliasMTc0NzY5OTkxNDY0MDEwMzAwMAo host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo description Guest NATMTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended permit ip host 10.0.2.3 anyMTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended permit ip any host 172.16.0.5MTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended permit ip host 10.10.10.10 anyMTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY5OTkxNDY0MDEwMzAwMAonat (inside,outside) source static Panther-Gateway Edge-TerminalMTc0NzY5OTkxNDY0MDEwMzAwMAonat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY5OTkxNDY0MDEwMzAwMAo'
+Serialized Objects: object-group network Wakanda-CoreMTc0NzY5OTkxNDY0MDEwMzAwMAo description National Core Routing ZoneMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 192.168.1.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 10.0.0.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Panther-EdgeMTc0NzY5OTkxNDY0MDEwMzAwMAo description Internet-facing proxy systemsMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 203.0.113.25MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 172.16.0.5MTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject network Panther-GatewayMTc0NzY5OTkxNDY0MDEwMzAwMAo host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo description Secure outbound concentratorMTc0NzY5OTkxNDY0MDEwMzAwMAoobject network Edge-TerminalMTc0NzY5OTkxNDY0MDEwMzAwMAo host 172.16.0.5MTc0NzY5OTkxNDY0MDEwMzAwMAo description Internet firewall handoffMTc0NzY5OTkxNDY0MDEwMzAwMAoobject-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0MTc0NzY5OTkxNDY0MDEwMzAwMAoobject network Shield-WiFi-AliasMTc0NzY5OTkxNDY0MDEwMzAwMAo host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo description Guest NATMTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended permit ip host 10.0.2.3 anyMTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended permit ip any host 172.16.0.5MTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended permit ip host 10.10.10.10 anyMTc0NzY5OTkxNDY0MDEwMzAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY5OTkxNDY0MDEwMzAwMAonat (inside,outside) source static Panther-Gateway Edge-TerminalMTc0NzY5OTkxNDY0MDEwMzAwMAonat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY5OTkxNDY0MDEwMzAwMAo
 + return 0
-++ sed -E 's/MTc0NzY0OTg0Mjk3MjExNzAwMAo([^[:space:]])/\n\1/g'
-+ local 'restored_lines=object-group network Wakanda-CoreMTc0NzY0OTg0Mjk3MjExNzAwMAo description National Core Routing ZoneMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 192.168.1.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 10.0.0.0 255.255.255.0
-object-group network Panther-EdgeMTc0NzY0OTg0Mjk3MjExNzAwMAo description Internet-facing proxy systemsMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 172.16.0.5
-object-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0
-object-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0
-object network Panther-GatewayMTc0NzY0OTg0Mjk3MjExNzAwMAo host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo description Secure outbound concentrator
-object network Edge-TerminalMTc0NzY0OTg0Mjk3MjExNzAwMAo host 172.16.0.5MTc0NzY0OTg0Mjk3MjExNzAwMAo description Internet firewall handoff
-object-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0
-object network Shield-WiFi-AliasMTc0NzY0OTg0Mjk3MjExNzAwMAo host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo description Guest NAT
+++ sed -E 's/MTc0NzY5OTkxNDY0MDEwMzAwMAo([^[:space:]])/\n\1/g'
++ local 'restored_lines=object-group network Wakanda-CoreMTc0NzY5OTkxNDY0MDEwMzAwMAo description National Core Routing ZoneMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 192.168.1.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 10.0.0.0 255.255.255.0
+object-group network Panther-EdgeMTc0NzY5OTkxNDY0MDEwMzAwMAo description Internet-facing proxy systemsMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 203.0.113.25MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 172.16.0.5
+object-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0
+object-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0
+object network Panther-GatewayMTc0NzY5OTkxNDY0MDEwMzAwMAo host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo description Secure outbound concentrator
+object network Edge-TerminalMTc0NzY5OTkxNDY0MDEwMzAwMAo host 172.16.0.5MTc0NzY5OTkxNDY0MDEwMzAwMAo description Internet firewall handoff
+object-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0
+object network Shield-WiFi-AliasMTc0NzY5OTkxNDY0MDEwMzAwMAo host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo description Guest NAT
 access-list OUTSIDE extended permit ip host 10.0.2.3 any
 access-list OUTSIDE extended permit ip any host 172.16.0.5
 access-list OUTSIDE extended permit ip host 10.10.10.10 any
 access-list OUTSIDE extended deny ip any any
 nat (inside,outside) source static Panther-Gateway Edge-Terminal
-nat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY0OTg0Mjk3MjExNzAwMAo'
+nat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY5OTkxNDY0MDEwMzAwMAo'
 + restored_lines+='
 '
 + IFS='
 '
 + read -r -d '' -a config_objects
-++ printf '%s\0' 'object-group network Wakanda-CoreMTc0NzY0OTg0Mjk3MjExNzAwMAo description National Core Routing ZoneMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 192.168.1.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 10.0.0.0 255.255.255.0
-object-group network Panther-EdgeMTc0NzY0OTg0Mjk3MjExNzAwMAo description Internet-facing proxy systemsMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 172.16.0.5
-object-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0
-object-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0
-object network Panther-GatewayMTc0NzY0OTg0Mjk3MjExNzAwMAo host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo description Secure outbound concentrator
-object network Edge-TerminalMTc0NzY0OTg0Mjk3MjExNzAwMAo host 172.16.0.5MTc0NzY0OTg0Mjk3MjExNzAwMAo description Internet firewall handoff
-object-group network Shield-WiFiMTc0NzY0OTg0Mjk3MjExNzAwMAo description Shield-controlled wireless networkMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 192.168.100.0 255.255.255.0
-object network Shield-WiFi-AliasMTc0NzY0OTg0Mjk3MjExNzAwMAo host 10.10.10.10MTc0NzY0OTg0Mjk3MjExNzAwMAo description Guest NAT
+++ printf '%s\0' 'object-group network Wakanda-CoreMTc0NzY5OTkxNDY0MDEwMzAwMAo description National Core Routing ZoneMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 192.168.1.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 10.0.0.0 255.255.255.0
+object-group network Panther-EdgeMTc0NzY5OTkxNDY0MDEwMzAwMAo description Internet-facing proxy systemsMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 203.0.113.25MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 172.16.0.5
+object-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0
+object-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0
+object network Panther-GatewayMTc0NzY5OTkxNDY0MDEwMzAwMAo host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo description Secure outbound concentrator
+object network Edge-TerminalMTc0NzY5OTkxNDY0MDEwMzAwMAo host 172.16.0.5MTc0NzY5OTkxNDY0MDEwMzAwMAo description Internet firewall handoff
+object-group network Shield-WiFiMTc0NzY5OTkxNDY0MDEwMzAwMAo description Shield-controlled wireless networkMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 192.168.100.0 255.255.255.0
+object network Shield-WiFi-AliasMTc0NzY5OTkxNDY0MDEwMzAwMAo host 10.10.10.10MTc0NzY5OTkxNDY0MDEwMzAwMAo description Guest NAT
 access-list OUTSIDE extended permit ip host 10.0.2.3 any
 access-list OUTSIDE extended permit ip any host 172.16.0.5
 access-list OUTSIDE extended permit ip host 10.10.10.10 any
 access-list OUTSIDE extended deny ip any any
 nat (inside,outside) source static Panther-Gateway Edge-Terminal
-nat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY0OTg0Mjk3MjExNzAwMAo
+nat (inside,outside) source static Shield-WiFi-Alias Edge-TerminalMTc0NzY5OTkxNDY0MDEwMzAwMAo
 '
 + [[ true == true ]]
 + message 'Loaded 14 config blocks'
@@ -1053,13 +1053,13 @@ Loaded 3 config blocks
 + return 0
 + for serialized_line in "${matched_objects[@]}"
 + [[ true == true ]]
-+ message 'Serialized Line: object-group network Wakanda-CoreMTc0NzY0OTg0Mjk3MjExNzAwMAo description National Core Routing ZoneMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 192.168.1.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 10.0.0.0 255.255.255.0'
-+ [[ -n Serialized Line: object-group network Wakanda-CoreMTc0NzY0OTg0Mjk3MjExNzAwMAo description National Core Routing ZoneMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 192.168.1.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 10.0.0.0 255.255.255.0 ]]
-+ local 'message=Serialized Line: object-group network Wakanda-CoreMTc0NzY0OTg0Mjk3MjExNzAwMAo description National Core Routing ZoneMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 192.168.1.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 10.0.0.0 255.255.255.0'
-+ echo -e 'Serialized Line: object-group network Wakanda-CoreMTc0NzY0OTg0Mjk3MjExNzAwMAo description National Core Routing ZoneMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 192.168.1.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 10.0.0.0 255.255.255.0'
-Serialized Line: object-group network Wakanda-CoreMTc0NzY0OTg0Mjk3MjExNzAwMAo description National Core Routing ZoneMTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 192.168.1.10MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo network-object 10.0.0.0 255.255.255.0
++ message 'Serialized Line: object-group network Wakanda-CoreMTc0NzY5OTkxNDY0MDEwMzAwMAo description National Core Routing ZoneMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 192.168.1.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 10.0.0.0 255.255.255.0'
++ [[ -n Serialized Line: object-group network Wakanda-CoreMTc0NzY5OTkxNDY0MDEwMzAwMAo description National Core Routing ZoneMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 192.168.1.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 10.0.0.0 255.255.255.0 ]]
++ local 'message=Serialized Line: object-group network Wakanda-CoreMTc0NzY5OTkxNDY0MDEwMzAwMAo description National Core Routing ZoneMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 192.168.1.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 10.0.0.0 255.255.255.0'
++ echo -e 'Serialized Line: object-group network Wakanda-CoreMTc0NzY5OTkxNDY0MDEwMzAwMAo description National Core Routing ZoneMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 192.168.1.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 10.0.0.0 255.255.255.0'
+Serialized Line: object-group network Wakanda-CoreMTc0NzY5OTkxNDY0MDEwMzAwMAo description National Core Routing ZoneMTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 192.168.1.10MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo network-object 10.0.0.0 255.255.255.0
 + return 0
-++ perl -pe 's/MTc0NzY0OTg0Mjk3MjExNzAwMAo/\n/g'
+++ perl -pe 's/MTc0NzY5OTkxNDY0MDEwMzAwMAo/\n/g'
 + restored_block='object-group network Wakanda-Core
  description National Core Routing Zone
  network-object host 192.168.1.10
@@ -1379,18 +1379,22 @@ object-group network Wakanda-Core
 + [[ -z x ]]
 + ((  sets_map[network-object]++  ))
 ++ for k in "${!sets_map[@]}"
-++ printf '{ "key": "%s", "val": %d }\n' network-object 3
 ++ jq -s 'map({(.key): .val}) | add'
+++ printf '{ "key": "%s", "val": %d }\n' network-object 3
 + local 'sets_json={
   "network-object": 3
 }'
-++ jq -n --arg object object-group --arg type 'network Wakanda-Core' --arg description 'National Core Routing Zone' --argjson items '[
++ [[ object-group == \o\b\j\e\c\t\-\g\r\o\u\p ]]
++ [[ network Wakanda-Core == network* ]]
++ partner_val=Wakanda-Core
+++ jq -n --arg object object-group --arg type 'network Wakanda-Core' --arg partner Wakanda-Core --arg description 'National Core Routing Zone' --argjson items '[
   "network-object host 10.0.2.3"
 ]' --argjson sets '{
   "network-object": 3
 }' --arg group Unclassified '{
           object: $object,
           type: ( $type | select( . != "" and . != "null" and . != "false" ) // false ),
+          partner: ( $partner | select( . != "" and . != "null" and . != "false" ) // empty ),
           description: ( $description | select( . != "" and . != "null" and . != "false" ) // false ),
           items: $items,
           sets: $sets,
@@ -1399,6 +1403,7 @@ object-group network Wakanda-Core
 + target_object='{
   "object": "object-group",
   "type": "network Wakanda-Core",
+  "partner": "Wakanda-Core",
   "description": "National Core Routing Zone",
   "items": [
     "network-object host 10.0.2.3"
@@ -1419,6 +1424,7 @@ object-group network Wakanda-Core
 + print '{
   "object": "object-group",
   "type": "network Wakanda-Core",
+  "partner": "Wakanda-Core",
   "description": "National Core Routing Zone",
   "items": [
     "network-object host 10.0.2.3"
@@ -1431,6 +1437,7 @@ object-group network Wakanda-Core
 + [[ -n {
   "object": "object-group",
   "type": "network Wakanda-Core",
+  "partner": "Wakanda-Core",
   "description": "National Core Routing Zone",
   "items": [
     "network-object host 10.0.2.3"
@@ -1440,10 +1447,10 @@ object-group network Wakanda-Core
   },
   "group": "Unclassified"
 } ]]
-+ jq .
 + echo -en '{
   "object": "object-group",
   "type": "network Wakanda-Core",
+  "partner": "Wakanda-Core",
   "description": "National Core Routing Zone",
   "items": [
     "network-object host 10.0.2.3"
@@ -1453,10 +1460,12 @@ object-group network Wakanda-Core
   },
   "group": "Unclassified"
 }'
++ jq .
 + return 0
 {
   "object": "object-group",
   "type": "network Wakanda-Core",
+  "partner": "Wakanda-Core",
   "description": "National Core Routing Zone",
   "items": [
     "network-object host 10.0.2.3"
@@ -1479,6 +1488,7 @@ object-group network Wakanda-Core
 + [[ -n {
   "object": "object-group",
   "type": "network Wakanda-Core",
+  "partner": "Wakanda-Core",
   "description": "National Core Routing Zone",
   "items": [
     "network-object host 10.0.2.3"
@@ -1492,6 +1502,7 @@ object-group network Wakanda-Core
 + message '|-----> Target Objects: {
   "object": "object-group",
   "type": "network Wakanda-Core",
+  "partner": "Wakanda-Core",
   "description": "National Core Routing Zone",
   "items": [
     "network-object host 10.0.2.3"
@@ -1504,6 +1515,7 @@ object-group network Wakanda-Core
 + [[ -n |-----> Target Objects: {
   "object": "object-group",
   "type": "network Wakanda-Core",
+  "partner": "Wakanda-Core",
   "description": "National Core Routing Zone",
   "items": [
     "network-object host 10.0.2.3"
@@ -1516,6 +1528,7 @@ object-group network Wakanda-Core
 + local 'message=|-----> Target Objects: {
   "object": "object-group",
   "type": "network Wakanda-Core",
+  "partner": "Wakanda-Core",
   "description": "National Core Routing Zone",
   "items": [
     "network-object host 10.0.2.3"
@@ -1528,6 +1541,7 @@ object-group network Wakanda-Core
 + echo -e '|-----> Target Objects: {
   "object": "object-group",
   "type": "network Wakanda-Core",
+  "partner": "Wakanda-Core",
   "description": "National Core Routing Zone",
   "items": [
     "network-object host 10.0.2.3"
@@ -1540,6 +1554,7 @@ object-group network Wakanda-Core
 |-----> Target Objects: {
   "object": "object-group",
   "type": "network Wakanda-Core",
+  "partner": "Wakanda-Core",
   "description": "National Core Routing Zone",
   "items": [
     "network-object host 10.0.2.3"
@@ -1553,6 +1568,7 @@ object-group network Wakanda-Core
 + [[ -n {
   "object": "object-group",
   "type": "network Wakanda-Core",
+  "partner": "Wakanda-Core",
   "description": "National Core Routing Zone",
   "items": [
     "network-object host 10.0.2.3"
@@ -1565,6 +1581,7 @@ object-group network Wakanda-Core
 ++ printf '%s\n' '{
   "object": "object-group",
   "type": "network Wakanda-Core",
+  "partner": "Wakanda-Core",
   "description": "National Core Routing Zone",
   "items": [
     "network-object host 10.0.2.3"
@@ -1586,6 +1603,7 @@ object-group network Wakanda-Core
     {
       "object": "object-group",
       "type": "network Wakanda-Core",
+      "partner": "Wakanda-Core",
       "description": "National Core Routing Zone",
       "items": [
         "network-object host 10.0.2.3"
@@ -1605,6 +1623,7 @@ object-group network Wakanda-Core
     {
       "object": "object-group",
       "type": "network Wakanda-Core",
+      "partner": "Wakanda-Core",
       "description": "National Core Routing Zone",
       "items": [
         "network-object host 10.0.2.3"
@@ -1623,6 +1642,7 @@ object-group network Wakanda-Core
     {
       "object": "object-group",
       "type": "network Wakanda-Core",
+      "partner": "Wakanda-Core",
       "description": "National Core Routing Zone",
       "items": [
         "network-object host 10.0.2.3"
@@ -1641,6 +1661,7 @@ object-group network Wakanda-Core
     {
       "object": "object-group",
       "type": "network Wakanda-Core",
+      "partner": "Wakanda-Core",
       "description": "National Core Routing Zone",
       "items": [
         "network-object host 10.0.2.3"
@@ -1659,6 +1680,7 @@ object-group network Wakanda-Core
     {
       "object": "object-group",
       "type": "network Wakanda-Core",
+      "partner": "Wakanda-Core",
       "description": "National Core Routing Zone",
       "items": [
         "network-object host 10.0.2.3"
@@ -1678,6 +1700,7 @@ object-group network Wakanda-Core
     {
       "object": "object-group",
       "type": "network Wakanda-Core",
+      "partner": "Wakanda-Core",
       "description": "National Core Routing Zone",
       "items": [
         "network-object host 10.0.2.3"
@@ -1697,6 +1720,7 @@ object-group network Wakanda-Core
     {
       "object": "object-group",
       "type": "network Wakanda-Core",
+      "partner": "Wakanda-Core",
       "description": "National Core Routing Zone",
       "items": [
         "network-object host 10.0.2.3"
@@ -1715,6 +1739,7 @@ object-group network Wakanda-Core
     {
       "object": "object-group",
       "type": "network Wakanda-Core",
+      "partner": "Wakanda-Core",
       "description": "National Core Routing Zone",
       "items": [
         "network-object host 10.0.2.3"
@@ -1733,6 +1758,7 @@ object-group network Wakanda-Core
     {
       "object": "object-group",
       "type": "network Wakanda-Core",
+      "partner": "Wakanda-Core",
       "description": "National Core Routing Zone",
       "items": [
         "network-object host 10.0.2.3"
@@ -1747,13 +1773,13 @@ object-group network Wakanda-Core
 + return 0
 + for serialized_line in "${matched_objects[@]}"
 + [[ true == true ]]
-+ message 'Serialized Line: object network Panther-GatewayMTc0NzY0OTg0Mjk3MjExNzAwMAo host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo description Secure outbound concentrator'
-+ [[ -n Serialized Line: object network Panther-GatewayMTc0NzY0OTg0Mjk3MjExNzAwMAo host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo description Secure outbound concentrator ]]
-+ local 'message=Serialized Line: object network Panther-GatewayMTc0NzY0OTg0Mjk3MjExNzAwMAo host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo description Secure outbound concentrator'
-+ echo -e 'Serialized Line: object network Panther-GatewayMTc0NzY0OTg0Mjk3MjExNzAwMAo host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo description Secure outbound concentrator'
-Serialized Line: object network Panther-GatewayMTc0NzY0OTg0Mjk3MjExNzAwMAo host 10.0.2.3MTc0NzY0OTg0Mjk3MjExNzAwMAo description Secure outbound concentrator
++ message 'Serialized Line: object network Panther-GatewayMTc0NzY5OTkxNDY0MDEwMzAwMAo host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo description Secure outbound concentrator'
++ [[ -n Serialized Line: object network Panther-GatewayMTc0NzY5OTkxNDY0MDEwMzAwMAo host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo description Secure outbound concentrator ]]
++ local 'message=Serialized Line: object network Panther-GatewayMTc0NzY5OTkxNDY0MDEwMzAwMAo host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo description Secure outbound concentrator'
++ echo -e 'Serialized Line: object network Panther-GatewayMTc0NzY5OTkxNDY0MDEwMzAwMAo host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo description Secure outbound concentrator'
+Serialized Line: object network Panther-GatewayMTc0NzY5OTkxNDY0MDEwMzAwMAo host 10.0.2.3MTc0NzY5OTkxNDY0MDEwMzAwMAo description Secure outbound concentrator
 + return 0
-++ perl -pe 's/MTc0NzY0OTg0Mjk3MjExNzAwMAo/\n/g'
+++ perl -pe 's/MTc0NzY5OTkxNDY0MDEwMzAwMAo/\n/g'
 + restored_block='object network Panther-Gateway
  host 10.0.2.3
  description Secure outbound concentrator'
@@ -2002,30 +2028,22 @@ object network Panther-Gateway
 + local 'sets_json={
   "host": 1
 }'
-++ jq -n --arg object object --arg type 'network Panther-Gateway' --arg description 'Secure outbound concentrator' --argjson items '[
++ [[ object == \o\b\j\e\c\t\-\g\r\o\u\p ]]
++ partner_val=
+++ jq -n --arg object object --arg type 'network Panther-Gateway' --arg partner '' --arg description 'Secure outbound concentrator' --argjson items '[
   "host 10.0.2.3"
 ]' --argjson sets '{
   "host": 1
 }' --arg group Unclassified '{
           object: $object,
           type: ( $type | select( . != "" and . != "null" and . != "false" ) // false ),
+          partner: ( $partner | select( . != "" and . != "null" and . != "false" ) // empty ),
           description: ( $description | select( . != "" and . != "null" and . != "false" ) // false ),
           items: $items,
           sets: $sets,
           group: $group
         }'
-+ target_object='{
-  "object": "object",
-  "type": "network Panther-Gateway",
-  "description": "Secure outbound concentrator",
-  "items": [
-    "host 10.0.2.3"
-  ],
-  "sets": {
-    "host": 1
-  },
-  "group": "Unclassified"
-}'
++ target_object=
 + export target_object
 + [[ true == true ]]
 + message '[process_configs] JSON Object (output):'
@@ -2034,56 +2052,10 @@ object network Panther-Gateway
 + echo -e '[process_configs] JSON Object (output):'
 [process_configs] JSON Object (output):
 + return 0
-+ print '{
-  "object": "object",
-  "type": "network Panther-Gateway",
-  "description": "Secure outbound concentrator",
-  "items": [
-    "host 10.0.2.3"
-  ],
-  "sets": {
-    "host": 1
-  },
-  "group": "Unclassified"
-}'
-+ jq .
-+ [[ -n {
-  "object": "object",
-  "type": "network Panther-Gateway",
-  "description": "Secure outbound concentrator",
-  "items": [
-    "host 10.0.2.3"
-  ],
-  "sets": {
-    "host": 1
-  },
-  "group": "Unclassified"
-} ]]
-+ echo -en '{
-  "object": "object",
-  "type": "network Panther-Gateway",
-  "description": "Secure outbound concentrator",
-  "items": [
-    "host 10.0.2.3"
-  ],
-  "sets": {
-    "host": 1
-  },
-  "group": "Unclassified"
-}'
++ print ''
++ [[ -n '' ]]
 + return 0
-{
-  "object": "object",
-  "type": "network Panther-Gateway",
-  "description": "Secure outbound concentrator",
-  "items": [
-    "host 10.0.2.3"
-  ],
-  "sets": {
-    "host": 1
-  },
-  "group": "Unclassified"
-}
++ jq .
 + newline
 + local count=1
 + (( i = 0 ))
@@ -2094,275 +2066,8 @@ object network Panther-Gateway
 + (( i < count ))
 + return 0
 + return 0
-+ [[ -n {
-  "object": "object",
-  "type": "network Panther-Gateway",
-  "description": "Secure outbound concentrator",
-  "items": [
-    "host 10.0.2.3"
-  ],
-  "sets": {
-    "host": 1
-  },
-  "group": "Unclassified"
-} ]]
-+ [[ true == true ]]
-+ message '|-----> Target Objects: {
-  "object": "object",
-  "type": "network Panther-Gateway",
-  "description": "Secure outbound concentrator",
-  "items": [
-    "host 10.0.2.3"
-  ],
-  "sets": {
-    "host": 1
-  },
-  "group": "Unclassified"
-}'
-+ [[ -n |-----> Target Objects: {
-  "object": "object",
-  "type": "network Panther-Gateway",
-  "description": "Secure outbound concentrator",
-  "items": [
-    "host 10.0.2.3"
-  ],
-  "sets": {
-    "host": 1
-  },
-  "group": "Unclassified"
-} ]]
-+ local 'message=|-----> Target Objects: {
-  "object": "object",
-  "type": "network Panther-Gateway",
-  "description": "Secure outbound concentrator",
-  "items": [
-    "host 10.0.2.3"
-  ],
-  "sets": {
-    "host": 1
-  },
-  "group": "Unclassified"
-}'
-+ echo -e '|-----> Target Objects: {
-  "object": "object",
-  "type": "network Panther-Gateway",
-  "description": "Secure outbound concentrator",
-  "items": [
-    "host 10.0.2.3"
-  ],
-  "sets": {
-    "host": 1
-  },
-  "group": "Unclassified"
-}'
-|-----> Target Objects: {
-  "object": "object",
-  "type": "network Panther-Gateway",
-  "description": "Secure outbound concentrator",
-  "items": [
-    "host 10.0.2.3"
-  ],
-  "sets": {
-    "host": 1
-  },
-  "group": "Unclassified"
-}
-+ return 0
-+ [[ -n {
-  "object": "object",
-  "type": "network Panther-Gateway",
-  "description": "Secure outbound concentrator",
-  "items": [
-    "host 10.0.2.3"
-  ],
-  "sets": {
-    "host": 1
-  },
-  "group": "Unclassified"
-} ]]
-++ printf '%s\n' '{
-  "object": "object",
-  "type": "network Panther-Gateway",
-  "description": "Secure outbound concentrator",
-  "items": [
-    "host 10.0.2.3"
-  ],
-  "sets": {
-    "host": 1
-  },
-  "group": "Unclassified"
-}'
-++ jq -s --arg site configs/misc --arg device fw3.cfg '{
-              site: ( $site | gsub( "^.*/"; "" ) ),
-              device: $device,
-              objects: .
-            }'
-+ wrapped_block='{
-  "site": "misc",
-  "device": "fw3.cfg",
-  "objects": [
-    {
-      "object": "object",
-      "type": "network Panther-Gateway",
-      "description": "Secure outbound concentrator",
-      "items": [
-        "host 10.0.2.3"
-      ],
-      "sets": {
-        "host": 1
-      },
-      "group": "Unclassified"
-    }
-  ]
-}'
-+ [[ true == true ]]
-+ message '|-----> Config Objects:\n{
-  "site": "misc",
-  "device": "fw3.cfg",
-  "objects": [
-    {
-      "object": "object",
-      "type": "network Panther-Gateway",
-      "description": "Secure outbound concentrator",
-      "items": [
-        "host 10.0.2.3"
-      ],
-      "sets": {
-        "host": 1
-      },
-      "group": "Unclassified"
-    }
-  ]
-}'
-+ [[ -n |-----> Config Objects:\n{
-  "site": "misc",
-  "device": "fw3.cfg",
-  "objects": [
-    {
-      "object": "object",
-      "type": "network Panther-Gateway",
-      "description": "Secure outbound concentrator",
-      "items": [
-        "host 10.0.2.3"
-      ],
-      "sets": {
-        "host": 1
-      },
-      "group": "Unclassified"
-    }
-  ]
-} ]]
-+ local 'message=|-----> Config Objects:\n{
-  "site": "misc",
-  "device": "fw3.cfg",
-  "objects": [
-    {
-      "object": "object",
-      "type": "network Panther-Gateway",
-      "description": "Secure outbound concentrator",
-      "items": [
-        "host 10.0.2.3"
-      ],
-      "sets": {
-        "host": 1
-      },
-      "group": "Unclassified"
-    }
-  ]
-}'
-+ echo -e '|-----> Config Objects:\n{
-  "site": "misc",
-  "device": "fw3.cfg",
-  "objects": [
-    {
-      "object": "object",
-      "type": "network Panther-Gateway",
-      "description": "Secure outbound concentrator",
-      "items": [
-        "host 10.0.2.3"
-      ],
-      "sets": {
-        "host": 1
-      },
-      "group": "Unclassified"
-    }
-  ]
-}'
-|-----> Config Objects:
-{
-  "site": "misc",
-  "device": "fw3.cfg",
-  "objects": [
-    {
-      "object": "object",
-      "type": "network Panther-Gateway",
-      "description": "Secure outbound concentrator",
-      "items": [
-        "host 10.0.2.3"
-      ],
-      "sets": {
-        "host": 1
-      },
-      "group": "Unclassified"
-    }
-  ]
-}
-+ return 0
-+ print '{
-  "site": "misc",
-  "device": "fw3.cfg",
-  "objects": [
-    {
-      "object": "object",
-      "type": "network Panther-Gateway",
-      "description": "Secure outbound concentrator",
-      "items": [
-        "host 10.0.2.3"
-      ],
-      "sets": {
-        "host": 1
-      },
-      "group": "Unclassified"
-    }
-  ]
-}'
-+ [[ -n {
-  "site": "misc",
-  "device": "fw3.cfg",
-  "objects": [
-    {
-      "object": "object",
-      "type": "network Panther-Gateway",
-      "description": "Secure outbound concentrator",
-      "items": [
-        "host 10.0.2.3"
-      ],
-      "sets": {
-        "host": 1
-      },
-      "group": "Unclassified"
-    }
-  ]
-} ]]
-+ echo -en '{
-  "site": "misc",
-  "device": "fw3.cfg",
-  "objects": [
-    {
-      "object": "object",
-      "type": "network Panther-Gateway",
-      "description": "Secure outbound concentrator",
-      "items": [
-        "host 10.0.2.3"
-      ],
-      "sets": {
-        "host": 1
-      },
-      "group": "Unclassified"
-    }
-  ]
-}'
-+ return 0
++ [[ -n '' ]]
++ [[ -n '' ]]
 + for serialized_line in "${matched_objects[@]}"
 + [[ true == true ]]
 + message 'Serialized Line: access-list OUTSIDE extended permit ip host 10.0.2.3 any'
@@ -2371,7 +2076,7 @@ object network Panther-Gateway
 + echo -e 'Serialized Line: access-list OUTSIDE extended permit ip host 10.0.2.3 any'
 Serialized Line: access-list OUTSIDE extended permit ip host 10.0.2.3 any
 + return 0
-++ perl -pe 's/MTc0NzY0OTg0Mjk3MjExNzAwMAo/\n/g'
+++ perl -pe 's/MTc0NzY5OTkxNDY0MDEwMzAwMAo/\n/g'
 + restored_block='access-list OUTSIDE extended permit ip host 10.0.2.3 any'
 + local cfg_path=configs/misc/fw3.cfg
 + local rel_path=misc/fw3.cfg
@@ -2558,30 +2263,22 @@ access-list OUTSIDE extended permit ip host 10.0.2.3 any
 + local 'sets_json={
   "access-list": 1
 }'
-++ jq -n --arg object access-list --arg type false --arg description false --argjson items '[
++ [[ access-list == \o\b\j\e\c\t\-\g\r\o\u\p ]]
++ partner_val=
+++ jq -n --arg object access-list --arg type false --arg partner '' --arg description false --argjson items '[
   "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
 ]' --argjson sets '{
   "access-list": 1
 }' --arg group Unclassified '{
           object: $object,
           type: ( $type | select( . != "" and . != "null" and . != "false" ) // false ),
+          partner: ( $partner | select( . != "" and . != "null" and . != "false" ) // empty ),
           description: ( $description | select( . != "" and . != "null" and . != "false" ) // false ),
           items: $items,
           sets: $sets,
           group: $group
         }'
-+ target_object='{
-  "object": "access-list",
-  "type": false,
-  "description": false,
-  "items": [
-    "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
-  ],
-  "sets": {
-    "access-list": 1
-  },
-  "group": "Unclassified"
-}'
++ target_object=
 + export target_object
 + [[ true == true ]]
 + message '[process_configs] JSON Object (output):'
@@ -2590,56 +2287,10 @@ access-list OUTSIDE extended permit ip host 10.0.2.3 any
 + echo -e '[process_configs] JSON Object (output):'
 [process_configs] JSON Object (output):
 + return 0
-+ print '{
-  "object": "access-list",
-  "type": false,
-  "description": false,
-  "items": [
-    "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
-  ],
-  "sets": {
-    "access-list": 1
-  },
-  "group": "Unclassified"
-}'
-+ [[ -n {
-  "object": "access-list",
-  "type": false,
-  "description": false,
-  "items": [
-    "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
-  ],
-  "sets": {
-    "access-list": 1
-  },
-  "group": "Unclassified"
-} ]]
-+ jq .
-+ echo -en '{
-  "object": "access-list",
-  "type": false,
-  "description": false,
-  "items": [
-    "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
-  ],
-  "sets": {
-    "access-list": 1
-  },
-  "group": "Unclassified"
-}'
++ print ''
++ [[ -n '' ]]
 + return 0
-{
-  "object": "access-list",
-  "type": false,
-  "description": false,
-  "items": [
-    "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
-  ],
-  "sets": {
-    "access-list": 1
-  },
-  "group": "Unclassified"
-}
++ jq .
 + newline
 + local count=1
 + (( i = 0 ))
@@ -2650,283 +2301,16 @@ access-list OUTSIDE extended permit ip host 10.0.2.3 any
 + (( i < count ))
 + return 0
 + return 0
-+ [[ -n {
-  "object": "access-list",
-  "type": false,
-  "description": false,
-  "items": [
-    "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
-  ],
-  "sets": {
-    "access-list": 1
-  },
-  "group": "Unclassified"
-} ]]
-+ [[ true == true ]]
-+ message '|-----> Target Objects: {
-  "object": "access-list",
-  "type": false,
-  "description": false,
-  "items": [
-    "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
-  ],
-  "sets": {
-    "access-list": 1
-  },
-  "group": "Unclassified"
-}'
-+ [[ -n |-----> Target Objects: {
-  "object": "access-list",
-  "type": false,
-  "description": false,
-  "items": [
-    "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
-  ],
-  "sets": {
-    "access-list": 1
-  },
-  "group": "Unclassified"
-} ]]
-+ local 'message=|-----> Target Objects: {
-  "object": "access-list",
-  "type": false,
-  "description": false,
-  "items": [
-    "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
-  ],
-  "sets": {
-    "access-list": 1
-  },
-  "group": "Unclassified"
-}'
-+ echo -e '|-----> Target Objects: {
-  "object": "access-list",
-  "type": false,
-  "description": false,
-  "items": [
-    "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
-  ],
-  "sets": {
-    "access-list": 1
-  },
-  "group": "Unclassified"
-}'
-|-----> Target Objects: {
-  "object": "access-list",
-  "type": false,
-  "description": false,
-  "items": [
-    "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
-  ],
-  "sets": {
-    "access-list": 1
-  },
-  "group": "Unclassified"
-}
++ [[ -n '' ]]
++ [[ -n '' ]]
 + return 0
-+ [[ -n {
-  "object": "access-list",
-  "type": false,
-  "description": false,
-  "items": [
-    "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
-  ],
-  "sets": {
-    "access-list": 1
-  },
-  "group": "Unclassified"
-} ]]
-++ printf '%s\n' '{
-  "object": "access-list",
-  "type": false,
-  "description": false,
-  "items": [
-    "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
-  ],
-  "sets": {
-    "access-list": 1
-  },
-  "group": "Unclassified"
-}'
-++ jq -s --arg site configs/misc --arg device fw3.cfg '{
-              site: ( $site | gsub( "^.*/"; "" ) ),
-              device: $device,
-              objects: .
-            }'
-+ wrapped_block='{
-  "site": "misc",
-  "device": "fw3.cfg",
-  "objects": [
-    {
-      "object": "access-list",
-      "type": false,
-      "description": false,
-      "items": [
-        "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
-      ],
-      "sets": {
-        "access-list": 1
-      },
-      "group": "Unclassified"
-    }
-  ]
-}'
-+ [[ true == true ]]
-+ message '|-----> Config Objects:\n{
-  "site": "misc",
-  "device": "fw3.cfg",
-  "objects": [
-    {
-      "object": "access-list",
-      "type": false,
-      "description": false,
-      "items": [
-        "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
-      ],
-      "sets": {
-        "access-list": 1
-      },
-      "group": "Unclassified"
-    }
-  ]
-}'
-+ [[ -n |-----> Config Objects:\n{
-  "site": "misc",
-  "device": "fw3.cfg",
-  "objects": [
-    {
-      "object": "access-list",
-      "type": false,
-      "description": false,
-      "items": [
-        "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
-      ],
-      "sets": {
-        "access-list": 1
-      },
-      "group": "Unclassified"
-    }
-  ]
-} ]]
-+ local 'message=|-----> Config Objects:\n{
-  "site": "misc",
-  "device": "fw3.cfg",
-  "objects": [
-    {
-      "object": "access-list",
-      "type": false,
-      "description": false,
-      "items": [
-        "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
-      ],
-      "sets": {
-        "access-list": 1
-      },
-      "group": "Unclassified"
-    }
-  ]
-}'
-+ echo -e '|-----> Config Objects:\n{
-  "site": "misc",
-  "device": "fw3.cfg",
-  "objects": [
-    {
-      "object": "access-list",
-      "type": false,
-      "description": false,
-      "items": [
-        "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
-      ],
-      "sets": {
-        "access-list": 1
-      },
-      "group": "Unclassified"
-    }
-  ]
-}'
-|-----> Config Objects:
-{
-  "site": "misc",
-  "device": "fw3.cfg",
-  "objects": [
-    {
-      "object": "access-list",
-      "type": false,
-      "description": false,
-      "items": [
-        "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
-      ],
-      "sets": {
-        "access-list": 1
-      },
-      "group": "Unclassified"
-    }
-  ]
-}
-+ return 0
-+ print '{
-  "site": "misc",
-  "device": "fw3.cfg",
-  "objects": [
-    {
-      "object": "access-list",
-      "type": false,
-      "description": false,
-      "items": [
-        "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
-      ],
-      "sets": {
-        "access-list": 1
-      },
-      "group": "Unclassified"
-    }
-  ]
-}'
-+ [[ -n {
-  "site": "misc",
-  "device": "fw3.cfg",
-  "objects": [
-    {
-      "object": "access-list",
-      "type": false,
-      "description": false,
-      "items": [
-        "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
-      ],
-      "sets": {
-        "access-list": 1
-      },
-      "group": "Unclassified"
-    }
-  ]
-} ]]
-+ echo -en '{
-  "site": "misc",
-  "device": "fw3.cfg",
-  "objects": [
-    {
-      "object": "access-list",
-      "type": false,
-      "description": false,
-      "items": [
-        "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
-      ],
-      "sets": {
-        "access-list": 1
-      },
-      "group": "Unclassified"
-    }
-  ]
-}'
-+ return 0
-+ return 0
-+ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.mAVfUbpXeA/10.0.2.3
-+ export json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.mAVfUbpXeA/10.0.2.3/10.0.2.3--MTc0NzY0OTg0.json
-+ json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.mAVfUbpXeA/10.0.2.3/10.0.2.3--MTc0NzY0OTg0.json
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.mAVfUbpXeA/fragments.json ]]
-+ jq -s --arg target 10.0.2.3 '{ target: $target, configs: . }' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.mAVfUbpXeA/fragments.json
++ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.ajI9H4IaZL/10.0.2.3
++ export json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.ajI9H4IaZL/10.0.2.3/10.0.2.3--MTc0NzY5OTkx.json
++ json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.ajI9H4IaZL/10.0.2.3/10.0.2.3--MTc0NzY5OTkx.json
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.ajI9H4IaZL/fragments.json ]]
++ jq -s --arg target 10.0.2.3 '{ target: $target, configs: . }' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.ajI9H4IaZL/fragments.json
 ++ mktemp
-+ tmp_merged=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.29Wt9dECaj
++ tmp_merged=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Gzml4xN9Xe
 + local final_outfile=reports/10.0.2.3/10.0.2.3.json
 ++ dirname reports/10.0.2.3/10.0.2.3.json
 + mkdir -p reports/10.0.2.3
@@ -2964,10 +2348,10 @@ access-list OUTSIDE extended permit ip host 10.0.2.3 any
               )
             else . + [ $cfg ] end
           ))
-      }' reports/10.0.2.3/10.0.2.3.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.mAVfUbpXeA/10.0.2.3/10.0.2.3--MTc0NzY0OTg0.json
-+ mv /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.29Wt9dECaj reports/10.0.2.3/10.0.2.3.json
-+ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.mAVfUbpXeA/10.0.2.3/10.0.2.3--MTc0NzY0OTg0.json
+      }' reports/10.0.2.3/10.0.2.3.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.ajI9H4IaZL/10.0.2.3/10.0.2.3--MTc0NzY5OTkx.json
++ mv /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Gzml4xN9Xe reports/10.0.2.3/10.0.2.3.json
++ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.ajI9H4IaZL/10.0.2.3/10.0.2.3--MTc0NzY5OTkx.json
 + return 0
 + unset verbose debug
-+ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.mAVfUbpXeA ]]
-+ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.mAVfUbpXeA
++ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.ajI9H4IaZL ]]
++ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.ajI9H4IaZL

@@ -483,10 +483,18 @@ function process_configs () {
     )";
 
     #### -----------------------------------------------------------------------
+    ## Optional metadata enrichment for known object/type combinations
+    if [[ "${object_keyword}" == "object-group" && "${type_value}" == network* ]]; then
+            partner_val="${type_value##network }";
+      else  partner_val="";
+    fi;
+
+    #### -----------------------------------------------------------------------
     target_object="$(
       jq -n \
         --arg object "${object_keyword}" \
         --arg type "${type_value}" \
+        --arg partner "${partner_val}" \
         --arg description "${desc_val}" \
         --argjson items "${matched_items_json}" \
         --argjson sets "${sets_json}" \
@@ -494,6 +502,7 @@ function process_configs () {
         '{
           object: $object,
           type: ( $type | select( . != "" and . != "null" and . != "false" ) // false ),
+          partner: ( $partner | select( . != "" and . != "null" and . != "false" ) // empty ),
           description: ( $description | select( . != "" and . != "null" and . != "false" ) // false ),
           items: $items,
           sets: $sets,

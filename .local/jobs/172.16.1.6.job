@@ -2,8 +2,8 @@
 + export LC_ALL=C
 + LC_ALL=C
 ++ mktemp -d
-+ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Q2r2d9uFdQ
-+ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Q2r2d9uFdQ
++ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.jFF7zpL9O4
++ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.jFF7zpL9O4
 + trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
 + source ./scripts/tools-devops.shell
 ++ [[ -n '' ]]
@@ -45,8 +45,8 @@
 +++ date +%s%N
 +++ base64
 +++ tr -dc a-zA-Z0-9
-++ export divisor=MTc0NzY0OTg0Mjk4ODUxNzAwMAo
-++ divisor=MTc0NzY0OTg0Mjk4ODUxNzAwMAo
+++ export divisor=MTc0NzY5OTkxNDY2MjIwMTAwMAo
+++ divisor=MTc0NzY5OTkxNDY2MjIwMTAwMAo
 + source ./scripts/tools-configs.shell
 ++ [[ -n '' ]]
 ++ readonly __TOOLS_EXTRACTION_SOURCED=1
@@ -60,7 +60,7 @@
 + script_name=./scripts/parse-configs.shell
 + [[ 9 -ge 1 ]]
 + [[ --configs=configs =~ ^-*(h|help)$ ]]
-+ main --configs=configs --ip-addr=172.16.1.6 --index=10 --matrix=matrix.json --reports=reports --file-ext=cfg,conf,cnf --classify --verbose --debug
++ main --configs=configs --ip-addr=172.16.1.6 --index=8 --matrix=matrix.json --reports=reports --file-ext=cfg,conf,cnf --classify --verbose --debug
 + file_extensions=()
 + declare -a file_extensions
 + oIFS=' 	
@@ -107,13 +107,13 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --index=10
+++ echo -e --index=8
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ index =~ ^(classify|g)$ ]]
 + [[ index =~ ^(configs|c)$ ]]
 + [[ index =~ ^(file-ext|x)$ ]]
 + [[ index =~ ^(index|n)$ ]]
-+ local target_index=10
++ local target_index=8
 + [[ index =~ ^(ip-addr|i)$ ]]
 + [[ index =~ ^(logs|o)$ ]]
 + [[ index =~ ^(matrix|m)$ ]]
@@ -369,25 +369,25 @@ Extracted config paths from JSON:+ return 0
 ]'
 + export reports_folder=reports
 + reports_folder=reports
-+ [[ -z 10 ]]
++ [[ -z 8 ]]
 + [[ -z false ]]
 + [[ -z 172.16.1.6 ]]
 ++ print 172.16.1.6
+++ sed -E 's/[[:space:]]+//g'
 ++ [[ -n 172.16.1.6 ]]
 ++ echo -en 172.16.1.6
 ++ return 0
-++ sed -E 's/[[:space:]]+//g'
 ++ tr -d '\r'
 + target_address=172.16.1.6
 + [[ false == true ]]
-+ export tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Q2r2d9uFdQ/fragments.json
-+ tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Q2r2d9uFdQ/fragments.json
++ export tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.jFF7zpL9O4/fragments.json
++ tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.jFF7zpL9O4/fragments.json
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs configs/misc/fw2.cfg 172.16.1.6 targets/172.16.1.6.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Q2r2d9uFdQ/fragments.json
++ extract_configs configs/misc/fw2.cfg 172.16.1.6 targets/172.16.1.6.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.jFF7zpL9O4/fragments.json
 + local config_file=configs/misc/fw2.cfg
 + local target_pattern=172.16.1.6
 + local target_listing=targets/172.16.1.6.json
-+ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Q2r2d9uFdQ/fragments.json
++ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.jFF7zpL9O4/fragments.json
 + [[ ! -f configs/misc/fw2.cfg ]]
 + message '[DEBUG] Checking if config file exists and is readable: configs/misc/fw2.cfg'
 + [[ -n [DEBUG] Checking if config file exists and is readable: configs/misc/fw2.cfg ]]
@@ -834,45 +834,45 @@ access-list OUTSIDE extended deny ip any any
 nat (inside,outside) source static Wayne-Tech Internet-Relay
 nat (inside,outside) source static Wayne-Tech Gotham-VPN
 + return 0
-++ perl -pe 's/\n/MTc0NzY0OTg0Mjk4ODUxNzAwMAo/g'
-+ local 'serialized_objects=object-group network Gotham-InternalMTc0NzY0OTg0Mjk4ODUxNzAwMAo description Internal datacenter and backup LANMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 10.0.1.2MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 192.168.1.11MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzY0OTg0Mjk4ODUxNzAwMAoobject-group network Batcave-WirelessMTc0NzY0OTg0Mjk4ODUxNzAwMAo description Secure wireless endpointsMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 172.16.1.6MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 192.168.100.100MTc0NzY0OTg0Mjk4ODUxNzAwMAoobject-group network Wayne-DMZMTc0NzY0OTg0Mjk4ODUxNzAwMAo description External public resourcesMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 198.51.100.75MTc0NzY0OTg0Mjk4ODUxNzAwMAoobject network Wayne-TechMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 10.0.1.2MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Application edge firewallMTc0NzY0OTg0Mjk4ODUxNzAwMAoobject network Gotham-VPNMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 198.51.100.75MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Encrypted edge gatewayMTc0NzY0OTg0Mjk4ODUxNzAwMAoobject network Internet-RelayMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 203.0.113.25MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Unfiltered outbound NAT IPMTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended permit ip host 10.0.1.2 anyMTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended permit ip any host 203.0.113.25MTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended permit ip any host 198.51.100.75MTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY0OTg0Mjk4ODUxNzAwMAonat (inside,outside) source static Wayne-Tech Internet-RelayMTc0NzY0OTg0Mjk4ODUxNzAwMAonat (inside,outside) source static Wayne-Tech Gotham-VPNMTc0NzY0OTg0Mjk4ODUxNzAwMAo'
+++ perl -pe 's/\n/MTc0NzY5OTkxNDY2MjIwMTAwMAo/g'
++ local 'serialized_objects=object-group network Gotham-InternalMTc0NzY5OTkxNDY2MjIwMTAwMAo description Internal datacenter and backup LANMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 10.0.1.2MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 192.168.1.11MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzY5OTkxNDY2MjIwMTAwMAoobject-group network Batcave-WirelessMTc0NzY5OTkxNDY2MjIwMTAwMAo description Secure wireless endpointsMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 172.16.1.6MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 192.168.100.100MTc0NzY5OTkxNDY2MjIwMTAwMAoobject-group network Wayne-DMZMTc0NzY5OTkxNDY2MjIwMTAwMAo description External public resourcesMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 203.0.113.25MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 198.51.100.75MTc0NzY5OTkxNDY2MjIwMTAwMAoobject network Wayne-TechMTc0NzY5OTkxNDY2MjIwMTAwMAo host 10.0.1.2MTc0NzY5OTkxNDY2MjIwMTAwMAo description Application edge firewallMTc0NzY5OTkxNDY2MjIwMTAwMAoobject network Gotham-VPNMTc0NzY5OTkxNDY2MjIwMTAwMAo host 198.51.100.75MTc0NzY5OTkxNDY2MjIwMTAwMAo description Encrypted edge gatewayMTc0NzY5OTkxNDY2MjIwMTAwMAoobject network Internet-RelayMTc0NzY5OTkxNDY2MjIwMTAwMAo host 203.0.113.25MTc0NzY5OTkxNDY2MjIwMTAwMAo description Unfiltered outbound NAT IPMTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended permit ip host 10.0.1.2 anyMTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended permit ip any host 203.0.113.25MTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended permit ip any host 198.51.100.75MTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY5OTkxNDY2MjIwMTAwMAonat (inside,outside) source static Wayne-Tech Internet-RelayMTc0NzY5OTkxNDY2MjIwMTAwMAonat (inside,outside) source static Wayne-Tech Gotham-VPNMTc0NzY5OTkxNDY2MjIwMTAwMAo'
 + [[ true == true ]]
-+ message 'Serialized Objects: object-group network Gotham-InternalMTc0NzY0OTg0Mjk4ODUxNzAwMAo description Internal datacenter and backup LANMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 10.0.1.2MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 192.168.1.11MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzY0OTg0Mjk4ODUxNzAwMAoobject-group network Batcave-WirelessMTc0NzY0OTg0Mjk4ODUxNzAwMAo description Secure wireless endpointsMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 172.16.1.6MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 192.168.100.100MTc0NzY0OTg0Mjk4ODUxNzAwMAoobject-group network Wayne-DMZMTc0NzY0OTg0Mjk4ODUxNzAwMAo description External public resourcesMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 198.51.100.75MTc0NzY0OTg0Mjk4ODUxNzAwMAoobject network Wayne-TechMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 10.0.1.2MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Application edge firewallMTc0NzY0OTg0Mjk4ODUxNzAwMAoobject network Gotham-VPNMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 198.51.100.75MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Encrypted edge gatewayMTc0NzY0OTg0Mjk4ODUxNzAwMAoobject network Internet-RelayMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 203.0.113.25MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Unfiltered outbound NAT IPMTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended permit ip host 10.0.1.2 anyMTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended permit ip any host 203.0.113.25MTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended permit ip any host 198.51.100.75MTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY0OTg0Mjk4ODUxNzAwMAonat (inside,outside) source static Wayne-Tech Internet-RelayMTc0NzY0OTg0Mjk4ODUxNzAwMAonat (inside,outside) source static Wayne-Tech Gotham-VPNMTc0NzY0OTg0Mjk4ODUxNzAwMAo'
-+ [[ -n Serialized Objects: object-group network Gotham-InternalMTc0NzY0OTg0Mjk4ODUxNzAwMAo description Internal datacenter and backup LANMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 10.0.1.2MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 192.168.1.11MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzY0OTg0Mjk4ODUxNzAwMAoobject-group network Batcave-WirelessMTc0NzY0OTg0Mjk4ODUxNzAwMAo description Secure wireless endpointsMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 172.16.1.6MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 192.168.100.100MTc0NzY0OTg0Mjk4ODUxNzAwMAoobject-group network Wayne-DMZMTc0NzY0OTg0Mjk4ODUxNzAwMAo description External public resourcesMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 198.51.100.75MTc0NzY0OTg0Mjk4ODUxNzAwMAoobject network Wayne-TechMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 10.0.1.2MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Application edge firewallMTc0NzY0OTg0Mjk4ODUxNzAwMAoobject network Gotham-VPNMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 198.51.100.75MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Encrypted edge gatewayMTc0NzY0OTg0Mjk4ODUxNzAwMAoobject network Internet-RelayMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 203.0.113.25MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Unfiltered outbound NAT IPMTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended permit ip host 10.0.1.2 anyMTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended permit ip any host 203.0.113.25MTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended permit ip any host 198.51.100.75MTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY0OTg0Mjk4ODUxNzAwMAonat (inside,outside) source static Wayne-Tech Internet-RelayMTc0NzY0OTg0Mjk4ODUxNzAwMAonat (inside,outside) source static Wayne-Tech Gotham-VPNMTc0NzY0OTg0Mjk4ODUxNzAwMAo ]]
-+ local 'message=Serialized Objects: object-group network Gotham-InternalMTc0NzY0OTg0Mjk4ODUxNzAwMAo description Internal datacenter and backup LANMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 10.0.1.2MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 192.168.1.11MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzY0OTg0Mjk4ODUxNzAwMAoobject-group network Batcave-WirelessMTc0NzY0OTg0Mjk4ODUxNzAwMAo description Secure wireless endpointsMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 172.16.1.6MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 192.168.100.100MTc0NzY0OTg0Mjk4ODUxNzAwMAoobject-group network Wayne-DMZMTc0NzY0OTg0Mjk4ODUxNzAwMAo description External public resourcesMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 198.51.100.75MTc0NzY0OTg0Mjk4ODUxNzAwMAoobject network Wayne-TechMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 10.0.1.2MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Application edge firewallMTc0NzY0OTg0Mjk4ODUxNzAwMAoobject network Gotham-VPNMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 198.51.100.75MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Encrypted edge gatewayMTc0NzY0OTg0Mjk4ODUxNzAwMAoobject network Internet-RelayMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 203.0.113.25MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Unfiltered outbound NAT IPMTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended permit ip host 10.0.1.2 anyMTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended permit ip any host 203.0.113.25MTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended permit ip any host 198.51.100.75MTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY0OTg0Mjk4ODUxNzAwMAonat (inside,outside) source static Wayne-Tech Internet-RelayMTc0NzY0OTg0Mjk4ODUxNzAwMAonat (inside,outside) source static Wayne-Tech Gotham-VPNMTc0NzY0OTg0Mjk4ODUxNzAwMAo'
-+ echo -e 'Serialized Objects: object-group network Gotham-InternalMTc0NzY0OTg0Mjk4ODUxNzAwMAo description Internal datacenter and backup LANMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 10.0.1.2MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 192.168.1.11MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzY0OTg0Mjk4ODUxNzAwMAoobject-group network Batcave-WirelessMTc0NzY0OTg0Mjk4ODUxNzAwMAo description Secure wireless endpointsMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 172.16.1.6MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 192.168.100.100MTc0NzY0OTg0Mjk4ODUxNzAwMAoobject-group network Wayne-DMZMTc0NzY0OTg0Mjk4ODUxNzAwMAo description External public resourcesMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 198.51.100.75MTc0NzY0OTg0Mjk4ODUxNzAwMAoobject network Wayne-TechMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 10.0.1.2MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Application edge firewallMTc0NzY0OTg0Mjk4ODUxNzAwMAoobject network Gotham-VPNMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 198.51.100.75MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Encrypted edge gatewayMTc0NzY0OTg0Mjk4ODUxNzAwMAoobject network Internet-RelayMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 203.0.113.25MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Unfiltered outbound NAT IPMTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended permit ip host 10.0.1.2 anyMTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended permit ip any host 203.0.113.25MTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended permit ip any host 198.51.100.75MTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY0OTg0Mjk4ODUxNzAwMAonat (inside,outside) source static Wayne-Tech Internet-RelayMTc0NzY0OTg0Mjk4ODUxNzAwMAonat (inside,outside) source static Wayne-Tech Gotham-VPNMTc0NzY0OTg0Mjk4ODUxNzAwMAo'
-Serialized Objects: object-group network Gotham-InternalMTc0NzY0OTg0Mjk4ODUxNzAwMAo description Internal datacenter and backup LANMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 10.0.1.2MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 192.168.1.11MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzY0OTg0Mjk4ODUxNzAwMAoobject-group network Batcave-WirelessMTc0NzY0OTg0Mjk4ODUxNzAwMAo description Secure wireless endpointsMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 172.16.1.6MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 192.168.100.100MTc0NzY0OTg0Mjk4ODUxNzAwMAoobject-group network Wayne-DMZMTc0NzY0OTg0Mjk4ODUxNzAwMAo description External public resourcesMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 198.51.100.75MTc0NzY0OTg0Mjk4ODUxNzAwMAoobject network Wayne-TechMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 10.0.1.2MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Application edge firewallMTc0NzY0OTg0Mjk4ODUxNzAwMAoobject network Gotham-VPNMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 198.51.100.75MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Encrypted edge gatewayMTc0NzY0OTg0Mjk4ODUxNzAwMAoobject network Internet-RelayMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 203.0.113.25MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Unfiltered outbound NAT IPMTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended permit ip host 10.0.1.2 anyMTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended permit ip any host 203.0.113.25MTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended permit ip any host 198.51.100.75MTc0NzY0OTg0Mjk4ODUxNzAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY0OTg0Mjk4ODUxNzAwMAonat (inside,outside) source static Wayne-Tech Internet-RelayMTc0NzY0OTg0Mjk4ODUxNzAwMAonat (inside,outside) source static Wayne-Tech Gotham-VPNMTc0NzY0OTg0Mjk4ODUxNzAwMAo
++ message 'Serialized Objects: object-group network Gotham-InternalMTc0NzY5OTkxNDY2MjIwMTAwMAo description Internal datacenter and backup LANMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 10.0.1.2MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 192.168.1.11MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzY5OTkxNDY2MjIwMTAwMAoobject-group network Batcave-WirelessMTc0NzY5OTkxNDY2MjIwMTAwMAo description Secure wireless endpointsMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 172.16.1.6MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 192.168.100.100MTc0NzY5OTkxNDY2MjIwMTAwMAoobject-group network Wayne-DMZMTc0NzY5OTkxNDY2MjIwMTAwMAo description External public resourcesMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 203.0.113.25MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 198.51.100.75MTc0NzY5OTkxNDY2MjIwMTAwMAoobject network Wayne-TechMTc0NzY5OTkxNDY2MjIwMTAwMAo host 10.0.1.2MTc0NzY5OTkxNDY2MjIwMTAwMAo description Application edge firewallMTc0NzY5OTkxNDY2MjIwMTAwMAoobject network Gotham-VPNMTc0NzY5OTkxNDY2MjIwMTAwMAo host 198.51.100.75MTc0NzY5OTkxNDY2MjIwMTAwMAo description Encrypted edge gatewayMTc0NzY5OTkxNDY2MjIwMTAwMAoobject network Internet-RelayMTc0NzY5OTkxNDY2MjIwMTAwMAo host 203.0.113.25MTc0NzY5OTkxNDY2MjIwMTAwMAo description Unfiltered outbound NAT IPMTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended permit ip host 10.0.1.2 anyMTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended permit ip any host 203.0.113.25MTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended permit ip any host 198.51.100.75MTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY5OTkxNDY2MjIwMTAwMAonat (inside,outside) source static Wayne-Tech Internet-RelayMTc0NzY5OTkxNDY2MjIwMTAwMAonat (inside,outside) source static Wayne-Tech Gotham-VPNMTc0NzY5OTkxNDY2MjIwMTAwMAo'
++ [[ -n Serialized Objects: object-group network Gotham-InternalMTc0NzY5OTkxNDY2MjIwMTAwMAo description Internal datacenter and backup LANMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 10.0.1.2MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 192.168.1.11MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzY5OTkxNDY2MjIwMTAwMAoobject-group network Batcave-WirelessMTc0NzY5OTkxNDY2MjIwMTAwMAo description Secure wireless endpointsMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 172.16.1.6MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 192.168.100.100MTc0NzY5OTkxNDY2MjIwMTAwMAoobject-group network Wayne-DMZMTc0NzY5OTkxNDY2MjIwMTAwMAo description External public resourcesMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 203.0.113.25MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 198.51.100.75MTc0NzY5OTkxNDY2MjIwMTAwMAoobject network Wayne-TechMTc0NzY5OTkxNDY2MjIwMTAwMAo host 10.0.1.2MTc0NzY5OTkxNDY2MjIwMTAwMAo description Application edge firewallMTc0NzY5OTkxNDY2MjIwMTAwMAoobject network Gotham-VPNMTc0NzY5OTkxNDY2MjIwMTAwMAo host 198.51.100.75MTc0NzY5OTkxNDY2MjIwMTAwMAo description Encrypted edge gatewayMTc0NzY5OTkxNDY2MjIwMTAwMAoobject network Internet-RelayMTc0NzY5OTkxNDY2MjIwMTAwMAo host 203.0.113.25MTc0NzY5OTkxNDY2MjIwMTAwMAo description Unfiltered outbound NAT IPMTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended permit ip host 10.0.1.2 anyMTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended permit ip any host 203.0.113.25MTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended permit ip any host 198.51.100.75MTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY5OTkxNDY2MjIwMTAwMAonat (inside,outside) source static Wayne-Tech Internet-RelayMTc0NzY5OTkxNDY2MjIwMTAwMAonat (inside,outside) source static Wayne-Tech Gotham-VPNMTc0NzY5OTkxNDY2MjIwMTAwMAo ]]
++ local 'message=Serialized Objects: object-group network Gotham-InternalMTc0NzY5OTkxNDY2MjIwMTAwMAo description Internal datacenter and backup LANMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 10.0.1.2MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 192.168.1.11MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzY5OTkxNDY2MjIwMTAwMAoobject-group network Batcave-WirelessMTc0NzY5OTkxNDY2MjIwMTAwMAo description Secure wireless endpointsMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 172.16.1.6MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 192.168.100.100MTc0NzY5OTkxNDY2MjIwMTAwMAoobject-group network Wayne-DMZMTc0NzY5OTkxNDY2MjIwMTAwMAo description External public resourcesMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 203.0.113.25MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 198.51.100.75MTc0NzY5OTkxNDY2MjIwMTAwMAoobject network Wayne-TechMTc0NzY5OTkxNDY2MjIwMTAwMAo host 10.0.1.2MTc0NzY5OTkxNDY2MjIwMTAwMAo description Application edge firewallMTc0NzY5OTkxNDY2MjIwMTAwMAoobject network Gotham-VPNMTc0NzY5OTkxNDY2MjIwMTAwMAo host 198.51.100.75MTc0NzY5OTkxNDY2MjIwMTAwMAo description Encrypted edge gatewayMTc0NzY5OTkxNDY2MjIwMTAwMAoobject network Internet-RelayMTc0NzY5OTkxNDY2MjIwMTAwMAo host 203.0.113.25MTc0NzY5OTkxNDY2MjIwMTAwMAo description Unfiltered outbound NAT IPMTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended permit ip host 10.0.1.2 anyMTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended permit ip any host 203.0.113.25MTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended permit ip any host 198.51.100.75MTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY5OTkxNDY2MjIwMTAwMAonat (inside,outside) source static Wayne-Tech Internet-RelayMTc0NzY5OTkxNDY2MjIwMTAwMAonat (inside,outside) source static Wayne-Tech Gotham-VPNMTc0NzY5OTkxNDY2MjIwMTAwMAo'
++ echo -e 'Serialized Objects: object-group network Gotham-InternalMTc0NzY5OTkxNDY2MjIwMTAwMAo description Internal datacenter and backup LANMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 10.0.1.2MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 192.168.1.11MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzY5OTkxNDY2MjIwMTAwMAoobject-group network Batcave-WirelessMTc0NzY5OTkxNDY2MjIwMTAwMAo description Secure wireless endpointsMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 172.16.1.6MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 192.168.100.100MTc0NzY5OTkxNDY2MjIwMTAwMAoobject-group network Wayne-DMZMTc0NzY5OTkxNDY2MjIwMTAwMAo description External public resourcesMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 203.0.113.25MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 198.51.100.75MTc0NzY5OTkxNDY2MjIwMTAwMAoobject network Wayne-TechMTc0NzY5OTkxNDY2MjIwMTAwMAo host 10.0.1.2MTc0NzY5OTkxNDY2MjIwMTAwMAo description Application edge firewallMTc0NzY5OTkxNDY2MjIwMTAwMAoobject network Gotham-VPNMTc0NzY5OTkxNDY2MjIwMTAwMAo host 198.51.100.75MTc0NzY5OTkxNDY2MjIwMTAwMAo description Encrypted edge gatewayMTc0NzY5OTkxNDY2MjIwMTAwMAoobject network Internet-RelayMTc0NzY5OTkxNDY2MjIwMTAwMAo host 203.0.113.25MTc0NzY5OTkxNDY2MjIwMTAwMAo description Unfiltered outbound NAT IPMTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended permit ip host 10.0.1.2 anyMTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended permit ip any host 203.0.113.25MTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended permit ip any host 198.51.100.75MTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY5OTkxNDY2MjIwMTAwMAonat (inside,outside) source static Wayne-Tech Internet-RelayMTc0NzY5OTkxNDY2MjIwMTAwMAonat (inside,outside) source static Wayne-Tech Gotham-VPNMTc0NzY5OTkxNDY2MjIwMTAwMAo'
+Serialized Objects: object-group network Gotham-InternalMTc0NzY5OTkxNDY2MjIwMTAwMAo description Internal datacenter and backup LANMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 10.0.1.2MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 192.168.1.11MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object 192.168.1.0 255.255.255.0MTc0NzY5OTkxNDY2MjIwMTAwMAoobject-group network Batcave-WirelessMTc0NzY5OTkxNDY2MjIwMTAwMAo description Secure wireless endpointsMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 172.16.1.6MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 192.168.100.100MTc0NzY5OTkxNDY2MjIwMTAwMAoobject-group network Wayne-DMZMTc0NzY5OTkxNDY2MjIwMTAwMAo description External public resourcesMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 203.0.113.25MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 198.51.100.75MTc0NzY5OTkxNDY2MjIwMTAwMAoobject network Wayne-TechMTc0NzY5OTkxNDY2MjIwMTAwMAo host 10.0.1.2MTc0NzY5OTkxNDY2MjIwMTAwMAo description Application edge firewallMTc0NzY5OTkxNDY2MjIwMTAwMAoobject network Gotham-VPNMTc0NzY5OTkxNDY2MjIwMTAwMAo host 198.51.100.75MTc0NzY5OTkxNDY2MjIwMTAwMAo description Encrypted edge gatewayMTc0NzY5OTkxNDY2MjIwMTAwMAoobject network Internet-RelayMTc0NzY5OTkxNDY2MjIwMTAwMAo host 203.0.113.25MTc0NzY5OTkxNDY2MjIwMTAwMAo description Unfiltered outbound NAT IPMTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended permit ip host 10.0.1.2 anyMTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended permit ip any host 203.0.113.25MTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended permit ip any host 198.51.100.75MTc0NzY5OTkxNDY2MjIwMTAwMAoaccess-list OUTSIDE extended deny ip any anyMTc0NzY5OTkxNDY2MjIwMTAwMAonat (inside,outside) source static Wayne-Tech Internet-RelayMTc0NzY5OTkxNDY2MjIwMTAwMAonat (inside,outside) source static Wayne-Tech Gotham-VPNMTc0NzY5OTkxNDY2MjIwMTAwMAo
 + return 0
-++ sed -E 's/MTc0NzY0OTg0Mjk4ODUxNzAwMAo([^[:space:]])/\n\1/g'
-+ local 'restored_lines=object-group network Gotham-InternalMTc0NzY0OTg0Mjk4ODUxNzAwMAo description Internal datacenter and backup LANMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 10.0.1.2MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 192.168.1.11MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object 192.168.1.0 255.255.255.0
-object-group network Batcave-WirelessMTc0NzY0OTg0Mjk4ODUxNzAwMAo description Secure wireless endpointsMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 172.16.1.6MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 192.168.100.100
-object-group network Wayne-DMZMTc0NzY0OTg0Mjk4ODUxNzAwMAo description External public resourcesMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 198.51.100.75
-object network Wayne-TechMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 10.0.1.2MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Application edge firewall
-object network Gotham-VPNMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 198.51.100.75MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Encrypted edge gateway
-object network Internet-RelayMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 203.0.113.25MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Unfiltered outbound NAT IP
+++ sed -E 's/MTc0NzY5OTkxNDY2MjIwMTAwMAo([^[:space:]])/\n\1/g'
++ local 'restored_lines=object-group network Gotham-InternalMTc0NzY5OTkxNDY2MjIwMTAwMAo description Internal datacenter and backup LANMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 10.0.1.2MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 192.168.1.11MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object 192.168.1.0 255.255.255.0
+object-group network Batcave-WirelessMTc0NzY5OTkxNDY2MjIwMTAwMAo description Secure wireless endpointsMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 172.16.1.6MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 192.168.100.100
+object-group network Wayne-DMZMTc0NzY5OTkxNDY2MjIwMTAwMAo description External public resourcesMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 203.0.113.25MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 198.51.100.75
+object network Wayne-TechMTc0NzY5OTkxNDY2MjIwMTAwMAo host 10.0.1.2MTc0NzY5OTkxNDY2MjIwMTAwMAo description Application edge firewall
+object network Gotham-VPNMTc0NzY5OTkxNDY2MjIwMTAwMAo host 198.51.100.75MTc0NzY5OTkxNDY2MjIwMTAwMAo description Encrypted edge gateway
+object network Internet-RelayMTc0NzY5OTkxNDY2MjIwMTAwMAo host 203.0.113.25MTc0NzY5OTkxNDY2MjIwMTAwMAo description Unfiltered outbound NAT IP
 access-list OUTSIDE extended permit ip host 10.0.1.2 any
 access-list OUTSIDE extended permit ip any host 203.0.113.25
 access-list OUTSIDE extended permit ip any host 198.51.100.75
 access-list OUTSIDE extended deny ip any any
 nat (inside,outside) source static Wayne-Tech Internet-Relay
-nat (inside,outside) source static Wayne-Tech Gotham-VPNMTc0NzY0OTg0Mjk4ODUxNzAwMAo'
+nat (inside,outside) source static Wayne-Tech Gotham-VPNMTc0NzY5OTkxNDY2MjIwMTAwMAo'
 + restored_lines+='
 '
 + IFS='
 '
 + read -r -d '' -a config_objects
-++ printf '%s\0' 'object-group network Gotham-InternalMTc0NzY0OTg0Mjk4ODUxNzAwMAo description Internal datacenter and backup LANMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 10.0.1.2MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 192.168.1.11MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object 192.168.1.0 255.255.255.0
-object-group network Batcave-WirelessMTc0NzY0OTg0Mjk4ODUxNzAwMAo description Secure wireless endpointsMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 172.16.1.6MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 192.168.100.100
-object-group network Wayne-DMZMTc0NzY0OTg0Mjk4ODUxNzAwMAo description External public resourcesMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 203.0.113.25MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 198.51.100.75
-object network Wayne-TechMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 10.0.1.2MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Application edge firewall
-object network Gotham-VPNMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 198.51.100.75MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Encrypted edge gateway
-object network Internet-RelayMTc0NzY0OTg0Mjk4ODUxNzAwMAo host 203.0.113.25MTc0NzY0OTg0Mjk4ODUxNzAwMAo description Unfiltered outbound NAT IP
+++ printf '%s\0' 'object-group network Gotham-InternalMTc0NzY5OTkxNDY2MjIwMTAwMAo description Internal datacenter and backup LANMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 10.0.1.2MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 192.168.1.11MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object 192.168.1.0 255.255.255.0
+object-group network Batcave-WirelessMTc0NzY5OTkxNDY2MjIwMTAwMAo description Secure wireless endpointsMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 172.16.1.6MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 192.168.100.100
+object-group network Wayne-DMZMTc0NzY5OTkxNDY2MjIwMTAwMAo description External public resourcesMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 203.0.113.25MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 198.51.100.75
+object network Wayne-TechMTc0NzY5OTkxNDY2MjIwMTAwMAo host 10.0.1.2MTc0NzY5OTkxNDY2MjIwMTAwMAo description Application edge firewall
+object network Gotham-VPNMTc0NzY5OTkxNDY2MjIwMTAwMAo host 198.51.100.75MTc0NzY5OTkxNDY2MjIwMTAwMAo description Encrypted edge gateway
+object network Internet-RelayMTc0NzY5OTkxNDY2MjIwMTAwMAo host 203.0.113.25MTc0NzY5OTkxNDY2MjIwMTAwMAo description Unfiltered outbound NAT IP
 access-list OUTSIDE extended permit ip host 10.0.1.2 any
 access-list OUTSIDE extended permit ip any host 203.0.113.25
 access-list OUTSIDE extended permit ip any host 198.51.100.75
 access-list OUTSIDE extended deny ip any any
 nat (inside,outside) source static Wayne-Tech Internet-Relay
-nat (inside,outside) source static Wayne-Tech Gotham-VPNMTc0NzY0OTg0Mjk4ODUxNzAwMAo
+nat (inside,outside) source static Wayne-Tech Gotham-VPNMTc0NzY5OTkxNDY2MjIwMTAwMAo
 '
 + [[ true == true ]]
 + message 'Loaded 12 config blocks'
@@ -923,13 +923,13 @@ Loaded 1 config blocks
 + return 0
 + for serialized_line in "${matched_objects[@]}"
 + [[ true == true ]]
-+ message 'Serialized Line: object-group network Batcave-WirelessMTc0NzY0OTg0Mjk4ODUxNzAwMAo description Secure wireless endpointsMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 172.16.1.6MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 192.168.100.100'
-+ [[ -n Serialized Line: object-group network Batcave-WirelessMTc0NzY0OTg0Mjk4ODUxNzAwMAo description Secure wireless endpointsMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 172.16.1.6MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 192.168.100.100 ]]
-+ local 'message=Serialized Line: object-group network Batcave-WirelessMTc0NzY0OTg0Mjk4ODUxNzAwMAo description Secure wireless endpointsMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 172.16.1.6MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 192.168.100.100'
-+ echo -e 'Serialized Line: object-group network Batcave-WirelessMTc0NzY0OTg0Mjk4ODUxNzAwMAo description Secure wireless endpointsMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 172.16.1.6MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 192.168.100.100'
-Serialized Line: object-group network Batcave-WirelessMTc0NzY0OTg0Mjk4ODUxNzAwMAo description Secure wireless endpointsMTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 172.16.1.6MTc0NzY0OTg0Mjk4ODUxNzAwMAo network-object host 192.168.100.100
++ message 'Serialized Line: object-group network Batcave-WirelessMTc0NzY5OTkxNDY2MjIwMTAwMAo description Secure wireless endpointsMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 172.16.1.6MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 192.168.100.100'
++ [[ -n Serialized Line: object-group network Batcave-WirelessMTc0NzY5OTkxNDY2MjIwMTAwMAo description Secure wireless endpointsMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 172.16.1.6MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 192.168.100.100 ]]
++ local 'message=Serialized Line: object-group network Batcave-WirelessMTc0NzY5OTkxNDY2MjIwMTAwMAo description Secure wireless endpointsMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 172.16.1.6MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 192.168.100.100'
++ echo -e 'Serialized Line: object-group network Batcave-WirelessMTc0NzY5OTkxNDY2MjIwMTAwMAo description Secure wireless endpointsMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 172.16.1.6MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 192.168.100.100'
+Serialized Line: object-group network Batcave-WirelessMTc0NzY5OTkxNDY2MjIwMTAwMAo description Secure wireless endpointsMTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 172.16.1.6MTc0NzY5OTkxNDY2MjIwMTAwMAo network-object host 192.168.100.100
 + return 0
-++ perl -pe 's/MTc0NzY0OTg0Mjk4ODUxNzAwMAo/\n/g'
+++ perl -pe 's/MTc0NzY5OTkxNDY2MjIwMTAwMAo/\n/g'
 + restored_block='object-group network Batcave-Wireless
  description Secure wireless endpoints
  network-object host 172.16.1.6
@@ -1212,13 +1212,17 @@ object-group network Batcave-Wireless
 + local 'sets_json={
   "network-object": 2
 }'
-++ jq -n --arg object object-group --arg type 'network Batcave-Wireless' --arg description 'Secure wireless endpoints' --argjson items '[
++ [[ object-group == \o\b\j\e\c\t\-\g\r\o\u\p ]]
++ [[ network Batcave-Wireless == network* ]]
++ partner_val=Batcave-Wireless
+++ jq -n --arg object object-group --arg type 'network Batcave-Wireless' --arg partner Batcave-Wireless --arg description 'Secure wireless endpoints' --argjson items '[
   "network-object host 172.16.1.6"
 ]' --argjson sets '{
   "network-object": 2
 }' --arg group Unclassified '{
           object: $object,
           type: ( $type | select( . != "" and . != "null" and . != "false" ) // false ),
+          partner: ( $partner | select( . != "" and . != "null" and . != "false" ) // empty ),
           description: ( $description | select( . != "" and . != "null" and . != "false" ) // false ),
           items: $items,
           sets: $sets,
@@ -1227,6 +1231,7 @@ object-group network Batcave-Wireless
 + target_object='{
   "object": "object-group",
   "type": "network Batcave-Wireless",
+  "partner": "Batcave-Wireless",
   "description": "Secure wireless endpoints",
   "items": [
     "network-object host 172.16.1.6"
@@ -1247,6 +1252,7 @@ object-group network Batcave-Wireless
 + print '{
   "object": "object-group",
   "type": "network Batcave-Wireless",
+  "partner": "Batcave-Wireless",
   "description": "Secure wireless endpoints",
   "items": [
     "network-object host 172.16.1.6"
@@ -1257,9 +1263,9 @@ object-group network Batcave-Wireless
   "group": "Unclassified"
 }'
 + [[ -n {
-+ jq .
   "object": "object-group",
   "type": "network Batcave-Wireless",
+  "partner": "Batcave-Wireless",
   "description": "Secure wireless endpoints",
   "items": [
     "network-object host 172.16.1.6"
@@ -1272,6 +1278,7 @@ object-group network Batcave-Wireless
 + echo -en '{
   "object": "object-group",
   "type": "network Batcave-Wireless",
+  "partner": "Batcave-Wireless",
   "description": "Secure wireless endpoints",
   "items": [
     "network-object host 172.16.1.6"
@@ -1281,10 +1288,12 @@ object-group network Batcave-Wireless
   },
   "group": "Unclassified"
 }'
++ jq .
 + return 0
 {
   "object": "object-group",
   "type": "network Batcave-Wireless",
+  "partner": "Batcave-Wireless",
   "description": "Secure wireless endpoints",
   "items": [
     "network-object host 172.16.1.6"
@@ -1307,6 +1316,7 @@ object-group network Batcave-Wireless
 + [[ -n {
   "object": "object-group",
   "type": "network Batcave-Wireless",
+  "partner": "Batcave-Wireless",
   "description": "Secure wireless endpoints",
   "items": [
     "network-object host 172.16.1.6"
@@ -1320,6 +1330,7 @@ object-group network Batcave-Wireless
 + message '|-----> Target Objects: {
   "object": "object-group",
   "type": "network Batcave-Wireless",
+  "partner": "Batcave-Wireless",
   "description": "Secure wireless endpoints",
   "items": [
     "network-object host 172.16.1.6"
@@ -1332,6 +1343,7 @@ object-group network Batcave-Wireless
 + [[ -n |-----> Target Objects: {
   "object": "object-group",
   "type": "network Batcave-Wireless",
+  "partner": "Batcave-Wireless",
   "description": "Secure wireless endpoints",
   "items": [
     "network-object host 172.16.1.6"
@@ -1344,6 +1356,7 @@ object-group network Batcave-Wireless
 + local 'message=|-----> Target Objects: {
   "object": "object-group",
   "type": "network Batcave-Wireless",
+  "partner": "Batcave-Wireless",
   "description": "Secure wireless endpoints",
   "items": [
     "network-object host 172.16.1.6"
@@ -1356,6 +1369,7 @@ object-group network Batcave-Wireless
 + echo -e '|-----> Target Objects: {
   "object": "object-group",
   "type": "network Batcave-Wireless",
+  "partner": "Batcave-Wireless",
   "description": "Secure wireless endpoints",
   "items": [
     "network-object host 172.16.1.6"
@@ -1368,6 +1382,7 @@ object-group network Batcave-Wireless
 |-----> Target Objects: {
   "object": "object-group",
   "type": "network Batcave-Wireless",
+  "partner": "Batcave-Wireless",
   "description": "Secure wireless endpoints",
   "items": [
     "network-object host 172.16.1.6"
@@ -1381,6 +1396,7 @@ object-group network Batcave-Wireless
 + [[ -n {
   "object": "object-group",
   "type": "network Batcave-Wireless",
+  "partner": "Batcave-Wireless",
   "description": "Secure wireless endpoints",
   "items": [
     "network-object host 172.16.1.6"
@@ -1393,6 +1409,7 @@ object-group network Batcave-Wireless
 ++ printf '%s\n' '{
   "object": "object-group",
   "type": "network Batcave-Wireless",
+  "partner": "Batcave-Wireless",
   "description": "Secure wireless endpoints",
   "items": [
     "network-object host 172.16.1.6"
@@ -1414,6 +1431,7 @@ object-group network Batcave-Wireless
     {
       "object": "object-group",
       "type": "network Batcave-Wireless",
+      "partner": "Batcave-Wireless",
       "description": "Secure wireless endpoints",
       "items": [
         "network-object host 172.16.1.6"
@@ -1433,6 +1451,7 @@ object-group network Batcave-Wireless
     {
       "object": "object-group",
       "type": "network Batcave-Wireless",
+      "partner": "Batcave-Wireless",
       "description": "Secure wireless endpoints",
       "items": [
         "network-object host 172.16.1.6"
@@ -1451,6 +1470,7 @@ object-group network Batcave-Wireless
     {
       "object": "object-group",
       "type": "network Batcave-Wireless",
+      "partner": "Batcave-Wireless",
       "description": "Secure wireless endpoints",
       "items": [
         "network-object host 172.16.1.6"
@@ -1469,6 +1489,7 @@ object-group network Batcave-Wireless
     {
       "object": "object-group",
       "type": "network Batcave-Wireless",
+      "partner": "Batcave-Wireless",
       "description": "Secure wireless endpoints",
       "items": [
         "network-object host 172.16.1.6"
@@ -1487,6 +1508,7 @@ object-group network Batcave-Wireless
     {
       "object": "object-group",
       "type": "network Batcave-Wireless",
+      "partner": "Batcave-Wireless",
       "description": "Secure wireless endpoints",
       "items": [
         "network-object host 172.16.1.6"
@@ -1506,6 +1528,7 @@ object-group network Batcave-Wireless
     {
       "object": "object-group",
       "type": "network Batcave-Wireless",
+      "partner": "Batcave-Wireless",
       "description": "Secure wireless endpoints",
       "items": [
         "network-object host 172.16.1.6"
@@ -1525,6 +1548,7 @@ object-group network Batcave-Wireless
     {
       "object": "object-group",
       "type": "network Batcave-Wireless",
+      "partner": "Batcave-Wireless",
       "description": "Secure wireless endpoints",
       "items": [
         "network-object host 172.16.1.6"
@@ -1543,6 +1567,7 @@ object-group network Batcave-Wireless
     {
       "object": "object-group",
       "type": "network Batcave-Wireless",
+      "partner": "Batcave-Wireless",
       "description": "Secure wireless endpoints",
       "items": [
         "network-object host 172.16.1.6"
@@ -1561,6 +1586,7 @@ object-group network Batcave-Wireless
     {
       "object": "object-group",
       "type": "network Batcave-Wireless",
+      "partner": "Batcave-Wireless",
       "description": "Secure wireless endpoints",
       "items": [
         "network-object host 172.16.1.6"
@@ -1574,13 +1600,13 @@ object-group network Batcave-Wireless
 }'
 + return 0
 + return 0
-+ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Q2r2d9uFdQ/172.16.1.6
-+ export json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Q2r2d9uFdQ/172.16.1.6/172.16.1.6--MTc0NzY0OTg0.json
-+ json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Q2r2d9uFdQ/172.16.1.6/172.16.1.6--MTc0NzY0OTg0.json
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Q2r2d9uFdQ/fragments.json ]]
-+ jq -s --arg target 172.16.1.6 '{ target: $target, configs: . }' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Q2r2d9uFdQ/fragments.json
++ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.jFF7zpL9O4/172.16.1.6
++ export json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.jFF7zpL9O4/172.16.1.6/172.16.1.6--MTc0NzY5OTkx.json
++ json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.jFF7zpL9O4/172.16.1.6/172.16.1.6--MTc0NzY5OTkx.json
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.jFF7zpL9O4/fragments.json ]]
++ jq -s --arg target 172.16.1.6 '{ target: $target, configs: . }' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.jFF7zpL9O4/fragments.json
 ++ mktemp
-+ tmp_merged=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Sxztepq3wg
++ tmp_merged=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.cHR7hfGcxC
 + local final_outfile=reports/172.16.1.6/172.16.1.6.json
 ++ dirname reports/172.16.1.6/172.16.1.6.json
 + mkdir -p reports/172.16.1.6
@@ -1618,10 +1644,10 @@ object-group network Batcave-Wireless
               )
             else . + [ $cfg ] end
           ))
-      }' reports/172.16.1.6/172.16.1.6.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Q2r2d9uFdQ/172.16.1.6/172.16.1.6--MTc0NzY0OTg0.json
-+ mv /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Sxztepq3wg reports/172.16.1.6/172.16.1.6.json
-+ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Q2r2d9uFdQ/172.16.1.6/172.16.1.6--MTc0NzY0OTg0.json
+      }' reports/172.16.1.6/172.16.1.6.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.jFF7zpL9O4/172.16.1.6/172.16.1.6--MTc0NzY5OTkx.json
++ mv /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.cHR7hfGcxC reports/172.16.1.6/172.16.1.6.json
++ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.jFF7zpL9O4/172.16.1.6/172.16.1.6--MTc0NzY5OTkx.json
 + return 0
 + unset verbose debug
-+ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Q2r2d9uFdQ ]]
-+ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Q2r2d9uFdQ
++ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.jFF7zpL9O4 ]]
++ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.jFF7zpL9O4

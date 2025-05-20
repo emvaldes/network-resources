@@ -1,7 +1,7 @@
-[INFO] Date: 2025-05-19 03:17:17
+[INFO] Date: 2025-05-19 17:11:45
 
 [INFO] Script: ./scripts/parse-listings.shell
-[INFO] PID: 96696
+[INFO] PID: 35713
 
 [INFO] User: emvaldes
 [INFO] Host: emvaldes-imac-desktop.local
@@ -10,7 +10,7 @@
 
 [INFO] Local State Directory: .local
 [INFO] Logging Output Directory: .local/stats/
-[INFO] Temp Directory: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KtJIVgDlSr
+[INFO] Temp Directory: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.9cwmj9OjT8
 
 [INFO] Classify Targets: true
 [INFO] configs
@@ -19,10 +19,10 @@
 [INFO] 0.05
 [INFO] ips.list
 [INFO] Enable Logging: true
-[INFO] 10
+[INFO] 100
 [INFO] Matrix Filename: matrix.json
 [INFO] Reports Folder: reports
-[INFO] false
+[INFO] cisco,fortinet,misc
 [INFO] Validate Address: false
 [INFO] false
 [INFO] Debug: true
@@ -34,6 +34,17 @@ Target (devices.list) (count): 3
   - fw1
   - fw2
   - fw3
+
+Filtered Configurations (count): 8
+
+  - configs/cisco/fw1.cfg
+  - configs/cisco/fw2.cfg
+  - configs/cisco/fw3.cfg
+  - configs/fortinet/fw1.cfg
+  - configs/fortinet/fw2.cfg
+  - configs/fortinet/fw3.cfg
+  - configs/misc/fw2.cfg
+  - configs/misc/fw3.cfg
 
 Loaded (default) IPs addresses (count): 17
 
@@ -55,39 +66,40 @@ Loaded (default) IPs addresses (count): 17
   - 192.168.0.1
   - 192.168.0.100
 
-[2025-05-19T10:17:17Z]
+[2025-05-20T00:11:45Z]
 
 Site Folders:
 
   - cisco
+  - fortinet
   - misc
 
 Batch processing (outer):
 Batch size: 5
 
-Parallel threads:   10
+Parallel threads:   100
 Target IPs (count): 17
 
 Target Site:   cisco
 Total Configs: 3
 
 Batch processing (inner):
-Batch ID: MTc0NzY0OTgz
+Batch ID: MTc0NzY5OTkw
 
 Batch offset:   0
-Batch Suffix:   1747649837-20871
-Batch FileName: configs--MTc0NzY0OTgz-1747649837-20871.list
-Batch Configs:  /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KtJIVgDlSr/configs--MTc0NzY0OTgz-1747649837-20871.list
+Batch Suffix:   1747699905-31423
+Batch FileName: configs--MTc0NzY5OTkw-1747699905-31423.list
+Batch Configs:  /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.9cwmj9OjT8/configs--MTc0NzY5OTkw-1747699905-31423.list
 
-File: configs--MTc0NzY0OTgz-1747649837-20871.list
-Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KtJIVgDlSr
+File: configs--MTc0NzY5OTkw-1747699905-31423.list
+Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.9cwmj9OjT8
 Size: 66 bytes
-Blocks/Inode: 8 / 237929530
+Blocks/Inode: 8 / 238047566
 Mode: -rw-r--r--
 UID/GID: 501 / 20
-Access: May 19 03:17:17 2025
-Modify: May 19 03:17:17 2025
-Change: May 19 03:17:17 2025
+Access: May 19 17:11:45 2025
+Modify: May 19 17:11:45 2025
+Change: May 19 17:11:45 2025
 
 configs/cisco/fw1.cfg
 configs/cisco/fw2.cfg
@@ -98,24 +110,24 @@ Batch Ranges:   1 -> 3
 
 [EXECUTE]   matching_configs
 [PARAMETER] source_configs_list:
-            /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KtJIVgDlSr/configs--MTc0NzY0OTgz-1747649837-20871.list
+            /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.9cwmj9OjT8/configs--MTc0NzY5OTkw-1747699905-31423.list
 
 Matched IPs to [cisco] configs (12):
 -------------------------------------
 PID    | IP Address      => Config(s)
 -------------------------------------
-97129  | 10.0.1.2        => fw2.cfg
-97122  | 10.10.10.10     => fw1.cfg:fw3.cfg
-97125  | 10.0.2.3        => fw3.cfg
-97111  | 192.168.100.100 => fw1.cfg:fw2.cfg
-97112  | 192.0.2.50      => fw1.cfg
-97114  | 203.0.113.25    => fw1.cfg:fw2.cfg:fw3.cfg
-97116  | 172.16.0.5      => fw3.cfg
-97118  | 10.0.0.1        => fw1.cfg
-97139  | 192.168.1.11    => fw2.cfg
-97132  | 198.51.100.75   => fw2.cfg
-97134  | 192.168.1.10    => fw1.cfg:fw3.cfg
-97146  | 172.16.1.6      => fw2.cfg
+36176  | 192.168.1.10    => fw1.cfg:fw3.cfg
+36172  | 198.51.100.75   => fw2.cfg
+36152  | 192.168.100.100 => fw1.cfg:fw2.cfg
+36153  | 192.0.2.50      => fw1.cfg
+36155  | 203.0.113.25    => fw1.cfg:fw2.cfg:fw3.cfg
+36157  | 172.16.0.5      => fw3.cfg
+36187  | 172.16.1.6      => fw2.cfg
+36182  | 192.168.1.11    => fw2.cfg
+36168  | 10.0.1.2        => fw2.cfg
+36161  | 10.0.0.1        => fw1.cfg
+36163  | 10.10.10.10     => fw1.cfg:fw3.cfg
+36166  | 10.0.2.3        => fw3.cfg
 
 Unmapped IPs (count): 5
 
@@ -128,39 +140,109 @@ Unmapped IPs (count): 5
 Background Jobs -> Managed Configs:
 PID   | IP Address (12)
 -------------------------
-97384 | 203.0.113.25
-97380 | 192.0.2.50
-97389 | 172.16.0.5
-97431 | 192.168.1.11
-97443 | 172.16.1.6
-97394 | 10.0.0.1
-97399 | 10.10.10.10
-97411 | 10.0.1.2
-97417 | 198.51.100.75
-97377 | 192.168.100.100
-97424 | 192.168.1.10
-97405 | 10.0.2.3
+36458 | 198.51.100.75
+36452 | 10.0.1.2
+36473 | 192.168.1.11
+36487 | 172.16.1.6
+36425 | 203.0.113.25
+36421 | 192.0.2.50
+36418 | 192.168.100.100
+36446 | 10.0.2.3
+36440 | 10.10.10.10
+36466 | 192.168.1.10
+36435 | 10.0.0.1
+36430 | 172.16.0.5
+
+Target Site:   fortinet
+Total Configs: 3
+
+Batch processing (inner):
+Batch ID: MTc0NzY5OTkx
+
+Batch offset:   0
+Batch Suffix:   1747699910-1307
+Batch FileName: configs--MTc0NzY5OTkx-1747699910-1307.list
+Batch Configs:  /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.9cwmj9OjT8/configs--MTc0NzY5OTkx-1747699910-1307.list
+
+File: configs--MTc0NzY5OTkx-1747699910-1307.list
+Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.9cwmj9OjT8
+Size: 75 bytes
+Blocks/Inode: 8 / 238047967
+Mode: -rw-r--r--
+UID/GID: 501 / 20
+Access: May 19 17:11:50 2025
+Modify: May 19 17:11:50 2025
+Change: May 19 17:11:50 2025
+
+configs/fortinet/fw1.cfg
+configs/fortinet/fw2.cfg
+configs/fortinet/fw3.cfg
+
+Batch Size:     3
+Batch Ranges:   1 -> 3
+
+[EXECUTE]   matching_configs
+[PARAMETER] source_configs_list:
+            /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.9cwmj9OjT8/configs--MTc0NzY5OTkx-1747699910-1307.list
+
+Matched IPs to [fortinet] configs (9):
+-------------------------------------
+PID    | IP Address      => Config(s)
+-------------------------------------
+39878  | 10.0.0.1        => fw2.cfg
+39876  | 192.168.100.100 => fw3.cfg
+39877  | 203.0.113.25    => fw2.cfg
+39889  | 192.168.1.10    => fw2.cfg
+39887  | 198.51.100.75   => fw1.cfg
+39884  | 10.0.1.2        => fw2.cfg
+39881  | 10.0.2.3        => fw1.cfg
+39896  | 172.16.1.6      => fw3.cfg
+39893  | 192.168.1.11    => fw3.cfg
+
+Unmapped IPs (count): 8
+
+  - 192.168.2.12
+  - 172.16.0.5
+  - 192.0.2.50
+  - 172.18.1.20
+  - 10.10.10.10
+  - 172.31.255.254
+  - 192.168.0.1
+  - 192.168.0.100
+
+Background Jobs -> Managed Configs:
+PID   | IP Address (9)
+-------------------------
+40045 | 203.0.113.25
+40041 | 192.168.100.100
+40049 | 10.0.0.1
+40082 | 172.16.1.6
+40070 | 192.168.1.10
+40076 | 192.168.1.11
+40054 | 10.0.2.3
+40059 | 10.0.1.2
+40064 | 198.51.100.75
 
 Target Site:   misc
 Total Configs: 2
 
 Batch processing (inner):
-Batch ID: MTc0NzY0OTg0
+Batch ID: MTc0NzY5OTkx
 
 Batch offset:   0
-Batch Suffix:   1747649841-25254
-Batch FileName: configs--MTc0NzY0OTg0-1747649841-25254.list
-Batch Configs:  /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KtJIVgDlSr/configs--MTc0NzY0OTg0-1747649841-25254.list
+Batch Suffix:   1747699913-11307
+Batch FileName: configs--MTc0NzY5OTkx-1747699913-11307.list
+Batch Configs:  /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.9cwmj9OjT8/configs--MTc0NzY5OTkx-1747699913-11307.list
 
-File: configs--MTc0NzY0OTg0-1747649841-25254.list
-Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KtJIVgDlSr
+File: configs--MTc0NzY5OTkx-1747699913-11307.list
+Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.9cwmj9OjT8
 Size: 42 bytes
-Blocks/Inode: 8 / 237929667
+Blocks/Inode: 8 / 238048183
 Mode: -rw-r--r--
 UID/GID: 501 / 20
-Access: May 19 03:17:21 2025
-Modify: May 19 03:17:21 2025
-Change: May 19 03:17:21 2025
+Access: May 19 17:11:53 2025
+Modify: May 19 17:11:53 2025
+Change: May 19 17:11:53 2025
 
 configs/misc/fw2.cfg
 configs/misc/fw3.cfg
@@ -170,112 +252,79 @@ Batch Ranges:   1 -> 2
 
 [EXECUTE]   matching_configs
 [PARAMETER] source_configs_list:
-            /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KtJIVgDlSr/configs--MTc0NzY0OTg0-1747649841-25254.list
+            /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.9cwmj9OjT8/configs--MTc0NzY5OTkx-1747699913-11307.list
 
-Matched IPs to [misc] configs (10):
+Matched IPs to [misc] configs (8):
 -------------------------------------
 PID    | IP Address      => Config(s)
 -------------------------------------
-1567   | 203.0.113.25    => fw2.cfg:fw3.cfg
-1566   | 192.168.100.100 => fw2.cfg
-1568   | 172.16.0.5      => fw3.cfg
-1589   | 172.16.1.6      => fw2.cfg
-1585   | 192.168.1.11    => fw2.cfg
-1584   | 192.168.1.10    => fw3.cfg
-1581   | 198.51.100.75   => fw2.cfg
-1576   | 10.0.1.2        => fw2.cfg
-1572   | 10.0.2.3        => fw3.cfg
-1570   | 10.10.10.10     => fw3.cfg
+42155  | 172.16.1.6      => fw2.cfg
+42153  | 192.168.1.11    => fw2.cfg
+42139  | 192.168.100.100 => fw2.cfg
+42145  | 198.51.100.75   => fw2.cfg
+42140  | 203.0.113.25    => fw2.cfg:fw3.cfg
+42141  | 10.0.2.3        => fw3.cfg
+42143  | 10.0.1.2        => fw2.cfg
+42148  | 192.168.1.10    => fw3.cfg
 
-Unmapped IPs (count): 7
+Unmapped IPs (count): 9
 
   - 10.0.0.1
   - 192.168.2.12
+  - 172.16.0.5
   - 192.0.2.50
   - 172.18.1.20
+  - 10.10.10.10
   - 172.31.255.254
   - 192.168.0.1
   - 192.168.0.100
 
 Background Jobs -> Managed Configs:
-PID   | IP Address (10)
+PID   | IP Address (8)
 -------------------------
-1763  | 203.0.113.25
-1760  | 192.168.100.100
-1767  | 172.16.0.5
-1794  | 192.168.1.10
-1800  | 192.168.1.11
-1807  | 172.16.1.6
-1788  | 198.51.100.75
-1782  | 10.0.1.2
-1772  | 10.10.10.10
-1777  | 10.0.2.3
+42308 | 10.0.2.3
+42301 | 192.168.100.100
+42304 | 203.0.113.25
+42323 | 192.168.1.10
+42329 | 192.168.1.11
+42318 | 198.51.100.75
+42313 | 10.0.1.2
+42335 | 172.16.1.6
 
 CSV Report Summary (tabulated):
 -------------------------------
-     1	target,site,device,object,sets,description,group
-     2	"10.0.0.1","cisco","fw1.cfg","access-list","access-list OUTSIDE extended permit ip host 10.0.0.1 any","none","Unclassified"
-     3	"10.0.0.1","cisco","fw1.cfg","object","host 10.0.0.1","Core services gateway","Unclassified"
-     4	"10.0.0.1","cisco","fw1.cfg","object-group","network-object host 10.0.0.1","Internal Data Plane","Unclassified"
-     5	"10.0.1.2","cisco","fw2.cfg","access-list","access-list OUTSIDE extended permit ip host 10.0.1.2 any","none","Unclassified"
-     6	"10.0.1.2","cisco","fw2.cfg","object","host 10.0.1.2","Application edge firewall","Unclassified"
-     7	"10.0.1.2","cisco","fw2.cfg","object-group","network-object host 10.0.1.2","Internal datacenter and backup LAN","Unclassified"
-     8	"10.0.1.2","misc","fw2.cfg","access-list","access-list OUTSIDE extended permit ip host 10.0.1.2 any","none","Unclassified"
-     9	"10.0.1.2","misc","fw2.cfg","object","host 10.0.1.2","Application edge firewall","Unclassified"
-    10	"10.0.1.2","misc","fw2.cfg","object-group","network-object host 10.0.1.2","Internal datacenter and backup LAN","Unclassified"
-    11	"10.0.2.3","cisco","fw3.cfg","access-list","access-list OUTSIDE extended permit ip host 10.0.2.3 any","none","Unclassified"
-    12	"10.0.2.3","cisco","fw3.cfg","object","host 10.0.2.3","Secure outbound concentrator","Unclassified"
-    13	"10.0.2.3","cisco","fw3.cfg","object-group","network-object host 10.0.2.3","National Core Routing Zone","Unclassified"
-    14	"10.0.2.3","misc","fw3.cfg","access-list","access-list OUTSIDE extended permit ip host 10.0.2.3 any","none","Unclassified"
-    15	"10.0.2.3","misc","fw3.cfg","object","host 10.0.2.3","Secure outbound concentrator","Unclassified"
-    16	"10.0.2.3","misc","fw3.cfg","object-group","network-object host 10.0.2.3","National Core Routing Zone","Unclassified"
-    17	"10.10.10.10","cisco","fw1.cfg","object-group","network-object host 10.10.10.10","Wireless guest segment","Unclassified"
-    18	"10.10.10.10","cisco","fw3.cfg","access-list","access-list OUTSIDE extended permit ip host 10.10.10.10 any","none","Unclassified"
-    19	"10.10.10.10","cisco","fw3.cfg","object","host 10.10.10.10","Guest NAT","Unclassified"
-    20	"10.10.10.10","cisco","fw3.cfg","object-group","network-object host 10.10.10.10","Shield-controlled wireless network","Unclassified"
-    21	"10.10.10.10","misc","fw3.cfg","access-list","access-list OUTSIDE extended permit ip host 10.10.10.10 any","none","Unclassified"
-    22	"10.10.10.10","misc","fw3.cfg","object","host 10.10.10.10","Guest NAT","Unclassified"
-    23	"10.10.10.10","misc","fw3.cfg","object-group","network-object host 10.10.10.10","Shield-controlled wireless network","Unclassified"
-    24	"172.16.0.5","cisco","fw3.cfg","access-list","access-list OUTSIDE extended permit ip any host 172.16.0.5","none","Unclassified"
-    25	"172.16.0.5","cisco","fw3.cfg","object","host 172.16.0.5","Internet firewall handoff","Unclassified"
-    26	"172.16.0.5","cisco","fw3.cfg","object-group","network-object host 172.16.0.5","Internet-facing proxy systems","Unclassified"
-    27	"172.16.0.5","misc","fw3.cfg","access-list","access-list OUTSIDE extended permit ip any host 172.16.0.5","none","Unclassified"
-    28	"172.16.0.5","misc","fw3.cfg","object","host 172.16.0.5","Internet firewall handoff","Unclassified"
-    29	"172.16.0.5","misc","fw3.cfg","object-group","network-object host 172.16.0.5","Internet-facing proxy systems","Unclassified"
-    30	"172.16.1.6","cisco","fw2.cfg","object-group","network-object host 172.16.1.6","Secure wireless endpoints","Unclassified"
-    31	"172.16.1.6","misc","fw2.cfg","object-group","network-object host 172.16.1.6","Secure wireless endpoints","Unclassified"
-    32	"192.0.2.50","cisco","fw1.cfg","object","host 192.0.2.50","Untrusted guest access","Unclassified"
-    33	"192.0.2.50","cisco","fw1.cfg","object-group","network-object host 192.0.2.50","Public access layer","Unclassified"
-    34	"192.0.2.50","cisco","fw1.cfg","object-group","network-object host 192.0.2.50","Public access layer","Unclassified"
-    35	"192.168.1.10","cisco","fw1.cfg","object-group","network-object host 192.168.1.10","Internal Data Plane","Unclassified"
-    36	"192.168.1.10","cisco","fw3.cfg","object-group","network-object host 192.168.1.10","National Core Routing Zone","Unclassified"
-    37	"192.168.1.10","misc","fw3.cfg","object-group","network-object host 192.168.1.10","National Core Routing Zone","Unclassified"
-    38	"192.168.1.11","cisco","fw2.cfg","object-group","network-object host 192.168.1.11","Internal datacenter and backup LAN","Unclassified"
-    39	"192.168.1.11","misc","fw2.cfg","object-group","network-object host 192.168.1.11","Internal datacenter and backup LAN","Unclassified"
-    40	"192.168.100.100","cisco","fw1.cfg","object-group","network-object host 192.168.100.100","Wireless guest segment","Unclassified"
-    41	"192.168.100.100","cisco","fw2.cfg","object-group","network-object host 192.168.100.100","Secure wireless endpoints","Unclassified"
-    42	"192.168.100.100","misc","fw2.cfg","object-group","network-object host 192.168.100.100","Secure wireless endpoints","Unclassified"
-    43	"198.51.100.75","cisco","fw2.cfg","access-list","access-list OUTSIDE extended permit ip any host 198.51.100.75","none","Unclassified"
-    44	"198.51.100.75","cisco","fw2.cfg","object","host 198.51.100.75","Encrypted edge gateway","Unclassified"
-    45	"198.51.100.75","cisco","fw2.cfg","object-group","network-object host 198.51.100.75","External public resources","Unclassified"
-    46	"198.51.100.75","misc","fw2.cfg","access-list","access-list OUTSIDE extended permit ip any host 198.51.100.75","none","Unclassified"
-    47	"198.51.100.75","misc","fw2.cfg","object","host 198.51.100.75","Encrypted edge gateway","Unclassified"
-    48	"198.51.100.75","misc","fw2.cfg","object-group","network-object host 198.51.100.75","External public resources","Unclassified"
-    49	"203.0.113.25","cisco","fw1.cfg","access-list","access-list OUTSIDE extended permit ip any host 203.0.113.25","none","Unclassified"
-    50	"203.0.113.25","cisco","fw1.cfg","object","host 203.0.113.25","Internet-bound IP NAT","Unclassified"
-    51	"203.0.113.25","cisco","fw1.cfg","object-group","network-object host 203.0.113.25","Public access layer","Unclassified"
-    52	"203.0.113.25","cisco","fw2.cfg","access-list","access-list OUTSIDE extended permit ip any host 203.0.113.25","none","Unclassified"
-    53	"203.0.113.25","cisco","fw2.cfg","object","host 203.0.113.25","Unfiltered outbound NAT IP","Unclassified"
-    54	"203.0.113.25","cisco","fw2.cfg","object-group","network-object host 203.0.113.25","External public resources","Unclassified"
-    55	"203.0.113.25","cisco","fw3.cfg","object-group","network-object host 203.0.113.25","Internet-facing proxy systems","Unclassified"
-    56	"203.0.113.25","misc","fw2.cfg","access-list","access-list OUTSIDE extended permit ip any host 203.0.113.25","none","Unclassified"
-    57	"203.0.113.25","misc","fw2.cfg","object","host 203.0.113.25","Unfiltered outbound NAT IP","Unclassified"
-    58	"203.0.113.25","misc","fw2.cfg","object-group","network-object host 203.0.113.25","External public resources","Unclassified"
-    59	"203.0.113.25","misc","fw3.cfg","object-group","network-object host 203.0.113.25","Internet-facing proxy systems","Unclassified"
-    60	
+     1	target,site,device,object,type,items,partner,description,group
+     2	"10.0.0.1","cisco","fw1.cfg","object-group","network Stark-Core","network-object host 10.0.0.1","Stark-Core","Internal Data Plane","Unclassified"
+     3	"10.0.1.2","cisco","fw2.cfg","object-group","network Gotham-Internal","network-object host 10.0.1.2","Gotham-Internal","Internal datacenter and backup LAN","Unclassified"
+     4	"10.0.1.2","misc","fw2.cfg","object-group","network Gotham-Internal","network-object host 10.0.1.2","Gotham-Internal","Internal datacenter and backup LAN","Unclassified"
+     5	"10.0.2.3","cisco","fw3.cfg","object-group","network Wakanda-Core","network-object host 10.0.2.3","Wakanda-Core","National Core Routing Zone","Unclassified"
+     6	"10.0.2.3","misc","fw3.cfg","object-group","network Wakanda-Core","network-object host 10.0.2.3","Wakanda-Core","National Core Routing Zone","Unclassified"
+     7	"10.10.10.10","cisco","fw1.cfg","object-group","network Rogers-WiFi","network-object host 10.10.10.10","Rogers-WiFi","Wireless guest segment","Unclassified"
+     8	"10.10.10.10","cisco","fw3.cfg","object-group","network Shield-WiFi","network-object host 10.10.10.10","Shield-WiFi","Shield-controlled wireless network","Unclassified"
+     9	"172.16.0.5","cisco","fw3.cfg","object-group","network Panther-Edge","network-object host 172.16.0.5","Panther-Edge","Internet-facing proxy systems","Unclassified"
+    10	"172.16.1.6","cisco","fw2.cfg","object-group","network Batcave-Wireless","network-object host 172.16.1.6","Batcave-Wireless","Secure wireless endpoints","Unclassified"
+    11	"172.16.1.6","misc","fw2.cfg","object-group","network Batcave-Wireless","network-object host 172.16.1.6","Batcave-Wireless","Secure wireless endpoints","Unclassified"
+    12	"192.0.2.50","cisco","fw1.cfg","object-group","network Avengers-DMZ","network-object host 192.0.2.50","Avengers-DMZ","Public access layer","Unclassified"
+    13	"192.0.2.50","cisco","fw1.cfg","object-group","network Avengers-DMZ","network-object host 192.0.2.50","Avengers-DMZ","Public access layer","Unclassified"
+    14	"192.168.1.10","cisco","fw1.cfg","object-group","network Stark-Core","network-object host 192.168.1.10","Stark-Core","Internal Data Plane","Unclassified"
+    15	"192.168.1.10","cisco","fw3.cfg","object-group","network Wakanda-Core","network-object host 192.168.1.10","Wakanda-Core","National Core Routing Zone","Unclassified"
+    16	"192.168.1.10","misc","fw3.cfg","object-group","network Wakanda-Core","network-object host 192.168.1.10","Wakanda-Core","National Core Routing Zone","Unclassified"
+    17	"192.168.1.11","cisco","fw2.cfg","object-group","network Gotham-Internal","network-object host 192.168.1.11","Gotham-Internal","Internal datacenter and backup LAN","Unclassified"
+    18	"192.168.1.11","misc","fw2.cfg","object-group","network Gotham-Internal","network-object host 192.168.1.11","Gotham-Internal","Internal datacenter and backup LAN","Unclassified"
+    19	"192.168.100.100","cisco","fw1.cfg","object-group","network Rogers-WiFi","network-object host 192.168.100.100","Rogers-WiFi","Wireless guest segment","Unclassified"
+    20	"192.168.100.100","cisco","fw2.cfg","object-group","network Batcave-Wireless","network-object host 192.168.100.100","Batcave-Wireless","Secure wireless endpoints","Unclassified"
+    21	"192.168.100.100","misc","fw2.cfg","object-group","network Batcave-Wireless","network-object host 192.168.100.100","Batcave-Wireless","Secure wireless endpoints","Unclassified"
+    22	"198.51.100.75","cisco","fw2.cfg","object-group","network Wayne-DMZ","network-object host 198.51.100.75","Wayne-DMZ","External public resources","Unclassified"
+    23	"198.51.100.75","misc","fw2.cfg","object-group","network Wayne-DMZ","network-object host 198.51.100.75","Wayne-DMZ","External public resources","Unclassified"
+    24	"203.0.113.25","cisco","fw1.cfg","object-group","network Avengers-DMZ","network-object host 203.0.113.25","Avengers-DMZ","Public access layer","Unclassified"
+    25	"203.0.113.25","cisco","fw2.cfg","object-group","network Wayne-DMZ","network-object host 203.0.113.25","Wayne-DMZ","External public resources","Unclassified"
+    26	"203.0.113.25","cisco","fw3.cfg","object-group","network Panther-Edge","network-object host 203.0.113.25","Panther-Edge","Internet-facing proxy systems","Unclassified"
+    27	"203.0.113.25","misc","fw2.cfg","object-group","network Wayne-DMZ","network-object host 203.0.113.25","Wayne-DMZ","External public resources","Unclassified"
+    28	"203.0.113.25","misc","fw3.cfg","object-group","network Panther-Edge","network-object host 203.0.113.25","Panther-Edge","Internet-facing proxy systems","Unclassified"
+    29	
 
 Session Summary:
 -------------------------------
-Started at: 2025-05-19 03:17:17
-[INFO] Total runtime: 00:00:08
+Started at: 2025-05-19 17:11:45
+[INFO] Total runtime: 00:00:11
 
