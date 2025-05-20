@@ -113,8 +113,7 @@ function main () {
             mapfile -t target_devices_source < <(
               print "${target_devices}" | tr ', ' '\n' | grep -v '^\s*$'
             );
-      else  error_message "Project Target Devices-Listing file not found: ${target_devices}";
-            # return 4;
+      else  message "Project Target Devices-Listing file not found: ${target_devices}";
     fi;
 
     #### -----------------------------------------------------------------------
@@ -139,10 +138,6 @@ function main () {
 
     export output_csv="${reports_folder}/reports.csv";
 
-    ## Initializing the log file
-    : > "${reports_logsfile}";  ## Truncate report log
-    # [[ "${debug}" == true ]] && list_file "${reports_logsfile}";
-
     #### -----------------------------------------------------------------------
     ## Validating IP Addresses (Skipping?)
     [[ -z ${validate_address:-} ]] && export validate_address=false;
@@ -160,8 +155,7 @@ function main () {
         message "[INFO] OS: ${OSTYPE}";
         message "[INFO] Shell: ${BASH_VERSION}";
         newline;
-        message "[INFO] Local State Directory: ${local_state_dir}";
-        message "[INFO] Logging Output Directory: ${stats_folder}";
+        message "[INFO] Logging Output Directory: ${logs_location}";
         message "[INFO] Temp Directory: ${TMP_DIR}";
         newline;
         message "[INFO] Classify Targets: ${classify_targets}";
@@ -197,8 +191,7 @@ function main () {
 
     #### -----------------------------------------------------------------------
     ## Cache list of configuration files to avoid repeated find calls
-    mkdir -p .cache;
-    local configs_list_cache=".cache/configs.list";
+    local configs_list_cache="${cache_location}/configs.list";
 
     if [[ ! -f "${configs_list_cache}" ]]; then
 
@@ -311,11 +304,16 @@ function main () {
     declare -a target_addresses_source=();
     if [[ -f "${target_addresses}" ]]; then
             mapfile -t target_addresses_source < <(
-              grep -v '^\s*$' "${target_addresses}" | tr -d '\r'
+              grep -v '^\s*$' "${target_addresses}" | \
+              tr -d '\r' | \
+              sort -u
             );
       elif [[ "${target_addresses}" =~ ^[0-9] ]]; then
             mapfile -t target_addresses_source < <(
-              print "${target_addresses}" | tr ', ' '\n' | grep -v '^\s*$'
+              print "${target_addresses}" | \
+              tr ', ' '\n' | \
+              grep -v '^\s*$' | \
+              sort -u
             );
       else  error_message "Project Target IP-listing file not found: ${target_addresses}";
             # return 3;
@@ -342,39 +340,12 @@ function main () {
       fi;
     done;
 
-    rejected_logsfile=".local/errors/rejected.jobs";
-    touch "${rejected_logsfile}";
-
-    #### -------------------------------------------------------------------
-    ## Overwrite and validate all .local/stats/*.stat files
-    stat_flush_success=true;
-
-    find .local/stats/ -type f -name '*.jobs' | \
-    while read -r stat_file; do
-      timestamp="[$(
-        date -u '+%Y-%m-%dT%H:%M:%SZ'
-      )]";
-      printf '%s\n' "${timestamp}" >> "${stat_file}";
-      newline >> "${stat_file}";
-      ## Validate flush was successful
-      if ! grep -qF "${timestamp}" "${stat_file}"; then
-        error_message "[ERROR] Failed to update: ${stat_file}";
-        stat_flush_success=false;
-      fi;
-    done;
-
-    # ## Abort if any .stat file failed to flush properly
-    # if [[ "${stat_flush_success}" != true ]]; then
-    #   error_message "[FATAL] One or more .jobs files failed to flush properly.";
-    #   # exit 3;
-    # fi;
-
 #### Starting: Batch-Processing - Outer Loop ------------------------------ ####
 
     #### -----------------------------------------------------------------------
     ## Begin placeholder-only batch structure (no processing)
     mapfile -t site_folders < <(
-      cut -d/ -f2 .cache/configs.list | sort -u
+      cut -d/ -f2 ${cache_location}/configs.list | sort -u
     );
 
     local batch_size=5;
@@ -418,33 +389,31 @@ function main () {
       fi;
 
       #### -------------------------------------------------------------------
-      ## Delete ./targets directory and wait until fully removed
-      rm -rf ./targets; while [[ -d ./targets ]]; do sleep 0.1; done;
-      ## Confirm ./targets is fully removed
-      if [[ -d ./targets ]]; then
-        error_message "[FATAL] Failed to delete ./targets directory.";
-        exit 3;
+      ## Delete only top-level JSON files in ${targets_location} (preserve subfolders)
+      if [[ -d ${targets_location} ]]; then
+        find ${targets_location} -maxdepth 1 -type f -name '*.json' -delete;
+        ## Confirm deletion was successful
+        if compgen -G "./targets/*.json" >/dev/null; then
+          error_message "[FATAL] Failed to delete JSON files in ${targets_location} directory.";
+          exit 2;
+        fi;
       fi;
 
       #### -------------------------------------------------------------------
-      ## Delete .local/jobs directory and wait until fully removed
-      rm -rf .local/jobs; while [[ -d .local/jobs ]]; do sleep 0.1; done;
-      ## Confirm .local/jobs is fully removed
-      if [[ -d .local/jobs ]]; then
-        error_message "[FATAL] Failed to delete .local/jobs directory.";
-        exit 4;
+      ## Delete ${logs_location}/jobs directory and wait until fully removed
+      rm -rf ${logs_location}/jobs; while [[ -d ${logs_location}/jobs ]]; do sleep 0.1; done;
+      ## Confirm ${logs_location}/jobs is fully removed
+      if [[ -d ${logs_location}/jobs ]]; then
+        error_message "[FATAL] Failed to delete ${logs_location}/jobs directory.";
+        exit 3;
       fi;
 
 #### Starting: Batch-Processing - Inner Loop ------------------------------ ####
-
-      ## Enforcing the creation of these file-structures
-      mkdir -p targets .local/{errors,jobs,stats};
 
       ## Inner Batching (While-loop)
       offset=0;
       while [[ "${offset}" -lt "${total_files}" ]]; do
 
-        batch_slice=( "${site_files[@]:offset:batch_size}" );
         export batch_id="$(
           printf '%s-%s' "$( date +%s%N )" "${RANDOM}" | \
           base64 | \
@@ -452,6 +421,7 @@ function main () {
           cut -c1-12
         )";
 
+        batch_slice=( "${site_files[@]:offset:batch_size}" );
         batch_suffix="$( date +%s )-${RANDOM}";
         batch_configs_list="configs--${batch_id}-${batch_suffix}.list";
 
@@ -483,11 +453,9 @@ function main () {
           } >> "${actions_logsfile}";
         fi;
 
-        newline >> "${reports_logsfile}";
-        newline >> "${targets_logsfile}";
-
         ## Advanced Background Jobs management workflow
         matching_configs ${BATCH_CONFIGS};
+        :> "${targets_logsfile}";
 
         # #### -------------------------------------------------------------------
         # if [[ "${verbose}" == true ]]; then
@@ -540,9 +508,51 @@ function main () {
       ## Exporting ./reports/reports.json data-sets into CSV output
       generate_csvoutput;
 
+      #### ------------------------------------------------------------------------
+      ## Final consolidation step:
+      ## Merge all per-site JSON files from ./targets/<ip>/<ip>--<site>.json
+      ## into a single unified output at .cache/targets/<ip>.json.
+      ## This runs only after all parsing and processing is complete.
+      ## The intermediate ./targets/*.json files are already deleted after use.
+
+      shopt -s nullglob;
+      for ip_dir in "${targets_location}"/*/; do
+        ip="$(
+          basename "${ip_dir}"
+        )";
+        final_file="${cache_location}/targets/${ip}.json";
+        mkdir -p "${cache_location}/targets";
+        site_jsons=(
+          "${ip_dir}/${ip}"--*.json
+        );
+        [[ "${#site_jsons[@]}" -eq 0 ]] && continue;
+        if [[ -f "${final_file}" ]]; then
+              jq -s '{
+                configs: (
+                  map(.configs) | add |
+                  unique_by( .config.site + ":" + .config.device )
+                )
+              }' "${final_file}" "${site_jsons[@]}" > "${final_file}.tmp" && \
+              mv -f "${final_file}.tmp" "${final_file}";
+        else  jq -s '{
+                configs: (
+                  map(.configs) | add |
+                  unique_by(.config.site + ":" + .config.device)
+                )
+              }' "${site_jsons[@]}" > "${final_file}";
+        fi;
+      done;
+      shopt -u nullglob;
+
+      #### ------------------------------------------------------------------------
+      ## Final cleanup: remove any remaining per-site JSON files and empty folders
+      find "${targets_location}" -type f -name "*.json" -delete;
+      find "${targets_location}" -type d -empty -delete;
+
     done;
 #### Completed:  Batch-Processing - Outer Loop ---------------------------- ####
 
+    #### ------------------------------------------------------------------------
     if [[ "${verbose}" == true && -s "${output_csv}" ]]; then
       {
         message "CSV Report Summary (tabulated):";
@@ -552,7 +562,16 @@ function main () {
       } >> "${actions_logsfile}";
     fi;
 
-    #### -----------------------------------------------------------------------
+    #### ------------------------------------------------------------------------
+    ## Delete ${logs_location}/jobs directory and wait until fully removed
+    rm -rf ${logs_location}/jobs; while [[ -d ${logs_location}/jobs ]]; do sleep 0.1; done;
+    ## Confirm ${logs_location}/jobs is fully removed
+    if [[ -d ${logs_location}/jobs ]]; then
+      error_message "[FATAL] Failed to delete ${logs_location}/jobs directory.";
+      exit 4;
+    fi;
+
+    #### ------------------------------------------------------------------------
     local elapsed="${SECONDS}";
     {
       message "Session Summary:";
@@ -570,10 +589,20 @@ function main () {
 
 #------------------------------------------------------------------------------#
 
-# os="$( detect_platform )";
-# install_missing "${os}";
+:> ${actions_logsfile};
 
-export script_name="${0}";
+rm -rf ${cache_location};
+mkdir -p ${cache_location}/{jobs,targets};
+
+rm -rf ${logs_location} 2>/dev/null;
+mkdir -p ${logs_location}/{errors,jobs};
+
+rm -rf ${targets_location} 2>/dev/null;
+mkdir -p ${targets_location};
+
+[[ -z "${script_name+x}" ]] && export script_name="${0}";
+
+#------------------------------------------------------------------------------#
 
 if [[ ${#@} -ge 1 && "${1,,}" =~ ^-*(h|help)$ ]]; then
         main --help ;

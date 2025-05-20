@@ -405,41 +405,41 @@ function process_configs () {
 
     #### -----------------------------------------------------------------------
     ## Extract optional description (if present)
-    local desc_val="$(
+    local description_value="$(
       grep -i '^[[:space:]]*description' <<< "${cleaned_block}" | \
       head -n 1 | \
       sed -E 's/^[^"]*"?description"?[[:space:]]*//I; s/^[[:space:]]*//; s/[[:space:]]*$//'
     )";
-    [[ -z "${desc_val}" ]] && desc_val="false";
-    [[ "${desc_val}" =~ $'\n' ]] && desc_val="$( head -n 1 <<< "${desc_val}" )";
+    [[ -z "${description_value}" ]] && description_value="false";
+    [[ "${description_value}" =~ $'\n' ]] && description_value="$( head -n 1 <<< "${description_value}" )";
 
     [[ "${verbose}" == true ]] && \
-       message "[process_configs] Description: ${desc_val}";
+       message "[process_configs] Description: ${description_value}";
 
     #### -----------------------------------------------------------------------
     ## Determine group from matrix (if enabled)
-    local group_val="Unclassified";
+    local group_value="Unclassified";
     if [[ "${classify_targets:-false}" == true ]]; then
       local object_key;
       object_key="$(
         awk '{print $NF}' <<< "${type_value}" | \
         sed -E 's/[[:punct:]]*$//'
       )";
-      group_val="$(
+      group_value="$(
         jq -r --arg key "${object_key}" \
                         'map( select( .match[]? | contains( $key ) ) ) | .[0].group' \
         <<< "${matrix_configs}" )";
-      if [[ -z "${group_val}" || "${group_val}" == "null" ]]; then
-        group_val="$(
-          jq -r --arg desc "${desc_val}" 'map( select( .match[]? == $desc ) ) | .[0].group' \
+      if [[ -z "${group_value}" || "${group_value}" == "null" ]]; then
+        group_value="$(
+          jq -r --arg desc "${description_value}" 'map( select( .match[]? == $desc ) ) | .[0].group' \
           <<< "${matrix_configs}"
         )";
       fi;
-      [[ -z "${group_val}" || "${group_val}" == "null" ]] && group_val="Unclassified";
+      [[ -z "${group_value}" || "${group_value}" == "null" ]] && group_value="Unclassified";
     fi;
 
     [[ "${verbose}" == true ]] && \
-       message "[process_configs] Group: ${group_val}";
+       message "[process_configs] Group: ${group_value}";
 
     ## -----------------------------------------------------------------------
     ## Convert Bash array data_sets[] to JSON-safe array string
@@ -457,8 +457,8 @@ function process_configs () {
       )";
       [[ -n "${key}" ]] || continue;
       if [[ -z "${sets_map["$key"]+x}" ]]; then
-              sets_map["$key"]=1
-        else  (( sets_map["$key"]++ ))
+              sets_map["$key"]=1;
+        else  (( sets_map["$key"]++ ));
       fi;
     done;
 
@@ -483,32 +483,40 @@ function process_configs () {
     )";
 
     #### -----------------------------------------------------------------------
-    ## Optional metadata enrichment for known object/type combinations
-    if [[ "${object_keyword}" == "object-group" && "${type_value}" == network* ]]; then
-            partner_val="${type_value##network }";
-      else  partner_val="";
-    fi;
+    partner_value="";
+    case "${object_keyword}" in
+      object-group|object ) if [[ "${type_value}" == network* ]]; then
+                              extracted_name="${type_value##network }";
+                              if ! [[ "${extracted_name}" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+                                partner_value="${extracted_name}";
+                              fi;
+                            fi;
+                            ;;
+      * ) partner_value="";
+          ;;
+    esac;
 
     #### -----------------------------------------------------------------------
     target_object="$(
       jq -n \
         --arg object "${object_keyword}" \
         --arg type "${type_value}" \
-        --arg partner "${partner_val}" \
-        --arg description "${desc_val}" \
+        --arg partner "${partner_value}" \
+        --arg description "${description_value}" \
         --argjson items "${matched_items_json}" \
         --argjson sets "${sets_json}" \
-        --arg group "${group_val}" \
+        --arg group "${group_value}" \
         '{
           object: $object,
-          type: ( $type | select( . != "" and . != "null" and . != "false" ) // false ),
-          partner: ( $partner | select( . != "" and . != "null" and . != "false" ) // empty ),
-          description: ( $description | select( . != "" and . != "null" and . != "false" ) // false ),
+          type: ( $type // false ),
+          partner: ( $partner | select(. != "" and . != "null" and . != "false") // false ),
+          description: ( $description | select(. != "" and . != "null" and . != "false") // false ),
           items: $items,
           sets: $sets,
           group: $group
         }'
-    )";
+    )"
+
 
     #### -----------------------------------------------------------------------
     ## Purpose: `target_object` holds the final structured JSON representation

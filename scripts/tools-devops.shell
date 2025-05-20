@@ -375,19 +375,15 @@ function validate_address () {
 export LC_ALL=C;
 export nl="\n";
 
-local_state_dir=".local";
-mkdir -p ${local_state_dir}/{errors,jobs,stats};
-export stats_folder="${local_state_dir}/stats/";
+export cache_location=".cache";
+export logs_location=".logs";
+export targets_location="targets";
 
-export actions_logsfile="${stats_folder}/actions.jobs";
-export reports_logsfile="${stats_folder}/reports.jobs";
-export started_logsfile="${stats_folder}/started.jobs";
-export success_logsfile="${stats_folder}/success.jobs";
-export targets_logsfile="${stats_folder}/targets.jobs";
+export actions_logsfile="$( pwd )/actions.output";
+export targets_logsfile="${logs_location}/targets.jobs";
 
 export divisor="$(
   date +%s%N | base64 | tr -dc 'a-zA-Z0-9'
-)";
-# message "DEBUG: divisor = '${divisor}'";
+)";  ## message "DEBUG: divisor = '${divisor}'";
 
 #------------------------------------------------------------------------------#
