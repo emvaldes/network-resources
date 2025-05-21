@@ -1,0 +1,116 @@
+{
+  "target": "10.0.2.3",
+  "configs": [
+    {
+      "site": "cisco",
+      "device": "fw3.cfg",
+      "objects": [
+        {
+          "object": "access-list",
+          "type": "false",
+          "partner": false,
+          "description": false,
+          "items": [
+            "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
+          ],
+          "sets": {
+            "access-list": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network Panther-Gateway",
+          "partner": "Panther-Gateway",
+          "description": "Secure outbound concentrator",
+          "items": [
+            "host 10.0.2.3"
+          ],
+          "sets": {
+            "host": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Wakanda-Core",
+          "partner": "Wakanda-Core",
+          "description": "National Core Routing Zone",
+          "items": [
+            "network-object host 10.0.2.3"
+          ],
+          "sets": {
+            "network-object": 3
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "fortinet",
+      "device": "fw1.cfg",
+      "objects": [
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": false,
+          "description": false,
+          "items": [
+            "set subnet 10.0.2.3 255.255.255.255"
+          ],
+          "sets": {
+            "edit": 4,
+            "next": 4,
+            "set": 8
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "fw3.cfg",
+      "objects": [
+        {
+          "object": "access-list",
+          "type": "false",
+          "partner": false,
+          "description": false,
+          "items": [
+            "access-list OUTSIDE extended permit ip host 10.0.2.3 any"
+          ],
+          "sets": {
+            "access-list": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network Panther-Gateway",
+          "partner": "Panther-Gateway",
+          "description": "Secure outbound concentrator",
+          "items": [
+            "host 10.0.2.3"
+          ],
+          "sets": {
+            "host": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Wakanda-Core",
+          "partner": "Wakanda-Core",
+          "description": "National Core Routing Zone",
+          "items": [
+            "network-object host 10.0.2.3"
+          ],
+          "sets": {
+            "network-object": 3
+          },
+          "group": "Unclassified"
+        }
+      ]
+    }
+  ]
+}

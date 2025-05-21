@@ -1,0 +1,199 @@
+{
+  "target": "203.0.113.25",
+  "configs": [
+    {
+      "site": "cisco",
+      "device": "fw1.cfg",
+      "objects": [
+        {
+          "object": "access-list",
+          "type": "false",
+          "partner": false,
+          "description": false,
+          "items": [
+            "access-list OUTSIDE extended permit ip any host 203.0.113.25"
+          ],
+          "sets": {
+            "access-list": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Avengers-DMZ",
+          "partner": "Avengers-DMZ",
+          "description": "Public access layer",
+          "items": [
+            "network-object host 203.0.113.25"
+          ],
+          "sets": {
+            "network-object": 3
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network NAT-Edge",
+          "partner": "NAT-Edge",
+          "description": "Internet-bound IP NAT",
+          "items": [
+            "host 203.0.113.25"
+          ],
+          "sets": {
+            "host": 1
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
+      "device": "fw2.cfg",
+      "objects": [
+        {
+          "object": "access-list",
+          "type": "false",
+          "partner": false,
+          "description": false,
+          "items": [
+            "access-list OUTSIDE extended permit ip any host 203.0.113.25"
+          ],
+          "sets": {
+            "access-list": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network Internet-Relay",
+          "partner": "Internet-Relay",
+          "description": "Unfiltered outbound NAT IP",
+          "items": [
+            "host 203.0.113.25"
+          ],
+          "sets": {
+            "host": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Wayne-DMZ",
+          "partner": "Wayne-DMZ",
+          "description": "External public resources",
+          "items": [
+            "network-object host 203.0.113.25"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
+      "device": "fw3.cfg",
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network Panther-Edge",
+          "partner": "Panther-Edge",
+          "description": "Internet-facing proxy systems",
+          "items": [
+            "network-object host 203.0.113.25"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "fortinet",
+      "device": "fw2.cfg",
+      "objects": [
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": false,
+          "description": false,
+          "items": [
+            "set subnet 203.0.113.25 255.255.255.255"
+          ],
+          "sets": {
+            "edit": 6,
+            "next": 6,
+            "set": 12
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "fw2.cfg",
+      "objects": [
+        {
+          "object": "access-list",
+          "type": "false",
+          "partner": false,
+          "description": false,
+          "items": [
+            "access-list OUTSIDE extended permit ip any host 203.0.113.25"
+          ],
+          "sets": {
+            "access-list": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network Internet-Relay",
+          "partner": "Internet-Relay",
+          "description": "Unfiltered outbound NAT IP",
+          "items": [
+            "host 203.0.113.25"
+          ],
+          "sets": {
+            "host": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Wayne-DMZ",
+          "partner": "Wayne-DMZ",
+          "description": "External public resources",
+          "items": [
+            "network-object host 203.0.113.25"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "fw3.cfg",
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network Panther-Edge",
+          "partner": "Panther-Edge",
+          "description": "Internet-facing proxy systems",
+          "items": [
+            "network-object host 203.0.113.25"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        }
+      ]
+    }
+  ]
+}

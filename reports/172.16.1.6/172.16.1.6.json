@@ -1,0 +1,64 @@
+{
+  "target": "172.16.1.6",
+  "configs": [
+    {
+      "site": "cisco",
+      "device": "fw2.cfg",
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network Batcave-Wireless",
+          "partner": "Batcave-Wireless",
+          "description": "Secure wireless endpoints",
+          "items": [
+            "network-object host 172.16.1.6"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "fortinet",
+      "device": "fw3.cfg",
+      "objects": [
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": false,
+          "description": false,
+          "items": [
+            "set subnet 172.16.1.6 255.255.255.255"
+          ],
+          "sets": {
+            "edit": 5,
+            "next": 5,
+            "set": 10
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "fw2.cfg",
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network Batcave-Wireless",
+          "partner": "Batcave-Wireless",
+          "description": "Secure wireless endpoints",
+          "items": [
+            "network-object host 172.16.1.6"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        }
+      ]
+    }
+  ]
+}

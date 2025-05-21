@@ -1,0 +1,69 @@
+{
+  "target": "10.10.10.10",
+  "configs": [
+    {
+      "site": "cisco",
+      "device": "fw1.cfg",
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network Rogers-WiFi",
+          "partner": "Rogers-WiFi",
+          "description": "Wireless guest segment",
+          "items": [
+            "network-object host 10.10.10.10"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
+      "device": "fw3.cfg",
+      "objects": [
+        {
+          "object": "access-list",
+          "type": "false",
+          "partner": false,
+          "description": false,
+          "items": [
+            "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
+          ],
+          "sets": {
+            "access-list": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Shield-WiFi",
+          "partner": "Shield-WiFi",
+          "description": "Shield-controlled wireless network",
+          "items": [
+            "network-object host 10.10.10.10"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network Shield-WiFi-Alias",
+          "partner": "Shield-WiFi-Alias",
+          "description": "Guest NAT",
+          "items": [
+            "host 10.10.10.10"
+          ],
+          "sets": {
+            "host": 1
+          },
+          "group": "Unclassified"
+        }
+      ]
+    }
+  ]
+}
