@@ -47,66 +47,32 @@
       ]
     },
     {
-      "site": "fortinet",
-      "device": "fw1.cfg",
+      "site": "cisco",
+      "device": "fw5.cfg",
       "objects": [
-        {
-          "object": "config",
-          "type": "firewall address",
-          "partner": false,
-          "description": false,
-          "items": [
-            "set subnet 198.51.100.75 255.255.255.255"
-          ],
-          "sets": {
-            "edit": 4,
-            "next": 4,
-            "set": 8
-          },
-          "group": "Unclassified"
-        }
-      ]
-    },
-    {
-      "site": "misc",
-      "device": "fw2.cfg",
-      "objects": [
-        {
-          "object": "access-list",
-          "type": "false",
-          "partner": false,
-          "description": false,
-          "items": [
-            "access-list OUTSIDE extended permit ip any host 198.51.100.75"
-          ],
-          "sets": {
-            "access-list": 1
-          },
-          "group": "Unclassified"
-        },
-        {
-          "object": "object",
-          "type": "network Gotham-VPN",
-          "partner": "Gotham-VPN",
-          "description": "Encrypted edge gateway",
-          "items": [
-            "host 198.51.100.75"
-          ],
-          "sets": {
-            "host": 1
-          },
-          "group": "Unclassified"
-        },
         {
           "object": "object-group",
-          "type": "network Wayne-DMZ",
-          "partner": "Wayne-DMZ",
-          "description": "External public resources",
+          "type": "network Hydra-Edge",
+          "partner": "Hydra-Edge",
+          "description": "Remote site uplink",
           "items": [
             "network-object host 198.51.100.75"
           ],
           "sets": {
             "network-object": 2
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network Hydra-Link",
+          "partner": "Hydra-Link",
+          "description": false,
+          "items": [
+            "host 198.51.100.75"
+          ],
+          "sets": {
+            "host": 1
           },
           "group": "Unclassified"
         }

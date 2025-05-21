@@ -21,35 +21,40 @@
       ]
     },
     {
-      "site": "fortinet",
-      "device": "fw3.cfg",
+      "site": "cisco",
+      "device": "fw5.cfg",
       "objects": [
         {
-          "object": "config",
-          "type": "firewall address",
+          "object": "access-list",
+          "type": "false",
           "partner": false,
           "description": false,
           "items": [
-            "set subnet 172.16.1.6 255.255.255.255"
+            "access-list OUTSIDE extended permit ip host 172.16.1.6 any"
           ],
           "sets": {
-            "edit": 5,
-            "next": 5,
-            "set": 10
+            "access-list": 1
           },
           "group": "Unclassified"
-        }
-      ]
-    },
-    {
-      "site": "misc",
-      "device": "fw2.cfg",
-      "objects": [
+        },
+        {
+          "object": "object",
+          "type": "network BlackWidow-Core",
+          "partner": "BlackWidow-Core",
+          "description": false,
+          "items": [
+            "host 172.16.1.6"
+          ],
+          "sets": {
+            "host": 1
+          },
+          "group": "Unclassified"
+        },
         {
           "object": "object-group",
-          "type": "network Batcave-Wireless",
-          "partner": "Batcave-Wireless",
-          "description": "Secure wireless endpoints",
+          "type": "network RedRoom-Core",
+          "partner": "RedRoom-Core",
+          "description": "Classified subnets",
           "items": [
             "network-object host 172.16.1.6"
           ],
