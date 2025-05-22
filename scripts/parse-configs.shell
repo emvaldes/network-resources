@@ -5,13 +5,6 @@
 ## Purpose: Parse a single IP and output matched configurations to reports/<ip>.json
 ## Requirements: Bash v4+ and GNU utilities (jq, find, grep, sed, etc.)
 
-## ./scripts/parse-configs.shell --configs="configs" \
-##                               --ip-addr="10.0.0.1" \
-##                               --index="1" \
-##                               --matrix="matrix.json" \
-##                               --reports="reports" \
-##                               --file-ext="cfg,conf" ;
-
 set -euo pipefail  # Strict mode: exit on error, undefined var use, and pipeline failure
 # set -x;          # Enable for execution tracing/debugging
 
@@ -29,8 +22,13 @@ source ./scripts/tools-devops.shell;
 source ./scripts/tools-configs.shell;
 
 #------------------------------------------------------------------------------#
-# Function: main
-# Entry point of this script
+## This function acts as the primary driver for the parsing pipeline. It:
+##   - Processes CLI arguments and sets defaults
+##   - Validates required input files
+##   - Loads site/device/IP filters if provided
+##   - Initializes environment variables and folders
+##   - Performs outer batching of IPs and inner batching of configs
+##   - For each IP/config pair, spawns background jobs to generate reports
 
 function main () {
     ## tracking_process ${FUNCNAME} "${@}";
@@ -109,8 +107,8 @@ function main () {
       [[ "${source_configs[$i]}" != "${configs_dirpath}/"* ]] && \
       source_configs[$i]="${configs_dirpath}/${source_configs[$i]}";
     done;
-    # [[ "${verbose}" == true ]] && \
-    #    print "Using precomputed config list: ${target_configlist_json}";
+
+    #### -----------------------------------------------------------------------
     if [[ "${verbose}" == true ]]; then
       print "Config JSON file used: ${target_configlist_json}";
       print "Extracted config paths from JSON:";
@@ -167,7 +165,8 @@ function main () {
       extract_configs "${cfg_file}" \
                       "${target_address}" \
                       "${target_configlist_json}" \
-                      "${tmp_fragments}";
+                      "${tmp_fragments}" \
+      ;
     done;
 
     #### -----------------------------------------------------------------------
@@ -178,7 +177,6 @@ function main () {
     export json_outfile="${TMP_DIR}/${target_address}/${target_address}--${batch_id}.json";
 
     if [[ -s "${tmp_fragments}" ]]; then
-
       jq -s --arg target "${target_address}" \
              '{ target: $target, configs: . }' \
       "${tmp_fragments}" > "${json_outfile}";
@@ -187,7 +185,6 @@ function main () {
       #### ---------------------------------------------------------------------
       ## Merge batch result into persistent output for this IP
       tmp_merged="$( mktemp )";
-
       local final_outfile="${reports_folder}/${target_address}/${target_address}.json";
       mkdir -p "$(
         dirname "${final_outfile}"
@@ -217,7 +214,6 @@ function main () {
             else . + [ $cfg ] end
           ))
       }';
-
       if [[ -f "${final_outfile}" ]]; then
               jq -s "${jq_merge_expr}" \
                     "${final_outfile}" \
@@ -227,7 +223,6 @@ function main () {
       fi;
       mv "${tmp_merged}" "${final_outfile}" && \
       rm -f "${json_outfile}";
-
     fi;
 
     return 0;

@@ -7,7 +7,24 @@ if [[ -n "${__TOOLS_LISTINGS_SOURCED:-}" ]]; then return 0; fi;
 readonly __TOOLS_LISTINGS_SOURCED=1;
 
 #### ---------------------------------------------------------------------------
-# JSON generation function: Handles file matching and creates the JSON output
+# Purpose:
+#   Scans a list of configuration files for matches of a specific IP address.
+#   For each match, it builds a summarized JSON structure capturing:
+#     - the site and device (parsed from the config path)
+#     - total line count in the config
+#     - number of IP matches
+#
+# Inputs:
+#   $1 = target IP address (e.g. 10.0.0.1)
+#   $2 = output JSON path (e.g. ./targets/10.0.0.1.json)
+#   $3 = optional: path to list of config files (default: ${configs_list_cache})
+#   $4 = optional: tracing file to record intermediate state (used during batching)
+#
+# Output:
+#   Writes a JSON object to $2 in the form: { "configs": [ ... ] }
+#   If tracing file ($4) is set, it merges into that file as well.
+#   Logs the operation to the actions log.
+
 function generate_configslist () {
 
     local ip_addr="$1";
@@ -26,11 +43,6 @@ function generate_configslist () {
                $( <"${source_configs_list}" ) 2>/dev/null || true
     );
 
-    # declare -a matched_files=($(
-    #   cat "${source_configs_list}"
-    # ));
-    # print "Matched files: ${matched_files}"
-
     ## If matched files exist, generate the JSON structure
     if [[ -n "${matched_files}" ]]; then
       ## Initialize an empty JSON array
@@ -40,10 +52,6 @@ function generate_configslist () {
       while IFS= read -r config_file; do
         ## Remove the "configs_dirpath" prefix from each file path
 
-        # config_file=$(
-        #   print "${config_file}" | \
-        #   sed "s|^${configs_dirpath}/||"
-        # );
         ## Strip full prefix before storing to JSON
         config_file="${config_file#"${configs_dirpath%/}/"}";
 
@@ -100,8 +108,26 @@ function generate_configslist () {
 }; alias generate-configslist='generate_configslist';
 
 #### ---------------------------------------------------------------------------
-# Function: generate_csvoutput
-# Purpose: Converts all per-IP JSON files into a single CSV output (stream-based).
+# Purpose:
+#   Converts structured per-IP JSON reports into a single unified CSV file.
+#   Extracts relevant fields from each matching config object using `jq`.
+#
+# Input:
+#   None (operates on all *.json files under ${reports_folder}/<ip>/<ip>.json)
+#
+# Output:
+#   Generates sorted CSV at ${output_csv}, with columns:
+#     target, site, device, object, type, items, partner, description, group
+#
+# Method:
+#   - Uses jq to extract rows per object in each config.
+#   - Applies fallback values (e.g., "none") for missing fields.
+#   - Sorts output by: target, site, device, object.
+#   - Header is inserted manually; rows appended below.
+#
+# Notes:
+#   - Uses a temporary file to build unsorted content before final sort.
+#   - Logs each processed JSON file to stderr for traceability.
 
 function generate_csvoutput () {
 
@@ -174,10 +200,29 @@ function generate_csvoutput () {
 }; alias generate-csvoutput='generate_csvoutput';
 
 #### ---------------------------------------------------------------------------
-# Main function: Manages the background jobs and waits for them to complete
+# Purpose:
+#   Launches background parsing jobs for a batch of target IPs and monitors completion.
+#
+# Input:
+#   None (uses global array: ${target_listing[@]})
+#
+# Behavior:
+#   - Spawns a background job for each IP in `target_listing` using `parse_configs`.
+#   - Tracks each job’s PID and associates it with the corresponding IP.
+#   - Continuously monitors active jobs, filtering out completed ones.
+#   - Waits until all parsing jobs are done before exiting.
+#
+# Logging:
+#   - Logs job start metadata and PID-to-IP mapping to ${actions_logsfile}.
+#   - Optionally logs job completion (currently commented out).
+#
+# Notes:
+#   - This function is always run synchronously — no nested async logic inside parse_configs.
+#   - Designed to be called once per config batch within inner loop.
+
 function manage_configs () {
 
-    declare -a configs_jobs_pid=();    ## Array to hold the PIDs of background jobs
+    declare -a configs_jobs_pid=();          ## Array to hold the PIDs of background jobs
     declare -A configs_jobs2ips_mapping=();  ## Associative array to map PIDs to IPs
 
     ip_index=0;
@@ -227,7 +272,30 @@ function manage_configs () {
 }; alias manage-configs='manage_configs';
 
 #### ---------------------------------------------------------------------------
-# Main function: Manages the background jobs and waits for them to complete
+# Purpose:
+#   Filters target IPs to only those that match configuration files,
+#   then launches parallel `generate_configslist` jobs to process them.
+#
+# Input:
+#   $1 = optional path to the config list file (defaults to ${configs_list_cache})
+#
+# Behavior:
+#   - Uses `grep -F -f` to locate all lines in all config files that match any target IP.
+#   - Builds an in-memory mapping of IP → matched config files.
+#   - Overwrites `target_listing[]` to only include matched IPs.
+#   - Deduplicates and rewrites `source_configs_list` to include only matched files.
+#   - Spawns background jobs (one per matched IP) to generate per-IP JSON summaries.
+#
+# Output:
+#   - Creates `targets/<ip>/<ip>--<site>--<batch_id>.json` for each matched IP.
+#   - Logs PID-to-IP mappings and configuration associations for traceability.
+#
+# Notes:
+#   - Maintains two critical maps:
+#       targets_jobs2ips_mapping[pid] → ip
+#       ip2files[ip] → colon-delimited config file paths
+#   - Ensures background jobs are tracked and completed before exiting.
+
 function matching_configs () {
 
     local input_parameter="PARAMETER";
@@ -352,15 +420,28 @@ function matching_configs () {
 }; alias matching-configs='matching_configs';
 
 #### ---------------------------------------------------------------------------
-# Function: run_config_parser
-# Purpose: Executes parse-configs.shell for a single IP address
-# Input:
-#   $1 = IP address
-#   $2 = padded index
-
-## WARNING: This function is executed as a background job from manage_configs()
-##          Do not introduce inner '&' or nested asynchronous calls.
-##          Keep all processing synchronous to retain job PID tracking.
+# Purpose:
+#   Executes the `parse-configs.shell` script to process a single IP address.
+#   Dynamically assembles CLI arguments based on current environment settings.
+#
+# Inputs:
+#   $1 = IP address to parse
+#   $2 = Padded index used for output identification and job tracking
+#
+# Behavior:
+#   - Constructs the execution command for `parse-configs.shell` with flags:
+#       --configs, --ip-addr, --index, --matrix, --reports, --file-ext
+#   - Conditionally appends --classify, --validate, --verbose, --debug
+#   - Redirects all output to a log file if logging is enabled.
+#   - Executes the command synchronously (no nested backgrounding).
+#
+# Output:
+#   - Log output written to: ${logs_location}/jobs/${ip_addr}.job
+#   - On failure, error is logged to: ${logs_location}/errors/errors.log
+#
+# Notes:
+#   - Designed to run as a background task from `manage_configs()`.
+#   - Must remain synchronous to preserve PID tracking integrity.
 
 function parse_configs () {
     local ip_addr="${1}";

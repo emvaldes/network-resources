@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+
+## File: scripts/tools-installer.shell
+
+## Purpose: Package installation and management for various Linux distributions and macOS.
+##          This script is designed to be sourced by other scripts.
+##          It provides functions to detect the platform, install packages, and check for installed binaries.
+##          It also includes a function to install missing packages based on the detected platform.
+##    Note: It is not intended to be run directly. Instead, it should be sourced by other scripts.
+
+## Prevent re-sourcing and ensure one-time initialization
+if [[ -n "${__TOOLS_INSTALLER_SOURCED:-}" ]]; then return 0; fi;
+readonly __TOOLS_INSTALLER_SOURCED=1;
+
+## Require Bash 4.0+ for associative array support (only runs once)
+if [[ "${BASH_VERSINFO[0]}" -lt 4 ]]; then
+  echo "Error: Bash 4.0 or newer is required. Current version: ${BASH_VERSINFO[*]}";
+  exit 1;
+fi;
+
+#------------------------------------------------------------------------------#
+## Package Installation: Detect Platform
+function detect_platform () {
+    if [[ "${OSTYPE}" == "darwin"* ]]; then echo "macos";
+      elif [[ -f /etc/alpine-release ]]; then echo "alpine";
+      elif [[ -f /etc/debian_version ]]; then echo "debian";
+      elif [[ -f /etc/redhat-release ]]; then echo "rhel";
+      else echo "unknown";
+    fi;
+    return 0;
+}; alias detect-platform='detect_platform';
+
+#------------------------------------------------------------------------------#
+## Package Installation: Install Packages
+function install_packages () {
+    local os="$1";
+    case "$os" in
+      macos)  echo "[+] Detected macOS (requires Homebrew)";
+              brew install jq gnu-sed coreutils moreutils grep;
+      ;;
+      debian) echo "[+] Detected Debian/Ubuntu";
+              sudo apt-get update -y;
+              sudo apt-get install -y jq sed grep coreutils findutils util-linux moreutils less;
+      ;;
+      rhel)   echo "[+] Detected RHEL/CentOS/Fedora";
+              sudo yum install -y epel-release;
+              sudo yum install -y jq sed grep coreutils findutils util-linux moreutils less;
+      ;;
+      alpine) echo "[+] Detected Alpine Linux";
+              sudo apk update;
+              sudo apk add jq sed grep coreutils findutils util-linux moreutils less;
+      ;;
+      *)  echo "[-] Unsupported OS type: $os";
+          exit 1;
+      ;;
+    esac;
+    echo "Dependencies installed for ${os}";
+    return 0;
+}; alias install-packages='install_packages';
+
+#------------------------------------------------------------------------------#
+## Package Installation: Installed
+function installed () {
+    command -v "$1" &>/dev/null;
+    return 0;
+};
+
+#------------------------------------------------------------------------------#
+## Package Installation: Install Missing
+function install_missing () {
+    local os="$1";
+    local pkg_cmd="";
+    local -A pkg_map=(
+      [jq]="jq"
+      [sed]="sed"
+      [grep]="grep"
+      [find]="find"
+      [column]="moreutils"  ## for Debian/Ubuntu
+      [less]="less"
+      [base64]="coreutils"
+    );
+    case "$os" in
+      macos)   pkg_cmd="brew install";;
+      debian)  pkg_cmd="sudo apt-get install -y";;
+      rhel)    pkg_cmd="sudo yum install -y";;
+      alpine)  pkg_cmd="sudo apk add";;
+      *)       echo "[-] Unsupported OS"; exit 1;;
+    esac;
+    for bin in "${!pkg_map[@]}"; do
+      if ! installed "${bin}"; then
+        echo "[+] Installing ${pkg_map[$bin]} (for ${bin})";
+        ${pkg_cmd} "${pkg_map[$bin]}";
+      fi;
+    done;
+    return 0;
+}; alias install-missing='install_missing';
+
+#------------------------------------------------------------------------------#

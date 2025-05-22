@@ -7,17 +7,38 @@ if [[ -n "${__TOOLS_CONFIGS_SOURCED:-}" ]]; then return 0; fi;
 readonly __TOOLS_CONFIGS_SOURCED=1;
 
 #### ---------------------------------------------------------------------------
-## Function: generate_objects
-
-## Iterate over the list of config files that matched the current IP address.
-## Each file was pre-filtered during the chunking phase and is associated with
-## one or more config blocks (stored in matched_blocks_byfile[]).
-## For each config file, we reconstruct its block(s), extract the relevant
-## metadata (object type, entry, description, group), and build a structured
-## JSON output grouped under that config.
-
-##   $1 = Target IP address
-##   $2 = Output JSON file path
+# Purpose:
+#   Assembles structured per-IP JSON output from previously matched config blocks.
+#   Groups all object entries per config file under their respective site/device.
+#
+# Inputs:
+#   $1 = Target IP address (used for labeling and filtering)
+#   $2 = Output JSON path (e.g., ./targets/<ip>.json)
+#
+# Behavior:
+#   - Iterates over `matched_configs_order[@]`, which lists config files associated with $1
+#   - Uses `matched_blocks_byfile[<cfg>]` to retrieve all matching config blocks for each file
+#   - Splits each config block on blank lines (logical object boundaries)
+#   - Sends each block to `process_blocks()` for extraction (as structured JSON)
+#   - Wraps each set of objects under:
+#       {
+#         config: { site: "<site>", device: "<filename>" },
+#         objects: [ ... ]
+#       }
+#   - Aggregates all config blocks into:
+#       {
+#         target: "<ip_address>",
+#         configs: [ ... ]
+#       }
+#
+# Output:
+#   Writes a complete JSON report for the IP to the file path in $2
+#
+# Notes:
+#   - This is the final step in per-IP processing.
+#   - Depends on upstream structures: `matched_configs_order[]` and `matched_blocks_byfile[]`.
+#   - Each logical config block is expected to be newline-delimited.
+#   - Uses `relative_configpath()` to resolve site/device context.
 
 function generate_objects () {
     local ip_address="${1}";
@@ -54,18 +75,13 @@ function generate_objects () {
       )";
       site="${relative_cfg%%/*}";
       device="${relative_cfg#*/}";
-      # configs+=("$(
-      #   jq -n --arg cfg "$(
-      #                 relative_configpath "${cfg_file}"
-      #               )" \
-      #         --argjson objs "${objs_json}" \
-      #   '{ config: $cfg, objects: $objs }'
-      # )");
-      configs+=("$(jq -n \
-        --arg site "${site}" \
-        --arg device "${device}" \
-        --argjson objs "${objs_json}" \
-        '{ config: { site: $site, device: $device }, objects: $objs }'
+
+      configs+=("$(
+        jq -n \
+           --arg site "${site}" \
+           --arg device "${device}" \
+           --argjson objs "${objs_json}" \
+           '{ config: { site: $site, device: $device }, objects: $objs }'
       )");
 
     done;
@@ -81,20 +97,37 @@ function generate_objects () {
 }; alias generate-objects='generate_objects';
 
 #### -----------------------------------------------------------------------
-## Function: process_blocks
-## Purpose: Parses a config block, extracts matching line, description, and group
-## Input:
-##   $1 = IP address
-##   $2 = full config path
-##   $3 = full block string
-##   $4 = name of array variable (passed by name, reference with `-n`)
-## Output:
-##   Appends JSON object(s) to the referenced array
-## Notes:
-##   - Extracts the first IP-matching line as `entry`
-##   - Tries to determine the object name and use it for classification
-##   - Also pulls description when possible
-#### -----------------------------------------------------------------------
+# Purpose:
+#   Parses a single configuration block and extracts minimal metadata
+#   used to populate a simplified JSON object for summary views.
+#
+# Inputs:
+#   $1 = Target IP address (used to locate the key matching line)
+#   $2 = Full path to the config file (context only)
+#   $3 = Raw configuration block (newline-delimited string)
+#   $4 = Name of array variable (passed by name, Bash nameref)
+#
+# Behavior:
+#   - Strips empty lines from the block.
+#   - Captures:
+#       - `object`   → the first line of the block (header)
+#       - `entry`    → the first line that contains the IP
+#       - `desc`     → the first line starting with `description` (if any)
+#       - `group`    → classification group from matrix.json if classification is enabled
+#   - If only one line exists, disables `entry` to avoid false positives.
+#   - Appends a minimal JSON object into the provided array (via name reference).
+#
+# Output JSON format:
+#   {
+#     "object": "object-group network SOMENAME",
+#     "entry": "network-object host 10.0.0.1",
+#     "description": "Some optional label",
+#     "group": "Business-Unit-X"
+#   }
+#
+# Notes:
+#   - Used internally by `generate_objects()` to distill block summaries.
+#   - Classification prioritizes object key; falls back to description match.
 
 function process_blocks () {
     local ip="${1}";
@@ -157,9 +190,6 @@ function process_blocks () {
 
     #### -----------------------------------------------------------------------
     ## If only 1 line in block, the entry is not valid
-    # local entry_out="\"${entry_val}\"";
-    # [[ ${#lines[@]} -eq 1 ]] && entry_out="false";
-
     local entry_out="${entry_val}"
     [[ ${#lines[@]} -eq 1 ]] && entry_out=""
 
