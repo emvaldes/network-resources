@@ -180,6 +180,9 @@ function main () {
         in_block = 1;
         block_has_match = 0;
         block = $0 "\n";
+        if ($0 ~ ("(^|[^0-9])" target "($|[^0-9])")) {
+          block_has_match = 1;
+        }
         next;
       }
       {
