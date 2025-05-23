@@ -107,7 +107,7 @@ function detect_vendor () {
       else  return 3;
     fi;
     return 0;
-};
+}; alias detect-vendor='detect_vendor';
 
 #------------------------------------------------------------------------------#
 function main () {
@@ -171,12 +171,15 @@ function main () {
     done;
 
     #### -----------------------------------------------------------------------
+    set +e;
     detect_vendor "${source_config}";
-    local vendor_code=$?;
+    local vendor_code=${?};
+    message "Vendor Code: ${vendor_code}";
+    set -e;
     case "${vendor_code}" in
-      1)  target_script="fortinet";
+      1)  target_platform="fortinet";
           ;;
-      2)  target_script="cisco";
+      2)  target_platform="cisco";
           ;;
       3)  message "Unsupported configuration type: ${source_config}";
           newline 2;
@@ -189,17 +192,18 @@ function main () {
     esac;
 
     #### -----------------------------------------------------------------------
-    while [[ -z ${output_config:-} ]]; do
-      newline;
-      read -rp "Enter output configuration file: " output_config;
-    done
-    local output_dir="$( dirname "${output_config}" )";
-    if [[ ! -d "${output_dir}" ]]; then
-      mkdir -p "${output_dir}" || {
-        message "Warning: Failed to create output directory: ${output_dir}" >&2;
-        newline;
-        exit 5;
-      };
+    if [[ -n ${output_config:-} ]]; then
+            local output_dir="$( dirname "${output_config}" )";
+            if [[ ! -d "${output_dir}" ]]; then
+              mkdir -p "${output_dir}" || {
+                message "Warning: Failed to create output directory: ${output_dir}" >&2;
+                newline;
+                exit 5;
+              };
+            fi;
+      else  local output_config="$( pwd )/${target_platform}--$(
+                    basename ${source_config/.cfg/}
+                  ).cfg";
     fi;
 
     #### -----------------------------------------------------------------------
@@ -212,7 +216,7 @@ function main () {
 
     #### -----------------------------------------------------------------------
     declare -a execute=(
-      ./scripts/extract/${target_script}-configs.shell
+      ./scripts/extract/${target_platform}-configs.shell
       --ip-addr="${search_pattern}"
       --config="${source_config}"
       --output="${output_config}"
