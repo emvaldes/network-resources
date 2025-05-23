@@ -1,0 +1,240 @@
+#!/usr/bin/env bash
+
+## File: scripts/extract/network-configs.shell
+
+##-----------------------------------------------------------------------------##
+## File: scripts/extract/network-configs.shell
+##
+## Purpose:
+##   Dynamic switchboard script to extract relevant configuration blocks
+##   for a given search pattern (e.g., IP address) from multi-vendor network
+##   device configuration files.
+##
+## Description:
+##   - Automatically detects the vendor platform (e.g., Cisco, Fortinet)
+##     by inspecting configuration content.
+##   - Delegates parsing to backend scripts:
+##       - cisco-configs.shell
+##       - fortinet-configs.shell
+##   - Validates inputs and ensures output path exists and is writable.
+##   - Ensures uniform exit codes and silent execution unless --verbose.
+##
+## Usage:
+##   bash ./scripts/extract/network-configs.shell \
+##     --ip-addr=198.51.100.75 \
+##     --config=./configs/source-config.cfg \
+##     --output=./results/extracted-config.cfg \
+##     --verbose
+##
+## Vendor Detection Logic:
+##   - Fortinet: matches 'fortinet', 'fortigate'
+##   - Cisco: matches 'asa', 'interface', 'object', 'cisco ios'
+##
+## Exit Codes:
+##   1 = Missing or empty search pattern
+##   2 = Config file not found
+##   3 = Unsupported configuration format
+##   4 = Unrecognized configuration content
+##   5 = Output path creation failed
+##
+##-----------------------------------------------------------------------------##
+
+set -euo pipefail  ## Strict mode: exit on error, undefined var use, and pipeline failure
+# set -x;          ## Enable for execution tracing/debugging
+
+## POSIX locale standard
+export LC_ALL=C   ## Ensure consistent sorting and character handling (POSIX-compliant)
+
+# Create a secure, temporary working directory (auto-cleaned at script exit)
+export TMP_DIR="$( mktemp -d )";
+trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT;
+
+export nl="\n";
+
+#------------------------------------------------------------------------------#
+function display_help () {
+    local -a help_lines=();
+    local indent="    ";
+    local padding="$( printf '%*s' ${#script_name} ' ' )";
+    ## Header
+    help_lines+=( "Usage: ${script_name} [OPTIONS]${nl}" );
+    ## Shared Options
+    help_lines+=( "Options:${nl}" );
+    help_lines+=( "  -i, --ip-addr      Custom Search Pattern: IP Address, etc." );
+    help_lines+=( "  -c, --config       Source Configuration filepath to be parsed" );
+    help_lines+=( "  -o, --output       Output Filepath for extracted datasets (*.cfg)" );
+    help_lines+=( "${nl}" );
+    ## Flags
+    help_lines+=( "Flags:${nl}" );
+    help_lines+=( "  --help             Show this help message and exit" );
+    # help_lines+=( "  --debug            Enable debug mode with trace output" );
+    # help_lines+=( "  --dry-run          Print actions without executing them" );
+    help_lines+=( "  --verbose          Enable verbose output${nl}" );
+    ## Output
+    newline;
+    for line in "${help_lines[@]}"; do
+      message "${indent}${line}";
+    done;
+    return 0;
+}; alias display-help='display_help'
+
+#------------------------------------------------------------------------------#
+## Output Utilities: Print N newlines (default: 1)
+function newline () {
+    local count="${1:-1}";
+    for ((i = 0; i < count; i++)); do echo; done;
+    return 0;
+};
+
+#------------------------------------------------------------------------------#
+## Output Utilities: Print an error message in consistent format
+function message () {
+    [[ -n ${1:-} ]] && local message="${1}" || return 0;
+    echo -e "${message}";
+    return 0;
+};
+
+#------------------------------------------------------------------------------#
+function detect_vendor () {
+    local config_file="${1}";
+    local fortinet_pattern='fortinet|fortigate';
+    local cisco_pattern='\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b';
+    if grep -qiE "${fortinet_pattern}" "${config_file}"; then
+            return 1;
+      elif  grep -qiE "${cisco_pattern}" \
+                 "${config_file}"; then
+            return 2;
+      else  return 3;
+    fi;
+    return 0;
+};
+
+#------------------------------------------------------------------------------#
+function main () {
+    ## tracking_process ${FUNCNAME} "${@}";
+    oIFS="${IFS}";
+
+    ## Process command-line arguments and map them to local variables
+    for xitem in "${@}"; do
+      IFS='=' read -r key value <<< "$(
+        echo -e "${xitem}" | sed -e '1s|^\(-\)\{1,\}||'
+      )"; #echo -e "\nxitem: '${xitem}'\nkey: '${key}'\t->\tvalue: '${value}'";
+
+      #### ---------------------------------------------------------------------
+      ## Match accepted arguments
+      [[ $key =~ ^(ip-addr|i)$ ]] && export search_pattern="${value}";
+      [[ $key =~ ^(config|c)$ ]] && export source_config="${value}";
+      [[ $key =~ ^(output|o)$ ]] && export output_config="${value}";
+
+      #### ---------------------------------------------------------------------
+      ## Special options
+      [[ $key == "help" ]] && local script_helper=true;
+      [[ $key == "debug" ]] && local debug=true;
+      [[ $key == "dry-run" ]] && local dry_run=true;
+      [[ $key == "verbose" ]] && local verbose=true;
+    done; IFS="${oIFS}";
+
+    #### -----------------------------------------------------------------------
+    ## Set default values if not supplied
+    [[ -z ${script_helper:-} ]] && script_helper=false;
+    [[ -z ${debug:-} ]] && debug=false;
+    [[ -z ${dry_run:-} ]] && dry_run=false;
+    [[ -z ${verbose:-} ]] && verbose=false;
+
+    #### -----------------------------------------------------------------------
+    ## Display usage help if requested
+    if [[ ${script_helper:-} == true ]]; then
+      display_help;
+      exit 0;
+    fi;
+
+    #### -----------------------------------------------------------------------
+    while [[ -z ${search_pattern:-} ]]; do
+      newline;
+      read -rp "Enter target search pattern: " search_pattern
+      if [[ "${search_pattern:-}" =~ ^[[:space:]]*$ ]]; then
+        message "Warning: Pattern cannot be empty!" >&2;
+        newline;
+        exit 1;
+      fi;
+    done;
+
+    #### -----------------------------------------------------------------------
+    while [[ -z ${source_config:-} || ! -f "${source_config}" ]]; do
+      newline;
+      read -rp "Enter source configuration file: " source_config;
+      if [[ ! -f "${source_config}" ]]; then
+        message "Warning: File does not exist: ${source_config}" >&2;
+        newline;
+        exit 2;
+      fi;
+    done;
+
+    #### -----------------------------------------------------------------------
+    detect_vendor "${source_config}";
+    local vendor_code=$?;
+    case "${vendor_code}" in
+      1)  target_script="fortinet";
+          ;;
+      2)  target_script="cisco";
+          ;;
+      3)  message "Unsupported configuration type: ${source_config}";
+          newline 2;
+          exit 3;
+          ;;
+      *)  message "Unknown configuration type: ${source_config}";
+          newline 2;
+          exit 4;
+          ;;
+    esac;
+
+    #### -----------------------------------------------------------------------
+    while [[ -z ${output_config:-} ]]; do
+      newline;
+      read -rp "Enter output configuration file: " output_config;
+    done
+    local output_dir="$( dirname "${output_config}" )";
+    if [[ ! -d "${output_dir}" ]]; then
+      mkdir -p "${output_dir}" || {
+        message "Warning: Failed to create output directory: ${output_dir}" >&2;
+        newline;
+        exit 5;
+      };
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Optionally: echo resolved parameters
+    # newline;
+    # message "Serach Pattern: ${search_pattern}";
+    # message "Input Config:   ${source_config}";
+    # message "Output Config:  ${output_config}";
+    # newline;
+
+    #### -----------------------------------------------------------------------
+    declare -a execute=(
+      ./scripts/extract/${target_script}-configs.shell
+      --ip-addr="${search_pattern}"
+      --config="${source_config}"
+      --output="${output_config}"
+    );
+    [[ "${verbose}" == true ]] && execute+=( --verbose );
+
+    #### -----------------------------------------------------------------------
+    ## Execute and propagate exit status
+    bash "${execute[@]}" >/dev/null 2>&1;
+
+    return 0;
+}; alias parse-cisco='main';
+
+[[ -z "${script_name+x}" ]] && export script_name="${0}";
+
+#------------------------------------------------------------------------------#
+
+if [[ ${#@} -ge 1 && "${1,,}" =~ ^-*(h|help)$ ]]; then
+        main --help ;
+  else  main "${@}";
+        result=${?}; exit ${result};
+        ## newline; message "Done."; newline;
+fi;
+
+#------------------------------------------------------------------------------#

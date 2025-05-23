@@ -3,8 +3,49 @@
   "configs": [
     {
       "site": "cisco",
-      "device": "fw5.cfg",
+      "device": "branch-fw-03.cfg",
       "objects": [
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/1",
+          "partner": false,
+          "description": "Office LAN",
+          "items": [
+            "ip address 192.168.2.12 255.255.255.0"
+          ],
+          "sets": {
+            "security-level": 1,
+            "ip": 1,
+            "nameif": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "access-list",
+          "type": "false",
+          "partner": false,
+          "description": false,
+          "items": [
+            "access-list OUTSIDE extended permit ip host 192.168.2.12 any"
+          ],
+          "sets": {
+            "access-list": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network Hydra-Core",
+          "partner": "Hydra-Core",
+          "description": "Local Application Server",
+          "items": [
+            "host 192.168.2.12"
+          ],
+          "sets": {
+            "host": 1
+          },
+          "group": "Unclassified"
+        },
         {
           "object": "object-group",
           "type": "network Hydra-Edge",
@@ -22,48 +63,54 @@
     },
     {
       "site": "cisco",
-      "device": "fw8.cfg",
+      "device": "branch-fw-snmp.cfg",
       "objects": [
         {
-          "object": "object-group",
-          "type": "network Hellfire-Internal",
-          "partner": "Hellfire-Internal",
-          "description": "East coast internal network",
-          "items": [
-            "network-object 192.168.2.12"
-          ],
-          "sets": {
-            "network-object": 2
-          },
-          "group": "Unclassified"
-        }
-      ]
-    },
-    {
-      "site": "fortinet",
-      "device": "fw3.cfg",
-      "objects": [
-        {
-          "object": "config",
-          "type": "firewall address",
+          "object": "interface",
+          "type": "GigabitEthernet0/1",
           "partner": false,
           "description": false,
           "items": [
-            "set subnet 192.168.2.12 255.255.255.255"
+            "ip address 192.168.2.12 255.255.255.0"
           ],
           "sets": {
-            "edit": 5,
-            "next": 5,
-            "set": 10
+            "ip": 1,
+            "nameif": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network Hydra-Core",
+          "partner": "Hydra-Core",
+          "description": "Branch App Gateway",
+          "items": [
+            "host 192.168.2.12"
+          ],
+          "sets": {
+            "host": 1
           },
           "group": "Unclassified"
         }
       ]
     },
     {
-      "site": "misc",
-      "device": "fw5.cfg",
+      "site": "cisco",
+      "device": "branch-isr-02.cfg",
       "objects": [
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/0/1",
+          "partner": false,
+          "description": "Workstation LAN",
+          "items": [
+            "ip address 192.168.2.12 255.255.255.0"
+          ],
+          "sets": {
+            "ip": 1
+          },
+          "group": "Unclassified"
+        },
         {
           "object": "object-group",
           "type": "network Hydra-Edge",

@@ -3,78 +3,8 @@
   "configs": [
     {
       "site": "cisco",
-      "device": "fw1.cfg",
+      "device": "access-switch-07.cfg",
       "objects": [
-        {
-          "object": "object-group",
-          "type": "network Rogers-WiFi",
-          "partner": "Rogers-WiFi",
-          "description": "Wireless guest segment",
-          "items": [
-            "network-object host 192.168.100.100"
-          ],
-          "sets": {
-            "network-object": 2
-          },
-          "group": "Unclassified"
-        }
-      ]
-    },
-    {
-      "site": "cisco",
-      "device": "fw2.cfg",
-      "objects": [
-        {
-          "object": "object-group",
-          "type": "network Batcave-Wireless",
-          "partner": "Batcave-Wireless",
-          "description": "Secure wireless endpoints",
-          "items": [
-            "network-object host 192.168.100.100"
-          ],
-          "sets": {
-            "network-object": 2
-          },
-          "group": "Unclassified"
-        }
-      ]
-    },
-    {
-      "site": "cisco",
-      "device": "fw4.cfg",
-      "objects": [
-        {
-          "object": "object-group",
-          "type": "network Sector-Wireless",
-          "partner": "Sector-Wireless",
-          "description": "Staff WiFi clients",
-          "items": [
-            "network-object host 192.168.100.100"
-          ],
-          "sets": {
-            "network-object": 2
-          },
-          "group": "Unclassified"
-        }
-      ]
-    },
-    {
-      "site": "cisco",
-      "device": "fw7.cfg",
-      "objects": [
-        {
-          "object": "object",
-          "type": "network Titan-WLAN-Host",
-          "partner": "Titan-WLAN-Host",
-          "description": false,
-          "items": [
-            "host 192.168.100.100"
-          ],
-          "sets": {
-            "host": 1
-          },
-          "group": "Unclassified"
-        },
         {
           "object": "object-group",
           "type": "network Titan-Wireless",
@@ -91,35 +21,47 @@
       ]
     },
     {
-      "site": "fortinet",
-      "device": "fw3.cfg",
+      "site": "cisco",
+      "device": "datacenter-fw-core.cfg",
       "objects": [
         {
-          "object": "config",
-          "type": "firewall address",
-          "partner": false,
-          "description": false,
+          "object": "object",
+          "type": "network Titan-WLAN-Host",
+          "partner": "Titan-WLAN-Host",
+          "description": "Wireless NAT",
           "items": [
-            "set subnet 192.168.100.100 255.255.255.255"
+            "host 192.168.100.100"
           ],
           "sets": {
-            "edit": 5,
-            "next": 5,
-            "set": 10
+            "host": 1
           },
           "group": "Unclassified"
         }
       ]
     },
     {
-      "site": "misc",
-      "device": "fw2.cfg",
+      "site": "cisco",
+      "device": "dmz-fw2-backup.cfg",
       "objects": [
         {
+          "object": "interface",
+          "type": "GigabitEthernet0/1",
+          "partner": false,
+          "description": "Inside LAN segment",
+          "items": [
+            "ip address 192.168.100.100 255.255.255.0"
+          ],
+          "sets": {
+            "ip": 1,
+            "nameif": 1
+          },
+          "group": "Unclassified"
+        },
+        {
           "object": "object-group",
-          "type": "network Batcave-Wireless",
-          "partner": "Batcave-Wireless",
-          "description": "Secure wireless endpoints",
+          "type": "network Sector-Wireless",
+          "partner": "Sector-Wireless",
+          "description": "Staff WiFi clients",
           "items": [
             "network-object host 192.168.100.100"
           ],
@@ -127,23 +69,17 @@
             "network-object": 2
           },
           "group": "Unclassified"
-        }
-      ]
-    },
-    {
-      "site": "misc",
-      "device": "switch2.conf",
-      "objects": [
+        },
         {
-          "object": "interface",
-          "type": "Vlan3",
-          "partner": false,
-          "description": false,
+          "object": "object",
+          "type": "network Titan-WLAN-Host",
+          "partner": "Titan-WLAN-Host",
+          "description": "Backup inside NAT IP",
           "items": [
-            "ip address 192.168.100.100 255.255.255.0"
+            "host 192.168.100.100"
           ],
           "sets": {
-            "ip": 1
+            "host": 1
           },
           "group": "Unclassified"
         }

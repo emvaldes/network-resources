@@ -3,7 +3,112 @@
   "configs": [
     {
       "site": "cisco",
-      "device": "fw2.cfg",
+      "device": "branch-fw-03.cfg",
+      "objects": [
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/0",
+          "partner": false,
+          "description": "ISP Link",
+          "items": [
+            "ip address 198.51.100.75 255.255.255.0"
+          ],
+          "sets": {
+            "security-level": 1,
+            "ip": 1,
+            "nameif": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "access-list",
+          "type": "false",
+          "partner": false,
+          "description": false,
+          "items": [
+            "access-list OUTSIDE extended permit ip any host 198.51.100.75"
+          ],
+          "sets": {
+            "access-list": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Hydra-Edge",
+          "partner": "Hydra-Edge",
+          "description": "Remote site uplink",
+          "items": [
+            "network-object host 198.51.100.75"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network Hydra-Link",
+          "partner": "Hydra-Link",
+          "description": "Public NAT IP",
+          "items": [
+            "host 198.51.100.75"
+          ],
+          "sets": {
+            "host": 1
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
+      "device": "branch-isr-02.cfg",
+      "objects": [
+        {
+          "object": "access-list",
+          "type": "false",
+          "partner": false,
+          "description": false,
+          "items": [
+            "access-list OUTSIDE extended permit ip any host 198.51.100.75"
+          ],
+          "sets": {
+            "access-list": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Hydra-Edge",
+          "partner": "Hydra-Edge",
+          "description": "Remote site uplink",
+          "items": [
+            "network-object host 198.51.100.75"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network Hydra-Link",
+          "partner": "Hydra-Link",
+          "description": "Branch NAT egress",
+          "items": [
+            "host 198.51.100.75"
+          ],
+          "sets": {
+            "host": 1
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
+      "device": "core-fw-dmz-01.cfg",
       "objects": [
         {
           "object": "access-list",
@@ -48,31 +153,131 @@
     },
     {
       "site": "cisco",
-      "device": "fw5.cfg",
+      "device": "dmz-fw2-backup.cfg",
       "objects": [
         {
-          "object": "object-group",
-          "type": "network Hydra-Edge",
-          "partner": "Hydra-Edge",
-          "description": "Remote site uplink",
+          "object": "interface",
+          "type": "GigabitEthernet0/2",
+          "partner": false,
+          "description": "Outbound Internet NAT interface",
           "items": [
-            "network-object host 198.51.100.75"
+            "ip address 198.51.100.75 255.255.255.0"
           ],
           "sets": {
-            "network-object": 2
+            "ip": 1,
+            "nameif": 1
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
+      "device": "hq-core-rtr-02.cfg",
+      "objects": [
+        {
+          "object": "ntp",
+          "type": "false",
+          "partner": false,
+          "description": false,
+          "items": [
+            "ntp server 198.51.100.75 prefer"
+          ],
+          "sets": {
+            "ntp": 1
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "fortinet",
+      "device": "fg-branch-vpn-01.cfg",
+      "objects": [
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": false,
+          "description": false,
+          "items": [
+            "set subnet 198.51.100.75 255.255.255.255"
+          ],
+          "sets": {
+            "edit": 2,
+            "next": 2,
+            "set": 4
           },
           "group": "Unclassified"
         },
         {
-          "object": "object",
-          "type": "network Hydra-Link",
-          "partner": "Hydra-Link",
+          "object": "config",
+          "type": "system interface",
+          "partner": false,
           "description": false,
           "items": [
-            "host 198.51.100.75"
+            "set ip 198.51.100.75 255.255.255.0"
           ],
           "sets": {
-            "host": 1
+            "edit": 3,
+            "next": 3,
+            "set": 6
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "fortinet",
+      "device": "fg-fw-dmz-01.cfg",
+      "objects": [
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": false,
+          "description": false,
+          "items": [
+            "set subnet 198.51.100.75 255.255.255.255"
+          ],
+          "sets": {
+            "edit": 4,
+            "next": 4,
+            "set": 8
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "fortinet",
+      "device": "fg-lab-test-fw.cfg",
+      "objects": [
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": false,
+          "description": false,
+          "items": [
+            "set subnet 198.51.100.75 255.255.255.255"
+          ],
+          "sets": {
+            "edit": 2,
+            "next": 2,
+            "set": 4
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "config",
+          "type": "system interface",
+          "partner": false,
+          "description": false,
+          "items": [
+            "set ip 198.51.100.75 255.255.255.0"
+          ],
+          "sets": {
+            "edit": 3,
+            "next": 3,
+            "set": 6
           },
           "group": "Unclassified"
         }

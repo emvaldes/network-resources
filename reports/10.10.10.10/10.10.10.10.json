@@ -3,18 +3,31 @@
   "configs": [
     {
       "site": "cisco",
-      "device": "fw1.cfg",
+      "device": "access-sw1-west.cfg",
       "objects": [
         {
           "object": "object-group",
-          "type": "network Rogers-WiFi",
-          "partner": "Rogers-WiFi",
-          "description": "Wireless guest segment",
+          "type": "network MGMT-ACCESS",
+          "partner": "MGMT-ACCESS",
+          "description": "Management objects",
           "items": [
             "network-object host 10.10.10.10"
           ],
           "sets": {
-            "network-object": 2
+            "network-object": 3
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Mutant-WiFi",
+          "partner": "Mutant-WiFi",
+          "description": "Controlled guest devices",
+          "items": [
+            "network-object host 10.10.10.10"
+          ],
+          "sets": {
+            "network-object": 1
           },
           "group": "Unclassified"
         }
@@ -22,26 +35,65 @@
     },
     {
       "site": "cisco",
-      "device": "fw3.cfg",
+      "device": "access-switch-07.cfg",
       "objects": [
         {
-          "object": "access-list",
-          "type": "false",
-          "partner": false,
-          "description": false,
+          "object": "object-group",
+          "type": "network Mutant-WiFi",
+          "partner": "Mutant-WiFi",
+          "description": "Controlled guest devices",
           "items": [
-            "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
+            "network-object host 10.10.10.10"
           ],
           "sets": {
-            "access-list": 1
+            "network-object": 1
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
+      "device": "campus-sw-access01.cfg",
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network Floor-Networks",
+          "partner": "Floor-Networks",
+          "description": "End-user and service devices",
+          "items": [
+            "network-object host 10.10.10.10"
+          ],
+          "sets": {
+            "network-object": 3
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
+      "device": "dmz-fw2-backup.cfg",
+      "objects": [
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/0",
+          "partner": false,
+          "description": "Guest access interface",
+          "items": [
+            "ip address 10.10.10.10 255.255.255.0"
+          ],
+          "sets": {
+            "ip": 1,
+            "nameif": 1
           },
           "group": "Unclassified"
         },
         {
           "object": "object-group",
-          "type": "network Shield-WiFi",
-          "partner": "Shield-WiFi",
-          "description": "Shield-controlled wireless network",
+          "type": "network Sector-Wireless",
+          "partner": "Sector-Wireless",
+          "description": "Staff WiFi clients",
           "items": [
             "network-object host 10.10.10.10"
           ],
@@ -60,57 +112,6 @@
           ],
           "sets": {
             "host": 1
-          },
-          "group": "Unclassified"
-        }
-      ]
-    },
-    {
-      "site": "cisco",
-      "device": "fw4.cfg",
-      "objects": [
-        {
-          "object": "object",
-          "type": "network Sector-Terminal",
-          "partner": "Sector-Terminal",
-          "description": false,
-          "items": [
-            "host 10.10.10.10"
-          ],
-          "sets": {
-            "host": 1
-          },
-          "group": "Unclassified"
-        },
-        {
-          "object": "object-group",
-          "type": "network Sector-Wireless",
-          "partner": "Sector-Wireless",
-          "description": "Staff WiFi clients",
-          "items": [
-            "network-object host 10.10.10.10"
-          ],
-          "sets": {
-            "network-object": 2
-          },
-          "group": "Unclassified"
-        }
-      ]
-    },
-    {
-      "site": "cisco",
-      "device": "fw6.cfg",
-      "objects": [
-        {
-          "object": "object-group",
-          "type": "network Mutant-WiFi",
-          "partner": "Mutant-WiFi",
-          "description": "Controlled guest devices",
-          "items": [
-            "network-object host 10.10.10.10"
-          ],
-          "sets": {
-            "network-object": 1
           },
           "group": "Unclassified"
         }

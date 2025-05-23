@@ -1,0 +1,101 @@
+{
+  "target": "192.168.0.1",
+  "configs": [
+    {
+      "site": "cisco",
+      "device": "access-sw1-west.cfg",
+      "objects": [
+        {
+          "object": "interface",
+          "type": "Vlan1",
+          "partner": false,
+          "description": "Management Interface",
+          "items": [
+            "ip address 192.168.0.1 255.255.255.0"
+          ],
+          "sets": {
+            "ip": 1
+          },
+          "group": "Business-Unit-Networks"
+        },
+        {
+          "object": "object-group",
+          "type": "network MGMT-ACCESS",
+          "partner": "MGMT-ACCESS",
+          "description": "Management objects",
+          "items": [
+            "network-object host 192.168.0.1"
+          ],
+          "sets": {
+            "network-object": 3
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
+      "device": "access-switch-07.cfg",
+      "objects": [
+        {
+          "object": "interface",
+          "type": "Vlan1",
+          "partner": false,
+          "description": "Management Interface",
+          "items": [
+            "ip address 192.168.0.1 255.255.255.0"
+          ],
+          "sets": {
+            "ip": 1
+          },
+          "group": "Business-Unit-Networks"
+        },
+        {
+          "object": "object-group",
+          "type": "network MGMT-ACCESS",
+          "partner": "MGMT-ACCESS",
+          "description": "Management subnet objects",
+          "items": [
+            "network-object host 192.168.0.1"
+          ],
+          "sets": {
+            "network-object": 3
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
+      "device": "campus-sw-access01.cfg",
+      "objects": [
+        {
+          "object": "interface",
+          "type": "Vlan1",
+          "partner": false,
+          "description": "Switch Mgmt",
+          "items": [
+            "ip address 192.168.0.1 255.255.255.0"
+          ],
+          "sets": {
+            "ip": 1
+          },
+          "group": "Business-Unit-Networks"
+        },
+        {
+          "object": "object-group",
+          "type": "network Floor-Networks",
+          "partner": "Floor-Networks",
+          "description": "End-user and service devices",
+          "items": [
+            "network-object host 192.168.0.1"
+          ],
+          "sets": {
+            "network-object": 3
+          },
+          "group": "Unclassified"
+        }
+      ]
+    }
+  ]
+}

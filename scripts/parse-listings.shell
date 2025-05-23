@@ -173,20 +173,19 @@ function main () {
         message "[INFO] Temp Directory: ${TMP_DIR}";
         newline;
         message "[INFO] Classify Targets: ${classify_targets}";
-        message "[INFO] ${configs_dirpath}";
-        message "[INFO] ${target_devices}";
+        message "[INFO] Configurations Path: ${configs_dirpath}";
+        message "[INFO] Filtering Devices: ${target_devices}";
         message "[INFO] File Extensions: ${file_extensions}";
-        message "[INFO] ${delaying_factor}";
-        message "[INFO] ${target_addresses}";
+        message "[INFO] Delaying Factor: ${delaying_factor}";
+        message "[INFO] Target Addresses: ${target_addresses}";
         message "[INFO] Enable Logging: ${enable_logging}";
-        message "[INFO] ${parallel_threads}";
+        message "[INFO] Parallelism Factor: ${parallel_threads}";
         message "[INFO] Matrix Filename: ${matrix_filename}";
         message "[INFO] Reports Folder: ${reports_folder}";
-        message "[INFO] ${target_sites}";
+        message "[INFO] Target Locations: ${target_sites}";
         message "[INFO] Validate Address: ${validate_address}";
-        message "[INFO] ${script_helper}";
         message "[INFO] Debug: ${debug}";
-        message "[INFO] ${dry_run}";
+        message "[INFO] Dry-Run: ${dry_run}";
         message "[INFO] Verbose: ${verbose}";
         newline;
       } >> "${actions_logsfile}";
@@ -277,7 +276,7 @@ function main () {
             message "Filtered Configurations (count): ${#filtered_configs[@]}";
             newline;
             for config in "${filtered_configs[@]}"; do
-              message "  - ${config}";
+              message "  - $( relative_configpath ${config} )";
             done; newline;
           } >> "${actions_logsfile}";
         fi;
@@ -412,9 +411,9 @@ function main () {
         #### -------------------------------------------------------------------
         ## Delete only top-level JSON files in ${targets_location} (preserve subfolders)
         if [[ -d ${targets_location} ]]; then
-          find ${targets_location} -maxdepth 1 -type f -name '*.json' -delete;
+          find ${targets_location} -maxdepth 1 -type f -name '*.json' -delete 2>/dev/null;
           ## Confirm deletion was successful
-          if compgen -G "./targets/*.json" >/dev/null; then
+          if compgen -G "${targets_location}/*.json" >/dev/null; then
             error_message "[FATAL] Failed to delete JSON files in ${targets_location} directory.";
             exit 2;
           fi;
@@ -422,7 +421,8 @@ function main () {
 
         #### -------------------------------------------------------------------
         ## Delete ${logs_location}/jobs directory and wait until fully removed
-        rm -rf ${logs_location}/jobs; while [[ -d ${logs_location}/jobs ]]; do sleep 0.1; done;
+        rm -rf ${logs_location}/jobs;
+        while [[ -d ${logs_location}/jobs ]]; do sleep 0.1; done;
         ## Confirm ${logs_location}/jobs is fully removed
         if [[ -d ${logs_location}/jobs ]]; then
           error_message "[FATAL] Failed to delete ${logs_location}/jobs directory.";
@@ -464,9 +464,12 @@ function main () {
               message "Batch Configs:  ${BATCH_CONFIGS}";
               list_file "${BATCH_CONFIGS}";
               newline;
-              print_file "${BATCH_CONFIGS}";
               message "Batch Size:     ${#batch_slice[@]}";
               message "Batch Ranges:   ${range_first} -> ${range_last}";
+              newline;
+              for config in "${batch_slice[@]}"; do
+                message "  - $(relative_configpath "${config}")";
+              done;
               newline;
             } >> "${actions_logsfile}";
           fi;
@@ -555,8 +558,10 @@ function main () {
 
         #### -------------------------------------------------------------------
         ## Final cleanup: remove any remaining per-site JSON files and empty folders
-        find "${targets_location}" -type f -name "*.json" -delete;
-        find "${targets_location}" -type d -empty -delete;
+        if [[ -d ${targets_location} ]]; then
+          find "${targets_location}" -type f -name "*.json" -delete 2>/dev/null;
+          find "${targets_location}" -type d -empty -delete 2>/dev/null;
+        fi;
 
       done;
 
@@ -569,12 +574,17 @@ function main () {
     #### -----------------------------------------------------------------------
     ## Post-processing: Normalize ./cache/targets/<ip>.json to grouped by site
     if [[ "${verbose}" == true ]]; then
+      grouped_targets="${cache_location}/targets";
       {
         message "Post-processing: Normalizing JSON files";
         message "---------------------------------------";
-        message "Grouped by site:";
+        message "Grouped by site: ${grouped_targets}";
         newline;
-        ls -1 "${cache_location}/targets/"*.json;
+        for fpath in "${grouped_targets}/"*.json; do
+          # ip="$(basename "${fpath}" .json)";
+          ip="$( basename "${fpath}" )";
+          message "  - ${ip}";
+        done;
         newline;
       } >> "${actions_logsfile}";
     fi;
@@ -596,7 +606,7 @@ function main () {
             | add
           ' "${target_file}"
         )";
-        jq . <<< "${grouped_objects}" > "${target_file}"
+        jq . <<< "${grouped_objects}" > "${target_file}";
       fi;
     done;
     shopt -u nullglob;
