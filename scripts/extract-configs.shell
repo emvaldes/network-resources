@@ -77,7 +77,7 @@ function display_help () {
       message "${indent}${line}";
     done;
     return 0;
-}; alias display-help='display_help'
+}; alias display-help='display_help';
 
 #------------------------------------------------------------------------------#
 ## Output Utilities: Print N newlines (default: 1)
@@ -108,10 +108,10 @@ function main () {
 
       #### ---------------------------------------------------------------------
       ## Match accepted arguments
-      [[ $key =~ ^(ip-addr|i)$ ]] && export search_pattern="${value}";
-      [[ $key =~ ^(config|c)$ ]] && export source_config="${value}";
-      [[ $key =~ ^(output|o)$ ]] && export output_config="${value}";
-      [[ $key =~ ^(platform|p)$ ]] && export target_platform="${value}";
+      [[ $key =~ ^(ip-addr|i)$ ]] && local search_pattern="${value}";
+      [[ $key =~ ^(config|c)$ ]] && local source_config="${value}";
+      [[ $key =~ ^(output|o)$ ]] && local output_config="${value}";
+      [[ $key =~ ^(platform|p)$ ]] && local target_platform="${value}";
 
       #### ---------------------------------------------------------------------
       ## Special options

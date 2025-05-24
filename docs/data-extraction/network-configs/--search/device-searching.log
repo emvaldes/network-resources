@@ -1,15 +1,15 @@
 $ bash -x ./scripts/network-configs.shell \
           --ip-addr="198.51.100.75,203.0.113.10" \
           --search="branch-isr-02.cfg,fg-lab-test-fw.cfg,edge-router-01.cfg" \
-          --output=./.outputs \
-          --verbose ;
+          --location=./configs \
+          --verbose;
 
 + set -euo pipefail
 + export LC_ALL=C
 + LC_ALL=C
 ++ mktemp -d
-+ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.bZ3R1qpENN
-+ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.bZ3R1qpENN
++ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.ed6qHIhiub
++ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.ed6qHIhiub
 + trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
 + export 'nl=\n'
 + nl='\n'
@@ -23,8 +23,16 @@ $ bash -x ./scripts/network-configs.shell \
 + script_name=./scripts/network-configs.shell
 + [[ 4 -ge 1 ]]
 + [[ --ip-addr=198.51.100.75,203.0.113.10 =~ ^-*(h|help)$ ]]
-+ main --ip-addr=198.51.100.75,203.0.113.10 --search=branch-isr-02.cfg,fg-lab-test-fw.cfg,edge-router-01.cfg --output=./.outputs --verbose
-+ oIFS='
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ main --ip-addr=198.51.100.75,203.0.113.10 --search=branch-isr-02.cfg,fg-lab-test-fw.cfg,edge-router-01.cfg --location=./configs --verbose
++ oIFS=' 	
 '
 + for xitem in "${@}"
 + IFS==
@@ -32,8 +40,7 @@ $ bash -x ./scripts/network-configs.shell \
 ++ echo -e --ip-addr=198.51.100.75,203.0.113.10
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ ip-addr =~ ^(ip-addr|i)$ ]]
-+ export search_pattern=198.51.100.75,203.0.113.10
-+ search_pattern=198.51.100.75,203.0.113.10
++ local search_pattern=198.51.100.75,203.0.113.10
 + [[ ip-addr =~ ^(config|c)$ ]]
 + [[ ip-addr =~ ^(search|s)$ ]]
 + [[ ip-addr =~ ^(location|l)$ ]]
@@ -50,8 +57,7 @@ $ bash -x ./scripts/network-configs.shell \
 + [[ search =~ ^(ip-addr|i)$ ]]
 + [[ search =~ ^(config|c)$ ]]
 + [[ search =~ ^(search|s)$ ]]
-+ export search_configs=branch-isr-02.cfg,fg-lab-test-fw.cfg,edge-router-01.cfg
-+ search_configs=branch-isr-02.cfg,fg-lab-test-fw.cfg,edge-router-01.cfg
++ local search_configs=branch-isr-02.cfg,fg-lab-test-fw.cfg,edge-router-01.cfg
 + [[ search =~ ^(location|l)$ ]]
 + [[ search =~ ^(output|o)$ ]]
 + [[ search == \h\e\l\p ]]
@@ -61,19 +67,18 @@ $ bash -x ./scripts/network-configs.shell \
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --output=./.outputs
+++ echo -e --location=./configs
 ++ sed -e '1s|^\(-\)\{1,\}||'
-+ [[ output =~ ^(ip-addr|i)$ ]]
-+ [[ output =~ ^(config|c)$ ]]
-+ [[ output =~ ^(search|s)$ ]]
-+ [[ output =~ ^(location|l)$ ]]
-+ [[ output =~ ^(output|o)$ ]]
-+ export output_config=./.outputs
-+ output_config=./.outputs
-+ [[ output == \h\e\l\p ]]
-+ [[ output == \d\e\b\u\g ]]
-+ [[ output == \d\r\y\-\r\u\n ]]
-+ [[ output == \v\e\r\b\o\s\e ]]
++ [[ location =~ ^(ip-addr|i)$ ]]
++ [[ location =~ ^(config|c)$ ]]
++ [[ location =~ ^(search|s)$ ]]
++ [[ location =~ ^(location|l)$ ]]
++ local search_location=./configs
++ [[ location =~ ^(output|o)$ ]]
++ [[ location == \h\e\l\p ]]
++ [[ location == \d\e\b\u\g ]]
++ [[ location == \d\r\y\-\r\u\n ]]
++ [[ location == \v\e\r\b\o\s\e ]]
 + for xitem in "${@}"
 + IFS==
 + read -r key value
@@ -89,10 +94,13 @@ $ bash -x ./scripts/network-configs.shell \
 + [[ verbose == \d\r\y\-\r\u\n ]]
 + [[ verbose == \v\e\r\b\o\s\e ]]
 + local verbose=true
-+ IFS='
++ IFS=' 	
 '
 + [[ -z '' ]]
-+ script_helper=false
++ local script_helper=false
++ [[ -z '' ]]
++ export output_config=./resources
++ output_config=./resources
 + [[ -z '' ]]
 + debug=false
 + [[ -z '' ]]
@@ -101,33 +109,83 @@ $ bash -x ./scripts/network-configs.shell \
 + [[ false == true ]]
 + configs_listing=()
 + declare -a configs_listing
-+ [[ -z 198.51.100.75,203.0.113.10 ]]
-+ configs_listing=()
++ local action_class=unknown
 + [[ -n '' ]]
++ [[ -z ./configs ]]
++ [[ -z 198.51.100.75,203.0.113.10 ]]
 + [[ -n branch-isr-02.cfg,fg-lab-test-fw.cfg,edge-router-01.cfg ]]
 + IFS=,
 + read -r -a search_items
 + found_configs=()
++ declare -a found_configs
 + for item in "${search_items[@]}"
-++ find . -type f -name branch-isr-02.cfg
-++ head -n 1
+++ find ./configs -type f -name branch-isr-02.cfg
 + result=./configs/cisco/branch-isr-02.cfg
 + [[ -n ./configs/cisco/branch-isr-02.cfg ]]
-+ found_configs+=("$result")
++ found_configs+=("${result}")
 + for item in "${search_items[@]}"
-++ find . -type f -name fg-lab-test-fw.cfg
-++ head -n 1
+++ find ./configs -type f -name fg-lab-test-fw.cfg
 + result=./configs/fortinet/fg-lab-test-fw.cfg
 + [[ -n ./configs/fortinet/fg-lab-test-fw.cfg ]]
-+ found_configs+=("$result")
++ found_configs+=("${result}")
 + for item in "${search_items[@]}"
-++ find . -type f -name edge-router-01.cfg
-++ head -n 1
+++ find ./configs -type f -name edge-router-01.cfg
 + result=
 + [[ -n '' ]]
 + [[ 2 -gt 0 ]]
 + configs_listing=("${found_configs[@]}")
-+ [[ -n '' ]]
++ action_class=search
++ [[ 2 -eq 0 ]]
++ [[ -n branch-isr-02.cfg,fg-lab-test-fw.cfg,edge-router-01.cfg ]]
++ matched_configs=()
++ declare -a matched_configs
++ IFS=,
++ read -ra ip_list
++ for cfg in "${configs_listing[@]}"
++ for ip in "${ip_list[@]}"
++ grep -qF 198.51.100.75 ./configs/cisco/branch-isr-02.cfg
++ matched_configs+=("${cfg}")
++ break
++ for cfg in "${configs_listing[@]}"
++ for ip in "${ip_list[@]}"
++ grep -qF 198.51.100.75 ./configs/fortinet/fg-lab-test-fw.cfg
++ matched_configs+=("${cfg}")
++ break
++ [[ 2 -gt 0 ]]
++ message 'Matching IPs found in 2 files:'
++ [[ -n Matching IPs found in 2 files: ]]
++ local 'message=Matching IPs found in 2 files:'
++ echo -e 'Matching IPs found in 2 files:'
+Matching IPs found in 2 files:
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ for item in "${matched_configs[@]}"
++ message '  - ./configs/cisco/branch-isr-02.cfg'
++ [[ -n   - ./configs/cisco/branch-isr-02.cfg ]]
++ local 'message=  - ./configs/cisco/branch-isr-02.cfg'
++ echo -e '  - ./configs/cisco/branch-isr-02.cfg'
+  - ./configs/cisco/branch-isr-02.cfg
++ for item in "${matched_configs[@]}"
++ message '  - ./configs/fortinet/fg-lab-test-fw.cfg'
++ [[ -n   - ./configs/fortinet/fg-lab-test-fw.cfg ]]
++ local 'message=  - ./configs/fortinet/fg-lab-test-fw.cfg'
++ echo -e '  - ./configs/fortinet/fg-lab-test-fw.cfg'
+  - ./configs/fortinet/fg-lab-test-fw.cfg
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ configs_listing=("${matched_configs[@]}")
 + [[ 2 -eq 0 ]]
 + for source_config in "${configs_listing[@]}"
 + [[ ! -f ./configs/cisco/branch-isr-02.cfg ]]
@@ -143,24 +201,33 @@ $ bash -x ./scripts/network-configs.shell \
 + set -e
 + case "${vendor_code}" in
 + target_platform=cisco
-+ [[ -n ./.outputs ]]
-+ base_output=./.outputs
++ message 'Parsing [ cisco ] configs (by: search): '
++ [[ -n Parsing [ cisco ] configs (by: search):  ]]
++ local 'message=Parsing [ cisco ] configs (by: search): '
++ echo -e 'Parsing [ cisco ] configs (by: search): '
+Parsing [ cisco ] configs (by: search): 
++ [[ -n ./resources ]]
++ base_output=./resources
 ++ echo ./configs/cisco/branch-isr-02.cfg
 ++ sed 's|^\./||'
 + rel_path=configs/cisco/branch-isr-02.cfg
-+ target_output=./.outputs/configs/cisco/branch-isr-02.cfg
-++ dirname ./.outputs/configs/cisco/branch-isr-02.cfg
-+ local output_dir=./.outputs/configs/cisco
-+ [[ ! -d ./.outputs/configs/cisco ]]
-+ mkdir -p ./.outputs/configs/cisco
-+ execute=('./scripts/extract-configs.shell' '--ip-addr=198.51.100.75,203.0.113.10' '--config=./configs/cisco/branch-isr-02.cfg' '--output=./.outputs/configs/cisco/branch-isr-02.cfg')
++ target_output=./resources/configs/cisco/branch-isr-02.cfg
+++ dirname ./resources/configs/cisco/branch-isr-02.cfg
++ local output_dir=./resources/configs/cisco
++ [[ ! -d ./resources/configs/cisco ]]
++ execute=('./scripts/extract-configs.shell' '--ip-addr=198.51.100.75,203.0.113.10' '--config=./configs/cisco/branch-isr-02.cfg' '--output=./resources/configs/cisco/branch-isr-02.cfg')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
 ++ which bash
-+ /usr/local/bin/bash ./scripts/extract-configs.shell --ip-addr=198.51.100.75,203.0.113.10 --config=./configs/cisco/branch-isr-02.cfg --output=./.outputs/configs/cisco/branch-isr-02.cfg --verbose
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ip-addr=198.51.100.75,203.0.113.10 --config=./configs/cisco/branch-isr-02.cfg --output=./resources/configs/cisco/branch-isr-02.cfg --verbose
 + [[ true == true ]]
-+ newline 1
++ message 'Configuration File [ ./resources/configs/cisco/branch-isr-02.cfg ]'
++ [[ -n Configuration File [ ./resources/configs/cisco/branch-isr-02.cfg ] ]]
++ local 'message=Configuration File [ ./resources/configs/cisco/branch-isr-02.cfg ]'
++ echo -e 'Configuration File [ ./resources/configs/cisco/branch-isr-02.cfg ]'
+Configuration File [ ./resources/configs/cisco/branch-isr-02.cfg ]
++ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -168,37 +235,20 @@ $ bash -x ./scripts/network-configs.shell \
 
 + (( i++ ))
 + (( i < count ))
-+ cat -n ./.outputs/configs/cisco/branch-isr-02.cfg
++ cat -n ./resources/configs/cisco/branch-isr-02.cfg
      1	hostname branch-isr-02
-     2
+     2	
      3	object network Hydra-Link
      4	 host 198.51.100.75
      5	 description Branch NAT egress
-     6
+     6	
      7	object-group network Hydra-Edge
      8	 description Remote site uplink
      9	 network-object host 192.168.2.12
     10	 network-object host 198.51.100.75
-    11
+    11	
     12	access-list OUTSIDE extended permit ip any host 198.51.100.75
-    13
-+ newline 2
-+ local count=2
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-+ echo
-
-+ (( i++ ))
-+ (( i < count ))
-+ ls -al ./.outputs
-total 0
-drwxr-xr-x   3 emvaldes  staff   96 May 24 00:55 .
-drwxr-xr-x@ 18 emvaldes  staff  576 May 24 00:55 ..
-drwxr-xr-x   3 emvaldes  staff   96 May 24 00:55 configs
+    13	
 + newline
 + local count=1
 + (( i = 0 ))
@@ -220,24 +270,33 @@ drwxr-xr-x   3 emvaldes  staff   96 May 24 00:55 configs
 + set -e
 + case "${vendor_code}" in
 + target_platform=fortinet
-+ [[ -n ./.outputs ]]
-+ base_output=./.outputs
++ message 'Parsing [ fortinet ] configs (by: search): '
++ [[ -n Parsing [ fortinet ] configs (by: search):  ]]
++ local 'message=Parsing [ fortinet ] configs (by: search): '
++ echo -e 'Parsing [ fortinet ] configs (by: search): '
+Parsing [ fortinet ] configs (by: search): 
++ [[ -n ./resources ]]
++ base_output=./resources
 ++ echo ./configs/fortinet/fg-lab-test-fw.cfg
 ++ sed 's|^\./||'
 + rel_path=configs/fortinet/fg-lab-test-fw.cfg
-+ target_output=./.outputs/configs/fortinet/fg-lab-test-fw.cfg
-++ dirname ./.outputs/configs/fortinet/fg-lab-test-fw.cfg
-+ local output_dir=./.outputs/configs/fortinet
-+ [[ ! -d ./.outputs/configs/fortinet ]]
-+ mkdir -p ./.outputs/configs/fortinet
-+ execute=('./scripts/extract-configs.shell' '--ip-addr=198.51.100.75,203.0.113.10' '--config=./configs/fortinet/fg-lab-test-fw.cfg' '--output=./.outputs/configs/fortinet/fg-lab-test-fw.cfg')
++ target_output=./resources/configs/fortinet/fg-lab-test-fw.cfg
+++ dirname ./resources/configs/fortinet/fg-lab-test-fw.cfg
++ local output_dir=./resources/configs/fortinet
++ [[ ! -d ./resources/configs/fortinet ]]
++ execute=('./scripts/extract-configs.shell' '--ip-addr=198.51.100.75,203.0.113.10' '--config=./configs/fortinet/fg-lab-test-fw.cfg' '--output=./resources/configs/fortinet/fg-lab-test-fw.cfg')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
 ++ which bash
-+ /usr/local/bin/bash ./scripts/extract-configs.shell --ip-addr=198.51.100.75,203.0.113.10 --config=./configs/fortinet/fg-lab-test-fw.cfg --output=./.outputs/configs/fortinet/fg-lab-test-fw.cfg --verbose
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ip-addr=198.51.100.75,203.0.113.10 --config=./configs/fortinet/fg-lab-test-fw.cfg --output=./resources/configs/fortinet/fg-lab-test-fw.cfg --verbose
 + [[ true == true ]]
-+ newline 1
++ message 'Configuration File [ ./resources/configs/fortinet/fg-lab-test-fw.cfg ]'
++ [[ -n Configuration File [ ./resources/configs/fortinet/fg-lab-test-fw.cfg ] ]]
++ local 'message=Configuration File [ ./resources/configs/fortinet/fg-lab-test-fw.cfg ]'
++ echo -e 'Configuration File [ ./resources/configs/fortinet/fg-lab-test-fw.cfg ]'
+Configuration File [ ./resources/configs/fortinet/fg-lab-test-fw.cfg ]
++ newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
@@ -245,41 +304,51 @@ drwxr-xr-x   3 emvaldes  staff   96 May 24 00:55 configs
 
 + (( i++ ))
 + (( i < count ))
-+ cat -n ./.outputs/configs/fortinet/fg-lab-test-fw.cfg
++ cat -n ./resources/configs/fortinet/fg-lab-test-fw.cfg
      1	#hostname="fg-lab-test-fw"
      2	#model="FortiGate-40F"
-     3
+     3	
      4	config system interface
      5	 edit "wan1"
      6	  set ip 198.51.100.75 255.255.255.0
      7	  set alias "Branch ISP"
      8	 next
      9	end
-    10
+    10	
     11	config firewall address
     12	 edit "Branch-Public"
     13	  set subnet 198.51.100.75 255.255.255.255
     14	  set comment "Branch NAT"
     15	 next
     16	end
-    17
-+ newline 2
-+ local count=2
+    17	
++ newline
++ local count=1
 + (( i = 0 ))
 + (( i < count ))
 + echo
 
 + (( i++ ))
 + (( i < count ))
-+ echo
++ tree ./resources
+./resources
+`-- configs
+    |-- cisco
+    |   |-- branch-fw-03.cfg
+    |   |-- branch-isr-02.cfg
+    |   |-- core-fw-dmz-01.cfg
+    |   |-- dmz-fw2-backup.cfg
+    |   `-- hq-core-rtr-02.cfg
+    |-- fortinet
+    |   |-- fg-branch-vpn-01.cfg
+    |   |-- fg-fw-dmz-01.cfg
+    |   |-- fg-lab-test-fw.cfg
+    |   `-- fg-testing-config.cfg
+    `-- misc
+        |-- fw2.cfg
+        `-- fw5.cfg
 
-+ (( i++ ))
-+ (( i < count ))
-+ ls -al ./.outputs
-total 0
-drwxr-xr-x   3 emvaldes  staff   96 May 24 00:55 .
-drwxr-xr-x@ 18 emvaldes  staff  576 May 24 00:55 ..
-drwxr-xr-x   4 emvaldes  staff  128 May 24 00:55 configs
+5 directories, 11 files
 + newline
 + local count=1
 + (( i = 0 ))
@@ -291,39 +360,73 @@ drwxr-xr-x   4 emvaldes  staff  128 May 24 00:55 configs
 + return 0
 + result=0
 + exit 0
-+ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.bZ3R1qpENN ]]
-+ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.bZ3R1qpENN
++ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.ed6qHIhiub ]]
++ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.ed6qHIhiub
 
-$ cat ./.outputs/configs/cisco/branch-isr-02.cfg ;
+$ bash ./scripts/network-configs.shell \
+       --ip-addr="198.51.100.75,203.0.113.10" \
+       --search="branch-isr-02.cfg,fg-lab-test-fw.cfg,edge-router-01.cfg" \
+       --location=./configs \
+       --verbose;
 
-hostname branch-isr-02
+Matching IPs found in 2 files:
 
-object network Hydra-Link
- host 198.51.100.75
- description Branch NAT egress
+  - ./configs/cisco/branch-isr-02.cfg
+  - ./configs/fortinet/fg-lab-test-fw.cfg
 
-object-group network Hydra-Edge
- description Remote site uplink
- network-object host 192.168.2.12
- network-object host 198.51.100.75
+Parsing [ cisco ] configs (by: search): 
+Configuration File [ ./resources/configs/cisco/branch-isr-02.cfg ]
 
-access-list OUTSIDE extended permit ip any host 198.51.100.75
+     1	hostname branch-isr-02
+     2	
+     3	object network Hydra-Link
+     4	 host 198.51.100.75
+     5	 description Branch NAT egress
+     6	
+     7	object-group network Hydra-Edge
+     8	 description Remote site uplink
+     9	 network-object host 192.168.2.12
+    10	 network-object host 198.51.100.75
+    11	
+    12	access-list OUTSIDE extended permit ip any host 198.51.100.75
+    13	
 
-$ cat ./.outputs/configs/fortinet/fg-lab-test-fw.cfg ;
+Parsing [ fortinet ] configs (by: search): 
+Configuration File [ ./resources/configs/fortinet/fg-lab-test-fw.cfg ]
 
-#hostname="fg-lab-test-fw"
-#model="FortiGate-40F"
+     1	#hostname="fg-lab-test-fw"
+     2	#model="FortiGate-40F"
+     3	
+     4	config system interface
+     5	 edit "wan1"
+     6	  set ip 198.51.100.75 255.255.255.0
+     7	  set alias "Branch ISP"
+     8	 next
+     9	end
+    10	
+    11	config firewall address
+    12	 edit "Branch-Public"
+    13	  set subnet 198.51.100.75 255.255.255.255
+    14	  set comment "Branch NAT"
+    15	 next
+    16	end
+    17	
 
-config system interface
- edit "wan1"
-  set ip 198.51.100.75 255.255.255.0
-  set alias "Branch ISP"
- next
-end
+./resources
+`-- configs
+    |-- cisco
+    |   |-- branch-fw-03.cfg
+    |   |-- branch-isr-02.cfg
+    |   |-- core-fw-dmz-01.cfg
+    |   |-- dmz-fw2-backup.cfg
+    |   `-- hq-core-rtr-02.cfg
+    |-- fortinet
+    |   |-- fg-branch-vpn-01.cfg
+    |   |-- fg-fw-dmz-01.cfg
+    |   |-- fg-lab-test-fw.cfg
+    |   `-- fg-testing-config.cfg
+    `-- misc
+        |-- fw2.cfg
+        `-- fw5.cfg
 
-config firewall address
- edit "Branch-Public"
-  set subnet 198.51.100.75 255.255.255.255
-  set comment "Branch NAT"
- next
-end
+5 directories, 11 files

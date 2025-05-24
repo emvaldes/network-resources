@@ -1,15 +1,15 @@
 $ bash -x scripts/network-configs.shell \
           --ip-addr="192.168.1.10,203.0.113.25" \
           --config=./configs/fortinet/fg-lab-test-fw.cfg \
-          --output=./.outputs/fg-lab-test-fw.cfg \
+          --output=./resources/fg-lab-test-fw.cfg \
           --verbose ;
 
 + set -euo pipefail
 + export LC_ALL=C
 + LC_ALL=C
 ++ mktemp -d
-+ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2QpYMMQBOu
-+ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2QpYMMQBOu
++ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.wX5AK6oLET
++ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.wX5AK6oLET
 + trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
 + export 'nl=\n'
 + nl='\n'
@@ -23,8 +23,16 @@ $ bash -x scripts/network-configs.shell \
 + script_name=scripts/network-configs.shell
 + [[ 4 -ge 1 ]]
 + [[ --ip-addr=192.168.1.10,203.0.113.25 =~ ^-*(h|help)$ ]]
-+ main --ip-addr=192.168.1.10,203.0.113.25 --config=./configs/fortinet/fg-lab-test-fw.cfg --output=./.outputs/fg-lab-test-fw.cfg --verbose
-+ oIFS='
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ main --ip-addr=192.168.1.10,203.0.113.25 --config=./configs/fortinet/fg-lab-test-fw.cfg --output=./resources/fg-lab-test-fw.cfg --verbose
++ oIFS=' 	
 '
 + for xitem in "${@}"
 + IFS==
@@ -32,8 +40,7 @@ $ bash -x scripts/network-configs.shell \
 ++ echo -e --ip-addr=192.168.1.10,203.0.113.25
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ ip-addr =~ ^(ip-addr|i)$ ]]
-+ export search_pattern=192.168.1.10,203.0.113.25
-+ search_pattern=192.168.1.10,203.0.113.25
++ local search_pattern=192.168.1.10,203.0.113.25
 + [[ ip-addr =~ ^(config|c)$ ]]
 + [[ ip-addr =~ ^(search|s)$ ]]
 + [[ ip-addr =~ ^(location|l)$ ]]
@@ -49,8 +56,7 @@ $ bash -x scripts/network-configs.shell \
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ config =~ ^(ip-addr|i)$ ]]
 + [[ config =~ ^(config|c)$ ]]
-+ export source_config=./configs/fortinet/fg-lab-test-fw.cfg
-+ source_config=./configs/fortinet/fg-lab-test-fw.cfg
++ local source_config=./configs/fortinet/fg-lab-test-fw.cfg
 + [[ config =~ ^(search|s)$ ]]
 + [[ config =~ ^(location|l)$ ]]
 + [[ config =~ ^(output|o)$ ]]
@@ -61,15 +67,14 @@ $ bash -x scripts/network-configs.shell \
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --output=./.outputs/fg-lab-test-fw.cfg
+++ echo -e --output=./resources/fg-lab-test-fw.cfg
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ output =~ ^(ip-addr|i)$ ]]
 + [[ output =~ ^(config|c)$ ]]
 + [[ output =~ ^(search|s)$ ]]
 + [[ output =~ ^(location|l)$ ]]
 + [[ output =~ ^(output|o)$ ]]
-+ export output_config=./.outputs/fg-lab-test-fw.cfg
-+ output_config=./.outputs/fg-lab-test-fw.cfg
++ local output_config=./resources/fg-lab-test-fw.cfg
 + [[ output == \h\e\l\p ]]
 + [[ output == \d\e\b\u\g ]]
 + [[ output == \d\r\y\-\r\u\n ]]
@@ -89,10 +94,11 @@ $ bash -x scripts/network-configs.shell \
 + [[ verbose == \d\r\y\-\r\u\n ]]
 + [[ verbose == \v\e\r\b\o\s\e ]]
 + local verbose=true
-+ IFS='
++ IFS=' 	
 '
 + [[ -z '' ]]
-+ script_helper=false
++ local script_helper=false
++ [[ -z ./resources/fg-lab-test-fw.cfg ]]
 + [[ -z '' ]]
 + debug=false
 + [[ -z '' ]]
@@ -101,11 +107,18 @@ $ bash -x scripts/network-configs.shell \
 + [[ false == true ]]
 + configs_listing=()
 + declare -a configs_listing
-+ [[ -z 192.168.1.10,203.0.113.25 ]]
-+ configs_listing=()
++ local action_class=unknown
 + [[ -n ./configs/fortinet/fg-lab-test-fw.cfg ]]
 + [[ -f ./configs/fortinet/fg-lab-test-fw.cfg ]]
 + configs_listing=("${source_config}")
++ action_class=config
++ [[ -z '' ]]
++ [[ -n '' ]]
++ [[ -z '' ]]
++ [[ -z ./configs/fortinet/fg-lab-test-fw.cfg ]]
++ [[ -z 192.168.1.10,203.0.113.25 ]]
++ [[ -n '' ]]
++ [[ 1 -eq 0 ]]
 + [[ -n '' ]]
 + [[ -n '' ]]
 + [[ 1 -eq 0 ]]
@@ -122,17 +135,33 @@ $ bash -x scripts/network-configs.shell \
 + set -e
 + case "${vendor_code}" in
 + target_platform=fortinet
-+ [[ -n ./.outputs/fg-lab-test-fw.cfg ]]
-++ dirname ./.outputs/fg-lab-test-fw.cfg
-+ local output_dir=./.outputs
-+ [[ ! -d ./.outputs ]]
-+ execute=('./scripts/extract-configs.shell' '--ip-addr=192.168.1.10,203.0.113.25' '--config=./configs/fortinet/fg-lab-test-fw.cfg' '--output=./.outputs/fg-lab-test-fw.cfg')
++ message 'Parsing [ fortinet ] configs (by: config): '
++ [[ -n Parsing [ fortinet ] configs (by: config):  ]]
++ local 'message=Parsing [ fortinet ] configs (by: config): '
++ echo -e 'Parsing [ fortinet ] configs (by: config): '
+Parsing [ fortinet ] configs (by: config): 
++ [[ -n ./resources/fg-lab-test-fw.cfg ]]
++ base_output=./resources/fg-lab-test-fw.cfg
+++ echo ./configs/fortinet/fg-lab-test-fw.cfg
+++ sed 's|^\./||'
++ rel_path=configs/fortinet/fg-lab-test-fw.cfg
++ target_output=./resources/fg-lab-test-fw.cfg/configs/fortinet/fg-lab-test-fw.cfg
+++ dirname ./resources/fg-lab-test-fw.cfg/configs/fortinet/fg-lab-test-fw.cfg
++ local output_dir=./resources/fg-lab-test-fw.cfg/configs/fortinet
++ [[ ! -d ./resources/fg-lab-test-fw.cfg/configs/fortinet ]]
++ mkdir -p ./resources/fg-lab-test-fw.cfg/configs/fortinet
++ execute=('./scripts/extract-configs.shell' '--ip-addr=192.168.1.10,203.0.113.25' '--config=./configs/fortinet/fg-lab-test-fw.cfg' '--output=./resources/fg-lab-test-fw.cfg/configs/fortinet/fg-lab-test-fw.cfg')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
 ++ which bash
-+ /usr/local/bin/bash ./scripts/extract-configs.shell --ip-addr=192.168.1.10,203.0.113.25 --config=./configs/fortinet/fg-lab-test-fw.cfg --output=./.outputs/fg-lab-test-fw.cfg --verbose
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ip-addr=192.168.1.10,203.0.113.25 --config=./configs/fortinet/fg-lab-test-fw.cfg --output=./resources/fg-lab-test-fw.cfg/configs/fortinet/fg-lab-test-fw.cfg --verbose
 + [[ true == true ]]
++ message 'Configuration File [ ./resources/fg-lab-test-fw.cfg/configs/fortinet/fg-lab-test-fw.cfg ]'
++ [[ -n Configuration File [ ./resources/fg-lab-test-fw.cfg/configs/fortinet/fg-lab-test-fw.cfg ] ]]
++ local 'message=Configuration File [ ./resources/fg-lab-test-fw.cfg/configs/fortinet/fg-lab-test-fw.cfg ]'
++ echo -e 'Configuration File [ ./resources/fg-lab-test-fw.cfg/configs/fortinet/fg-lab-test-fw.cfg ]'
+Configuration File [ ./resources/fg-lab-test-fw.cfg/configs/fortinet/fg-lab-test-fw.cfg ]
 + newline
 + local count=1
 + (( i = 0 ))
@@ -141,10 +170,10 @@ $ bash -x scripts/network-configs.shell \
 
 + (( i++ ))
 + (( i < count ))
-+ cat -n ./.outputs/fg-lab-test-fw.cfg
++ cat -n ./resources/fg-lab-test-fw.cfg/configs/fortinet/fg-lab-test-fw.cfg
      1	#hostname="fg-lab-test-fw"
      2	#model="FortiGate-40F"
-     3
+     3	
      4	config firewall address
      5	 edit "Panther-Vault"
      6	  set subnet 192.168.1.10 255.255.255.255
@@ -154,20 +183,23 @@ $ bash -x scripts/network-configs.shell \
     10	  set subnet 203.0.113.25 255.255.255.255
     11	  set comment "Public NAT exposure for Red Skull trap"
     12	 next
-    13	end+ newline 2
-+ local count=2
+    13	end
+    14	
++ newline
++ local count=1
 + (( i = 0 ))
 + (( i < count ))
 + echo
 
 + (( i++ ))
 + (( i < count ))
-+ echo
++ tree ./resources/fg-lab-test-fw.cfg
+./resources/fg-lab-test-fw.cfg
+`-- configs
+    `-- fortinet
+        `-- fg-lab-test-fw.cfg
 
-+ (( i++ ))
-+ (( i < count ))
-+ ls -al ./.outputs/fg-lab-test-fw.cfg
--rw-r--r--  1 emvaldes  staff  307 May 23 23:20 ./.outputs/fg-lab-test-fw.cfg
+3 directories, 1 file
 + newline
 + local count=1
 + (( i = 0 ))
@@ -179,21 +211,36 @@ $ bash -x scripts/network-configs.shell \
 + return 0
 + result=0
 + exit 0
-+ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2QpYMMQBOu ]]
-+ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2QpYMMQBOu
++ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.wX5AK6oLET ]]
++ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.wX5AK6oLET
 
-$ cat .outputs/fg-lab-test-fw.cfg ;
+$ bash scripts/network-configs.shell \
+       --ip-addr="192.168.1.10,203.0.113.25" \
+       --config=./configs/fortinet/fg-lab-test-fw.cfg \
+       --output=./resources/fg-lab-test-fw.cfg \
+       --verbose ;
 
-#hostname="fg-lab-test-fw"
-#model="FortiGate-40F"
+Parsing [ fortinet ] configs (by: config): 
+Configuration File [ ./resources/fg-lab-test-fw.cfg/configs/fortinet/fg-lab-test-fw.cfg ]
 
-config firewall address
- edit "Panther-Vault"
-  set subnet 192.168.1.10 255.255.255.255
-  set comment "Wakandan data store"
- next
- edit "Public-Test"
-  set subnet 203.0.113.25 255.255.255.255
-  set comment "Public NAT exposure for Red Skull trap"
- next
-end
+     1	#hostname="fg-lab-test-fw"
+     2	#model="FortiGate-40F"
+     3	
+     4	config firewall address
+     5	 edit "Panther-Vault"
+     6	  set subnet 192.168.1.10 255.255.255.255
+     7	  set comment "Wakandan data store"
+     8	 next
+     9	 edit "Public-Test"
+    10	  set subnet 203.0.113.25 255.255.255.255
+    11	  set comment "Public NAT exposure for Red Skull trap"
+    12	 next
+    13	end
+    14	
+
+./resources/fg-lab-test-fw.cfg
+`-- configs
+    `-- fortinet
+        `-- fg-lab-test-fw.cfg
+
+3 directories, 1 file

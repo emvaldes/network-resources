@@ -1,15 +1,15 @@
 $ bash -x scripts/network-configs.shell \
           --ip-addr="10.0.2.3,172.16.1.6" \
           --config=./configs/cisco/branch-isr-02.cfg \
-          --output=./.outputs/branch-isr-02-multi.cfg \
+          --output=./resources/branch-isr-02-multi.cfg \
           --verbose ;
 
-  + set -euo pipefail
++ set -euo pipefail
 + export LC_ALL=C
 + LC_ALL=C
 ++ mktemp -d
-+ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.bkAkXuwc4T
-+ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.bkAkXuwc4T
++ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.aoRgRL1qaH
++ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.aoRgRL1qaH
 + trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
 + export 'nl=\n'
 + nl='\n'
@@ -23,8 +23,16 @@ $ bash -x scripts/network-configs.shell \
 + script_name=scripts/network-configs.shell
 + [[ 4 -ge 1 ]]
 + [[ --ip-addr=10.0.2.3,172.16.1.6 =~ ^-*(h|help)$ ]]
-+ main --ip-addr=10.0.2.3,172.16.1.6 --config=./configs/cisco/branch-isr-02.cfg --output=./.outputs/branch-isr-02-multi.cfg --verbose
-+ oIFS='
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ main --ip-addr=10.0.2.3,172.16.1.6 --config=./configs/cisco/branch-isr-02.cfg --output=./resources/branch-isr-02-multi.cfg --verbose
++ oIFS=' 	
 '
 + for xitem in "${@}"
 + IFS==
@@ -32,8 +40,7 @@ $ bash -x scripts/network-configs.shell \
 ++ echo -e --ip-addr=10.0.2.3,172.16.1.6
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ ip-addr =~ ^(ip-addr|i)$ ]]
-+ export search_pattern=10.0.2.3,172.16.1.6
-+ search_pattern=10.0.2.3,172.16.1.6
++ local search_pattern=10.0.2.3,172.16.1.6
 + [[ ip-addr =~ ^(config|c)$ ]]
 + [[ ip-addr =~ ^(search|s)$ ]]
 + [[ ip-addr =~ ^(location|l)$ ]]
@@ -49,8 +56,7 @@ $ bash -x scripts/network-configs.shell \
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ config =~ ^(ip-addr|i)$ ]]
 + [[ config =~ ^(config|c)$ ]]
-+ export source_config=./configs/cisco/branch-isr-02.cfg
-+ source_config=./configs/cisco/branch-isr-02.cfg
++ local source_config=./configs/cisco/branch-isr-02.cfg
 + [[ config =~ ^(search|s)$ ]]
 + [[ config =~ ^(location|l)$ ]]
 + [[ config =~ ^(output|o)$ ]]
@@ -61,15 +67,14 @@ $ bash -x scripts/network-configs.shell \
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --output=./.outputs/branch-isr-02-multi.cfg
+++ echo -e --output=./resources/branch-isr-02-multi.cfg
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ output =~ ^(ip-addr|i)$ ]]
 + [[ output =~ ^(config|c)$ ]]
 + [[ output =~ ^(search|s)$ ]]
 + [[ output =~ ^(location|l)$ ]]
 + [[ output =~ ^(output|o)$ ]]
-+ export output_config=./.outputs/branch-isr-02-multi.cfg
-+ output_config=./.outputs/branch-isr-02-multi.cfg
++ local output_config=./resources/branch-isr-02-multi.cfg
 + [[ output == \h\e\l\p ]]
 + [[ output == \d\e\b\u\g ]]
 + [[ output == \d\r\y\-\r\u\n ]]
@@ -89,10 +94,11 @@ $ bash -x scripts/network-configs.shell \
 + [[ verbose == \d\r\y\-\r\u\n ]]
 + [[ verbose == \v\e\r\b\o\s\e ]]
 + local verbose=true
-+ IFS='
++ IFS=' 	
 '
 + [[ -z '' ]]
-+ script_helper=false
++ local script_helper=false
++ [[ -z ./resources/branch-isr-02-multi.cfg ]]
 + [[ -z '' ]]
 + debug=false
 + [[ -z '' ]]
@@ -101,11 +107,18 @@ $ bash -x scripts/network-configs.shell \
 + [[ false == true ]]
 + configs_listing=()
 + declare -a configs_listing
-+ [[ -z 10.0.2.3,172.16.1.6 ]]
-+ configs_listing=()
++ local action_class=unknown
 + [[ -n ./configs/cisco/branch-isr-02.cfg ]]
 + [[ -f ./configs/cisco/branch-isr-02.cfg ]]
 + configs_listing=("${source_config}")
++ action_class=config
++ [[ -z '' ]]
++ [[ -n '' ]]
++ [[ -z '' ]]
++ [[ -z ./configs/cisco/branch-isr-02.cfg ]]
++ [[ -z 10.0.2.3,172.16.1.6 ]]
++ [[ -n '' ]]
++ [[ 1 -eq 0 ]]
 + [[ -n '' ]]
 + [[ -n '' ]]
 + [[ 1 -eq 0 ]]
@@ -123,17 +136,33 @@ $ bash -x scripts/network-configs.shell \
 + set -e
 + case "${vendor_code}" in
 + target_platform=cisco
-+ [[ -n ./.outputs/branch-isr-02-multi.cfg ]]
-++ dirname ./.outputs/branch-isr-02-multi.cfg
-+ local output_dir=./.outputs
-+ [[ ! -d ./.outputs ]]
-+ execute=('./scripts/extract-configs.shell' '--ip-addr=10.0.2.3,172.16.1.6' '--config=./configs/cisco/branch-isr-02.cfg' '--output=./.outputs/branch-isr-02-multi.cfg')
++ message 'Parsing [ cisco ] configs (by: config): '
++ [[ -n Parsing [ cisco ] configs (by: config):  ]]
++ local 'message=Parsing [ cisco ] configs (by: config): '
++ echo -e 'Parsing [ cisco ] configs (by: config): '
+Parsing [ cisco ] configs (by: config): 
++ [[ -n ./resources/branch-isr-02-multi.cfg ]]
++ base_output=./resources/branch-isr-02-multi.cfg
+++ echo ./configs/cisco/branch-isr-02.cfg
+++ sed 's|^\./||'
++ rel_path=configs/cisco/branch-isr-02.cfg
++ target_output=./resources/branch-isr-02-multi.cfg/configs/cisco/branch-isr-02.cfg
+++ dirname ./resources/branch-isr-02-multi.cfg/configs/cisco/branch-isr-02.cfg
++ local output_dir=./resources/branch-isr-02-multi.cfg/configs/cisco
++ [[ ! -d ./resources/branch-isr-02-multi.cfg/configs/cisco ]]
++ mkdir -p ./resources/branch-isr-02-multi.cfg/configs/cisco
++ execute=('./scripts/extract-configs.shell' '--ip-addr=10.0.2.3,172.16.1.6' '--config=./configs/cisco/branch-isr-02.cfg' '--output=./resources/branch-isr-02-multi.cfg/configs/cisco/branch-isr-02.cfg')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
 ++ which bash
-+ /usr/local/bin/bash ./scripts/extract-configs.shell --ip-addr=10.0.2.3,172.16.1.6 --config=./configs/cisco/branch-isr-02.cfg --output=./.outputs/branch-isr-02-multi.cfg --verbose
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ip-addr=10.0.2.3,172.16.1.6 --config=./configs/cisco/branch-isr-02.cfg --output=./resources/branch-isr-02-multi.cfg/configs/cisco/branch-isr-02.cfg --verbose
 + [[ true == true ]]
++ message 'Configuration File [ ./resources/branch-isr-02-multi.cfg/configs/cisco/branch-isr-02.cfg ]'
++ [[ -n Configuration File [ ./resources/branch-isr-02-multi.cfg/configs/cisco/branch-isr-02.cfg ] ]]
++ local 'message=Configuration File [ ./resources/branch-isr-02-multi.cfg/configs/cisco/branch-isr-02.cfg ]'
++ echo -e 'Configuration File [ ./resources/branch-isr-02-multi.cfg/configs/cisco/branch-isr-02.cfg ]'
+Configuration File [ ./resources/branch-isr-02-multi.cfg/configs/cisco/branch-isr-02.cfg ]
 + newline
 + local count=1
 + (( i = 0 ))
@@ -142,41 +171,44 @@ $ bash -x scripts/network-configs.shell \
 
 + (( i++ ))
 + (( i < count ))
-+ cat -n ./.outputs/branch-isr-02-multi.cfg
++ cat -n ./resources/branch-isr-02-multi.cfg/configs/cisco/branch-isr-02.cfg
      1	hostname branch-isr-02
-     2
+     2	
      3	interface GigabitEthernet0/0/0
      4	 ip address 172.16.1.6 255.255.255.0
      5	 description ISP uplink
-     6
+     6	
      7	interface GigabitEthernet0/0/2
      8	 ip address 10.0.2.3 255.255.255.0
      9	 description Dev VLAN
-    10
+    10	
     11	object network BlackWidow-Core
     12	 host 172.16.1.6
     13	 description Branch router uplink NAT
-    14
+    14	
     15	object network Panther-Gateway
     16	 host 10.0.2.3
     17	 description Secure outbound concentrator
-    18
+    18	
     19	access-list OUTSIDE extended permit ip host 10.0.2.3 any
-    20
-    21	access-list OUTSIDE extended permit ip any host 172.16.1.6+ newline 2
-+ local count=2
+    20	
+    21	access-list OUTSIDE extended permit ip any host 172.16.1.6
+    22	
++ newline
++ local count=1
 + (( i = 0 ))
 + (( i < count ))
 + echo
 
 + (( i++ ))
 + (( i < count ))
-+ echo
++ tree ./resources/branch-isr-02-multi.cfg
+./resources/branch-isr-02-multi.cfg
+`-- configs
+    `-- cisco
+        `-- branch-isr-02.cfg
 
-+ (( i++ ))
-+ (( i < count ))
-+ ls -al ./.outputs/branch-isr-02-multi.cfg
--rw-r--r--  1 emvaldes  staff  498 May 23 23:17 ./.outputs/branch-isr-02-multi.cfg
+3 directories, 1 file
 + newline
 + local count=1
 + (( i = 0 ))
@@ -188,29 +220,44 @@ $ bash -x scripts/network-configs.shell \
 + return 0
 + result=0
 + exit 0
-+ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.bkAkXuwc4T ]]
-+ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.bkAkXuwc4T
++ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.aoRgRL1qaH ]]
++ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.aoRgRL1qaH
 
-$ cat ./.outputs/branch-isr-02-multi.cfg
+$ bash scripts/network-configs.shell \
+       --ip-addr="10.0.2.3,172.16.1.6" \
+       --config=./configs/cisco/branch-isr-02.cfg \
+       --output=./resources/branch-isr-02-multi.cfg \
+       --verbose ;
 
-hostname branch-isr-02
+Parsing [ cisco ] configs (by: config): 
+Configuration File [ ./resources/branch-isr-02-multi.cfg/configs/cisco/branch-isr-02.cfg ]
 
-interface GigabitEthernet0/0/0
- ip address 172.16.1.6 255.255.255.0
- description ISP uplink
+     1	hostname branch-isr-02
+     2	
+     3	interface GigabitEthernet0/0/0
+     4	 ip address 172.16.1.6 255.255.255.0
+     5	 description ISP uplink
+     6	
+     7	interface GigabitEthernet0/0/2
+     8	 ip address 10.0.2.3 255.255.255.0
+     9	 description Dev VLAN
+    10	
+    11	object network BlackWidow-Core
+    12	 host 172.16.1.6
+    13	 description Branch router uplink NAT
+    14	
+    15	object network Panther-Gateway
+    16	 host 10.0.2.3
+    17	 description Secure outbound concentrator
+    18	
+    19	access-list OUTSIDE extended permit ip host 10.0.2.3 any
+    20	
+    21	access-list OUTSIDE extended permit ip any host 172.16.1.6
+    22	
 
-interface GigabitEthernet0/0/2
- ip address 10.0.2.3 255.255.255.0
- description Dev VLAN
+./resources/branch-isr-02-multi.cfg
+`-- configs
+    `-- cisco
+        `-- branch-isr-02.cfg
 
-object network BlackWidow-Core
- host 172.16.1.6
- description Branch router uplink NAT
-
-object network Panther-Gateway
- host 10.0.2.3
- description Secure outbound concentrator
-
-access-list OUTSIDE extended permit ip host 10.0.2.3 any
-
-access-list OUTSIDE extended permit ip any host 172.16.1.6
+3 directories, 1 file
