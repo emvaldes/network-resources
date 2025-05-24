@@ -1,34 +1,32 @@
 #!/usr/bin/env bash
 
-## File: scripts/extract/network-configs.shell
-
-##-----------------------------------------------------------------------------##
-## File: scripts/extract/network-configs.shell
+## -------------------------------------------------------------------------- ##
+## File: scripts/network-configs.shell
 ##
 ## Purpose:
-##   Dynamic switchboard script to extract relevant configuration blocks
-##   for a given search pattern (e.g., IP address) from multi-vendor network
-##   device configuration files.
+##   Top-level dispatcher for pre-processing multi-vendor network configurations.
+##   Extracts relevant sections (e.g., ACLs, objects, addresses) based on a
+##   user-defined search pattern (typically IP addresses), reducing massive
+##   configuration files into targeted, minimal artifacts for faster analysis.
 ##
 ## Description:
-##   - Automatically detects the vendor platform (e.g., Cisco, Fortinet)
-##     by inspecting configuration content.
-##   - Delegates parsing to backend scripts:
-##       - cisco-configs.shell
-##       - fortinet-configs.shell
-##   - Validates inputs and ensures output path exists and is writable.
-##   - Ensures uniform exit codes and silent execution unless --verbose.
+##   - Acts as a platform-agnostic orchestrator.
+##   - Accepts one or more source configs or an entire directory scan.
+##   - Automatically detects vendor platform (Cisco, Fortinet).
+##   - Delegates execution to `extract-configs.shell` via vendor-specific logic.
+##   - Output is a per-config reduced dataset with relevant blocks only.
+##   - Results are suitable for use in downstream search/classification pipelines.
+##
+## Extraction Logic:
+##   - Fortinet: matches ‘fortinet’, ‘fortigate’
+##   - Cisco: matches ‘asa’, ‘interface’, ‘object’, ‘cisco ios’
 ##
 ## Usage:
-##   bash ./scripts/extract/network-configs.shell \
+##   bash ./scripts/network-configs.shell \
 ##     --ip-addr=198.51.100.75 \
-##     --config=./configs/source-config.cfg \
-##     --output=./results/extracted-config.cfg \
+##     --config=./configs/device.cfg \
+##     --output=./results/device-reduced.cfg \
 ##     --verbose
-##
-## Vendor Detection Logic:
-##   - Fortinet: matches 'fortinet', 'fortigate'
-##   - Cisco: matches 'asa', 'interface', 'object', 'cisco ios'
 ##
 ## Exit Codes:
 ##   1 = Missing or empty search pattern
@@ -37,7 +35,7 @@
 ##   4 = Unrecognized configuration content
 ##   5 = Output path creation failed
 ##
-##-----------------------------------------------------------------------------##
+## -------------------------------------------------------------------------- ##
 
 set -euo pipefail  ## Strict mode: exit on error, undefined var use, and pipeline failure
 # set -x;          ## Enable for execution tracing/debugging
@@ -122,7 +120,7 @@ function main () {
 
       #### ---------------------------------------------------------------------
       ## Match accepted arguments
-      [[ $key =~ ^(ip-addr|i|search|s)$ ]] && export search_pattern="${value}";
+      [[ $key =~ ^(ip-addr|i)$ ]] && export search_pattern="${value}";
       [[ $key =~ ^(config|c)$ ]] && export source_config="${value}";
       [[ $key =~ ^(output|o)$ ]] && export output_config="${value}";
 
@@ -218,16 +216,8 @@ function main () {
       fi;
 
       #### -----------------------------------------------------------------------
-      ## Optionally: echo resolved parameters
-      # newline;
-      # message "Serach Pattern: ${search_pattern}";
-      # message "Input Config:   ${source_config}";
-      # message "Output Config:  ${output_config}";
-      # newline;
-
-      #### -----------------------------------------------------------------------
       declare -a execute=(
-        ./scripts/extract/${target_platform}-configs.shell
+        ./scripts/extract-configs.shell
         --ip-addr="${search_pattern}"
         --config="${source_config}"
         --output="${output_config}"
@@ -243,6 +233,9 @@ function main () {
         cat -n "${output_config}";
         newline 2;
       fi;
+
+      ls -al "${output_config}";
+      newline;
 
     done;
 
@@ -260,4 +253,45 @@ if [[ ${#@} -ge 1 && "${1,,}" =~ ^-*(h|help)$ ]]; then
         ## newline; message "Done."; newline;
 fi;
 
-#------------------------------------------------------------------------------#
+## -------------------------------------------------------------------------- ##
+## Examples:
+##
+## 1. Cisco — Extract entries referencing a known IP:
+##    bash scripts/network-configs.shell \
+##         --ip-addr="198.51.100.75" \
+##         --config=configs/cisco/branch-isr-02.cfg \
+##         --output=tmp/branch-isr-02-reduced.cfg \
+##         --verbose
+##
+## 2. Fortinet — Extract from lab firewall using shared IP:
+##    bash scripts/network-configs.shell \
+##         --ip-addr="198.51.100.75" \
+##         --config=configs/fortinet/fg-lab-test-fw.cfg \
+##         --output=tmp/fg-lab-test-fw-reduced.cfg \
+##         --verbose
+##
+## 3. Cisco — Match multiple IP addresses in a single pass:
+##    bash scripts/network-configs.shell \
+##         --ip-addr="10.0.2.3,172.16.1.6" \
+##         --config=configs/cisco/branch-isr-02.cfg \
+##         --output=tmp/branch-isr-02-multi.cfg \
+##         --verbose
+##
+## 4. Fortinet — Match subnet blocks (set subnet commands):
+##    bash scripts/network-configs.shell \
+##         --ip-addr="192.168.1.10,203.0.113.25" \
+##         --config=configs/fortinet/fg-lab-test-fw.cfg \
+##         --output=tmp/fg-lab-test-fw-subnets.cfg \
+##         --verbose
+##
+## 5. Auto-detect output path (no --output specified):
+##    bash scripts/network-configs.shell \
+##         --ip-addr="10.0.0.1" \
+##         --config=configs/fortinet/fg-lab-test-fw.cfg \
+##         --verbose
+##
+## Notes:
+##   - Search patterns can include IPs, phrases, or edit keys.
+##   - The --output flag is optional; auto-names will be generated if omitted.
+##   - Additional support for --location and --configs coming soon.
+## -------------------------------------------------------------------------- ##

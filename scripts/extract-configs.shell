@@ -1,16 +1,43 @@
 #!/usr/bin/env bash
 
-## File: scripts/extract-cisco.shell
+#!/usr/bin/env bash
 
-## Purpose: Parse a set of IP addresses against a directory of configuration files
-##          and produce detailed per-IP reports in JSON and CSV format.
-## Requirements: Bash v4+ and GNU utilities (jq, find, grep, sed, etc.)
-
-## > bash ./scripts/extract-cisco.shell \
-##     --ip-addr|-i \
-##     --config=config.cfg \
-##     --output=output.cfg \
-##     --verbose ;
+## -------------------------------------------------------------------------- ##
+## File: scripts/extract-configs.shell
+##
+## Purpose:
+##   Unified pre-parsing engine to extract reduced configuration blocks
+##   from vendor-native network configuration files (e.g., Cisco, Fortinet).
+##
+##   This wrapper detects or accepts a vendor platform, invokes the appropriate
+##   vendor-specific AWK script, and writes a minimized output containing only
+##   relevant configuration entries matched against a search pattern.
+##
+## Description:
+##   - Automatically detects config vendor if not specified.
+##   - Dispatches to ./scripts/extract/<vendor>-configs.awk
+##   - Captures matched config blocks based on IPs, phrases, or identifiers.
+##   - Supports clean JSON-oriented output production downstream.
+##   - Serves as a bridge between `network-configs.shell` and vendor logic.
+##
+## Usage:
+##   bash ./scripts/extract-configs.shell \
+##     --ip-addr=10.0.0.1 \
+##     --config=configs/fw-1.cfg \
+##     --output=./tmp/fw1-reduced.cfg \
+##     [--platform=cisco|fortinet] \
+##     [--verbose]
+##
+## Requirements:
+##   - Bash v4+, GNU awk, grep, sed
+##   - scripts/extract/<vendor>-configs.awk must exist
+##
+## Notes:
+##   - This script should never contain vendor-specific logic internally.
+##     All pattern logic resides in vendor-specific AWK scripts.
+##   - Compatible with project-wide caching and pre-reduction workflows.
+##
+## -------------------------------------------------------------------------- ##
 
 set -euo pipefail  ## Strict mode: exit on error, undefined var use, and pipeline failure
 # set -x;          ## Enable for execution tracing/debugging
@@ -36,6 +63,7 @@ function display_help () {
     help_lines+=( "  -i, --ip-addr      Custom Search Pattern: IP Address, etc." );
     help_lines+=( "  -c, --config       Source Configuration filepath to be parsed" );
     help_lines+=( "  -o, --output       Output Filepath for extracted datasets (*.cfg)" );
+    help_lines+=( "  -p, --platform     Provide platform-specific config (cisco, fortinet)" );
     help_lines+=( "${nl}" );
     ## Flags
     help_lines+=( "Flags:${nl}" );
@@ -56,8 +84,8 @@ function display_help () {
 function newline () {
     local count="${1:-1}";
     for ((i = 0; i < count; i++)); do echo; done;
-    return 0;
-};
+    # return 0;
+}; alias new-line='newline';
 
 #------------------------------------------------------------------------------#
 ## Output Utilities: Print an error message in consistent format
@@ -65,7 +93,7 @@ function message () {
     [[ -n ${1:-} ]] && local message="${1}" || return 0;
     echo -e "${message}";
     return 0;
-};
+}; alias print-message='message';
 
 #------------------------------------------------------------------------------#
 function main () {
@@ -83,6 +111,7 @@ function main () {
       [[ $key =~ ^(ip-addr|i)$ ]] && export search_pattern="${value}";
       [[ $key =~ ^(config|c)$ ]] && export source_config="${value}";
       [[ $key =~ ^(output|o)$ ]] && export output_config="${value}";
+      [[ $key =~ ^(platform|p)$ ]] && export target_platform="${value}";
 
       #### ---------------------------------------------------------------------
       ## Special options
@@ -109,7 +138,7 @@ function main () {
     #### -----------------------------------------------------------------------
     while [[ -z ${search_pattern:-} ]]; do
       newline;
-      read -e -i "Enter target search pattern: " search_pattern
+      read -e -p "Enter target search pattern: " search_pattern
       if [[ "${search_pattern:-}" =~ ^[[:space:]]*$ ]]; then
         message "Warning: Pattern cannot be empty!" >&2;
         newline;
@@ -120,7 +149,7 @@ function main () {
     #### -----------------------------------------------------------------------
     while [[ -z ${source_config:-} || ! -f "${source_config}" ]]; do
       newline;
-      read -e -i "Enter source configuration file: " source_config;
+      read -e -p "Enter source configuration file: " source_config;
       if [[ ! -f "${source_config}" ]]; then
         message "Warning: File does not exist!" >&2;
         newline;
@@ -128,16 +157,22 @@ function main () {
       fi;
     done;
 
-    if grep -qiE 'fortinet|fortigate' "${source_config}"; then
-      message "Warning: This appears to be a Fortinet configuration!" >&2
-      newline 2;
-      exit 3;
-    fi;
+    if [[ -z "${target_platform:-}" ]]; then
+      if grep -qiE 'fortinet|fortigate' "${source_config}"; then
+        vendor="fortinet"
+      elif grep -qiE '\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b' "${source_config}" 2>/dev/null; then
+        vendor="cisco"
+      else
+        message "Unable to detect vendor platform." >&2;
+        newline;
+        exit 3;
+      fi
+    fi
 
     #### -----------------------------------------------------------------------
     while [[ -z ${output_config:-} ]]; do
       newline;
-      read -e -i "Enter output configuration file: " output_config;
+      read -e -p "Enter output configuration file: " output_config;
     done
     local output_dir="$( dirname "${output_config}" )";
     if [[ ! -d "${output_dir}" ]]; then
@@ -149,60 +184,10 @@ function main () {
     fi;
 
     #### -----------------------------------------------------------------------
-    ## Optionally: echo resolved parameters
-    # newline;
-    # message "Serach Pattern: ${search_pattern}";
-    # message "Input Config:   ${source_config}";
-    # message "Output Config:  ${output_config}";
-    # newline;
-
-    #### -----------------------------------------------------------------------
-    ## This is an Artificial Intellingence Asssisted contribution:
     local extracted_configuration="$(
-      awk -v target="${search_pattern}" '
-      BEGIN {
-        in_block = 0;
-        match_found = 0;
-        block = "";
-        headers = "";
-        collected_blocks = "";
-      }
-      /^(ASA Version|hostname|domain-name|#)/ {
-        headers = headers $0 "\n";
-        next;
-      }
-      /^$/ { next; }
-      /^[^[:space:]]/ {
-        if (in_block && block_has_match) {
-          collected_blocks = collected_blocks block "\n";
-          match_found = 1;
-        }
-        in_block = 1;
-        block_has_match = 0;
-        block = $0 "\n";
-        if ($0 ~ ("(^|[^0-9])" target "($|[^0-9])")) {
-          block_has_match = 1;
-        }
-        next;
-      }
-      {
-        if (in_block) {
-          block = block $0 "\n";
-          if ($0 ~ ("(^|[^0-9])" target "($|[^0-9])")) {
-            block_has_match = 1;
-          }
-        }
-      }
-      END {
-        if (in_block && block_has_match) {
-          collected_blocks = collected_blocks block "\n";
-          match_found = 1;
-        }
-        if (match_found) {
-          printf "%s\n%s", headers, collected_blocks;
-        }
-      }
-      ' "${source_config}"
+      $( which awk ) -v targets="${search_pattern}" \
+                     -f "./scripts/extract/${vendor}-configs.awk" \
+                     "${source_config}"
     )";
     result=$?;
     message "AWK exit code: ${result}";
@@ -229,8 +214,45 @@ function main () {
 
 if [[ ${#@} -ge 1 && "${1,,}" =~ ^-*(h|help)$ ]]; then
         main --help ;
-  else  main "${@}"; exit $?;
+  else  main "${@}";
+        result=${?}; exit ${result};
         ## newline; message "Done."; newline;
 fi;
 
-#------------------------------------------------------------------------------#
+## -------------------------------------------------------------------------- ##
+## Examples:
+##
+## 1. Extract from Cisco config using IP matches:
+##    bash scripts/extract-configs.shell \
+##         --ip-addr="10.0.0.1,192.168.1.1" \
+##         --config=./configs/core-fw.cfg \
+##         --output=./reduced/core-fw.cfg \
+##         --platform=cisco
+##
+## 2. Extract from Fortinet config using VPN object names:
+##    bash scripts/extract-configs.shell \
+##         --ip-addr="edit VPN-PROFILE,edit BRANCH-ACCESS" \
+##         --config=./configs/fg-dmz.cfg \
+##         --output=./reduced/fg-dmz.cfg \
+##         --platform=fortinet
+##
+## 3. Auto-detect platform from config content:
+##    bash scripts/extract-configs.shell \
+##         --ip-addr="permit ip any" \
+##         --config=./configs/asa-fw.cfg \
+##         --output=./reduced/asa-fw.cfg
+##
+## 4. Use custom pipe delimiter:
+##    bash scripts/extract-configs.shell \
+##         --ip-addr="object-group DMZ|object-group CORE" \
+##         --config=./configs/fw-acl.cfg \
+##         --output=./reduced/fw-acl.cfg \
+##         --platform=cisco
+##
+## 5. Basic interactive mode (will prompt for missing values):
+##    bash scripts/extract-configs.shell
+##
+## Notes:
+##   - The --ip-addr pattern string is passed to the AWK script as-is.
+##   - Use --platform to bypass detection and force a specific parser.
+## -------------------------------------------------------------------------- ##
