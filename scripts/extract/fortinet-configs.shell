@@ -56,8 +56,8 @@ function display_help () {
 function newline () {
     local count="${1:-1}";
     for ((i = 0; i < count; i++)); do echo; done;
-    return 0;
-};
+    # return 0;
+}; alias new-line='newline';
 
 #------------------------------------------------------------------------------#
 ## Output Utilities: Print an error message in consistent format
@@ -65,7 +65,7 @@ function message () {
     [[ -n ${1:-} ]] && local message="${1}" || return 0;
     echo -e "${message}";
     return 0;
-};
+}; alias print-message='message';
 
 #------------------------------------------------------------------------------#
 function main () {
@@ -109,7 +109,7 @@ function main () {
     #### -----------------------------------------------------------------------
     while [[ -z ${search_pattern:-} ]]; do
       newline;
-      read -rp "Enter target search pattern: " search_pattern
+      read -e -p "Enter target search pattern: " search_pattern
       if [[ "${search_pattern:-}" =~ ^[[:space:]]*$ ]]; then
         message "Warning: Pattern cannot be empty!" >&2;
         newline;
@@ -120,9 +120,9 @@ function main () {
     #### -----------------------------------------------------------------------
     while [[ -z ${source_config:-} || ! -f "${source_config}" ]]; do
       newline;
-      read -rp "Enter source configuration file: " source_config;
+      read -e -p "Enter source configuration file: " source_config;
       if [[ ! -f "${source_config}" ]]; then
-        message "Warning: File does not exist: ${source_config}" >&2;
+        message "Warning: File does not exist!" >&2;
         newline;
         exit 2;
       fi;
@@ -136,7 +136,7 @@ function main () {
     #### -----------------------------------------------------------------------
     while [[ -z ${output_config:-} ]]; do
       newline;
-      read -rp "Enter output configuration file: " output_config;
+      read -e -p "Enter output configuration file: " output_config;
     done
     local output_dir="$( dirname "${output_config}" )";
     if [[ ! -d "${output_dir}" ]]; then
@@ -239,8 +239,8 @@ function main () {
     if [[ -n "${extracted_configuration}" ]]; then
             echo -n "${extracted_configuration}" > "${output_config}";
             if [[ "${verbose}" == true ]]; then
-              message "${extracted_configuration}" | cat -n;
-              newline;
+              cat -n "${output_config}";
+              newline 2;
             fi;
       else  message "Warning: No matching blocks found. Output file not written.";
             newline;

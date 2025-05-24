@@ -61,9 +61,10 @@ function display_help () {
     ## Shared Options
     help_lines+=( "Options:${nl}" );
     help_lines+=( "  -i, --ip-addr      Custom Search Pattern: IP Address, etc." );
-    help_lines+=( "  -c, --config       Source Configuration filepath to be parsed" );
+    help_lines+=( "  -c, --config       Single (target) Configuration filepath to be parsed" );
+    help_lines+=( "  -s, --search       Configurations listing to be located (files: {abc,def,ghi}.cfg)" );
+    help_lines+=( "  -l, --location     Requires to listing all files matching a criteria (files: *.cfg)" );
     help_lines+=( "  -o, --output       Output Filepath for extracted datasets (*.cfg)" );
-    help_lines+=( "${nl}" );
     ## Flags
     help_lines+=( "Flags:${nl}" );
     help_lines+=( "  --help             Show this help message and exit" );
@@ -83,16 +84,16 @@ function display_help () {
 function newline () {
     local count="${1:-1}";
     for ((i = 0; i < count; i++)); do echo; done;
-    return 0;
-};
+    # return 0;
+  }; alias new-line='newline';
 
 #------------------------------------------------------------------------------#
 ## Output Utilities: Print an error message in consistent format
 function message () {
     [[ -n ${1:-} ]] && local message="${1}" || return 0;
     echo -e "${message}";
-    return 0;
-};
+    # return 0;
+  }; alias print-message='message';
 
 #------------------------------------------------------------------------------#
 function detect_vendor () {
@@ -101,8 +102,7 @@ function detect_vendor () {
     local cisco_pattern='\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b';
     if grep -qiE "${fortinet_pattern}" "${config_file}"; then
             return 1;
-      elif  grep -qiE "${cisco_pattern}" \
-                 "${config_file}"; then
+      elif  grep -qiE "${cisco_pattern}" "${config_file}" 2>/dev/null; then
             return 2;
       else  return 3;
     fi;
@@ -122,7 +122,7 @@ function main () {
 
       #### ---------------------------------------------------------------------
       ## Match accepted arguments
-      [[ $key =~ ^(ip-addr|i)$ ]] && export search_pattern="${value}";
+      [[ $key =~ ^(ip-addr|i|search|s)$ ]] && export search_pattern="${value}";
       [[ $key =~ ^(config|c)$ ]] && export source_config="${value}";
       [[ $key =~ ^(output|o)$ ]] && export output_config="${value}";
 
@@ -148,10 +148,12 @@ function main () {
       exit 0;
     fi;
 
+    declare -a configs_listing=();
+
     #### -----------------------------------------------------------------------
     while [[ -z ${search_pattern:-} ]]; do
       newline;
-      read -rp "Enter target search pattern: " search_pattern
+      read -e -p "Enter target search pattern: " search_pattern
       if [[ "${search_pattern:-}" =~ ^[[:space:]]*$ ]]; then
         message "Warning: Pattern cannot be empty!" >&2;
         newline;
@@ -162,70 +164,87 @@ function main () {
     #### -----------------------------------------------------------------------
     while [[ -z ${source_config:-} || ! -f "${source_config}" ]]; do
       newline;
-      read -rp "Enter source configuration file: " source_config;
+      read -e -p "Enter source configuration file: " source_config
+      # message "Source Config: ${source_config}";
       if [[ ! -f "${source_config}" ]]; then
-        message "Warning: File does not exist: ${source_config}" >&2;
+        message "Warning: File does not exist!" >&2;
         newline;
         exit 2;
       fi;
     done;
 
-    #### -----------------------------------------------------------------------
-    set +e;
-    detect_vendor "${source_config}";
-    local vendor_code=${?};
-    message "Vendor Code: ${vendor_code}";
-    set -e;
-    case "${vendor_code}" in
-      1)  target_platform="fortinet";
-          ;;
-      2)  target_platform="cisco";
-          ;;
-      3)  message "Unsupported configuration type: ${source_config}";
-          newline 2;
-          exit 3;
-          ;;
-      *)  message "Unknown configuration type: ${source_config}";
-          newline 2;
-          exit 4;
-          ;;
-    esac;
+    # Copy into array for uniform downstream processing
+    configs_listing=( "${source_config}" );
 
     #### -----------------------------------------------------------------------
-    if [[ -n ${output_config:-} ]]; then
-            local output_dir="$( dirname "${output_config}" )";
-            if [[ ! -d "${output_dir}" ]]; then
-              mkdir -p "${output_dir}" || {
-                message "Warning: Failed to create output directory: ${output_dir}" >&2;
-                newline;
-                exit 5;
-              };
-            fi;
-      else  local output_config="$( pwd )/${target_platform}--$(
-                    basename ${source_config/.cfg/}
-                  ).cfg";
-    fi;
+    # Loop through configs_listing array
+    for source_config in "${configs_listing[@]}"; do
+      [[ ! -f "${source_config}" ]] && continue;
 
-    #### -----------------------------------------------------------------------
-    ## Optionally: echo resolved parameters
-    # newline;
-    # message "Serach Pattern: ${search_pattern}";
-    # message "Input Config:   ${source_config}";
-    # message "Output Config:  ${output_config}";
-    # newline;
+      #### -----------------------------------------------------------------------
+      set +e;
+      detect_vendor "${source_config}";
+      local vendor_code=${?};
+      # message "Vendor Code: ${vendor_code}";
+      set -e;
+      case "${vendor_code}" in
+        1)  target_platform="fortinet";
+            ;;
+        2)  target_platform="cisco";
+            ;;
+        3)  message "Unsupported configuration type: ${source_config}";
+            newline 2;
+            exit 3;
+            ;;
+        *)  message "Unknown configuration type: ${source_config}";
+            newline 2;
+            exit 4;
+            ;;
+      esac;
 
-    #### -----------------------------------------------------------------------
-    declare -a execute=(
-      ./scripts/extract/${target_platform}-configs.shell
-      --ip-addr="${search_pattern}"
-      --config="${source_config}"
-      --output="${output_config}"
-    );
-    [[ "${verbose}" == true ]] && execute+=( --verbose );
+      #### -----------------------------------------------------------------------
+      if [[ -n ${output_config:-} ]]; then
+              local output_dir="$( dirname "${output_config}" )";
+              if [[ ! -d "${output_dir}" ]]; then
+                mkdir -p "${output_dir}" || {
+                  message "Warning: Failed to create output directory: ${output_dir}" >&2;
+                  newline;
+                  exit 5;
+                };
+              fi;
+        else  local output_config="$( pwd )/${target_platform}--$(
+                      basename ${source_config/.cfg/}
+                    ).cfg";
+      fi;
 
-    #### -----------------------------------------------------------------------
-    ## Execute and propagate exit status
-    bash "${execute[@]}" >/dev/null 2>&1;
+      #### -----------------------------------------------------------------------
+      ## Optionally: echo resolved parameters
+      # newline;
+      # message "Serach Pattern: ${search_pattern}";
+      # message "Input Config:   ${source_config}";
+      # message "Output Config:  ${output_config}";
+      # newline;
+
+      #### -----------------------------------------------------------------------
+      declare -a execute=(
+        ./scripts/extract/${target_platform}-configs.shell
+        --ip-addr="${search_pattern}"
+        --config="${source_config}"
+        --output="${output_config}"
+      );
+      [[ "${verbose}" == true ]] && execute+=( --verbose );
+
+      #### -----------------------------------------------------------------------
+      ## Execute and propagate exit status
+      $( which bash ) "${execute[@]}" >/dev/null 2>&1;
+
+      if [[ "${verbose}" == true ]]; then
+        newline;
+        cat -n "${output_config}";
+        newline 2;
+      fi;
+
+    done;
 
     return 0;
 }; alias parse-cisco='main';
