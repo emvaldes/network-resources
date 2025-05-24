@@ -122,6 +122,8 @@ function main () {
       ## Match accepted arguments
       [[ $key =~ ^(ip-addr|i)$ ]] && export search_pattern="${value}";
       [[ $key =~ ^(config|c)$ ]] && export source_config="${value}";
+      [[ $key =~ ^(search|s)$ ]] && export search_configs="${value}";
+      [[ $key =~ ^(location|l)$ ]] && export search_location="${value}";
       [[ $key =~ ^(output|o)$ ]] && export output_config="${value}";
 
       #### ---------------------------------------------------------------------
@@ -134,7 +136,10 @@ function main () {
 
     #### -----------------------------------------------------------------------
     ## Set default values if not supplied
+
     [[ -z ${script_helper:-} ]] && script_helper=false;
+    [[ -z "${output_config:-}" ]] && output_config="./.configs";
+
     [[ -z ${debug:-} ]] && debug=false;
     [[ -z ${dry_run:-} ]] && dry_run=false;
     [[ -z ${verbose:-} ]] && verbose=false;
@@ -160,19 +165,96 @@ function main () {
     done;
 
     #### -----------------------------------------------------------------------
-    while [[ -z ${source_config:-} || ! -f "${source_config}" ]]; do
-      newline;
-      read -e -p "Enter source configuration file: " source_config
-      # message "Source Config: ${source_config}";
-      if [[ ! -f "${source_config}" ]]; then
-        message "Warning: File does not exist!" >&2;
+    ## Build target list with precedence: --location > --search > --config
+    configs_listing=();  # Reset array first
+
+    #### -----------------------------------------------------------------------
+    ## Parameter: --config → lowest precedence (single file)
+    if [[ -n "${source_config:-}" && -f "${source_config}" ]]; then
+      configs_listing=( "${source_config}" );
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Parameter: --search → overrides --config (comma-separated list, needs lookup)
+    if [[ -n "${search_configs:-}" ]]; then
+      IFS=',' read -r -a search_items <<< "${search_configs}";
+      found_configs=()
+      for item in "${search_items[@]}"; do
+        result="$(
+          find . -type f -name "${item}" 2>/dev/null | head -n 1
+        )";
+        [[ -n "$result" ]] && found_configs+=( "$result" );
+      done;
+      [[ "${#found_configs[@]}" -gt 0 ]] && \
+          configs_listing=( "${found_configs[@]}" );
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Parameter --location → highest precedence (scan all files)
+    if [[ -n "${search_location:-}" && -d "${search_location}" ]]; then
+
+      #### ---------------------------------------------------------------------
+      mapfile -t configs_listing < <(
+        find "${search_location}" -type f
+      );
+
+      #### ---------------------------------------------------------------------
+      if [[ "${#configs_listing[@]}" -eq 0 ]]; then
+        message "No configuration files found under location: ${search_location}";
         newline;
         exit 2;
       fi;
-    done;
 
-    # Copy into array for uniform downstream processing
-    configs_listing=( "${source_config}" );
+      # #### ---------------------------------------------------------------------
+      # if [[ "${verbose}" == true ]]; then
+      #   message "Found ${#configs_listing[@]} configs under ${search_location}:";
+      #   for item in "${configs_listing[@]}"; do
+      #     message "  - ${item}";
+      #   done;
+      #   newline;
+      # fi;
+
+      #### ---------------------------------------------------------------------
+      ## Show which configs actually match the IP pattern
+      declare -a matched_configs=();
+      IFS=',' read -ra ip_list <<< "${search_pattern}";
+      for cfg in "${configs_listing[@]}"; do
+        for ip in "${ip_list[@]}"; do
+          if grep -qF "${ip}" "${cfg}"; then
+            matched_configs+=( "${cfg}" );
+            break;
+          fi;
+        done;
+      done;
+
+      #### ---------------------------------------------------------------------
+      if [[ "${#matched_configs[@]}" -gt 0 ]]; then
+        message "Matching IPs found in ${#matched_configs[@]} files:";
+        newline;
+        for item in "${matched_configs[@]}"; do
+          message "  - ${item}";
+        done;
+        newline;
+        configs_listing=( "${matched_configs[@]}" );
+      else
+        message "No matches for search pattern '${search_pattern}' in ${search_location}";
+        newline;
+        exit 0;
+      fi;
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Fallback prompt if all failed
+    if [[ "${#configs_listing[@]}" -eq 0 ]]; then
+      newline;
+      read -e -p "Enter source configuration file: " source_config;
+      if [[ -f "${source_config}" ]]; then
+              configs_listing=( "${source_config}" );
+        else  message "Error: No valid configuration file provided or found." >&2;
+              newline;
+              exit 2;
+      fi;
+    fi;
 
     #### -----------------------------------------------------------------------
     # Loop through configs_listing array
@@ -201,18 +283,24 @@ function main () {
       esac;
 
       #### -----------------------------------------------------------------------
-      if [[ -n ${output_config:-} ]]; then
-              local output_dir="$( dirname "${output_config}" )";
-              if [[ ! -d "${output_dir}" ]]; then
-                mkdir -p "${output_dir}" || {
-                  message "Warning: Failed to create output directory: ${output_dir}" >&2;
-                  newline;
-                  exit 5;
-                };
-              fi;
-        else  local output_config="$( pwd )/${target_platform}--$(
-                      basename ${source_config/.cfg/}
-                    ).cfg";
+      if [[ -n "${output_config:-}" ]]; then
+              base_output="${output_config%/}";
+              rel_path="$(
+                echo "${source_config}" | sed 's|^\./||'
+              )";
+              target_output="${base_output}/${rel_path}";
+        else  config_filename="$(
+                basename "${source_config}"
+              )";
+              target_output="$( pwd )/${target_platform}--${config_filename}";
+      fi;
+      local output_dir="$( dirname "${target_output}" )";
+      if [[ ! -d "${output_dir}" ]]; then
+        mkdir -p "${output_dir}" || {
+          message "Warning: Failed to create output directory: ${output_dir}" >&2;
+          newline;
+          exit 5;
+        };
       fi;
 
       #### -----------------------------------------------------------------------
@@ -220,7 +308,7 @@ function main () {
         ./scripts/extract-configs.shell
         --ip-addr="${search_pattern}"
         --config="${source_config}"
-        --output="${output_config}"
+        --output="${target_output}"
       );
       [[ "${verbose}" == true ]] && execute+=( --verbose );
 
@@ -229,15 +317,17 @@ function main () {
       $( which bash ) "${execute[@]}" >/dev/null 2>&1;
 
       if [[ "${verbose}" == true ]]; then
+        newline 1;
+        message "Configuration File [ ${target_output} ]";
         newline;
-        cat -n "${output_config}";
-        newline 2;
+        cat -n "${target_output}";
+        newline;
       fi;
 
-      ls -al "${output_config}";
-      newline;
-
     done;
+
+    tree "${output_config}";
+    newline;
 
     return 0;
 }; alias parse-cisco='main';

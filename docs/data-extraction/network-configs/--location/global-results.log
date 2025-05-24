@@ -1,0 +1,145 @@
+$ bash ./scripts/network-configs.shell \
+       --ip-addr="198.51.100.75,203.0.113.10" \
+       --location=./configs \
+       --verbose ;
+
+Matching IPs found in 12 files:
+
+  - ./configs/misc/fw5.cfg
+  - ./configs/misc/fw2.cfg
+  - ./configs/cisco/core-fw-dmz-01.cfg
+  - ./configs/cisco/branch-isr-02.cfg
+  - ./configs/cisco/branch-fw-03.cfg
+  - ./configs/cisco/hq-core-rtr-02.cfg
+  - ./configs/cisco/dmz-fw2-backup.cfg
+  - ./configs/juniper/srx1.ignore
+  - ./configs/fortinet/fg-fw-dmz-01.cfg
+  - ./configs/fortinet/fg-branch-vpn-01.cfg
+  - ./configs/fortinet/fg-lab-test-fw.cfg
+  - ./configs/fortinet/fg-testing-config.cfg
+
+
+Configuration File [ ./.configs/configs/misc/fw5.cfg ]
+
+     1	object-group network Hydra-Edge
+     2	 description Remote site uplink
+     3	 network-object host 192.168.2.12
+     4	 network-object host 198.51.100.75
+     5
+     6	object network Hydra-Link
+     7	 host 198.51.100.75
+     8
+
+
+Configuration File [ ./.configs/configs/misc/fw2.cfg ]
+
+     1	object-group network Wayne-DMZ
+     2	 description External public resources
+     3	 network-object host 203.0.113.25
+     4	 network-object host 198.51.100.75
+     5
+     6	object network Gotham-VPN
+     7	 host 198.51.100.75
+     8	 description Encrypted edge gateway
+     9
+    10	access-list OUTSIDE extended permit ip any host 198.51.100.75
+    11
+
+
+Configuration File [ ./.configs/configs/cisco/core-fw-dmz-01.cfg ]
+
+     1	ASA Version 9.16(2)
+     2	hostname core-fw-dmz-01
+     3	domain-name corp.dmz.local
+     4
+     5	object-group network Wayne-DMZ
+     6	 description External public resources
+     7	 network-object host 203.0.113.25
+     8	 network-object host 198.51.100.75
+     9
+    10	object network Gotham-VPN
+    11	 host 198.51.100.75
+    12	 description Encrypted edge gateway
+    13
+    14	access-list OUTSIDE extended permit ip any host 198.51.100.75
+    15
+
+
+Configuration File [ ./.configs/configs/cisco/branch-isr-02.cfg ]
+
+     1	hostname branch-isr-02
+     2
+     3	object network Hydra-Link
+     4	 host 198.51.100.75
+     5	 description Branch NAT egress
+     6
+     7	object-group network Hydra-Edge
+     8	 description Remote site uplink
+     9	 network-object host 192.168.2.12
+    10	 network-object host 198.51.100.75
+    11
+    12	access-list OUTSIDE extended permit ip any host 198.51.100.75
+    13
+
+
+Configuration File [ ./.configs/configs/cisco/branch-fw-03.cfg ]
+
+     1	ASA Version 9.9(2)
+     2	hostname branch-fw-03
+     3	domain-name remote.corp.com
+     4
+     5	interface GigabitEthernet0/0
+     6	 nameif outside
+     7	 ip address 198.51.100.75 255.255.255.0
+     8	 security-level 0
+     9	 description ISP Link
+    10
+    11	object network Hydra-Link
+    12	 host 198.51.100.75
+    13	 description Public NAT IP
+    14
+    15	object-group network Hydra-Edge
+    16	 description Remote site uplink
+    17	 network-object host 192.168.2.12
+    18	 network-object host 198.51.100.75
+    19
+    20	access-list OUTSIDE extended permit ip any host 198.51.100.75
+    21
+
+
+Configuration File [ ./.configs/configs/cisco/hq-core-rtr-02.cfg ]
+
+     1	hostname hq-core-rtr-02
+     2
+     3	ntp server 198.51.100.75 prefer
+     4
+
+
+Configuration File [ ./.configs/configs/cisco/dmz-fw2-backup.cfg ]
+
+     1	ASA Version 9.12(4)
+     2	hostname dmz-fw2-backup
+     3	domain-name global.dmz.example.net
+     4
+     5	interface GigabitEthernet0/2
+     6	 nameif outside
+     7	 ip address 198.51.100.75 255.255.255.0
+     8	 description Outbound Internet NAT interface
+     9
+
+Unsupported configuration type: ./configs/juniper/srx1.ignore
+
+
+./.configs
+└── configs
+    ├── cisco
+    │   ├── branch-fw-03.cfg
+    │   ├── branch-isr-02.cfg
+    │   ├── core-fw-dmz-01.cfg
+    │   ├── dmz-fw2-backup.cfg
+    │   └── hq-core-rtr-02.cfg
+    └── misc
+        ├── fw2.cfg
+        └── fw5.cfg
+
+4 directories, 7 files

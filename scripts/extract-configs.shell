@@ -157,30 +157,45 @@ function main () {
       fi;
     done;
 
+    #### -----------------------------------------------------------------------
     if [[ -z "${target_platform:-}" ]]; then
       if grep -qiE 'fortinet|fortigate' "${source_config}"; then
-        vendor="fortinet"
-      elif grep -qiE '\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b' "${source_config}" 2>/dev/null; then
-        vendor="cisco"
-      else
-        message "Unable to detect vendor platform." >&2;
-        newline;
-        exit 3;
-      fi
-    fi
+              vendor="fortinet"
+        elif  grep -qiE '\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b' "${source_config}" 2>/dev/null; then
+              vendor="cisco"
+        else  message "Unable to detect vendor platform." >&2;
+              newline;
+              exit 3;
+      fi;
+    fi;
 
     #### -----------------------------------------------------------------------
-    while [[ -z ${output_config:-} ]]; do
-      newline;
-      read -e -p "Enter output configuration file: " output_config;
-    done
-    local output_dir="$( dirname "${output_config}" )";
-    if [[ ! -d "${output_dir}" ]]; then
-      mkdir -p "${output_dir}" || {
-        message "Warning: Failed to create output directory: ${output_dir}" >&2;
-        newline;
-        exit 4;
-      };
+    ## Output path handling and validation
+    if [[ -z "${output_config:-}" ]]; then
+            if [[ "${verbose}" == true ]]; then
+              message "Info: No --output specified. Displaying output inline.";
+            fi;
+            output_to_stdout=true;
+      else  output_to_stdout=false;
+            # Determine if output_config is a file (same extension as source)
+            if [[ "${output_config##*.}" == "${source_config##*.}" ]]; then
+                    final_output="${output_config}";
+              else  # Always clone structure inside provided directory
+                    base_output="${output_config%/}";
+                    rel_path="$(
+                      echo "${source_config}" | sed "s|^\./||"
+                    )";
+                    final_output="${base_output}/${rel_path}";
+            fi;
+            output_config="${final_output}";
+            output_dir="$( dirname "${output_config}" )";
+            if [[ ! -d "${output_dir}" ]]; then
+              mkdir -p "${output_dir}" || {
+                message "Warning: Failed to create output directory: ${output_dir}" >&2;
+                newline;
+                exit 4;
+              };
+            fi;
     fi;
 
     #### -----------------------------------------------------------------------
@@ -190,15 +205,20 @@ function main () {
                      "${source_config}"
     )";
     result=$?;
-    message "AWK exit code: ${result}";
+    # message "AWK exit code: ${result}";
 
     #### -----------------------------------------------------------------------
-    newline;
+    # newline;
     if [[ -n "${extracted_configuration}" ]]; then
-            echo -n "${extracted_configuration}" > "${output_config}";
+            # echo -n "${extracted_configuration}" > "${output_config}";
+            echo -n "${extracted_configuration}" | \
+            sed '1{/^[[:space:]]*$/d;}' \
+            > "${output_config}";
+            newline 2 >> "${output_config}";
             if [[ "${verbose}" == true ]]; then
+              message "Configuration File [ ${output_config} ]";
+              newline;
               cat -n "${output_config}";
-              newline 2;
             fi;
       else  message "Warning: No matching blocks found. Output file not written.";
             newline;
