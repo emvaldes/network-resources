@@ -29,7 +29,7 @@
 ##
 ## Usage:
 ##   bash ./scripts/network-configs.shell \
-##     --ip-addr=198.51.100.75 \
+##     --ips-list=198.51.100.75 \
 ##     --config=./configs/device.cfg \
 ##     --output=./results/device-reduced.cfg \
 ##     --verbose ;
@@ -60,7 +60,7 @@ function display_help () {
     help_lines+=( "Usage: ${script_name} [OPTIONS]${nl}" );
     ## Available Operational Requests
     help_lines+=( "Options:${nl}" );
-    help_lines+=( "  -i, --ip-addr      Custom Search Pattern: IP Address, etc." );
+    help_lines+=( "  -i, --ips-list     Custom Search Pattern: IP Address, etc." );
     help_lines+=( "  -c, --config       Single (target) Configuration filepath to be parsed" );
     help_lines+=( "  -s, --search       Configurations listing to be located (files: {abc,def,ghi}.cfg)" );
     help_lines+=( "  -l, --location     Requires to listing all files matching a criteria (files: *.cfg)" );
@@ -74,7 +74,7 @@ function display_help () {
     ## Exit Codes Details
     help_lines+=( "Exit Codes:${nl}" );
     help_lines+=( "   1 = Missing or empty search pattern:" );
-    help_lines+=( "       Triggered if --ip-addr is not provided or input is blank when prompted.${nl}" );
+    help_lines+=( "       Triggered if --ips-list is not provided or input is blank when prompted.${nl}" );
     help_lines+=( "   2 = No valid configuration file(s) found and raised when:${nl}" );
     help_lines+=( "       a) --config is given but the file does not exist." );
     help_lines+=( "       b) --location scan yields no matching files." );
@@ -95,8 +95,6 @@ function display_help () {
     help_lines+=( "       Raised if directory creation for the output path fails.${nl}" );
     help_lines+=( "  10 = rm -rf failure:" );
     help_lines+=( "       Raised if the script fails to clean out the existing output directory.${nl}" );
-    help_lines+=( "  11 = Source config resides or overlaps in output path:" );
-    help_lines+=( "       Raised if the source configuration file is located inside the output directory, risking overwrite.${nl}" );
     ## Application Notes
     help_lines+=( "Application Notes:${nl}" );
     help_lines+=( "  * All search patterns may be individual, comma-separated, or CIDR-based." );
@@ -106,32 +104,32 @@ function display_help () {
     help_lines+=( "Examples:${nl}" );
     help_lines+=( "  1. Extract entries referencing a known IP:" );
     help_lines+=( "     bash ${script_name} \\" );
-    help_lines+=( "          --ip-addr=\"198.51.100.75\" \\" );
+    help_lines+=( "          --ips-list=\"198.51.100.75\" \\" );
     help_lines+=( "          --config=configs/cisco/branch-isr-02.cfg \\" );
     help_lines+=( "          --output=tmp/branch-isr-02-reduced.cfg \\" );
     help_lines+=( "          --verbose${nl}" );
     help_lines+=( "  2. Match multiple IP addresses in a single pass:" );
     help_lines+=( "     bash ${script_name} \\" );
-    help_lines+=( "          --ip-addr=\"10.0.2.3,172.16.1.6\" \\" );
+    help_lines+=( "          --ips-list=\"10.0.2.3,172.16.1.6\" \\" );
     help_lines+=( "          --config=configs/cisco/branch-isr-02.cfg \\" );
     help_lines+=( "          --output=tmp/branch-isr-02-multi.cfg \\" );
     help_lines+=( "          --verbose${nl}" );
     help_lines+=( "  3. Extract entries from multiple config files by name (search + location):" );
     help_lines+=( "     bash ${script_name} \\" );
-    help_lines+=( "          --ip-addr=\"198.51.100.75,203.0.113.10,10.0.0.1\" \\" );
+    help_lines+=( "          --ips-list=\"198.51.100.75,203.0.113.10,10.0.0.1\" \\" );
     help_lines+=( "          --search=\"branch-isr-02.cfg,fg-lab-test-fw.cfg\" \\" );
     help_lines+=( "          --location=./configs \\" );
     help_lines+=( "          --output=tmp/multi-config-search \\" );
     help_lines+=( "          --verbose${nl}" );
     help_lines+=( "  4. Match multiple IPs across all config files in a folder (directory scan):" );
     help_lines+=( "     bash ${script_name} \\" );
-    help_lines+=( "          --ip-addr=\"192.168.1.10,203.0.113.25,10.0.2.3\" \\" );
+    help_lines+=( "          --ips-list=\"192.168.1.10,203.0.113.25,10.0.2.3\" \\" );
     help_lines+=( "          --location=./configs \\" );
     help_lines+=( "          --output=tmp/folder-scan \\" );
     help_lines+=( "          --verbose${nl}" );
     help_lines+=( "  5. Match multiple IPs when config files are unknown (full scan with auto output):" );
     help_lines+=( "     bash ${script_name} \\" );
-    help_lines+=( "          --ip-addr=\"10.0.0.1,198.51.100.75,203.0.113.25\" \\" );
+    help_lines+=( "          --ips-list=\"10.0.0.1,198.51.100.75,203.0.113.25\" \\" );
     help_lines+=( "          --location=./configs \\" );
     help_lines+=( "          --verbose${nl}" );
     ## Display Built-In Help
@@ -160,6 +158,14 @@ function message () {
   }; alias print-message='message';
 
 #------------------------------------------------------------------------------#
+## Output Utilities: Print an error message in consistent format
+function warning () {
+    [[ -n ${1:-} ]] && local message="${1}" || return 0;
+    echo -e "\nWarning: ${message}";
+    # return 0;
+}; alias error-message='error_message';
+
+#------------------------------------------------------------------------------#
 function detect_vendor () {
     local config_file="${1}";
     local fortinet_pattern='fortinet|fortigate';
@@ -170,7 +176,7 @@ function detect_vendor () {
             return 2;
       else  return 3;
     fi;
-    return 0;
+    # return 0;
 }; alias detect-vendor='detect_vendor';
 
 #------------------------------------------------------------------------------#
@@ -186,7 +192,7 @@ function main () {
 
       #### ---------------------------------------------------------------------
       ## Match accepted arguments
-      [[ $key =~ ^(ip-addr|i)$ ]] && local search_pattern="${value}";
+      [[ $key =~ ^(ips-list|i)$ ]] && local target_addresses="${value}";
       [[ $key =~ ^(config|c)$ ]] && local source_config="${value}";
       [[ $key =~ ^(search|s)$ ]] && local search_configs="${value}";
       [[ $key =~ ^(location|l)$ ]] && local search_location="${value}";
@@ -202,9 +208,32 @@ function main () {
 
     #### -----------------------------------------------------------------------
     ## Set default values if not supplied
-
     [[ -z ${script_helper:-} ]] && local script_helper=false;
-    [[ -z "${output_config:-}" ]] && export output_config="./resources";
+
+    {
+      [[ -z "${output_config:-}" ]] && export output_config="./resources";
+      #### ---------------------------------------------------------------------
+      ## Safety check — always validate path BEFORE any mkdir or rm -rf
+      if [[ "${output_config}" =~ ^(/|\./?$|)$ ]]; then
+        warning "Refusing to operate on unsafe or ambiguous output directory [ ${output_config} ]" >&2;
+        newline;
+        exit 8;
+      fi;
+      #### ---------------------------------------------------------------------
+      ## Ensure output directory exists or create it
+      if [[ ! -d "${output_config}" ]]; then
+              mkdir -p "${output_config}" || {
+                warning "Failed to create output directory: ${output_config}" >&2;
+                newline;
+                exit 9;
+              };
+        else  rm -rf "${output_config:?}/"* || {
+                warning "Failed to clear output directory: ${output_config}" >&2;
+                newline;
+                exit 10;
+              };
+      fi;
+    };
 
     [[ -z ${debug:-} ]] && debug=false;
     [[ -z ${dry_run:-} ]] && dry_run=false;
@@ -232,12 +261,12 @@ function main () {
     ## Resolve or request --location if required by absence of --config or --search
     if [[ -z "${search_location:-}" ]]; then
       if { [[ -n "${search_configs:-}" ]] && [[ -z "${source_config:-}" ]]; } || \
-        { [[ -z "${search_configs:-}" ]] && [[ -z "${source_config:-}" ]]; }; then
+         { [[ -z "${search_configs:-}" ]] && [[ -z "${source_config:-}" ]]; }; then
         newline;
         read -e -p "Enter base directory to search for configs [--location]: " search_location;
         search_location="${search_location:-.}";
         if [[ ! -d "${search_location}" ]]; then
-          message "Error: Provided --location '${search_location}' is not a valid directory." >&2;
+          warning "Provided --location '${search_location}' is not a valid directory." >&2;
           newline;
           exit 1;
         fi;
@@ -245,15 +274,67 @@ function main () {
     fi;
 
     #### -----------------------------------------------------------------------
-    while [[ -z ${search_pattern:-} ]]; do
+    while [[ -z ${target_addresses:-} ]]; do
       newline;
-      read -e -p "Enter target search pattern: " search_pattern
-      if [[ "${search_pattern:-}" =~ ^[[:space:]]*$ ]]; then
-        message "Warning: Pattern cannot be empty!" >&2;
+      read -e -p "Enter target search pattern: " target_addresses
+      if [[ "${target_addresses:-}" =~ ^[[:space:]]*$ ]]; then
+        warning "A Search Pattern must be provided and cannot be empty!" >&2;
         newline;
         exit 2;
       fi;
     done;
+
+    #### -----------------------------------------------------------------------
+    ## Processing Target Addresses Listing (default: ips.list or inline string)
+    declare -a target_addresses_source=();
+    if [[ -f "${target_addresses}" ]]; then
+            mapfile -t target_addresses_source < <(
+              tr -d '\r' < "${target_addresses}" | \
+              tr ' \t,;:|' '\n' | \
+              grep -v '^\s*$' | \
+              sort -t . -k1,1n -k2,2n -k3,3n -k4,4n -u
+            );
+      elif [[ "${target_addresses}" =~ ^[0-9] ]]; then
+            mapfile -t target_addresses_source < <(
+              echo -e "${target_addresses}" | \
+              tr ' \t,;:|' '\n' | \
+              grep -v '^\s*$' | \
+              sort -t . -k1,1n -k2,2n -k3,3n -k4,4n -u
+            );
+      else  {
+              message "Project Target IPs-listing file not found!";
+              message "${target_addresses}";
+            } ## >> "${actions_logsfile}";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    if [[ "${verbose}" == true ]]; then
+      {
+        message "Loaded (default) IPs addresses (count): ${#target_addresses_source[@]}";
+        newline;
+        for ip in "${target_addresses_source[@]}"; do
+          message "  - ${ip}";
+        done; newline;
+      } ## >> "${actions_logsfile}";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Final usable search pattern array
+
+    # target_addresses="$(
+    #   printf "%s\n" "${target_addresses_source[@]}" | \
+    #   tr -d '\r' | \
+    #   grep -v '^\s*$' | \
+    #   paste -sd ',' -
+    # )";
+
+    target_addresses=$(IFS=','; echo -e "${target_addresses_source[*]}")
+    if [[ "${verbose}" == true ]]; then
+      {
+        message "Search Pattern: [ ${target_addresses} ]";
+        newline;
+      } ## >> "${actions_logsfile}";
+    fi;
 
     #### -----------------------------------------------------------------------
     ## Parameter: --search → overrides --config (comma-separated list, needs lookup)
@@ -281,7 +362,7 @@ function main () {
         find "${search_location}" -type f -name "*.cfg" 2>/dev/null
       );
       if [[ "${#configs_listing[@]}" -eq 0 ]]; then
-        message "No configuration files found under location: ${search_location}";
+        warning "No configuration files found under location [ ${search_location} ]";
         newline;
         exit 3;
       fi;
@@ -297,12 +378,12 @@ function main () {
 
       #### ---------------------------------------------------------------------
       ## Show which configs actually match the IP pattern
+      IFS=',' read -r -a search_patterns <<< "${target_addresses}";
       declare -a matched_configs=();
-      IFS=',' read -ra ip_list <<< "${search_pattern}";
-      for cfg in "${configs_listing[@]}"; do
-        for ip in "${ip_list[@]}"; do
-          if grep -qF "${ip}" "${cfg}"; then
-            matched_configs+=( "${cfg}" );
+      for config in "${configs_listing[@]}"; do
+        for pattern in "${search_patterns[@]}"; do
+          if grep -qF "${pattern}" "${config}"; then
+            matched_configs+=( "${config}" );
             break;
           fi;
         done;
@@ -310,14 +391,18 @@ function main () {
 
       #### ---------------------------------------------------------------------
       if [[ "${#matched_configs[@]}" -gt 0 ]]; then
-              message "Matching IPs found in ${#matched_configs[@]} files:";
-              newline;
-              for item in "${matched_configs[@]}"; do
-                message "  - ${item}";
-              done;
-              newline;
               configs_listing=( "${matched_configs[@]}" );
-        else  message "No matches for search pattern '${search_pattern}' in ${search_location:-search scope}";
+              if [[ "${verbose}" == true ]]; then
+                {
+                  message "Matching IPs found in ${#matched_configs[@]} files:";
+                  newline;
+                  for item in "${matched_configs[@]}"; do
+                    message "  - ${item}";
+                  done;
+                  newline;
+                } ## >> "${actions_logsfile}";
+              fi;
+        else  warning "No matches for search pattern '${target_addresses}' in ${search_location:-search scope}";
               newline;
               exit 4;
       fi;
@@ -331,7 +416,7 @@ function main () {
       read -e -p "Enter source configuration file: " source_config;
       if [[ -f "${source_config}" ]]; then
               configs_listing=( "${source_config}" );
-        else  message "Error: No valid configuration file provided or found." >&2;
+        else  warning "No valid configuration file provided or found." >&2;
               newline;
               exit 5;
       fi;
@@ -339,90 +424,62 @@ function main () {
 
     #### -----------------------------------------------------------------------
     # Loop through configs_listing array
-    for source_config in "${configs_listing[@]}"; do
-      [[ ! -f "${source_config}" ]] && continue;
+    for target_config in "${configs_listing[@]}"; do
+      [[ ! -f "${target_config}" ]] && continue;
 
       #### -----------------------------------------------------------------------
       set +e;
-      detect_vendor "${source_config}";
+      detect_vendor "${target_config}";
       local vendor_code=${?};
-      # message "Vendor Code: ${vendor_code}";
       set -e;
       case "${vendor_code}" in
         1)  target_platform="fortinet";
             ;;
         2)  target_platform="cisco";
             ;;
-        3)  message "Unsupported configuration type: ${source_config}";
+        3)  warning "Unsupported configuration type: ${target_config}";
             newline 2;
             exit 6;
             ;;
-        *)  message "Unknown configuration type: ${source_config}";
+        *)  warning "Unknown configuration type: ${target_config}";
             newline 2;
             exit 7;
             ;;
       esac;
 
-      message "Parsing [ ${target_platform} ] configs (by: ${action_class}): ";
+      #### -----------------------------------------------------------------------
+      if [[ "${verbose}" == true ]]; then
+        {
+          message "Parsing [ ${target_platform} ] configs (by: ${action_class}): ";
+        } ## >> "${actions_logsfile}";
+      fi;
+
       #### -----------------------------------------------------------------------
       if [[ -n "${output_config:-}" ]]; then
               base_output="${output_config%/}";
               rel_path="$(
-                echo "${source_config}" | sed 's|^\./||'
+                echo -e "${target_config}" | sed 's|^\./||'
               )";
               target_output="${base_output}/${rel_path}";
         else  config_filename="$(
-                basename "${source_config}"
+                basename "${target_config}"
               )";
               target_output="$( pwd )/${target_platform}--${config_filename}";
       fi;
-      message "Target Output: [ ${target_output} ]";
 
-      #### -----------------------------------------------------------------------
-      local output_dir="$(
-        dirname "${target_output}"
-      )";
-      message "Output Directory: [ ${output_dir} ]";
-
-      #### -----------------------------------------------------------------------
-      ## Safety check — always validate path BEFORE any mkdir or rm -rf
-      if [[ "${output_dir}" =~ ^(/|\./?$|)$ ]]; then
-        message "Error: Refusing to operate on unsafe or ambiguous output directory: '${output_dir}'" >&2;
-        newline;
-        exit 8;
-      fi;
-
-      #### -----------------------------------------------------------------------
-      ## Ensure output directory exists or create it
-      if [[ ! -d "${output_dir}" ]]; then
-              mkdir -p "${output_dir}" || {
-                message "Warning: Failed to create output directory: ${output_dir}" >&2;
-                newline;
-                exit 9;
-              };
-        else  rm -rf "${output_dir:?}/"* || {
-                message "Warning: Failed to clear output directory: ${output_dir}" >&2;
-                newline;
-                exit 10;
-              };
-      fi;
-
-      #### -----------------------------------------------------------------------
-      ## Prevent source files from residing within the output directory
-      if [[ -L "${source_config}" || \
-            -L "${output_config}" || \
-            "${source_config}" == "${output_config}"*
-          ]]; then
-        message "Error: Unsafe configuration — symlinks detected or Source/Output paths are overlaping!" >&2;
-        newline;
-        exit 11;
-      fi;
+      # #### -----------------------------------------------------------------------
+      # if [[ "${verbose}" == true ]]; then
+      #   {
+      #     message "Target Output: [ ${target_output} ]";
+      #     newline;
+      #   } ## >> "${actions_logsfile}";
+      # fi;
 
       #### -----------------------------------------------------------------------
       declare -a execute=(
         ./scripts/extract-configs.shell
-        --ip-addr="${search_pattern}"
-        --config="${source_config}"
+        --ips-list="${target_addresses}"
+        --config="${target_config}"
         --output="${target_output}"
       );
       [[ "${verbose}" == true ]] && execute+=( --verbose );
@@ -432,10 +489,12 @@ function main () {
       $( which bash ) "${execute[@]}" >/dev/null 2>&1;
 
       if [[ "${verbose}" == true ]]; then
-        message "Configuration File [ ${target_output} ]";
-        newline;
-        cat -n "${target_output}";
-        newline;
+        {
+          message "Configuration File [ ${target_output} ]";
+          newline;
+          cat -n "${target_output}";
+          newline;
+        } ## >> "${actions_logsfile}";
       fi;
 
     done;

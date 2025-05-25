@@ -57,7 +57,7 @@ function main () {
       [[ $key =~ ^(configs|c)$ ]] && export configs_dirpath="${value}";
       [[ $key =~ ^(devices|d)$ ]] && export target_devices="${value}";
       [[ $key =~ ^(file-ext|x)$ ]] && export file_extensions+=(
-        $( print "${value}" | tr ':,;\n ' '\n' )
+        $( echo -e "${value}" | tr ':,;\n ' '\n' )
       );
       [[ $key =~ ^(interval|l)$ ]] && export delaying_factor="${value}";
       [[ $key =~ ^(ips-list|i)$ ]] && export target_addresses="${value}";
@@ -125,7 +125,7 @@ function main () {
             );
       elif [[ "${target_devices}" =~ ^[0-9] ]]; then
             mapfile -t target_devices_source < <(
-              print "${target_devices}" | tr ', ' '\n' | grep -v '^\s*$'
+              echo -e "${target_devices}" | tr ', ' '\n' | grep -v '^\s*$'
             );
       else  message "Project Target Devices-Listing file not found: ${target_devices}";
     fi;
@@ -307,18 +307,20 @@ function main () {
     declare -a target_addresses_source=();
     if [[ -f "${target_addresses}" ]]; then
             mapfile -t target_addresses_source < <(
-              grep -v '^\s*$' "${target_addresses}" | \
-              tr -d '\r' | \
+              tr -d '\r' < "${target_addresses}" | \
+              tr ' \t,;:|' '\n' | \
+              grep -v '^\s*$' | \
               sort -t . -k1,1n -k2,2n -k3,3n -k4,4n -u
             );
       elif [[ "${target_addresses}" =~ ^[0-9] ]]; then
             mapfile -t target_addresses_source < <(
-              print "${target_addresses}" | \
-              tr ', ' '\n' | \
+              echo -e "${target_addresses}" | \
+              tr ' \t,;:|' '\n' | \
               grep -v '^\s*$' | \
               sort -t . -k1,1n -k2,2n -k3,3n -k4,4n -u
             );
-      else  error_message "Project Target IP-listing file not found: ${target_addresses}";
+      # else  message "Warning: Project Target IPs-listing file not found!";
+      #       message "${target_addresses}";
     fi;
 
     #### -----------------------------------------------------------------------

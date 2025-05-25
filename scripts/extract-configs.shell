@@ -22,7 +22,7 @@
 ##
 ## Usage:
 ##   bash ./scripts/extract-configs.shell \
-##     --ip-addr=10.0.0.1 \
+##     --ips-list=10.0.0.1 \
 ##     --config=configs/fw-1.cfg \
 ##     --output=./tmp/fw1-reduced.cfg \
 ##     [--platform=cisco|fortinet] \
@@ -60,7 +60,7 @@ function display_help () {
     help_lines+=( "Usage: ${script_name} [OPTIONS]${nl}" );
     ## Shared Options
     help_lines+=( "Options:${nl}" );
-    help_lines+=( "  -i, --ip-addr      Custom Search Pattern: IP Address, etc." );
+    help_lines+=( "  -i, --ips-list     Custom Search Pattern: IP Address, etc." );
     help_lines+=( "  -c, --config       Source Configuration filepath to be parsed" );
     help_lines+=( "  -o, --output       Output Filepath for extracted datasets (*.cfg)" );
     help_lines+=( "  -p, --platform     Provide platform-specific config (cisco, fortinet)" );
@@ -76,7 +76,7 @@ function display_help () {
     for line in "${help_lines[@]}"; do
       message "${indent}${line}";
     done;
-    return 0;
+    # return 0;
 }; alias display-help='display_help';
 
 #------------------------------------------------------------------------------#
@@ -92,7 +92,7 @@ function newline () {
 function message () {
     [[ -n ${1:-} ]] && local message="${1}" || return 0;
     echo -e "${message}";
-    return 0;
+    # return 0;
 }; alias print-message='message';
 
 #------------------------------------------------------------------------------#
@@ -108,7 +108,7 @@ function main () {
 
       #### ---------------------------------------------------------------------
       ## Match accepted arguments
-      [[ $key =~ ^(ip-addr|i)$ ]] && local search_pattern="${value}";
+      [[ $key =~ ^(ips-list|i)$ ]] && local target_addresses="${value}";
       [[ $key =~ ^(config|c)$ ]] && local source_config="${value}";
       [[ $key =~ ^(output|o)$ ]] && local output_config="${value}";
       [[ $key =~ ^(platform|p)$ ]] && local target_platform="${value}";
@@ -136,10 +136,10 @@ function main () {
     fi;
 
     #### -----------------------------------------------------------------------
-    while [[ -z ${search_pattern:-} ]]; do
+    while [[ -z ${target_addresses:-} ]]; do
       newline;
-      read -e -p "Enter target search pattern: " search_pattern
-      if [[ "${search_pattern:-}" =~ ^[[:space:]]*$ ]]; then
+      read -e -p "Enter target search pattern: " target_addresses
+      if [[ "${target_addresses:-}" =~ ^[[:space:]]*$ ]]; then
         message "Warning: Pattern cannot be empty!" >&2;
         newline;
         exit 1;
@@ -200,7 +200,7 @@ function main () {
 
     #### -----------------------------------------------------------------------
     local extracted_configuration="$(
-      $( which awk ) -v targets="${search_pattern}" \
+      $( which awk ) -v targets="${target_addresses}" \
                      -f "./scripts/extract/${vendor}-configs.awk" \
                      "${source_config}"
     )";
@@ -225,7 +225,7 @@ function main () {
             return 1;
     fi;
 
-    return 0;
+    # return 0;
 }; alias parse-cisco='main';
 
 [[ -z "${script_name+x}" ]] && export script_name="${0}";
@@ -244,27 +244,27 @@ fi;
 ##
 ## 1. Extract from Cisco config using IP matches:
 ##    bash scripts/extract-configs.shell \
-##         --ip-addr="10.0.0.1,192.168.1.1" \
+##         --ips-list="10.0.0.1,192.168.1.1" \
 ##         --config=./configs/core-fw.cfg \
 ##         --output=./reduced/core-fw.cfg \
 ##         --platform=cisco
 ##
 ## 2. Extract from Fortinet config using VPN object names:
 ##    bash scripts/extract-configs.shell \
-##         --ip-addr="edit VPN-PROFILE,edit BRANCH-ACCESS" \
+##         --ips-list="edit VPN-PROFILE,edit BRANCH-ACCESS" \
 ##         --config=./configs/fg-dmz.cfg \
 ##         --output=./reduced/fg-dmz.cfg \
 ##         --platform=fortinet
 ##
 ## 3. Auto-detect platform from config content:
 ##    bash scripts/extract-configs.shell \
-##         --ip-addr="permit ip any" \
+##         --ips-list="permit ip any" \
 ##         --config=./configs/asa-fw.cfg \
 ##         --output=./reduced/asa-fw.cfg
 ##
 ## 4. Use custom pipe delimiter:
 ##    bash scripts/extract-configs.shell \
-##         --ip-addr="object-group DMZ|object-group CORE" \
+##         --ips-list="object-group DMZ|object-group CORE" \
 ##         --config=./configs/fw-acl.cfg \
 ##         --output=./reduced/fw-acl.cfg \
 ##         --platform=cisco
@@ -273,6 +273,6 @@ fi;
 ##    bash scripts/extract-configs.shell
 ##
 ## Notes:
-##   - The --ip-addr pattern string is passed to the AWK script as-is.
+##   - The --ips-list pattern string is passed to the AWK script as-is.
 ##   - Use --platform to bypass detection and force a specific parser.
 ## -------------------------------------------------------------------------- ##

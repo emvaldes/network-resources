@@ -1,5 +1,5 @@
 $ bash -x ./scripts/network-configs.shell \
-           --ip-addr="198.51.100.75,203.0.113.10" \
+           --ips-list=ips.list \
            --location=./configs \
            --verbose ;
 
@@ -7,21 +7,22 @@ $ bash -x ./scripts/network-configs.shell \
 + export LC_ALL=C
 + LC_ALL=C
 ++ mktemp -d
-+ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.s5ehWmJuv6
-+ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.s5ehWmJuv6
++ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L7LQeRo2z0
++ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L7LQeRo2z0
 + trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
 + export 'nl=\n'
 + nl='\n'
 + alias display-help=display_help
 + alias new-line=newline
 + alias print-message=message
++ alias error-message=error_message
 + alias detect-vendor=detect_vendor
 + alias parse-cisco=main
 + [[ -z '' ]]
 + export script_name=./scripts/network-configs.shell
 + script_name=./scripts/network-configs.shell
 + [[ 3 -ge 1 ]]
-+ [[ --ip-addr=198.51.100.75,203.0.113.10 =~ ^-*(h|help)$ ]]
++ [[ --ips-list=ips.list =~ ^-*(h|help)$ ]]
 + newline
 + local count=1
 + (( i = 0 ))
@@ -30,30 +31,30 @@ $ bash -x ./scripts/network-configs.shell \
 
 + (( i++ ))
 + (( i < count ))
-+ main --ip-addr=198.51.100.75,203.0.113.10 --location=./configs --verbose
++ main --ips-list=ips.list --location=./configs --verbose
 + oIFS=' 	
 '
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --ip-addr=198.51.100.75,203.0.113.10
+++ echo -e --ips-list=ips.list
 ++ sed -e '1s|^\(-\)\{1,\}||'
-+ [[ ip-addr =~ ^(ip-addr|i)$ ]]
-+ local search_pattern=198.51.100.75,203.0.113.10
-+ [[ ip-addr =~ ^(config|c)$ ]]
-+ [[ ip-addr =~ ^(search|s)$ ]]
-+ [[ ip-addr =~ ^(location|l)$ ]]
-+ [[ ip-addr =~ ^(output|o)$ ]]
-+ [[ ip-addr == \h\e\l\p ]]
-+ [[ ip-addr == \d\e\b\u\g ]]
-+ [[ ip-addr == \d\r\y\-\r\u\n ]]
-+ [[ ip-addr == \v\e\r\b\o\s\e ]]
++ [[ ips-list =~ ^(ips-list|i)$ ]]
++ local target_addresses=ips.list
++ [[ ips-list =~ ^(config|c)$ ]]
++ [[ ips-list =~ ^(search|s)$ ]]
++ [[ ips-list =~ ^(location|l)$ ]]
++ [[ ips-list =~ ^(output|o)$ ]]
++ [[ ips-list == \h\e\l\p ]]
++ [[ ips-list == \d\e\b\u\g ]]
++ [[ ips-list == \d\r\y\-\r\u\n ]]
++ [[ ips-list == \v\e\r\b\o\s\e ]]
 + for xitem in "${@}"
 + IFS==
 + read -r key value
 ++ echo -e --location=./configs
 ++ sed -e '1s|^\(-\)\{1,\}||'
-+ [[ location =~ ^(ip-addr|i)$ ]]
++ [[ location =~ ^(ips-list|i)$ ]]
 + [[ location =~ ^(config|c)$ ]]
 + [[ location =~ ^(search|s)$ ]]
 + [[ location =~ ^(location|l)$ ]]
@@ -68,7 +69,7 @@ $ bash -x ./scripts/network-configs.shell \
 + read -r key value
 ++ echo -e --verbose
 ++ sed -e '1s|^\(-\)\{1,\}||'
-+ [[ verbose =~ ^(ip-addr|i)$ ]]
++ [[ verbose =~ ^(ips-list|i)$ ]]
 + [[ verbose =~ ^(config|c)$ ]]
 + [[ verbose =~ ^(search|s)$ ]]
 + [[ verbose =~ ^(location|l)$ ]]
@@ -85,6 +86,9 @@ $ bash -x ./scripts/network-configs.shell \
 + [[ -z '' ]]
 + export output_config=./resources
 + output_config=./resources
++ [[ ./resources =~ ^(/|\./?$|)$ ]]
++ [[ ! -d ./resources ]]
++ rm -rf ./resources/branch-isr-02-multi.cfg ./resources/configs ./resources/fg-lab-test-fw.cfg
 + [[ -z '' ]]
 + debug=false
 + [[ -z '' ]]
@@ -96,7 +100,156 @@ $ bash -x ./scripts/network-configs.shell \
 + local action_class=unknown
 + [[ -n '' ]]
 + [[ -z ./configs ]]
-+ [[ -z 198.51.100.75,203.0.113.10 ]]
++ [[ -z ips.list ]]
++ target_addresses_source=()
++ declare -a target_addresses_source
++ [[ -f ips.list ]]
++ mapfile -t target_addresses_source
+++ tr -d '\r'
+++ tr ' \t,;:|' '\n'
+++ grep -v '^\s*$'
+++ sort -t . -k1,1n -k2,2n -k3,3n -k4,4n -u
++ [[ true == true ]]
++ message 'Loaded (default) IPs addresses (count): 17'
++ [[ -n Loaded (default) IPs addresses (count): 17 ]]
++ local 'message=Loaded (default) IPs addresses (count): 17'
++ echo -e 'Loaded (default) IPs addresses (count): 17'
+Loaded (default) IPs addresses (count): 17
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ for ip in "${target_addresses_source[@]}"
++ message '  - 10.0.0.1'
++ [[ -n   - 10.0.0.1 ]]
++ local 'message=  - 10.0.0.1'
++ echo -e '  - 10.0.0.1'
+  - 10.0.0.1
++ for ip in "${target_addresses_source[@]}"
++ message '  - 10.0.1.2'
++ [[ -n   - 10.0.1.2 ]]
++ local 'message=  - 10.0.1.2'
++ echo -e '  - 10.0.1.2'
+  - 10.0.1.2
++ for ip in "${target_addresses_source[@]}"
++ message '  - 10.0.2.3'
++ [[ -n   - 10.0.2.3 ]]
++ local 'message=  - 10.0.2.3'
++ echo -e '  - 10.0.2.3'
+  - 10.0.2.3
++ for ip in "${target_addresses_source[@]}"
++ message '  - 10.10.10.10'
++ [[ -n   - 10.10.10.10 ]]
++ local 'message=  - 10.10.10.10'
++ echo -e '  - 10.10.10.10'
+  - 10.10.10.10
++ for ip in "${target_addresses_source[@]}"
++ message '  - 172.16.0.5'
++ [[ -n   - 172.16.0.5 ]]
++ local 'message=  - 172.16.0.5'
++ echo -e '  - 172.16.0.5'
+  - 172.16.0.5
++ for ip in "${target_addresses_source[@]}"
++ message '  - 172.16.1.6'
++ [[ -n   - 172.16.1.6 ]]
++ local 'message=  - 172.16.1.6'
++ echo -e '  - 172.16.1.6'
+  - 172.16.1.6
++ for ip in "${target_addresses_source[@]}"
++ message '  - 172.18.1.20'
++ [[ -n   - 172.18.1.20 ]]
++ local 'message=  - 172.18.1.20'
++ echo -e '  - 172.18.1.20'
+  - 172.18.1.20
++ for ip in "${target_addresses_source[@]}"
++ message '  - 172.31.255.254'
++ [[ -n   - 172.31.255.254 ]]
++ local 'message=  - 172.31.255.254'
++ echo -e '  - 172.31.255.254'
+  - 172.31.255.254
++ for ip in "${target_addresses_source[@]}"
++ message '  - 192.0.2.50'
++ [[ -n   - 192.0.2.50 ]]
++ local 'message=  - 192.0.2.50'
++ echo -e '  - 192.0.2.50'
+  - 192.0.2.50
++ for ip in "${target_addresses_source[@]}"
++ message '  - 192.168.0.1'
++ [[ -n   - 192.168.0.1 ]]
++ local 'message=  - 192.168.0.1'
++ echo -e '  - 192.168.0.1'
+  - 192.168.0.1
++ for ip in "${target_addresses_source[@]}"
++ message '  - 192.168.0.100'
++ [[ -n   - 192.168.0.100 ]]
++ local 'message=  - 192.168.0.100'
++ echo -e '  - 192.168.0.100'
+  - 192.168.0.100
++ for ip in "${target_addresses_source[@]}"
++ message '  - 192.168.1.10'
++ [[ -n   - 192.168.1.10 ]]
++ local 'message=  - 192.168.1.10'
++ echo -e '  - 192.168.1.10'
+  - 192.168.1.10
++ for ip in "${target_addresses_source[@]}"
++ message '  - 192.168.1.11'
++ [[ -n   - 192.168.1.11 ]]
++ local 'message=  - 192.168.1.11'
++ echo -e '  - 192.168.1.11'
+  - 192.168.1.11
++ for ip in "${target_addresses_source[@]}"
++ message '  - 192.168.2.12'
++ [[ -n   - 192.168.2.12 ]]
++ local 'message=  - 192.168.2.12'
++ echo -e '  - 192.168.2.12'
+  - 192.168.2.12
++ for ip in "${target_addresses_source[@]}"
++ message '  - 192.168.100.100'
++ [[ -n   - 192.168.100.100 ]]
++ local 'message=  - 192.168.100.100'
++ echo -e '  - 192.168.100.100'
+  - 192.168.100.100
++ for ip in "${target_addresses_source[@]}"
++ message '  - 198.51.100.75'
++ [[ -n   - 198.51.100.75 ]]
++ local 'message=  - 198.51.100.75'
++ echo -e '  - 198.51.100.75'
+  - 198.51.100.75
++ for ip in "${target_addresses_source[@]}"
++ message '  - 203.0.113.25'
++ [[ -n   - 203.0.113.25 ]]
++ local 'message=  - 203.0.113.25'
++ echo -e '  - 203.0.113.25'
+  - 203.0.113.25
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
+++ IFS=,
+++ echo -e 10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25
++ target_addresses=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25
++ [[ true == true ]]
++ message 'Search Pattern: [ 10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 ]'
++ [[ -n Search Pattern: [ 10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 ] ]]
++ local 'message=Search Pattern: [ 10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 ]'
++ echo -e 'Search Pattern: [ 10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 ]'
+Search Pattern: [ 10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 ]
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
 + [[ -n '' ]]
 + [[ 0 -eq 0 ]]
 + [[ -n ./configs ]]
@@ -111,133 +264,261 @@ $ bash -x ./scripts/network-configs.shell \
 + action_class=location
 + [[ -n '' ]]
 + [[ -n ./configs ]]
++ IFS=,
++ read -r -a search_patterns
 + matched_configs=()
 + declare -a matched_configs
-+ IFS=,
-+ read -ra ip_list
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/misc/fw5.cfg
-+ matched_configs+=("${cfg}")
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/misc/fw5.cfg
++ matched_configs+=("${config}")
 + break
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/misc/fw6.cfg
-+ for ip in "${ip_list[@]}"
-+ grep -qF 203.0.113.10 ./configs/misc/fw6.cfg
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/misc/fw3.cfg
-+ for ip in "${ip_list[@]}"
-+ grep -qF 203.0.113.10 ./configs/misc/fw3.cfg
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/misc/fw2.cfg
-+ matched_configs+=("${cfg}")
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/misc/fw6.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.1.2 ./configs/misc/fw6.cfg
++ matched_configs+=("${config}")
 + break
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/cisco/access-sw1-west.cfg
-+ for ip in "${ip_list[@]}"
-+ grep -qF 203.0.113.10 ./configs/cisco/access-sw1-west.cfg
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/cisco/core-router-01.cfg
-+ for ip in "${ip_list[@]}"
-+ grep -qF 203.0.113.10 ./configs/cisco/core-router-01.cfg
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/cisco/core-fw-dmz-01.cfg
-+ matched_configs+=("${cfg}")
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/misc/fw3.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.1.2 ./configs/misc/fw3.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.2.3 ./configs/misc/fw3.cfg
++ matched_configs+=("${config}")
 + break
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/cisco/branch-isr-02.cfg
-+ matched_configs+=("${cfg}")
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/misc/fw2.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.1.2 ./configs/misc/fw2.cfg
++ matched_configs+=("${config}")
 + break
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/cisco/datacenter-fw-core.cfg
-+ for ip in "${ip_list[@]}"
-+ grep -qF 203.0.113.10 ./configs/cisco/datacenter-fw-core.cfg
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/cisco/access-switch-07.cfg
-+ for ip in "${ip_list[@]}"
-+ grep -qF 203.0.113.10 ./configs/cisco/access-switch-07.cfg
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/cisco/campus-sw-access01.cfg
-+ for ip in "${ip_list[@]}"
-+ grep -qF 203.0.113.10 ./configs/cisco/campus-sw-access01.cfg
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/cisco/branch-fw-03.cfg
-+ matched_configs+=("${cfg}")
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/cisco/access-sw1-west.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.1.2 ./configs/cisco/access-sw1-west.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.2.3 ./configs/cisco/access-sw1-west.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.10.10.10 ./configs/cisco/access-sw1-west.cfg
++ matched_configs+=("${config}")
 + break
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/cisco/hq-core-rtr-02.cfg
-+ matched_configs+=("${cfg}")
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/cisco/core-router-01.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.1.2 ./configs/cisco/core-router-01.cfg
++ matched_configs+=("${config}")
 + break
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/cisco/perimeter-fw1.cfg
-+ for ip in "${ip_list[@]}"
-+ grep -qF 203.0.113.10 ./configs/cisco/perimeter-fw1.cfg
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/cisco/hq-core-rtr.cfg
-+ for ip in "${ip_list[@]}"
-+ grep -qF 203.0.113.10 ./configs/cisco/hq-core-rtr.cfg
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/cisco/branch-fw-snmp.cfg
-+ for ip in "${ip_list[@]}"
-+ grep -qF 203.0.113.10 ./configs/cisco/branch-fw-snmp.cfg
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/cisco/dmz-fw2-backup.cfg
-+ matched_configs+=("${cfg}")
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/cisco/core-fw-dmz-01.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.1.2 ./configs/cisco/core-fw-dmz-01.cfg
++ matched_configs+=("${config}")
 + break
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/fortinet/fg-campus-core.cfg
-+ for ip in "${ip_list[@]}"
-+ grep -qF 203.0.113.10 ./configs/fortinet/fg-campus-core.cfg
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/fortinet/fg-fw-dmz-01.cfg
-+ matched_configs+=("${cfg}")
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/cisco/branch-isr-02.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.1.2 ./configs/cisco/branch-isr-02.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.2.3 ./configs/cisco/branch-isr-02.cfg
++ matched_configs+=("${config}")
 + break
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/fortinet/fg-branch-vpn-01.cfg
-+ matched_configs+=("${cfg}")
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/cisco/datacenter-fw-core.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.1.2 ./configs/cisco/datacenter-fw-core.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.2.3 ./configs/cisco/datacenter-fw-core.cfg
++ matched_configs+=("${config}")
 + break
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/fortinet/fg-lab-test-fw.cfg
-+ matched_configs+=("${cfg}")
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/cisco/access-switch-07.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.1.2 ./configs/cisco/access-switch-07.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.2.3 ./configs/cisco/access-switch-07.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.10.10.10 ./configs/cisco/access-switch-07.cfg
++ matched_configs+=("${config}")
 + break
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/fortinet/fg-testing-config.cfg
-+ for ip in "${ip_list[@]}"
-+ grep -qF 203.0.113.10 ./configs/fortinet/fg-testing-config.cfg
-+ matched_configs+=("${cfg}")
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/cisco/campus-sw-access01.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.1.2 ./configs/cisco/campus-sw-access01.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.2.3 ./configs/cisco/campus-sw-access01.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.10.10.10 ./configs/cisco/campus-sw-access01.cfg
++ matched_configs+=("${config}")
 + break
-+ for cfg in "${configs_listing[@]}"
-+ for ip in "${ip_list[@]}"
-+ grep -qF 198.51.100.75 ./configs/fortinet/fg-datacenter-east.cfg
-+ for ip in "${ip_list[@]}"
-+ grep -qF 203.0.113.10 ./configs/fortinet/fg-datacenter-east.cfg
-+ [[ 11 -gt 0 ]]
-+ message 'Matching IPs found in 11 files:'
-+ [[ -n Matching IPs found in 11 files: ]]
-+ local 'message=Matching IPs found in 11 files:'
-+ echo -e 'Matching IPs found in 11 files:'
-Matching IPs found in 11 files:
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/cisco/branch-fw-03.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.1.2 ./configs/cisco/branch-fw-03.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.2.3 ./configs/cisco/branch-fw-03.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.10.10.10 ./configs/cisco/branch-fw-03.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 172.16.0.5 ./configs/cisco/branch-fw-03.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 172.16.1.6 ./configs/cisco/branch-fw-03.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 172.18.1.20 ./configs/cisco/branch-fw-03.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 172.31.255.254 ./configs/cisco/branch-fw-03.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 192.0.2.50 ./configs/cisco/branch-fw-03.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 192.168.0.1 ./configs/cisco/branch-fw-03.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 192.168.0.100 ./configs/cisco/branch-fw-03.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 192.168.1.10 ./configs/cisco/branch-fw-03.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 192.168.1.11 ./configs/cisco/branch-fw-03.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 192.168.2.12 ./configs/cisco/branch-fw-03.cfg
++ matched_configs+=("${config}")
++ break
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/cisco/hq-core-rtr-02.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.1.2 ./configs/cisco/hq-core-rtr-02.cfg
++ matched_configs+=("${config}")
++ break
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/cisco/perimeter-fw1.cfg
++ matched_configs+=("${config}")
++ break
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/cisco/hq-core-rtr.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.1.2 ./configs/cisco/hq-core-rtr.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.2.3 ./configs/cisco/hq-core-rtr.cfg
++ matched_configs+=("${config}")
++ break
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/cisco/branch-fw-snmp.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.1.2 ./configs/cisco/branch-fw-snmp.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.2.3 ./configs/cisco/branch-fw-snmp.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.10.10.10 ./configs/cisco/branch-fw-snmp.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 172.16.0.5 ./configs/cisco/branch-fw-snmp.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 172.16.1.6 ./configs/cisco/branch-fw-snmp.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 172.18.1.20 ./configs/cisco/branch-fw-snmp.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 172.31.255.254 ./configs/cisco/branch-fw-snmp.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 192.0.2.50 ./configs/cisco/branch-fw-snmp.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 192.168.0.1 ./configs/cisco/branch-fw-snmp.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 192.168.0.100 ./configs/cisco/branch-fw-snmp.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 192.168.1.10 ./configs/cisco/branch-fw-snmp.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 192.168.1.11 ./configs/cisco/branch-fw-snmp.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 192.168.2.12 ./configs/cisco/branch-fw-snmp.cfg
++ matched_configs+=("${config}")
++ break
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/cisco/dmz-fw2-backup.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.1.2 ./configs/cisco/dmz-fw2-backup.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.2.3 ./configs/cisco/dmz-fw2-backup.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.10.10.10 ./configs/cisco/dmz-fw2-backup.cfg
++ matched_configs+=("${config}")
++ break
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/fortinet/fg-campus-core.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.1.2 ./configs/fortinet/fg-campus-core.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.2.3 ./configs/fortinet/fg-campus-core.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.10.10.10 ./configs/fortinet/fg-campus-core.cfg
++ matched_configs+=("${config}")
++ break
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/fortinet/fg-fw-dmz-01.cfg
++ matched_configs+=("${config}")
++ break
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/fortinet/fg-branch-vpn-01.cfg
++ matched_configs+=("${config}")
++ break
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/fortinet/fg-lab-test-fw.cfg
++ matched_configs+=("${config}")
++ break
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/fortinet/fg-testing-config.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.1.2 ./configs/fortinet/fg-testing-config.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.2.3 ./configs/fortinet/fg-testing-config.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.10.10.10 ./configs/fortinet/fg-testing-config.cfg
++ matched_configs+=("${config}")
++ break
++ for config in "${configs_listing[@]}"
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.0.1 ./configs/fortinet/fg-datacenter-east.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.1.2 ./configs/fortinet/fg-datacenter-east.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.0.2.3 ./configs/fortinet/fg-datacenter-east.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 10.10.10.10 ./configs/fortinet/fg-datacenter-east.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 172.16.0.5 ./configs/fortinet/fg-datacenter-east.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 172.16.1.6 ./configs/fortinet/fg-datacenter-east.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 172.18.1.20 ./configs/fortinet/fg-datacenter-east.cfg
++ for pattern in "${search_patterns[@]}"
++ grep -qF 172.31.255.254 ./configs/fortinet/fg-datacenter-east.cfg
++ matched_configs+=("${config}")
++ break
++ [[ 23 -gt 0 ]]
++ configs_listing=("${matched_configs[@]}")
++ [[ true == true ]]
++ message 'Matching IPs found in 23 files:'
++ [[ -n Matching IPs found in 23 files: ]]
++ local 'message=Matching IPs found in 23 files:'
++ echo -e 'Matching IPs found in 23 files:'
+Matching IPs found in 23 files:
 + newline
 + local count=1
 + (( i = 0 ))
@@ -253,11 +534,35 @@ Matching IPs found in 11 files:
 + echo -e '  - ./configs/misc/fw5.cfg'
   - ./configs/misc/fw5.cfg
 + for item in "${matched_configs[@]}"
++ message '  - ./configs/misc/fw6.cfg'
++ [[ -n   - ./configs/misc/fw6.cfg ]]
++ local 'message=  - ./configs/misc/fw6.cfg'
++ echo -e '  - ./configs/misc/fw6.cfg'
+  - ./configs/misc/fw6.cfg
++ for item in "${matched_configs[@]}"
++ message '  - ./configs/misc/fw3.cfg'
++ [[ -n   - ./configs/misc/fw3.cfg ]]
++ local 'message=  - ./configs/misc/fw3.cfg'
++ echo -e '  - ./configs/misc/fw3.cfg'
+  - ./configs/misc/fw3.cfg
++ for item in "${matched_configs[@]}"
 + message '  - ./configs/misc/fw2.cfg'
 + [[ -n   - ./configs/misc/fw2.cfg ]]
 + local 'message=  - ./configs/misc/fw2.cfg'
 + echo -e '  - ./configs/misc/fw2.cfg'
   - ./configs/misc/fw2.cfg
++ for item in "${matched_configs[@]}"
++ message '  - ./configs/cisco/access-sw1-west.cfg'
++ [[ -n   - ./configs/cisco/access-sw1-west.cfg ]]
++ local 'message=  - ./configs/cisco/access-sw1-west.cfg'
++ echo -e '  - ./configs/cisco/access-sw1-west.cfg'
+  - ./configs/cisco/access-sw1-west.cfg
++ for item in "${matched_configs[@]}"
++ message '  - ./configs/cisco/core-router-01.cfg'
++ [[ -n   - ./configs/cisco/core-router-01.cfg ]]
++ local 'message=  - ./configs/cisco/core-router-01.cfg'
++ echo -e '  - ./configs/cisco/core-router-01.cfg'
+  - ./configs/cisco/core-router-01.cfg
 + for item in "${matched_configs[@]}"
 + message '  - ./configs/cisco/core-fw-dmz-01.cfg'
 + [[ -n   - ./configs/cisco/core-fw-dmz-01.cfg ]]
@@ -271,6 +576,24 @@ Matching IPs found in 11 files:
 + echo -e '  - ./configs/cisco/branch-isr-02.cfg'
   - ./configs/cisco/branch-isr-02.cfg
 + for item in "${matched_configs[@]}"
++ message '  - ./configs/cisco/datacenter-fw-core.cfg'
++ [[ -n   - ./configs/cisco/datacenter-fw-core.cfg ]]
++ local 'message=  - ./configs/cisco/datacenter-fw-core.cfg'
++ echo -e '  - ./configs/cisco/datacenter-fw-core.cfg'
+  - ./configs/cisco/datacenter-fw-core.cfg
++ for item in "${matched_configs[@]}"
++ message '  - ./configs/cisco/access-switch-07.cfg'
++ [[ -n   - ./configs/cisco/access-switch-07.cfg ]]
++ local 'message=  - ./configs/cisco/access-switch-07.cfg'
++ echo -e '  - ./configs/cisco/access-switch-07.cfg'
+  - ./configs/cisco/access-switch-07.cfg
++ for item in "${matched_configs[@]}"
++ message '  - ./configs/cisco/campus-sw-access01.cfg'
++ [[ -n   - ./configs/cisco/campus-sw-access01.cfg ]]
++ local 'message=  - ./configs/cisco/campus-sw-access01.cfg'
++ echo -e '  - ./configs/cisco/campus-sw-access01.cfg'
+  - ./configs/cisco/campus-sw-access01.cfg
++ for item in "${matched_configs[@]}"
 + message '  - ./configs/cisco/branch-fw-03.cfg'
 + [[ -n   - ./configs/cisco/branch-fw-03.cfg ]]
 + local 'message=  - ./configs/cisco/branch-fw-03.cfg'
@@ -283,11 +606,35 @@ Matching IPs found in 11 files:
 + echo -e '  - ./configs/cisco/hq-core-rtr-02.cfg'
   - ./configs/cisco/hq-core-rtr-02.cfg
 + for item in "${matched_configs[@]}"
++ message '  - ./configs/cisco/perimeter-fw1.cfg'
++ [[ -n   - ./configs/cisco/perimeter-fw1.cfg ]]
++ local 'message=  - ./configs/cisco/perimeter-fw1.cfg'
++ echo -e '  - ./configs/cisco/perimeter-fw1.cfg'
+  - ./configs/cisco/perimeter-fw1.cfg
++ for item in "${matched_configs[@]}"
++ message '  - ./configs/cisco/hq-core-rtr.cfg'
++ [[ -n   - ./configs/cisco/hq-core-rtr.cfg ]]
++ local 'message=  - ./configs/cisco/hq-core-rtr.cfg'
++ echo -e '  - ./configs/cisco/hq-core-rtr.cfg'
+  - ./configs/cisco/hq-core-rtr.cfg
++ for item in "${matched_configs[@]}"
++ message '  - ./configs/cisco/branch-fw-snmp.cfg'
++ [[ -n   - ./configs/cisco/branch-fw-snmp.cfg ]]
++ local 'message=  - ./configs/cisco/branch-fw-snmp.cfg'
++ echo -e '  - ./configs/cisco/branch-fw-snmp.cfg'
+  - ./configs/cisco/branch-fw-snmp.cfg
++ for item in "${matched_configs[@]}"
 + message '  - ./configs/cisco/dmz-fw2-backup.cfg'
 + [[ -n   - ./configs/cisco/dmz-fw2-backup.cfg ]]
 + local 'message=  - ./configs/cisco/dmz-fw2-backup.cfg'
 + echo -e '  - ./configs/cisco/dmz-fw2-backup.cfg'
   - ./configs/cisco/dmz-fw2-backup.cfg
++ for item in "${matched_configs[@]}"
++ message '  - ./configs/fortinet/fg-campus-core.cfg'
++ [[ -n   - ./configs/fortinet/fg-campus-core.cfg ]]
++ local 'message=  - ./configs/fortinet/fg-campus-core.cfg'
++ echo -e '  - ./configs/fortinet/fg-campus-core.cfg'
+  - ./configs/fortinet/fg-campus-core.cfg
 + for item in "${matched_configs[@]}"
 + message '  - ./configs/fortinet/fg-fw-dmz-01.cfg'
 + [[ -n   - ./configs/fortinet/fg-fw-dmz-01.cfg ]]
@@ -312,6 +659,12 @@ Matching IPs found in 11 files:
 + local 'message=  - ./configs/fortinet/fg-testing-config.cfg'
 + echo -e '  - ./configs/fortinet/fg-testing-config.cfg'
   - ./configs/fortinet/fg-testing-config.cfg
++ for item in "${matched_configs[@]}"
++ message '  - ./configs/fortinet/fg-datacenter-east.cfg'
++ [[ -n   - ./configs/fortinet/fg-datacenter-east.cfg ]]
++ local 'message=  - ./configs/fortinet/fg-datacenter-east.cfg'
++ echo -e '  - ./configs/fortinet/fg-datacenter-east.cfg'
+  - ./configs/fortinet/fg-datacenter-east.cfg
 + newline
 + local count=1
 + (( i = 0 ))
@@ -320,9 +673,8 @@ Matching IPs found in 11 files:
 
 + (( i++ ))
 + (( i < count ))
-+ configs_listing=("${matched_configs[@]}")
-+ [[ 11 -eq 0 ]]
-+ for source_config in "${configs_listing[@]}"
++ [[ 23 -eq 0 ]]
++ for target_config in "${configs_listing[@]}"
 + [[ ! -f ./configs/misc/fw5.cfg ]]
 + set +e
 + detect_vendor ./configs/misc/fw5.cfg
@@ -336,6 +688,7 @@ Matching IPs found in 11 files:
 + set -e
 + case "${vendor_code}" in
 + target_platform=cisco
++ [[ true == true ]]
 + message 'Parsing [ cisco ] configs (by: location): '
 + [[ -n Parsing [ cisco ] configs (by: location):  ]]
 + local 'message=Parsing [ cisco ] configs (by: location): '
@@ -343,19 +696,16 @@ Matching IPs found in 11 files:
 Parsing [ cisco ] configs (by: location): 
 + [[ -n ./resources ]]
 + base_output=./resources
-++ echo ./configs/misc/fw5.cfg
+++ echo -e ./configs/misc/fw5.cfg
 ++ sed 's|^\./||'
 + rel_path=configs/misc/fw5.cfg
 + target_output=./resources/configs/misc/fw5.cfg
-++ dirname ./resources/configs/misc/fw5.cfg
-+ local output_dir=./resources/configs/misc
-+ [[ ! -d ./resources/configs/misc ]]
-+ execute=('./scripts/extract-configs.shell' '--ip-addr=198.51.100.75,203.0.113.10' '--config=./configs/misc/fw5.cfg' '--output=./resources/configs/misc/fw5.cfg')
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/misc/fw5.cfg' '--output=./resources/configs/misc/fw5.cfg')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
 ++ which bash
-+ /usr/local/bin/bash ./scripts/extract-configs.shell --ip-addr=198.51.100.75,203.0.113.10 --config=./configs/misc/fw5.cfg --output=./resources/configs/misc/fw5.cfg --verbose
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/misc/fw5.cfg --output=./resources/configs/misc/fw5.cfg --verbose
 + [[ true == true ]]
 + message 'Configuration File [ ./resources/configs/misc/fw5.cfg ]'
 + [[ -n Configuration File [ ./resources/configs/misc/fw5.cfg ] ]]
@@ -376,9 +726,29 @@ Configuration File [ ./resources/configs/misc/fw5.cfg ]
      3	 network-object host 192.168.2.12
      4	 network-object host 198.51.100.75
      5	
-     6	object network Hydra-Link
-     7	 host 198.51.100.75
-     8	
+     6	object-group network RedRoom-Core
+     7	 description Classified subnets
+     8	 network-object host 10.0.0.1
+     9	 network-object host 172.16.1.6
+    10	
+    11	object-group network RedRoom-Core
+    12	 description Classified subnets
+    13	 network-object host 10.0.0.1
+    14	 network-object host 172.16.1.6
+    15	
+    16	object network Hydra-Link
+    17	 host 198.51.100.75
+    18	
+    19	object network BlackWidow-Core
+    20	 host 172.16.1.6
+    21	
+    22	object-group network RedRoom-Core
+    23	 description Classified subnets
+    24	 network-object host 10.0.0.1
+    25	 network-object host 172.16.1.6
+    26	
+    27	access-list OUTSIDE extended permit ip host 172.16.1.6 any
+    28	
 + newline
 + local count=1
 + (( i = 0 ))
@@ -387,7 +757,180 @@ Configuration File [ ./resources/configs/misc/fw5.cfg ]
 
 + (( i++ ))
 + (( i < count ))
-+ for source_config in "${configs_listing[@]}"
++ for target_config in "${configs_listing[@]}"
++ [[ ! -f ./configs/misc/fw6.cfg ]]
++ set +e
++ detect_vendor ./configs/misc/fw6.cfg
++ local config_file=./configs/misc/fw6.cfg
++ local 'fortinet_pattern=fortinet|fortigate'
++ local 'cisco_pattern=\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b'
++ grep -qiE 'fortinet|fortigate' ./configs/misc/fw6.cfg
++ grep -qiE '\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b' ./configs/misc/fw6.cfg
++ return 2
++ local vendor_code=2
++ set -e
++ case "${vendor_code}" in
++ target_platform=cisco
++ [[ true == true ]]
++ message 'Parsing [ cisco ] configs (by: location): '
++ [[ -n Parsing [ cisco ] configs (by: location):  ]]
++ local 'message=Parsing [ cisco ] configs (by: location): '
++ echo -e 'Parsing [ cisco ] configs (by: location): '
+Parsing [ cisco ] configs (by: location): 
++ [[ -n ./resources ]]
++ base_output=./resources
+++ echo -e ./configs/misc/fw6.cfg
+++ sed 's|^\./||'
++ rel_path=configs/misc/fw6.cfg
++ target_output=./resources/configs/misc/fw6.cfg
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/misc/fw6.cfg' '--output=./resources/configs/misc/fw6.cfg')
++ declare -a execute
++ [[ true == true ]]
++ execute+=(--verbose)
+++ which bash
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/misc/fw6.cfg --output=./resources/configs/misc/fw6.cfg --verbose
++ [[ true == true ]]
++ message 'Configuration File [ ./resources/configs/misc/fw6.cfg ]'
++ [[ -n Configuration File [ ./resources/configs/misc/fw6.cfg ] ]]
++ local 'message=Configuration File [ ./resources/configs/misc/fw6.cfg ]'
++ echo -e 'Configuration File [ ./resources/configs/misc/fw6.cfg ]'
+Configuration File [ ./resources/configs/misc/fw6.cfg ]
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ cat -n ./resources/configs/misc/fw6.cfg
+     1	object-group network Xmen-LAN
+     2	 description Secure base subnets
+     3	 network-object host 192.168.1.10
+     4	 network-object host 10.0.1.2
+     5	
+     6	object-group network Mutant-WiFi
+     7	 description Controlled guest devices
+     8	 network-object host 10.10.10.10
+     9	
+    10	object-group network Sentinel-Edge
+    11	 description WAN-facing systems
+    12	 network-object host 203.0.113.25
+    13	
+    14	object network Xavier-Core
+    15	 host 192.168.1.10
+    16	
+    17	object network Sentinel-NAT
+    18	 host 203.0.113.25
+    19	
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ for target_config in "${configs_listing[@]}"
++ [[ ! -f ./configs/misc/fw3.cfg ]]
++ set +e
++ detect_vendor ./configs/misc/fw3.cfg
++ local config_file=./configs/misc/fw3.cfg
++ local 'fortinet_pattern=fortinet|fortigate'
++ local 'cisco_pattern=\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b'
++ grep -qiE 'fortinet|fortigate' ./configs/misc/fw3.cfg
++ grep -qiE '\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b' ./configs/misc/fw3.cfg
++ return 2
++ local vendor_code=2
++ set -e
++ case "${vendor_code}" in
++ target_platform=cisco
++ [[ true == true ]]
++ message 'Parsing [ cisco ] configs (by: location): '
++ [[ -n Parsing [ cisco ] configs (by: location):  ]]
++ local 'message=Parsing [ cisco ] configs (by: location): '
++ echo -e 'Parsing [ cisco ] configs (by: location): '
+Parsing [ cisco ] configs (by: location): 
++ [[ -n ./resources ]]
++ base_output=./resources
+++ echo -e ./configs/misc/fw3.cfg
+++ sed 's|^\./||'
++ rel_path=configs/misc/fw3.cfg
++ target_output=./resources/configs/misc/fw3.cfg
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/misc/fw3.cfg' '--output=./resources/configs/misc/fw3.cfg')
++ declare -a execute
++ [[ true == true ]]
++ execute+=(--verbose)
+++ which bash
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/misc/fw3.cfg --output=./resources/configs/misc/fw3.cfg --verbose
++ [[ true == true ]]
++ message 'Configuration File [ ./resources/configs/misc/fw3.cfg ]'
++ [[ -n Configuration File [ ./resources/configs/misc/fw3.cfg ] ]]
++ local 'message=Configuration File [ ./resources/configs/misc/fw3.cfg ]'
++ echo -e 'Configuration File [ ./resources/configs/misc/fw3.cfg ]'
+Configuration File [ ./resources/configs/misc/fw3.cfg ]
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ cat -n ./resources/configs/misc/fw3.cfg
+     1	object-group network Wakanda-Core
+     2	 description National Core Routing Zone
+     3	 network-object host 192.168.1.10
+     4	 network-object host 10.0.2.3
+     5	 network-object 10.0.0.0 255.255.255.0
+     6	
+     7	object-group network Panther-Edge
+     8	 description Internet-facing proxy systems
+     9	 network-object host 203.0.113.25
+    10	 network-object host 172.16.0.5
+    11	
+    12	object-group network Shield-WiFi
+    13	 description Shield-controlled wireless network
+    14	 network-object host 10.10.10.10
+    15	 network-object 192.168.100.0 255.255.255.0
+    16	
+    17	object-group network Shield-WiFi
+    18	 description Shield-controlled wireless network
+    19	 network-object host 10.10.10.10
+    20	 network-object 192.168.100.0 255.255.255.0
+    21	
+    22	object network Panther-Gateway
+    23	 host 10.0.2.3
+    24	 description Secure outbound concentrator
+    25	
+    26	object network Edge-Terminal
+    27	 host 172.16.0.5
+    28	 description Internet firewall handoff
+    29	
+    30	object-group network Shield-WiFi
+    31	 description Shield-controlled wireless network
+    32	 network-object host 10.10.10.10
+    33	 network-object 192.168.100.0 255.255.255.0
+    34	
+    35	object network Shield-WiFi-Alias
+    36	 host 10.10.10.10
+    37	 description Guest NAT
+    38	
+    39	access-list OUTSIDE extended permit ip host 10.0.2.3 any
+    40	
+    41	access-list OUTSIDE extended permit ip any host 172.16.0.5
+    42	
+    43	access-list OUTSIDE extended permit ip host 10.10.10.10 any
+    44	
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ for target_config in "${configs_listing[@]}"
 + [[ ! -f ./configs/misc/fw2.cfg ]]
 + set +e
 + detect_vendor ./configs/misc/fw2.cfg
@@ -401,6 +944,7 @@ Configuration File [ ./resources/configs/misc/fw5.cfg ]
 + set -e
 + case "${vendor_code}" in
 + target_platform=cisco
++ [[ true == true ]]
 + message 'Parsing [ cisco ] configs (by: location): '
 + [[ -n Parsing [ cisco ] configs (by: location):  ]]
 + local 'message=Parsing [ cisco ] configs (by: location): '
@@ -408,19 +952,16 @@ Configuration File [ ./resources/configs/misc/fw5.cfg ]
 Parsing [ cisco ] configs (by: location): 
 + [[ -n ./resources ]]
 + base_output=./resources
-++ echo ./configs/misc/fw2.cfg
+++ echo -e ./configs/misc/fw2.cfg
 ++ sed 's|^\./||'
 + rel_path=configs/misc/fw2.cfg
 + target_output=./resources/configs/misc/fw2.cfg
-++ dirname ./resources/configs/misc/fw2.cfg
-+ local output_dir=./resources/configs/misc
-+ [[ ! -d ./resources/configs/misc ]]
-+ execute=('./scripts/extract-configs.shell' '--ip-addr=198.51.100.75,203.0.113.10' '--config=./configs/misc/fw2.cfg' '--output=./resources/configs/misc/fw2.cfg')
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/misc/fw2.cfg' '--output=./resources/configs/misc/fw2.cfg')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
 ++ which bash
-+ /usr/local/bin/bash ./scripts/extract-configs.shell --ip-addr=198.51.100.75,203.0.113.10 --config=./configs/misc/fw2.cfg --output=./resources/configs/misc/fw2.cfg --verbose
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/misc/fw2.cfg --output=./resources/configs/misc/fw2.cfg --verbose
 + [[ true == true ]]
 + message 'Configuration File [ ./resources/configs/misc/fw2.cfg ]'
 + [[ -n Configuration File [ ./resources/configs/misc/fw2.cfg ] ]]
@@ -436,17 +977,40 @@ Configuration File [ ./resources/configs/misc/fw2.cfg ]
 + (( i++ ))
 + (( i < count ))
 + cat -n ./resources/configs/misc/fw2.cfg
-     1	object-group network Wayne-DMZ
-     2	 description External public resources
-     3	 network-object host 203.0.113.25
-     4	 network-object host 198.51.100.75
-     5	
-     6	object network Gotham-VPN
-     7	 host 198.51.100.75
-     8	 description Encrypted edge gateway
-     9	
-    10	access-list OUTSIDE extended permit ip any host 198.51.100.75
+     1	object-group network Gotham-Internal
+     2	 description Internal datacenter and backup LAN
+     3	 network-object host 10.0.1.2
+     4	 network-object host 192.168.1.11
+     5	 network-object 192.168.1.0 255.255.255.0
+     6	
+     7	object-group network Batcave-Wireless
+     8	 description Secure wireless endpoints
+     9	 network-object host 172.16.1.6
+    10	 network-object host 192.168.100.100
     11	
+    12	object-group network Wayne-DMZ
+    13	 description External public resources
+    14	 network-object host 203.0.113.25
+    15	 network-object host 198.51.100.75
+    16	
+    17	object network Wayne-Tech
+    18	 host 10.0.1.2
+    19	 description Application edge firewall
+    20	
+    21	object network Gotham-VPN
+    22	 host 198.51.100.75
+    23	 description Encrypted edge gateway
+    24	
+    25	object network Internet-Relay
+    26	 host 203.0.113.25
+    27	 description Unfiltered outbound NAT IP
+    28	
+    29	access-list OUTSIDE extended permit ip host 10.0.1.2 any
+    30	
+    31	access-list OUTSIDE extended permit ip any host 203.0.113.25
+    32	
+    33	access-list OUTSIDE extended permit ip any host 198.51.100.75
+    34	
 + newline
 + local count=1
 + (( i = 0 ))
@@ -455,7 +1019,168 @@ Configuration File [ ./resources/configs/misc/fw2.cfg ]
 
 + (( i++ ))
 + (( i < count ))
-+ for source_config in "${configs_listing[@]}"
++ for target_config in "${configs_listing[@]}"
++ [[ ! -f ./configs/cisco/access-sw1-west.cfg ]]
++ set +e
++ detect_vendor ./configs/cisco/access-sw1-west.cfg
++ local config_file=./configs/cisco/access-sw1-west.cfg
++ local 'fortinet_pattern=fortinet|fortigate'
++ local 'cisco_pattern=\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b'
++ grep -qiE 'fortinet|fortigate' ./configs/cisco/access-sw1-west.cfg
++ grep -qiE '\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b' ./configs/cisco/access-sw1-west.cfg
++ return 2
++ local vendor_code=2
++ set -e
++ case "${vendor_code}" in
++ target_platform=cisco
++ [[ true == true ]]
++ message 'Parsing [ cisco ] configs (by: location): '
++ [[ -n Parsing [ cisco ] configs (by: location):  ]]
++ local 'message=Parsing [ cisco ] configs (by: location): '
++ echo -e 'Parsing [ cisco ] configs (by: location): '
+Parsing [ cisco ] configs (by: location): 
++ [[ -n ./resources ]]
++ base_output=./resources
+++ echo -e ./configs/cisco/access-sw1-west.cfg
+++ sed 's|^\./||'
++ rel_path=configs/cisco/access-sw1-west.cfg
++ target_output=./resources/configs/cisco/access-sw1-west.cfg
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/cisco/access-sw1-west.cfg' '--output=./resources/configs/cisco/access-sw1-west.cfg')
++ declare -a execute
++ [[ true == true ]]
++ execute+=(--verbose)
+++ which bash
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/cisco/access-sw1-west.cfg --output=./resources/configs/cisco/access-sw1-west.cfg --verbose
++ [[ true == true ]]
++ message 'Configuration File [ ./resources/configs/cisco/access-sw1-west.cfg ]'
++ [[ -n Configuration File [ ./resources/configs/cisco/access-sw1-west.cfg ] ]]
++ local 'message=Configuration File [ ./resources/configs/cisco/access-sw1-west.cfg ]'
++ echo -e 'Configuration File [ ./resources/configs/cisco/access-sw1-west.cfg ]'
+Configuration File [ ./resources/configs/cisco/access-sw1-west.cfg ]
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ cat -n ./resources/configs/cisco/access-sw1-west.cfg
+     1	hostname access-sw1-west
+     2	
+     3	interface Vlan1
+     4	 ip address 192.168.0.1 255.255.255.0
+     5	 description Management Interface
+     6	
+     7	interface Vlan100
+     8	 ip address 192.168.0.100 255.255.255.0
+     9	 description Guest VLAN Gateway
+    10	
+    11	object-group network MGMT-ACCESS
+    12	 description Management objects
+    13	 network-object host 192.168.0.1
+    14	 network-object host 192.168.0.100
+    15	 network-object host 10.10.10.10
+    16	
+    17	object-group network Mutant-WiFi
+    18	 description Controlled guest devices
+    19	 network-object host 10.10.10.10
+    20	
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ for target_config in "${configs_listing[@]}"
++ [[ ! -f ./configs/cisco/core-router-01.cfg ]]
++ set +e
++ detect_vendor ./configs/cisco/core-router-01.cfg
++ local config_file=./configs/cisco/core-router-01.cfg
++ local 'fortinet_pattern=fortinet|fortigate'
++ local 'cisco_pattern=\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b'
++ grep -qiE 'fortinet|fortigate' ./configs/cisco/core-router-01.cfg
++ grep -qiE '\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b' ./configs/cisco/core-router-01.cfg
++ return 2
++ local vendor_code=2
++ set -e
++ case "${vendor_code}" in
++ target_platform=cisco
++ [[ true == true ]]
++ message 'Parsing [ cisco ] configs (by: location): '
++ [[ -n Parsing [ cisco ] configs (by: location):  ]]
++ local 'message=Parsing [ cisco ] configs (by: location): '
++ echo -e 'Parsing [ cisco ] configs (by: location): '
+Parsing [ cisco ] configs (by: location): 
++ [[ -n ./resources ]]
++ base_output=./resources
+++ echo -e ./configs/cisco/core-router-01.cfg
+++ sed 's|^\./||'
++ rel_path=configs/cisco/core-router-01.cfg
++ target_output=./resources/configs/cisco/core-router-01.cfg
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/cisco/core-router-01.cfg' '--output=./resources/configs/cisco/core-router-01.cfg')
++ declare -a execute
++ [[ true == true ]]
++ execute+=(--verbose)
+++ which bash
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/cisco/core-router-01.cfg --output=./resources/configs/cisco/core-router-01.cfg --verbose
++ [[ true == true ]]
++ message 'Configuration File [ ./resources/configs/cisco/core-router-01.cfg ]'
++ [[ -n Configuration File [ ./resources/configs/cisco/core-router-01.cfg ] ]]
++ local 'message=Configuration File [ ./resources/configs/cisco/core-router-01.cfg ]'
++ echo -e 'Configuration File [ ./resources/configs/cisco/core-router-01.cfg ]'
+Configuration File [ ./resources/configs/cisco/core-router-01.cfg ]
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ cat -n ./resources/configs/cisco/core-router-01.cfg
+     1	hostname core-router-01
+     2	
+     3	interface GigabitEthernet0/0
+     4	 ip address 10.0.1.2 255.255.255.0
+     5	 description Core uplink to WAN
+     6	
+     7	interface GigabitEthernet0/1
+     8	 ip address 192.168.1.10 255.255.255.0
+     9	 description LAN Segment A
+    10	
+    11	interface GigabitEthernet0/2
+    12	 ip address 192.168.1.11 255.255.255.0
+    13	 description LAN Segment B
+    14	
+    15	object-group network Gotham-Internal
+    16	 description Internal datacenter and backup LAN
+    17	 network-object host 10.0.1.2
+    18	 network-object host 192.168.1.11
+    19	 network-object 192.168.1.0 255.255.255.0
+    20	
+    21	object-group network Wakanda-Core
+    22	 description National Core Routing Zone
+    23	 network-object host 192.168.1.10
+    24	 network-object host 10.0.2.3
+    25	 network-object 10.0.0.0 255.255.255.0
+    26	
+    27	object-group network Xmen-LAN
+    28	 description Secure base subnets
+    29	 network-object host 192.168.1.10
+    30	 network-object host 10.0.1.2
+    31	
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ for target_config in "${configs_listing[@]}"
 + [[ ! -f ./configs/cisco/core-fw-dmz-01.cfg ]]
 + set +e
 + detect_vendor ./configs/cisco/core-fw-dmz-01.cfg
@@ -469,6 +1194,7 @@ Configuration File [ ./resources/configs/misc/fw2.cfg ]
 + set -e
 + case "${vendor_code}" in
 + target_platform=cisco
++ [[ true == true ]]
 + message 'Parsing [ cisco ] configs (by: location): '
 + [[ -n Parsing [ cisco ] configs (by: location):  ]]
 + local 'message=Parsing [ cisco ] configs (by: location): '
@@ -476,19 +1202,16 @@ Configuration File [ ./resources/configs/misc/fw2.cfg ]
 Parsing [ cisco ] configs (by: location): 
 + [[ -n ./resources ]]
 + base_output=./resources
-++ echo ./configs/cisco/core-fw-dmz-01.cfg
+++ echo -e ./configs/cisco/core-fw-dmz-01.cfg
 ++ sed 's|^\./||'
 + rel_path=configs/cisco/core-fw-dmz-01.cfg
 + target_output=./resources/configs/cisco/core-fw-dmz-01.cfg
-++ dirname ./resources/configs/cisco/core-fw-dmz-01.cfg
-+ local output_dir=./resources/configs/cisco
-+ [[ ! -d ./resources/configs/cisco ]]
-+ execute=('./scripts/extract-configs.shell' '--ip-addr=198.51.100.75,203.0.113.10' '--config=./configs/cisco/core-fw-dmz-01.cfg' '--output=./resources/configs/cisco/core-fw-dmz-01.cfg')
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/cisco/core-fw-dmz-01.cfg' '--output=./resources/configs/cisco/core-fw-dmz-01.cfg')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
 ++ which bash
-+ /usr/local/bin/bash ./scripts/extract-configs.shell --ip-addr=198.51.100.75,203.0.113.10 --config=./configs/cisco/core-fw-dmz-01.cfg --output=./resources/configs/cisco/core-fw-dmz-01.cfg --verbose
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/cisco/core-fw-dmz-01.cfg --output=./resources/configs/cisco/core-fw-dmz-01.cfg --verbose
 + [[ true == true ]]
 + message 'Configuration File [ ./resources/configs/cisco/core-fw-dmz-01.cfg ]'
 + [[ -n Configuration File [ ./resources/configs/cisco/core-fw-dmz-01.cfg ] ]]
@@ -508,17 +1231,41 @@ Configuration File [ ./resources/configs/cisco/core-fw-dmz-01.cfg ]
      2	hostname core-fw-dmz-01
      3	domain-name corp.dmz.local
      4	
-     5	object-group network Wayne-DMZ
-     6	 description External public resources
-     7	 network-object host 203.0.113.25
-     8	 network-object host 198.51.100.75
-     9	
-    10	object network Gotham-VPN
-    11	 host 198.51.100.75
-    12	 description Encrypted edge gateway
-    13	
-    14	access-list OUTSIDE extended permit ip any host 198.51.100.75
-    15	
+     5	interface GigabitEthernet0/0
+     6	 nameif outside
+     7	 security-level 0
+     8	 ip address 203.0.113.25 255.255.255.0
+     9	 description Public ISP Link
+    10	
+    11	interface GigabitEthernet0/1
+    12	 nameif inside
+    13	 security-level 100
+    14	 ip address 10.0.1.2 255.255.255.0
+    15	 description Internal Firewall LAN
+    16	
+    17	object network Wayne-Tech
+    18	 host 10.0.1.2
+    19	 description Application edge firewall
+    20	
+    21	object network Internet-Relay
+    22	 host 203.0.113.25
+    23	 description Unfiltered outbound NAT IP
+    24	
+    25	object-group network Wayne-DMZ
+    26	 description External public resources
+    27	 network-object host 203.0.113.25
+    28	 network-object host 198.51.100.75
+    29	
+    30	object network Gotham-VPN
+    31	 host 198.51.100.75
+    32	 description Encrypted edge gateway
+    33	
+    34	access-list OUTSIDE extended permit ip any host 203.0.113.25
+    35	
+    36	access-list OUTSIDE extended permit ip any host 198.51.100.75
+    37	
+    38	access-list OUTSIDE extended permit ip host 10.0.1.2 any
+    39	
 + newline
 + local count=1
 + (( i = 0 ))
@@ -527,7 +1274,7 @@ Configuration File [ ./resources/configs/cisco/core-fw-dmz-01.cfg ]
 
 + (( i++ ))
 + (( i < count ))
-+ for source_config in "${configs_listing[@]}"
++ for target_config in "${configs_listing[@]}"
 + [[ ! -f ./configs/cisco/branch-isr-02.cfg ]]
 + set +e
 + detect_vendor ./configs/cisco/branch-isr-02.cfg
@@ -541,6 +1288,7 @@ Configuration File [ ./resources/configs/cisco/core-fw-dmz-01.cfg ]
 + set -e
 + case "${vendor_code}" in
 + target_platform=cisco
++ [[ true == true ]]
 + message 'Parsing [ cisco ] configs (by: location): '
 + [[ -n Parsing [ cisco ] configs (by: location):  ]]
 + local 'message=Parsing [ cisco ] configs (by: location): '
@@ -548,19 +1296,16 @@ Configuration File [ ./resources/configs/cisco/core-fw-dmz-01.cfg ]
 Parsing [ cisco ] configs (by: location): 
 + [[ -n ./resources ]]
 + base_output=./resources
-++ echo ./configs/cisco/branch-isr-02.cfg
+++ echo -e ./configs/cisco/branch-isr-02.cfg
 ++ sed 's|^\./||'
 + rel_path=configs/cisco/branch-isr-02.cfg
 + target_output=./resources/configs/cisco/branch-isr-02.cfg
-++ dirname ./resources/configs/cisco/branch-isr-02.cfg
-+ local output_dir=./resources/configs/cisco
-+ [[ ! -d ./resources/configs/cisco ]]
-+ execute=('./scripts/extract-configs.shell' '--ip-addr=198.51.100.75,203.0.113.10' '--config=./configs/cisco/branch-isr-02.cfg' '--output=./resources/configs/cisco/branch-isr-02.cfg')
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/cisco/branch-isr-02.cfg' '--output=./resources/configs/cisco/branch-isr-02.cfg')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
 ++ which bash
-+ /usr/local/bin/bash ./scripts/extract-configs.shell --ip-addr=198.51.100.75,203.0.113.10 --config=./configs/cisco/branch-isr-02.cfg --output=./resources/configs/cisco/branch-isr-02.cfg --verbose
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/cisco/branch-isr-02.cfg --output=./resources/configs/cisco/branch-isr-02.cfg --verbose
 + [[ true == true ]]
 + message 'Configuration File [ ./resources/configs/cisco/branch-isr-02.cfg ]'
 + [[ -n Configuration File [ ./resources/configs/cisco/branch-isr-02.cfg ] ]]
@@ -578,17 +1323,46 @@ Configuration File [ ./resources/configs/cisco/branch-isr-02.cfg ]
 + cat -n ./resources/configs/cisco/branch-isr-02.cfg
      1	hostname branch-isr-02
      2	
-     3	object network Hydra-Link
-     4	 host 198.51.100.75
-     5	 description Branch NAT egress
+     3	interface GigabitEthernet0/0/0
+     4	 ip address 172.16.1.6 255.255.255.0
+     5	 description ISP uplink
      6	
-     7	object-group network Hydra-Edge
-     8	 description Remote site uplink
-     9	 network-object host 192.168.2.12
-    10	 network-object host 198.51.100.75
-    11	
-    12	access-list OUTSIDE extended permit ip any host 198.51.100.75
-    13	
+     7	interface GigabitEthernet0/0/1
+     8	 ip address 192.168.2.12 255.255.255.0
+     9	 description Workstation LAN
+    10	
+    11	interface GigabitEthernet0/0/2
+    12	 ip address 10.0.2.3 255.255.255.0
+    13	 description Dev VLAN
+    14	
+    15	object network BlackWidow-Core
+    16	 host 172.16.1.6
+    17	 description Branch router uplink NAT
+    18	
+    19	object network Hydra-Link
+    20	 host 198.51.100.75
+    21	 description Branch NAT egress
+    22	
+    23	object-group network Hydra-Edge
+    24	 description Remote site uplink
+    25	 network-object host 192.168.2.12
+    26	 network-object host 198.51.100.75
+    27	
+    28	object network Panther-Gateway
+    29	 host 10.0.2.3
+    30	 description Secure outbound concentrator
+    31	
+    32	object-group network Lantern-DMZ
+    33	 description Protected but public-facing zone
+    34	 network-object host 172.18.1.20
+    35	 network-object host 192.168.1.11
+    36	
+    37	access-list OUTSIDE extended permit ip host 10.0.2.3 any
+    38	
+    39	access-list OUTSIDE extended permit ip any host 172.16.1.6
+    40	
+    41	access-list OUTSIDE extended permit ip any host 198.51.100.75
+    42	
 + newline
 + local count=1
 + (( i = 0 ))
@@ -597,7 +1371,241 @@ Configuration File [ ./resources/configs/cisco/branch-isr-02.cfg ]
 
 + (( i++ ))
 + (( i < count ))
-+ for source_config in "${configs_listing[@]}"
++ for target_config in "${configs_listing[@]}"
++ [[ ! -f ./configs/cisco/datacenter-fw-core.cfg ]]
++ set +e
++ detect_vendor ./configs/cisco/datacenter-fw-core.cfg
++ local config_file=./configs/cisco/datacenter-fw-core.cfg
++ local 'fortinet_pattern=fortinet|fortigate'
++ local 'cisco_pattern=\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b'
++ grep -qiE 'fortinet|fortigate' ./configs/cisco/datacenter-fw-core.cfg
++ grep -qiE '\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b' ./configs/cisco/datacenter-fw-core.cfg
++ return 2
++ local vendor_code=2
++ set -e
++ case "${vendor_code}" in
++ target_platform=cisco
++ [[ true == true ]]
++ message 'Parsing [ cisco ] configs (by: location): '
++ [[ -n Parsing [ cisco ] configs (by: location):  ]]
++ local 'message=Parsing [ cisco ] configs (by: location): '
++ echo -e 'Parsing [ cisco ] configs (by: location): '
+Parsing [ cisco ] configs (by: location): 
++ [[ -n ./resources ]]
++ base_output=./resources
+++ echo -e ./configs/cisco/datacenter-fw-core.cfg
+++ sed 's|^\./||'
++ rel_path=configs/cisco/datacenter-fw-core.cfg
++ target_output=./resources/configs/cisco/datacenter-fw-core.cfg
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/cisco/datacenter-fw-core.cfg' '--output=./resources/configs/cisco/datacenter-fw-core.cfg')
++ declare -a execute
++ [[ true == true ]]
++ execute+=(--verbose)
+++ which bash
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/cisco/datacenter-fw-core.cfg --output=./resources/configs/cisco/datacenter-fw-core.cfg --verbose
++ [[ true == true ]]
++ message 'Configuration File [ ./resources/configs/cisco/datacenter-fw-core.cfg ]'
++ [[ -n Configuration File [ ./resources/configs/cisco/datacenter-fw-core.cfg ] ]]
++ local 'message=Configuration File [ ./resources/configs/cisco/datacenter-fw-core.cfg ]'
++ echo -e 'Configuration File [ ./resources/configs/cisco/datacenter-fw-core.cfg ]'
+Configuration File [ ./resources/configs/cisco/datacenter-fw-core.cfg ]
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ cat -n ./resources/configs/cisco/datacenter-fw-core.cfg
+     1	ASA Version 9.17(1)
+     2	hostname datacenter-fw-core
+     3	domain-name dc.example.com
+     4	
+     5	interface GigabitEthernet0/0
+     6	 nameif dmz
+     7	 ip address 192.0.2.50 255.255.255.0
+     8	 security-level 50
+     9	 description DMZ for public services
+    10	
+    11	interface GigabitEthernet0/1
+    12	 nameif inside
+    13	 ip address 172.31.255.254 255.255.255.0
+    14	 security-level 100
+    15	 description Internal Core Routing
+    16	
+    17	object-group network Justice-LAN
+    18	 description Secure internal office
+    19	 network-object host 172.31.255.254
+    20	 network-object host 10.0.2.3
+    21	
+    22	object-group network Watchtower-DMZ
+    23	 description Global secure relay
+    24	 network-object host 192.0.2.50
+    25	
+    26	object network Watchtower-Core
+    27	 host 192.0.2.50
+    28	 description Public application NAT
+    29	
+    30	object network Titan-WLAN-Host
+    31	 host 192.168.100.100
+    32	 description Wireless NAT
+    33	
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ for target_config in "${configs_listing[@]}"
++ [[ ! -f ./configs/cisco/access-switch-07.cfg ]]
++ set +e
++ detect_vendor ./configs/cisco/access-switch-07.cfg
++ local config_file=./configs/cisco/access-switch-07.cfg
++ local 'fortinet_pattern=fortinet|fortigate'
++ local 'cisco_pattern=\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b'
++ grep -qiE 'fortinet|fortigate' ./configs/cisco/access-switch-07.cfg
++ grep -qiE '\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b' ./configs/cisco/access-switch-07.cfg
++ return 2
++ local vendor_code=2
++ set -e
++ case "${vendor_code}" in
++ target_platform=cisco
++ [[ true == true ]]
++ message 'Parsing [ cisco ] configs (by: location): '
++ [[ -n Parsing [ cisco ] configs (by: location):  ]]
++ local 'message=Parsing [ cisco ] configs (by: location): '
++ echo -e 'Parsing [ cisco ] configs (by: location): '
+Parsing [ cisco ] configs (by: location): 
++ [[ -n ./resources ]]
++ base_output=./resources
+++ echo -e ./configs/cisco/access-switch-07.cfg
+++ sed 's|^\./||'
++ rel_path=configs/cisco/access-switch-07.cfg
++ target_output=./resources/configs/cisco/access-switch-07.cfg
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/cisco/access-switch-07.cfg' '--output=./resources/configs/cisco/access-switch-07.cfg')
++ declare -a execute
++ [[ true == true ]]
++ execute+=(--verbose)
+++ which bash
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/cisco/access-switch-07.cfg --output=./resources/configs/cisco/access-switch-07.cfg --verbose
++ [[ true == true ]]
++ message 'Configuration File [ ./resources/configs/cisco/access-switch-07.cfg ]'
++ [[ -n Configuration File [ ./resources/configs/cisco/access-switch-07.cfg ] ]]
++ local 'message=Configuration File [ ./resources/configs/cisco/access-switch-07.cfg ]'
++ echo -e 'Configuration File [ ./resources/configs/cisco/access-switch-07.cfg ]'
+Configuration File [ ./resources/configs/cisco/access-switch-07.cfg ]
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ cat -n ./resources/configs/cisco/access-switch-07.cfg
+     1	hostname access-switch-07
+     2	
+     3	interface Vlan1
+     4	 ip address 192.168.0.1 255.255.255.0
+     5	 description Management Interface
+     6	
+     7	interface Vlan10
+     8	 ip address 192.168.0.100 255.255.255.0
+     9	 description Guest VLAN Gateway
+    10	
+    11	object-group network MGMT-ACCESS
+    12	 description Management subnet objects
+    13	 network-object host 192.168.0.1
+    14	 network-object host 192.168.0.100
+    15	 network-object host 10.99.99.1
+    16	
+    17	object-group network Titan-Wireless
+    18	 description Young heroes WiFi
+    19	 network-object host 192.168.100.100
+    20	
+    21	object-group network Mutant-WiFi
+    22	 description Controlled guest devices
+    23	 network-object host 10.10.10.10
+    24	
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ for target_config in "${configs_listing[@]}"
++ [[ ! -f ./configs/cisco/campus-sw-access01.cfg ]]
++ set +e
++ detect_vendor ./configs/cisco/campus-sw-access01.cfg
++ local config_file=./configs/cisco/campus-sw-access01.cfg
++ local 'fortinet_pattern=fortinet|fortigate'
++ local 'cisco_pattern=\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b'
++ grep -qiE 'fortinet|fortigate' ./configs/cisco/campus-sw-access01.cfg
++ grep -qiE '\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b' ./configs/cisco/campus-sw-access01.cfg
++ return 2
++ local vendor_code=2
++ set -e
++ case "${vendor_code}" in
++ target_platform=cisco
++ [[ true == true ]]
++ message 'Parsing [ cisco ] configs (by: location): '
++ [[ -n Parsing [ cisco ] configs (by: location):  ]]
++ local 'message=Parsing [ cisco ] configs (by: location): '
++ echo -e 'Parsing [ cisco ] configs (by: location): '
+Parsing [ cisco ] configs (by: location): 
++ [[ -n ./resources ]]
++ base_output=./resources
+++ echo -e ./configs/cisco/campus-sw-access01.cfg
+++ sed 's|^\./||'
++ rel_path=configs/cisco/campus-sw-access01.cfg
++ target_output=./resources/configs/cisco/campus-sw-access01.cfg
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/cisco/campus-sw-access01.cfg' '--output=./resources/configs/cisco/campus-sw-access01.cfg')
++ declare -a execute
++ [[ true == true ]]
++ execute+=(--verbose)
+++ which bash
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/cisco/campus-sw-access01.cfg --output=./resources/configs/cisco/campus-sw-access01.cfg --verbose
++ [[ true == true ]]
++ message 'Configuration File [ ./resources/configs/cisco/campus-sw-access01.cfg ]'
++ [[ -n Configuration File [ ./resources/configs/cisco/campus-sw-access01.cfg ] ]]
++ local 'message=Configuration File [ ./resources/configs/cisco/campus-sw-access01.cfg ]'
++ echo -e 'Configuration File [ ./resources/configs/cisco/campus-sw-access01.cfg ]'
+Configuration File [ ./resources/configs/cisco/campus-sw-access01.cfg ]
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ cat -n ./resources/configs/cisco/campus-sw-access01.cfg
+     1	hostname campus-sw-access01
+     2	
+     3	interface Vlan1
+     4	 ip address 192.168.0.1 255.255.255.0
+     5	 description Switch Mgmt
+     6	
+     7	object-group network Floor-Networks
+     8	 description End-user and service devices
+     9	 network-object host 192.168.0.1
+    10	 network-object host 192.168.0.100
+    11	 network-object host 10.10.10.10
+    12	
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ for target_config in "${configs_listing[@]}"
 + [[ ! -f ./configs/cisco/branch-fw-03.cfg ]]
 + set +e
 + detect_vendor ./configs/cisco/branch-fw-03.cfg
@@ -611,6 +1619,7 @@ Configuration File [ ./resources/configs/cisco/branch-isr-02.cfg ]
 + set -e
 + case "${vendor_code}" in
 + target_platform=cisco
++ [[ true == true ]]
 + message 'Parsing [ cisco ] configs (by: location): '
 + [[ -n Parsing [ cisco ] configs (by: location):  ]]
 + local 'message=Parsing [ cisco ] configs (by: location): '
@@ -618,19 +1627,16 @@ Configuration File [ ./resources/configs/cisco/branch-isr-02.cfg ]
 Parsing [ cisco ] configs (by: location): 
 + [[ -n ./resources ]]
 + base_output=./resources
-++ echo ./configs/cisco/branch-fw-03.cfg
+++ echo -e ./configs/cisco/branch-fw-03.cfg
 ++ sed 's|^\./||'
 + rel_path=configs/cisco/branch-fw-03.cfg
 + target_output=./resources/configs/cisco/branch-fw-03.cfg
-++ dirname ./resources/configs/cisco/branch-fw-03.cfg
-+ local output_dir=./resources/configs/cisco
-+ [[ ! -d ./resources/configs/cisco ]]
-+ execute=('./scripts/extract-configs.shell' '--ip-addr=198.51.100.75,203.0.113.10' '--config=./configs/cisco/branch-fw-03.cfg' '--output=./resources/configs/cisco/branch-fw-03.cfg')
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/cisco/branch-fw-03.cfg' '--output=./resources/configs/cisco/branch-fw-03.cfg')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
 ++ which bash
-+ /usr/local/bin/bash ./scripts/extract-configs.shell --ip-addr=198.51.100.75,203.0.113.10 --config=./configs/cisco/branch-fw-03.cfg --output=./resources/configs/cisco/branch-fw-03.cfg --verbose
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/cisco/branch-fw-03.cfg --output=./resources/configs/cisco/branch-fw-03.cfg --verbose
 + [[ true == true ]]
 + message 'Configuration File [ ./resources/configs/cisco/branch-fw-03.cfg ]'
 + [[ -n Configuration File [ ./resources/configs/cisco/branch-fw-03.cfg ] ]]
@@ -656,17 +1662,29 @@ Configuration File [ ./resources/configs/cisco/branch-fw-03.cfg ]
      8	 security-level 0
      9	 description ISP Link
     10	
-    11	object network Hydra-Link
-    12	 host 198.51.100.75
-    13	 description Public NAT IP
-    14	
-    15	object-group network Hydra-Edge
-    16	 description Remote site uplink
-    17	 network-object host 192.168.2.12
-    18	 network-object host 198.51.100.75
-    19	
-    20	access-list OUTSIDE extended permit ip any host 198.51.100.75
-    21	
+    11	interface GigabitEthernet0/1
+    12	 nameif inside
+    13	 ip address 192.168.2.12 255.255.255.0
+    14	 security-level 100
+    15	 description Office LAN
+    16	
+    17	object network Hydra-Link
+    18	 host 198.51.100.75
+    19	 description Public NAT IP
+    20	
+    21	object network Hydra-Core
+    22	 host 192.168.2.12
+    23	 description Local Application Server
+    24	
+    25	object-group network Hydra-Edge
+    26	 description Remote site uplink
+    27	 network-object host 192.168.2.12
+    28	 network-object host 198.51.100.75
+    29	
+    30	access-list OUTSIDE extended permit ip any host 198.51.100.75
+    31	
+    32	access-list OUTSIDE extended permit ip host 192.168.2.12 any
+    33	
 + newline
 + local count=1
 + (( i = 0 ))
@@ -675,7 +1693,7 @@ Configuration File [ ./resources/configs/cisco/branch-fw-03.cfg ]
 
 + (( i++ ))
 + (( i < count ))
-+ for source_config in "${configs_listing[@]}"
++ for target_config in "${configs_listing[@]}"
 + [[ ! -f ./configs/cisco/hq-core-rtr-02.cfg ]]
 + set +e
 + detect_vendor ./configs/cisco/hq-core-rtr-02.cfg
@@ -689,6 +1707,7 @@ Configuration File [ ./resources/configs/cisco/branch-fw-03.cfg ]
 + set -e
 + case "${vendor_code}" in
 + target_platform=cisco
++ [[ true == true ]]
 + message 'Parsing [ cisco ] configs (by: location): '
 + [[ -n Parsing [ cisco ] configs (by: location):  ]]
 + local 'message=Parsing [ cisco ] configs (by: location): '
@@ -696,19 +1715,16 @@ Configuration File [ ./resources/configs/cisco/branch-fw-03.cfg ]
 Parsing [ cisco ] configs (by: location): 
 + [[ -n ./resources ]]
 + base_output=./resources
-++ echo ./configs/cisco/hq-core-rtr-02.cfg
+++ echo -e ./configs/cisco/hq-core-rtr-02.cfg
 ++ sed 's|^\./||'
 + rel_path=configs/cisco/hq-core-rtr-02.cfg
 + target_output=./resources/configs/cisco/hq-core-rtr-02.cfg
-++ dirname ./resources/configs/cisco/hq-core-rtr-02.cfg
-+ local output_dir=./resources/configs/cisco
-+ [[ ! -d ./resources/configs/cisco ]]
-+ execute=('./scripts/extract-configs.shell' '--ip-addr=198.51.100.75,203.0.113.10' '--config=./configs/cisco/hq-core-rtr-02.cfg' '--output=./resources/configs/cisco/hq-core-rtr-02.cfg')
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/cisco/hq-core-rtr-02.cfg' '--output=./resources/configs/cisco/hq-core-rtr-02.cfg')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
 ++ which bash
-+ /usr/local/bin/bash ./scripts/extract-configs.shell --ip-addr=198.51.100.75,203.0.113.10 --config=./configs/cisco/hq-core-rtr-02.cfg --output=./resources/configs/cisco/hq-core-rtr-02.cfg --verbose
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/cisco/hq-core-rtr-02.cfg --output=./resources/configs/cisco/hq-core-rtr-02.cfg --verbose
 + [[ true == true ]]
 + message 'Configuration File [ ./resources/configs/cisco/hq-core-rtr-02.cfg ]'
 + [[ -n Configuration File [ ./resources/configs/cisco/hq-core-rtr-02.cfg ] ]]
@@ -728,6 +1744,19 @@ Configuration File [ ./resources/configs/cisco/hq-core-rtr-02.cfg ]
      2	
      3	ntp server 198.51.100.75 prefer
      4	
+     5	interface GigabitEthernet0/0
+     6	 ip address 10.0.1.2 255.255.255.0
+     7	 description Core uplink to WAN
+     8	
+     9	interface GigabitEthernet0/1
+    10	 ip address 192.168.1.10 255.255.255.0
+    11	 description Internal VLAN A
+    12	
+    13	object-group network Corps-Core
+    14	 description Internal LAN segments
+    15	 network-object host 10.0.1.2
+    16	 network-object 192.168.1.0 255.255.255.0
+    17	
 + newline
 + local count=1
 + (( i = 0 ))
@@ -736,7 +1765,262 @@ Configuration File [ ./resources/configs/cisco/hq-core-rtr-02.cfg ]
 
 + (( i++ ))
 + (( i < count ))
-+ for source_config in "${configs_listing[@]}"
++ for target_config in "${configs_listing[@]}"
++ [[ ! -f ./configs/cisco/perimeter-fw1.cfg ]]
++ set +e
++ detect_vendor ./configs/cisco/perimeter-fw1.cfg
++ local config_file=./configs/cisco/perimeter-fw1.cfg
++ local 'fortinet_pattern=fortinet|fortigate'
++ local 'cisco_pattern=\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b'
++ grep -qiE 'fortinet|fortigate' ./configs/cisco/perimeter-fw1.cfg
++ grep -qiE '\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b' ./configs/cisco/perimeter-fw1.cfg
++ return 2
++ local vendor_code=2
++ set -e
++ case "${vendor_code}" in
++ target_platform=cisco
++ [[ true == true ]]
++ message 'Parsing [ cisco ] configs (by: location): '
++ [[ -n Parsing [ cisco ] configs (by: location):  ]]
++ local 'message=Parsing [ cisco ] configs (by: location): '
++ echo -e 'Parsing [ cisco ] configs (by: location): '
+Parsing [ cisco ] configs (by: location): 
++ [[ -n ./resources ]]
++ base_output=./resources
+++ echo -e ./configs/cisco/perimeter-fw1.cfg
+++ sed 's|^\./||'
++ rel_path=configs/cisco/perimeter-fw1.cfg
++ target_output=./resources/configs/cisco/perimeter-fw1.cfg
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/cisco/perimeter-fw1.cfg' '--output=./resources/configs/cisco/perimeter-fw1.cfg')
++ declare -a execute
++ [[ true == true ]]
++ execute+=(--verbose)
+++ which bash
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/cisco/perimeter-fw1.cfg --output=./resources/configs/cisco/perimeter-fw1.cfg --verbose
++ [[ true == true ]]
++ message 'Configuration File [ ./resources/configs/cisco/perimeter-fw1.cfg ]'
++ [[ -n Configuration File [ ./resources/configs/cisco/perimeter-fw1.cfg ] ]]
++ local 'message=Configuration File [ ./resources/configs/cisco/perimeter-fw1.cfg ]'
++ echo -e 'Configuration File [ ./resources/configs/cisco/perimeter-fw1.cfg ]'
+Configuration File [ ./resources/configs/cisco/perimeter-fw1.cfg ]
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ cat -n ./resources/configs/cisco/perimeter-fw1.cfg
+     1	ASA Version 9.14(3)
+     2	hostname perimeter-fw1
+     3	domain-name edge.dc.example.com
+     4	
+     5	interface GigabitEthernet0/0
+     6	 nameif outside
+     7	 security-level 0
+     8	 ip address 203.0.113.25 255.255.255.0
+     9	 description External Internet-facing Interface
+    10	
+    11	interface GigabitEthernet0/1
+    12	 nameif inside
+    13	 security-level 100
+    14	 ip address 10.0.0.1 255.255.255.0
+    15	 description Internal Network Interface
+    16	
+    17	object network NAT-Edge
+    18	 host 203.0.113.25
+    19	 description Internet-bound IP NAT
+    20	
+    21	object network Stark-Tower
+    22	 host 10.0.0.1
+    23	 description Core services gateway
+    24	
+    25	object-group network Avengers-DMZ
+    26	 description Public access layer
+    27	 network-object host 192.0.2.50
+    28	 network-object host 203.0.113.25
+    29	 network-object 192.168.2.0 255.255.255.0
+    30	
+    31	object-group network Panther-Edge
+    32	 description Internet-facing proxy systems
+    33	 network-object host 203.0.113.25
+    34	 network-object host 172.16.0.5
+    35	
+    36	object network Magneto-Core
+    37	 host 172.16.0.5
+    38	 description WAN firewall entry point
+    39	
+    40	access-list OUTSIDE extended permit ip host 10.0.0.1 any
+    41	
+    42	access-list OUTSIDE extended permit ip any host 203.0.113.25
+    43	
+    44	access-list OUTSIDE extended permit ip any host 172.16.0.5
+    45	
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ for target_config in "${configs_listing[@]}"
++ [[ ! -f ./configs/cisco/hq-core-rtr.cfg ]]
++ set +e
++ detect_vendor ./configs/cisco/hq-core-rtr.cfg
++ local config_file=./configs/cisco/hq-core-rtr.cfg
++ local 'fortinet_pattern=fortinet|fortigate'
++ local 'cisco_pattern=\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b'
++ grep -qiE 'fortinet|fortigate' ./configs/cisco/hq-core-rtr.cfg
++ grep -qiE '\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b' ./configs/cisco/hq-core-rtr.cfg
++ return 2
++ local vendor_code=2
++ set -e
++ case "${vendor_code}" in
++ target_platform=cisco
++ [[ true == true ]]
++ message 'Parsing [ cisco ] configs (by: location): '
++ [[ -n Parsing [ cisco ] configs (by: location):  ]]
++ local 'message=Parsing [ cisco ] configs (by: location): '
++ echo -e 'Parsing [ cisco ] configs (by: location): '
+Parsing [ cisco ] configs (by: location): 
++ [[ -n ./resources ]]
++ base_output=./resources
+++ echo -e ./configs/cisco/hq-core-rtr.cfg
+++ sed 's|^\./||'
++ rel_path=configs/cisco/hq-core-rtr.cfg
++ target_output=./resources/configs/cisco/hq-core-rtr.cfg
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/cisco/hq-core-rtr.cfg' '--output=./resources/configs/cisco/hq-core-rtr.cfg')
++ declare -a execute
++ [[ true == true ]]
++ execute+=(--verbose)
+++ which bash
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/cisco/hq-core-rtr.cfg --output=./resources/configs/cisco/hq-core-rtr.cfg --verbose
++ [[ true == true ]]
++ message 'Configuration File [ ./resources/configs/cisco/hq-core-rtr.cfg ]'
++ [[ -n Configuration File [ ./resources/configs/cisco/hq-core-rtr.cfg ] ]]
++ local 'message=Configuration File [ ./resources/configs/cisco/hq-core-rtr.cfg ]'
++ echo -e 'Configuration File [ ./resources/configs/cisco/hq-core-rtr.cfg ]'
+Configuration File [ ./resources/configs/cisco/hq-core-rtr.cfg ]
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ cat -n ./resources/configs/cisco/hq-core-rtr.cfg
+     1	hostname hq-core-rtr
+     2	
+     3	interface GigabitEthernet0/0
+     4	 ip address 10.0.2.3 255.255.255.0
+     5	 description Core uplink
+     6	
+     7	interface GigabitEthernet0/1
+     8	 ip address 192.168.1.10 255.255.255.0
+     9	 description Application LAN
+    10	
+    11	interface GigabitEthernet0/2
+    12	 ip address 172.16.0.5 255.255.255.0
+    13	 description DMZ Transfer
+    14	
+    15	object-group network Wakanda-Core
+    16	 description National Core Routing Zone
+    17	 network-object host 192.168.1.10
+    18	 network-object host 10.0.2.3
+    19	 network-object 10.0.0.0 255.255.255.0
+    20	
+    21	object-group network Panther-Edge
+    22	 description Internet-facing proxy systems
+    23	 network-object host 203.0.113.25
+    24	 network-object host 172.16.0.5
+    25	
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ for target_config in "${configs_listing[@]}"
++ [[ ! -f ./configs/cisco/branch-fw-snmp.cfg ]]
++ set +e
++ detect_vendor ./configs/cisco/branch-fw-snmp.cfg
++ local config_file=./configs/cisco/branch-fw-snmp.cfg
++ local 'fortinet_pattern=fortinet|fortigate'
++ local 'cisco_pattern=\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b'
++ grep -qiE 'fortinet|fortigate' ./configs/cisco/branch-fw-snmp.cfg
++ grep -qiE '\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b' ./configs/cisco/branch-fw-snmp.cfg
++ return 2
++ local vendor_code=2
++ set -e
++ case "${vendor_code}" in
++ target_platform=cisco
++ [[ true == true ]]
++ message 'Parsing [ cisco ] configs (by: location): '
++ [[ -n Parsing [ cisco ] configs (by: location):  ]]
++ local 'message=Parsing [ cisco ] configs (by: location): '
++ echo -e 'Parsing [ cisco ] configs (by: location): '
+Parsing [ cisco ] configs (by: location): 
++ [[ -n ./resources ]]
++ base_output=./resources
+++ echo -e ./configs/cisco/branch-fw-snmp.cfg
+++ sed 's|^\./||'
++ rel_path=configs/cisco/branch-fw-snmp.cfg
++ target_output=./resources/configs/cisco/branch-fw-snmp.cfg
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/cisco/branch-fw-snmp.cfg' '--output=./resources/configs/cisco/branch-fw-snmp.cfg')
++ declare -a execute
++ [[ true == true ]]
++ execute+=(--verbose)
+++ which bash
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/cisco/branch-fw-snmp.cfg --output=./resources/configs/cisco/branch-fw-snmp.cfg --verbose
++ [[ true == true ]]
++ message 'Configuration File [ ./resources/configs/cisco/branch-fw-snmp.cfg ]'
++ [[ -n Configuration File [ ./resources/configs/cisco/branch-fw-snmp.cfg ] ]]
++ local 'message=Configuration File [ ./resources/configs/cisco/branch-fw-snmp.cfg ]'
++ echo -e 'Configuration File [ ./resources/configs/cisco/branch-fw-snmp.cfg ]'
+Configuration File [ ./resources/configs/cisco/branch-fw-snmp.cfg ]
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ cat -n ./resources/configs/cisco/branch-fw-snmp.cfg
+     1	ASA Version 9.12(4)
+     2	hostname branch-fw-snmp
+     3	domain-name br1.office.example.com
+     4	
+     5	interface GigabitEthernet0/0
+     6	 nameif outside
+     7	 ip address 203.0.113.25 255.255.255.0
+     8	
+     9	interface GigabitEthernet0/1
+    10	 nameif inside
+    11	 ip address 192.168.2.12 255.255.255.0
+    12	
+    13	object network Hydra-Core
+    14	 host 192.168.2.12
+    15	 description Branch App Gateway
+    16	
+    17	object network Hydra-NAT
+    18	 host 203.0.113.25
+    19	 description Public NAT Gateway
+    20	
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ for target_config in "${configs_listing[@]}"
 + [[ ! -f ./configs/cisco/dmz-fw2-backup.cfg ]]
 + set +e
 + detect_vendor ./configs/cisco/dmz-fw2-backup.cfg
@@ -750,6 +2034,7 @@ Configuration File [ ./resources/configs/cisco/hq-core-rtr-02.cfg ]
 + set -e
 + case "${vendor_code}" in
 + target_platform=cisco
++ [[ true == true ]]
 + message 'Parsing [ cisco ] configs (by: location): '
 + [[ -n Parsing [ cisco ] configs (by: location):  ]]
 + local 'message=Parsing [ cisco ] configs (by: location): '
@@ -757,19 +2042,16 @@ Configuration File [ ./resources/configs/cisco/hq-core-rtr-02.cfg ]
 Parsing [ cisco ] configs (by: location): 
 + [[ -n ./resources ]]
 + base_output=./resources
-++ echo ./configs/cisco/dmz-fw2-backup.cfg
+++ echo -e ./configs/cisco/dmz-fw2-backup.cfg
 ++ sed 's|^\./||'
 + rel_path=configs/cisco/dmz-fw2-backup.cfg
 + target_output=./resources/configs/cisco/dmz-fw2-backup.cfg
-++ dirname ./resources/configs/cisco/dmz-fw2-backup.cfg
-+ local output_dir=./resources/configs/cisco
-+ [[ ! -d ./resources/configs/cisco ]]
-+ execute=('./scripts/extract-configs.shell' '--ip-addr=198.51.100.75,203.0.113.10' '--config=./configs/cisco/dmz-fw2-backup.cfg' '--output=./resources/configs/cisco/dmz-fw2-backup.cfg')
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/cisco/dmz-fw2-backup.cfg' '--output=./resources/configs/cisco/dmz-fw2-backup.cfg')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
 ++ which bash
-+ /usr/local/bin/bash ./scripts/extract-configs.shell --ip-addr=198.51.100.75,203.0.113.10 --config=./configs/cisco/dmz-fw2-backup.cfg --output=./resources/configs/cisco/dmz-fw2-backup.cfg --verbose
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/cisco/dmz-fw2-backup.cfg --output=./resources/configs/cisco/dmz-fw2-backup.cfg --verbose
 + [[ true == true ]]
 + message 'Configuration File [ ./resources/configs/cisco/dmz-fw2-backup.cfg ]'
 + [[ -n Configuration File [ ./resources/configs/cisco/dmz-fw2-backup.cfg ] ]]
@@ -789,11 +2071,42 @@ Configuration File [ ./resources/configs/cisco/dmz-fw2-backup.cfg ]
      2	hostname dmz-fw2-backup
      3	domain-name global.dmz.example.net
      4	
-     5	interface GigabitEthernet0/2
-     6	 nameif outside
-     7	 ip address 198.51.100.75 255.255.255.0
-     8	 description Outbound Internet NAT interface
+     5	interface GigabitEthernet0/0
+     6	 nameif guest
+     7	 ip address 10.10.10.10 255.255.255.0
+     8	 description Guest access interface
      9	
+    10	interface GigabitEthernet0/1
+    11	 nameif inside
+    12	 ip address 192.168.100.100 255.255.255.0
+    13	 description Inside LAN segment
+    14	
+    15	interface GigabitEthernet0/2
+    16	 nameif outside
+    17	 ip address 198.51.100.75 255.255.255.0
+    18	 description Outbound Internet NAT interface
+    19	
+    20	object network Titan-WLAN-Host
+    21	 host 192.168.100.100
+    22	 description Backup inside NAT IP
+    23	
+    24	object network Shield-WiFi-Alias
+    25	 host 10.10.10.10
+    26	 description Guest NAT
+    27	
+    28	object network Sentinel-NAT
+    29	 host 203.0.113.25
+    30	 description Corporate NAT edge
+    31	
+    32	object-group network Sector-Wireless
+    33	 description Staff WiFi clients
+    34	 network-object host 192.168.100.100
+    35	 network-object host 10.10.10.10
+    36	
+    37	object-group network Watchtower-DMZ
+    38	 description Global secure relay
+    39	 network-object host 192.0.2.50
+    40	
 + newline
 + local count=1
 + (( i = 0 ))
@@ -802,7 +2115,105 @@ Configuration File [ ./resources/configs/cisco/dmz-fw2-backup.cfg ]
 
 + (( i++ ))
 + (( i < count ))
-+ for source_config in "${configs_listing[@]}"
++ for target_config in "${configs_listing[@]}"
++ [[ ! -f ./configs/fortinet/fg-campus-core.cfg ]]
++ set +e
++ detect_vendor ./configs/fortinet/fg-campus-core.cfg
++ local config_file=./configs/fortinet/fg-campus-core.cfg
++ local 'fortinet_pattern=fortinet|fortigate'
++ local 'cisco_pattern=\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b'
++ grep -qiE 'fortinet|fortigate' ./configs/fortinet/fg-campus-core.cfg
++ return 1
++ local vendor_code=1
++ set -e
++ case "${vendor_code}" in
++ target_platform=fortinet
++ [[ true == true ]]
++ message 'Parsing [ fortinet ] configs (by: location): '
++ [[ -n Parsing [ fortinet ] configs (by: location):  ]]
++ local 'message=Parsing [ fortinet ] configs (by: location): '
++ echo -e 'Parsing [ fortinet ] configs (by: location): '
+Parsing [ fortinet ] configs (by: location): 
++ [[ -n ./resources ]]
++ base_output=./resources
+++ echo -e ./configs/fortinet/fg-campus-core.cfg
+++ sed 's|^\./||'
++ rel_path=configs/fortinet/fg-campus-core.cfg
++ target_output=./resources/configs/fortinet/fg-campus-core.cfg
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/fortinet/fg-campus-core.cfg' '--output=./resources/configs/fortinet/fg-campus-core.cfg')
++ declare -a execute
++ [[ true == true ]]
++ execute+=(--verbose)
+++ which bash
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/fortinet/fg-campus-core.cfg --output=./resources/configs/fortinet/fg-campus-core.cfg --verbose
++ [[ true == true ]]
++ message 'Configuration File [ ./resources/configs/fortinet/fg-campus-core.cfg ]'
++ [[ -n Configuration File [ ./resources/configs/fortinet/fg-campus-core.cfg ] ]]
++ local 'message=Configuration File [ ./resources/configs/fortinet/fg-campus-core.cfg ]'
++ echo -e 'Configuration File [ ./resources/configs/fortinet/fg-campus-core.cfg ]'
+Configuration File [ ./resources/configs/fortinet/fg-campus-core.cfg ]
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ cat -n ./resources/configs/fortinet/fg-campus-core.cfg
+     1	#hostname="fg-campus-core"
+     2	#model="FortiGate-200F"
+     3	
+     4	config system interface
+     5	 edit "core"
+     6	  set ip 10.10.10.10 255.255.255.0
+     7	  set alias "Campus Core Transit"
+     8	 next
+     9	 edit "wifi"
+    10	  set ip 192.168.100.100 255.255.255.0
+    11	  set alias "Wireless VLAN"
+    12	 next
+    13	end
+    14	
+    15	config firewall address
+    16	 edit "Shield-WiFi"
+    17	  set subnet 10.10.10.10 255.255.255.255
+    18	  set comment "Wireless AP Gateway"
+    19	 next
+    20	 edit "Titan-WLAN-Host"
+    21	  set subnet 192.168.100.100 255.255.255.255
+    22	  set comment "Guest WiFi node"
+    23	 next
+    24	end
+    25	
+    26	config firewall address
+    27	 edit "Cap-HQ"
+    28	  set subnet 192.168.1.11 255.255.255.255
+    29	  set comment "Captain America’s secure endpoint"
+    30	 next
+    31	 edit "Vision-Link"
+    32	  set subnet 192.168.2.12 255.255.255.255
+    33	  set comment "Vision’s quantum channel"
+    34	 next
+    35	 edit "Hawkeye-Nest"
+    36	  set subnet 172.16.1.6 255.255.255.255
+    37	  set comment "Remote sniper node"
+    38	 next
+    39	 edit "Wanda-Field"
+    40	  set subnet 192.168.100.100 255.255.255.255
+    41	  set comment "Wanda’s chaos relay"
+    42	 next
+    43	end
+    44	
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ for target_config in "${configs_listing[@]}"
 + [[ ! -f ./configs/fortinet/fg-fw-dmz-01.cfg ]]
 + set +e
 + detect_vendor ./configs/fortinet/fg-fw-dmz-01.cfg
@@ -815,6 +2226,7 @@ Configuration File [ ./resources/configs/cisco/dmz-fw2-backup.cfg ]
 + set -e
 + case "${vendor_code}" in
 + target_platform=fortinet
++ [[ true == true ]]
 + message 'Parsing [ fortinet ] configs (by: location): '
 + [[ -n Parsing [ fortinet ] configs (by: location):  ]]
 + local 'message=Parsing [ fortinet ] configs (by: location): '
@@ -822,19 +2234,16 @@ Configuration File [ ./resources/configs/cisco/dmz-fw2-backup.cfg ]
 Parsing [ fortinet ] configs (by: location): 
 + [[ -n ./resources ]]
 + base_output=./resources
-++ echo ./configs/fortinet/fg-fw-dmz-01.cfg
+++ echo -e ./configs/fortinet/fg-fw-dmz-01.cfg
 ++ sed 's|^\./||'
 + rel_path=configs/fortinet/fg-fw-dmz-01.cfg
 + target_output=./resources/configs/fortinet/fg-fw-dmz-01.cfg
-++ dirname ./resources/configs/fortinet/fg-fw-dmz-01.cfg
-+ local output_dir=./resources/configs/fortinet
-+ [[ ! -d ./resources/configs/fortinet ]]
-+ execute=('./scripts/extract-configs.shell' '--ip-addr=198.51.100.75,203.0.113.10' '--config=./configs/fortinet/fg-fw-dmz-01.cfg' '--output=./resources/configs/fortinet/fg-fw-dmz-01.cfg')
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/fortinet/fg-fw-dmz-01.cfg' '--output=./resources/configs/fortinet/fg-fw-dmz-01.cfg')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
 ++ which bash
-+ /usr/local/bin/bash ./scripts/extract-configs.shell --ip-addr=198.51.100.75,203.0.113.10 --config=./configs/fortinet/fg-fw-dmz-01.cfg --output=./resources/configs/fortinet/fg-fw-dmz-01.cfg --verbose
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/fortinet/fg-fw-dmz-01.cfg --output=./resources/configs/fortinet/fg-fw-dmz-01.cfg --verbose
 + [[ true == true ]]
 + message 'Configuration File [ ./resources/configs/fortinet/fg-fw-dmz-01.cfg ]'
 + [[ -n Configuration File [ ./resources/configs/fortinet/fg-fw-dmz-01.cfg ] ]]
@@ -859,13 +2268,56 @@ Configuration File [ ./resources/configs/fortinet/fg-fw-dmz-01.cfg ]
      7	#platform="FortiOS"
      8	#vd="root"
      9	
-    10	config firewall address
-    11	 edit "Falcon-Uplink"
-    12	  set subnet 198.51.100.75 255.255.255.255
-    13	  set comment "Encrypted relay via flight pack"
-    14	 next
-    15	end
-    16	
+    10	config system interface
+    11	 edit "wan1"
+    12	  set ip 203.0.113.25 255.255.255.0
+    13	  set alias "Internet uplink"
+    14	  set allowaccess ping https ssh
+    15	 next
+    16	 edit "dmz"
+    17	  set ip 192.0.2.50 255.255.255.0
+    18	  set alias "Public-facing DMZ"
+    19	 next
+    20	 edit "internal"
+    21	  set ip 10.0.0.1 255.255.255.0
+    22	  set alias "Core LAN"
+    23	 next
+    24	end
+    25	
+    26	config firewall address
+    27	 edit "Stark-Tower"
+    28	  set subnet 10.0.0.1 255.255.255.255
+    29	  set comment "Core services gateway"
+    30	 next
+    31	 edit "Public-Terminal"
+    32	  set subnet 192.0.2.50 255.255.255.255
+    33	  set comment "External untrusted terminal"
+    34	 next
+    35	 edit "NAT-Edge"
+    36	  set subnet 203.0.113.25 255.255.255.255
+    37	  set comment "Public NAT IP"
+    38	 next
+    39	end
+    40	
+    41	config firewall address
+    42	 edit "Doctor-Strange-Gateway"
+    43	  set subnet 172.31.255.254 255.255.255.255
+    44	  set comment "Dimensional access gateway"
+    45	 next
+    46	 edit "Rocket-Toolbox"
+    47	  set subnet 192.168.0.100 255.255.255.255
+    48	  set comment "Utility node for gear access"
+    49	 next
+    50	 edit "Falcon-Uplink"
+    51	  set subnet 198.51.100.75 255.255.255.255
+    52	  set comment "Encrypted relay via flight pack"
+    53	 next
+    54	 edit "Ghost-Node"
+    55	  set subnet 10.0.2.3 255.255.255.255
+    56	  set comment "Phantom test node"
+    57	 next
+    58	end
+    59	
 + newline
 + local count=1
 + (( i = 0 ))
@@ -874,7 +2326,7 @@ Configuration File [ ./resources/configs/fortinet/fg-fw-dmz-01.cfg ]
 
 + (( i++ ))
 + (( i < count ))
-+ for source_config in "${configs_listing[@]}"
++ for target_config in "${configs_listing[@]}"
 + [[ ! -f ./configs/fortinet/fg-branch-vpn-01.cfg ]]
 + set +e
 + detect_vendor ./configs/fortinet/fg-branch-vpn-01.cfg
@@ -887,6 +2339,7 @@ Configuration File [ ./resources/configs/fortinet/fg-fw-dmz-01.cfg ]
 + set -e
 + case "${vendor_code}" in
 + target_platform=fortinet
++ [[ true == true ]]
 + message 'Parsing [ fortinet ] configs (by: location): '
 + [[ -n Parsing [ fortinet ] configs (by: location):  ]]
 + local 'message=Parsing [ fortinet ] configs (by: location): '
@@ -894,19 +2347,16 @@ Configuration File [ ./resources/configs/fortinet/fg-fw-dmz-01.cfg ]
 Parsing [ fortinet ] configs (by: location): 
 + [[ -n ./resources ]]
 + base_output=./resources
-++ echo ./configs/fortinet/fg-branch-vpn-01.cfg
+++ echo -e ./configs/fortinet/fg-branch-vpn-01.cfg
 ++ sed 's|^\./||'
 + rel_path=configs/fortinet/fg-branch-vpn-01.cfg
 + target_output=./resources/configs/fortinet/fg-branch-vpn-01.cfg
-++ dirname ./resources/configs/fortinet/fg-branch-vpn-01.cfg
-+ local output_dir=./resources/configs/fortinet
-+ [[ ! -d ./resources/configs/fortinet ]]
-+ execute=('./scripts/extract-configs.shell' '--ip-addr=198.51.100.75,203.0.113.10' '--config=./configs/fortinet/fg-branch-vpn-01.cfg' '--output=./resources/configs/fortinet/fg-branch-vpn-01.cfg')
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/fortinet/fg-branch-vpn-01.cfg' '--output=./resources/configs/fortinet/fg-branch-vpn-01.cfg')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
 ++ which bash
-+ /usr/local/bin/bash ./scripts/extract-configs.shell --ip-addr=198.51.100.75,203.0.113.10 --config=./configs/fortinet/fg-branch-vpn-01.cfg --output=./resources/configs/fortinet/fg-branch-vpn-01.cfg --verbose
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/fortinet/fg-branch-vpn-01.cfg --output=./resources/configs/fortinet/fg-branch-vpn-01.cfg --verbose
 + [[ true == true ]]
 + message 'Configuration File [ ./resources/configs/fortinet/fg-branch-vpn-01.cfg ]'
 + [[ -n Configuration File [ ./resources/configs/fortinet/fg-branch-vpn-01.cfg ] ]]
@@ -931,15 +2381,46 @@ Configuration File [ ./resources/configs/fortinet/fg-branch-vpn-01.cfg ]
      7	  set ip 198.51.100.75 255.255.255.0
      8	  set alias "Branch ISP"
      9	 next
-    10	end
-    11	
-    12	config firewall address
-    13	 edit "Branch-Public"
-    14	  set subnet 198.51.100.75 255.255.255.255
-    15	  set comment "Branch NAT"
-    16	 next
-    17	end
-    18	
+    10	 edit "internal"
+    11	  set ip 192.168.2.12 255.255.255.0
+    12	  set alias "User LAN"
+    13	 next
+    14	end
+    15	
+    16	config firewall address
+    17	 edit "Branch-Gateway"
+    18	  set subnet 192.168.2.12 255.255.255.255
+    19	  set comment "Primary LAN gateway"
+    20	 next
+    21	 edit "Branch-Public"
+    22	  set subnet 198.51.100.75 255.255.255.255
+    23	  set comment "Branch NAT"
+    24	 next
+    25	end
+    26	
+    27	config firewall address
+    28	 edit "IronMan-HQ"
+    29	  set subnet 10.0.0.1 255.255.255.255
+    30	  set comment "Main node at Stark Tower"
+    31	 next
+    32	 edit "Spidey-Sandbox"
+    33	  set subnet 10.0.1.2 255.255.255.255
+    34	  set comment "QA node in Peter's Lab"
+    35	 next
+    36	 edit "Panther-Vault"
+    37	  set subnet 192.168.1.10 255.255.255.255
+    38	  set comment "Wakandan data store"
+    39	 next
+    40	 edit "Public-Test"
+    41	  set subnet 203.0.113.25 255.255.255.255
+    42	  set comment "Public NAT exposure for Red Skull trap"
+    43	 next
+    44	 edit "Guardians-Relay"
+    45	  set subnet 192.168.0.1 255.255.255.255
+    46	  set comment "Backup uplink for Milano crew"
+    47	 next
+    48	end
+    49	
 + newline
 + local count=1
 + (( i = 0 ))
@@ -948,7 +2429,7 @@ Configuration File [ ./resources/configs/fortinet/fg-branch-vpn-01.cfg ]
 
 + (( i++ ))
 + (( i < count ))
-+ for source_config in "${configs_listing[@]}"
++ for target_config in "${configs_listing[@]}"
 + [[ ! -f ./configs/fortinet/fg-lab-test-fw.cfg ]]
 + set +e
 + detect_vendor ./configs/fortinet/fg-lab-test-fw.cfg
@@ -961,6 +2442,7 @@ Configuration File [ ./resources/configs/fortinet/fg-branch-vpn-01.cfg ]
 + set -e
 + case "${vendor_code}" in
 + target_platform=fortinet
++ [[ true == true ]]
 + message 'Parsing [ fortinet ] configs (by: location): '
 + [[ -n Parsing [ fortinet ] configs (by: location):  ]]
 + local 'message=Parsing [ fortinet ] configs (by: location): '
@@ -968,19 +2450,16 @@ Configuration File [ ./resources/configs/fortinet/fg-branch-vpn-01.cfg ]
 Parsing [ fortinet ] configs (by: location): 
 + [[ -n ./resources ]]
 + base_output=./resources
-++ echo ./configs/fortinet/fg-lab-test-fw.cfg
+++ echo -e ./configs/fortinet/fg-lab-test-fw.cfg
 ++ sed 's|^\./||'
 + rel_path=configs/fortinet/fg-lab-test-fw.cfg
 + target_output=./resources/configs/fortinet/fg-lab-test-fw.cfg
-++ dirname ./resources/configs/fortinet/fg-lab-test-fw.cfg
-+ local output_dir=./resources/configs/fortinet
-+ [[ ! -d ./resources/configs/fortinet ]]
-+ execute=('./scripts/extract-configs.shell' '--ip-addr=198.51.100.75,203.0.113.10' '--config=./configs/fortinet/fg-lab-test-fw.cfg' '--output=./resources/configs/fortinet/fg-lab-test-fw.cfg')
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/fortinet/fg-lab-test-fw.cfg' '--output=./resources/configs/fortinet/fg-lab-test-fw.cfg')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
 ++ which bash
-+ /usr/local/bin/bash ./scripts/extract-configs.shell --ip-addr=198.51.100.75,203.0.113.10 --config=./configs/fortinet/fg-lab-test-fw.cfg --output=./resources/configs/fortinet/fg-lab-test-fw.cfg --verbose
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/fortinet/fg-lab-test-fw.cfg --output=./resources/configs/fortinet/fg-lab-test-fw.cfg --verbose
 + [[ true == true ]]
 + message 'Configuration File [ ./resources/configs/fortinet/fg-lab-test-fw.cfg ]'
 + [[ -n Configuration File [ ./resources/configs/fortinet/fg-lab-test-fw.cfg ] ]]
@@ -1000,19 +2479,63 @@ Configuration File [ ./resources/configs/fortinet/fg-lab-test-fw.cfg ]
      2	#model="FortiGate-40F"
      3	
      4	config system interface
-     5	 edit "wan1"
-     6	  set ip 198.51.100.75 255.255.255.0
-     7	  set alias "Branch ISP"
-     8	 next
-     9	end
-    10	
-    11	config firewall address
-    12	 edit "Branch-Public"
-    13	  set subnet 198.51.100.75 255.255.255.255
-    14	  set comment "Branch NAT"
-    15	 next
-    16	end
-    17	
+     5	 edit "lab"
+     6	  set ip 10.0.2.3 255.255.255.0
+     7	 next
+     8	end
+     9	
+    10	config firewall address
+    11	 edit "Phantom-Node"
+    12	  set subnet 10.0.2.3 255.255.255.255
+    13	  set comment "Lab test VM"
+    14	 next
+    15	end
+    16	
+    17	config system interface
+    18	 edit "wan1"
+    19	  set ip 198.51.100.75 255.255.255.0
+    20	  set alias "Branch ISP"
+    21	 next
+    22	 edit "internal"
+    23	  set ip 192.168.2.12 255.255.255.0
+    24	  set alias "User LAN"
+    25	 next
+    26	end
+    27	
+    28	config firewall address
+    29	 edit "Branch-Gateway"
+    30	  set subnet 192.168.2.12 255.255.255.255
+    31	  set comment "Primary LAN gateway"
+    32	 next
+    33	 edit "Branch-Public"
+    34	  set subnet 198.51.100.75 255.255.255.255
+    35	  set comment "Branch NAT"
+    36	 next
+    37	end
+    38	
+    39	config firewall address
+    40	 edit "IronMan-HQ"
+    41	  set subnet 10.0.0.1 255.255.255.255
+    42	  set comment "Main node at Stark Tower"
+    43	 next
+    44	 edit "Spidey-Sandbox"
+    45	  set subnet 10.0.1.2 255.255.255.255
+    46	  set comment "QA node in Peter's Lab"
+    47	 next
+    48	 edit "Panther-Vault"
+    49	  set subnet 192.168.1.10 255.255.255.255
+    50	  set comment "Wakandan data store"
+    51	 next
+    52	 edit "Public-Test"
+    53	  set subnet 203.0.113.25 255.255.255.255
+    54	  set comment "Public NAT exposure for Red Skull trap"
+    55	 next
+    56	 edit "Guardians-Relay"
+    57	  set subnet 192.168.0.1 255.255.255.255
+    58	  set comment "Backup uplink for Milano crew"
+    59	 next
+    60	end
+    61	
 + newline
 + local count=1
 + (( i = 0 ))
@@ -1021,7 +2544,7 @@ Configuration File [ ./resources/configs/fortinet/fg-lab-test-fw.cfg ]
 
 + (( i++ ))
 + (( i < count ))
-+ for source_config in "${configs_listing[@]}"
++ for target_config in "${configs_listing[@]}"
 + [[ ! -f ./configs/fortinet/fg-testing-config.cfg ]]
 + set +e
 + detect_vendor ./configs/fortinet/fg-testing-config.cfg
@@ -1034,6 +2557,7 @@ Configuration File [ ./resources/configs/fortinet/fg-lab-test-fw.cfg ]
 + set -e
 + case "${vendor_code}" in
 + target_platform=fortinet
++ [[ true == true ]]
 + message 'Parsing [ fortinet ] configs (by: location): '
 + [[ -n Parsing [ fortinet ] configs (by: location):  ]]
 + local 'message=Parsing [ fortinet ] configs (by: location): '
@@ -1041,19 +2565,16 @@ Configuration File [ ./resources/configs/fortinet/fg-lab-test-fw.cfg ]
 Parsing [ fortinet ] configs (by: location): 
 + [[ -n ./resources ]]
 + base_output=./resources
-++ echo ./configs/fortinet/fg-testing-config.cfg
+++ echo -e ./configs/fortinet/fg-testing-config.cfg
 ++ sed 's|^\./||'
 + rel_path=configs/fortinet/fg-testing-config.cfg
 + target_output=./resources/configs/fortinet/fg-testing-config.cfg
-++ dirname ./resources/configs/fortinet/fg-testing-config.cfg
-+ local output_dir=./resources/configs/fortinet
-+ [[ ! -d ./resources/configs/fortinet ]]
-+ execute=('./scripts/extract-configs.shell' '--ip-addr=198.51.100.75,203.0.113.10' '--config=./configs/fortinet/fg-testing-config.cfg' '--output=./resources/configs/fortinet/fg-testing-config.cfg')
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/fortinet/fg-testing-config.cfg' '--output=./resources/configs/fortinet/fg-testing-config.cfg')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
 ++ which bash
-+ /usr/local/bin/bash ./scripts/extract-configs.shell --ip-addr=198.51.100.75,203.0.113.10 --config=./configs/fortinet/fg-testing-config.cfg --output=./resources/configs/fortinet/fg-testing-config.cfg --verbose
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/fortinet/fg-testing-config.cfg --output=./resources/configs/fortinet/fg-testing-config.cfg --verbose
 + [[ true == true ]]
 + message 'Configuration File [ ./resources/configs/fortinet/fg-testing-config.cfg ]'
 + [[ -n Configuration File [ ./resources/configs/fortinet/fg-testing-config.cfg ] ]]
@@ -1093,25 +2614,116 @@ Configuration File [ ./resources/configs/fortinet/fg-testing-config.cfg ]
 
 + (( i++ ))
 + (( i < count ))
++ for target_config in "${configs_listing[@]}"
++ [[ ! -f ./configs/fortinet/fg-datacenter-east.cfg ]]
++ set +e
++ detect_vendor ./configs/fortinet/fg-datacenter-east.cfg
++ local config_file=./configs/fortinet/fg-datacenter-east.cfg
++ local 'fortinet_pattern=fortinet|fortigate'
++ local 'cisco_pattern=\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b'
++ grep -qiE 'fortinet|fortigate' ./configs/fortinet/fg-datacenter-east.cfg
++ return 1
++ local vendor_code=1
++ set -e
++ case "${vendor_code}" in
++ target_platform=fortinet
++ [[ true == true ]]
++ message 'Parsing [ fortinet ] configs (by: location): '
++ [[ -n Parsing [ fortinet ] configs (by: location):  ]]
++ local 'message=Parsing [ fortinet ] configs (by: location): '
++ echo -e 'Parsing [ fortinet ] configs (by: location): '
+Parsing [ fortinet ] configs (by: location): 
++ [[ -n ./resources ]]
++ base_output=./resources
+++ echo -e ./configs/fortinet/fg-datacenter-east.cfg
+++ sed 's|^\./||'
++ rel_path=configs/fortinet/fg-datacenter-east.cfg
++ target_output=./resources/configs/fortinet/fg-datacenter-east.cfg
++ execute=('./scripts/extract-configs.shell' '--ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25' '--config=./configs/fortinet/fg-datacenter-east.cfg' '--output=./resources/configs/fortinet/fg-datacenter-east.cfg')
++ declare -a execute
++ [[ true == true ]]
++ execute+=(--verbose)
+++ which bash
++ /usr/local/bin/bash ./scripts/extract-configs.shell --ips-list=10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 --config=./configs/fortinet/fg-datacenter-east.cfg --output=./resources/configs/fortinet/fg-datacenter-east.cfg --verbose
++ [[ true == true ]]
++ message 'Configuration File [ ./resources/configs/fortinet/fg-datacenter-east.cfg ]'
++ [[ -n Configuration File [ ./resources/configs/fortinet/fg-datacenter-east.cfg ] ]]
++ local 'message=Configuration File [ ./resources/configs/fortinet/fg-datacenter-east.cfg ]'
++ echo -e 'Configuration File [ ./resources/configs/fortinet/fg-datacenter-east.cfg ]'
+Configuration File [ ./resources/configs/fortinet/fg-datacenter-east.cfg ]
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
++ cat -n ./resources/configs/fortinet/fg-datacenter-east.cfg
+     1	#hostname="fg-dc-east"
+     2	#model="FortiGate-500E"
+     3	
+     4	config system interface
+     5	 edit "inside"
+     6	  set ip 192.168.1.10 255.255.255.0
+     7	  set alias "Prod network"
+     8	 next
+     9	 edit "backup"
+    10	  set ip 172.31.255.254 255.255.255.0
+    11	  set alias "Offline DR segment"
+    12	 next
+    13	end
+    14	
+    15	config firewall address
+    16	 edit "Xavier-Core"
+    17	  set subnet 192.168.1.10 255.255.255.255
+    18	  set comment "Production core host"
+    19	 next
+    20	 edit "Justice-LAN"
+    21	  set subnet 172.31.255.254 255.255.255.255
+    22	  set comment "Backup services router"
+    23	 next
+    24	end
+    25	
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
+
++ (( i++ ))
++ (( i < count ))
 + tree ./resources
 ./resources
 `-- configs
     |-- cisco
+    |   |-- access-sw1-west.cfg
+    |   |-- access-switch-07.cfg
     |   |-- branch-fw-03.cfg
+    |   |-- branch-fw-snmp.cfg
     |   |-- branch-isr-02.cfg
+    |   |-- campus-sw-access01.cfg
     |   |-- core-fw-dmz-01.cfg
+    |   |-- core-router-01.cfg
+    |   |-- datacenter-fw-core.cfg
     |   |-- dmz-fw2-backup.cfg
-    |   `-- hq-core-rtr-02.cfg
+    |   |-- hq-core-rtr-02.cfg
+    |   |-- hq-core-rtr.cfg
+    |   `-- perimeter-fw1.cfg
     |-- fortinet
     |   |-- fg-branch-vpn-01.cfg
+    |   |-- fg-campus-core.cfg
+    |   |-- fg-datacenter-east.cfg
     |   |-- fg-fw-dmz-01.cfg
     |   |-- fg-lab-test-fw.cfg
     |   `-- fg-testing-config.cfg
     `-- misc
         |-- fw2.cfg
-        `-- fw5.cfg
+        |-- fw3.cfg
+        |-- fw5.cfg
+        `-- fw6.cfg
 
-5 directories, 11 files
+5 directories, 23 files
 + newline
 + local count=1
 + (( i = 0 ))
@@ -1123,27 +2735,61 @@ Configuration File [ ./resources/configs/fortinet/fg-testing-config.cfg ]
 + return 0
 + result=0
 + exit 0
-+ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.s5ehWmJuv6 ]]
-+ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.s5ehWmJuv6
++ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L7LQeRo2z0 ]]
++ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.L7LQeRo2z0
 
 $ bash ./scripts/network-configs.shell \
-       --ip-addr="198.51.100.75,203.0.113.10" \
+       --ips-list=ips.list \
        --location=./configs \
        --verbose ;
 
-Matching IPs found in 11 files:
+Loaded (default) IPs addresses (count): 17
+
+  - 10.0.0.1
+  - 10.0.1.2
+  - 10.0.2.3
+  - 10.10.10.10
+  - 172.16.0.5
+  - 172.16.1.6
+  - 172.18.1.20
+  - 172.31.255.254
+  - 192.0.2.50
+  - 192.168.0.1
+  - 192.168.0.100
+  - 192.168.1.10
+  - 192.168.1.11
+  - 192.168.2.12
+  - 192.168.100.100
+  - 198.51.100.75
+  - 203.0.113.25
+
+Search Pattern: [ 10.0.0.1,10.0.1.2,10.0.2.3,10.10.10.10,172.16.0.5,172.16.1.6,172.18.1.20,172.31.255.254,192.0.2.50,192.168.0.1,192.168.0.100,192.168.1.10,192.168.1.11,192.168.2.12,192.168.100.100,198.51.100.75,203.0.113.25 ]
+
+Matching IPs found in 23 files:
 
   - ./configs/misc/fw5.cfg
+  - ./configs/misc/fw6.cfg
+  - ./configs/misc/fw3.cfg
   - ./configs/misc/fw2.cfg
+  - ./configs/cisco/access-sw1-west.cfg
+  - ./configs/cisco/core-router-01.cfg
   - ./configs/cisco/core-fw-dmz-01.cfg
   - ./configs/cisco/branch-isr-02.cfg
+  - ./configs/cisco/datacenter-fw-core.cfg
+  - ./configs/cisco/access-switch-07.cfg
+  - ./configs/cisco/campus-sw-access01.cfg
   - ./configs/cisco/branch-fw-03.cfg
   - ./configs/cisco/hq-core-rtr-02.cfg
+  - ./configs/cisco/perimeter-fw1.cfg
+  - ./configs/cisco/hq-core-rtr.cfg
+  - ./configs/cisco/branch-fw-snmp.cfg
   - ./configs/cisco/dmz-fw2-backup.cfg
+  - ./configs/fortinet/fg-campus-core.cfg
   - ./configs/fortinet/fg-fw-dmz-01.cfg
   - ./configs/fortinet/fg-branch-vpn-01.cfg
   - ./configs/fortinet/fg-lab-test-fw.cfg
   - ./configs/fortinet/fg-testing-config.cfg
+  - ./configs/fortinet/fg-datacenter-east.cfg
 
 Parsing [ cisco ] configs (by: location): 
 Configuration File [ ./resources/configs/misc/fw5.cfg ]
@@ -1153,24 +2799,197 @@ Configuration File [ ./resources/configs/misc/fw5.cfg ]
      3	 network-object host 192.168.2.12
      4	 network-object host 198.51.100.75
      5	
-     6	object network Hydra-Link
-     7	 host 198.51.100.75
-     8	
+     6	object-group network RedRoom-Core
+     7	 description Classified subnets
+     8	 network-object host 10.0.0.1
+     9	 network-object host 172.16.1.6
+    10	
+    11	object-group network RedRoom-Core
+    12	 description Classified subnets
+    13	 network-object host 10.0.0.1
+    14	 network-object host 172.16.1.6
+    15	
+    16	object network Hydra-Link
+    17	 host 198.51.100.75
+    18	
+    19	object network BlackWidow-Core
+    20	 host 172.16.1.6
+    21	
+    22	object-group network RedRoom-Core
+    23	 description Classified subnets
+    24	 network-object host 10.0.0.1
+    25	 network-object host 172.16.1.6
+    26	
+    27	access-list OUTSIDE extended permit ip host 172.16.1.6 any
+    28	
+
+Parsing [ cisco ] configs (by: location): 
+Configuration File [ ./resources/configs/misc/fw6.cfg ]
+
+     1	object-group network Xmen-LAN
+     2	 description Secure base subnets
+     3	 network-object host 192.168.1.10
+     4	 network-object host 10.0.1.2
+     5	
+     6	object-group network Mutant-WiFi
+     7	 description Controlled guest devices
+     8	 network-object host 10.10.10.10
+     9	
+    10	object-group network Sentinel-Edge
+    11	 description WAN-facing systems
+    12	 network-object host 203.0.113.25
+    13	
+    14	object network Xavier-Core
+    15	 host 192.168.1.10
+    16	
+    17	object network Sentinel-NAT
+    18	 host 203.0.113.25
+    19	
+
+Parsing [ cisco ] configs (by: location): 
+Configuration File [ ./resources/configs/misc/fw3.cfg ]
+
+     1	object-group network Wakanda-Core
+     2	 description National Core Routing Zone
+     3	 network-object host 192.168.1.10
+     4	 network-object host 10.0.2.3
+     5	 network-object 10.0.0.0 255.255.255.0
+     6	
+     7	object-group network Panther-Edge
+     8	 description Internet-facing proxy systems
+     9	 network-object host 203.0.113.25
+    10	 network-object host 172.16.0.5
+    11	
+    12	object-group network Shield-WiFi
+    13	 description Shield-controlled wireless network
+    14	 network-object host 10.10.10.10
+    15	 network-object 192.168.100.0 255.255.255.0
+    16	
+    17	object-group network Shield-WiFi
+    18	 description Shield-controlled wireless network
+    19	 network-object host 10.10.10.10
+    20	 network-object 192.168.100.0 255.255.255.0
+    21	
+    22	object network Panther-Gateway
+    23	 host 10.0.2.3
+    24	 description Secure outbound concentrator
+    25	
+    26	object network Edge-Terminal
+    27	 host 172.16.0.5
+    28	 description Internet firewall handoff
+    29	
+    30	object-group network Shield-WiFi
+    31	 description Shield-controlled wireless network
+    32	 network-object host 10.10.10.10
+    33	 network-object 192.168.100.0 255.255.255.0
+    34	
+    35	object network Shield-WiFi-Alias
+    36	 host 10.10.10.10
+    37	 description Guest NAT
+    38	
+    39	access-list OUTSIDE extended permit ip host 10.0.2.3 any
+    40	
+    41	access-list OUTSIDE extended permit ip any host 172.16.0.5
+    42	
+    43	access-list OUTSIDE extended permit ip host 10.10.10.10 any
+    44	
 
 Parsing [ cisco ] configs (by: location): 
 Configuration File [ ./resources/configs/misc/fw2.cfg ]
 
-     1	object-group network Wayne-DMZ
-     2	 description External public resources
-     3	 network-object host 203.0.113.25
-     4	 network-object host 198.51.100.75
-     5	
-     6	object network Gotham-VPN
-     7	 host 198.51.100.75
-     8	 description Encrypted edge gateway
-     9	
-    10	access-list OUTSIDE extended permit ip any host 198.51.100.75
+     1	object-group network Gotham-Internal
+     2	 description Internal datacenter and backup LAN
+     3	 network-object host 10.0.1.2
+     4	 network-object host 192.168.1.11
+     5	 network-object 192.168.1.0 255.255.255.0
+     6	
+     7	object-group network Batcave-Wireless
+     8	 description Secure wireless endpoints
+     9	 network-object host 172.16.1.6
+    10	 network-object host 192.168.100.100
     11	
+    12	object-group network Wayne-DMZ
+    13	 description External public resources
+    14	 network-object host 203.0.113.25
+    15	 network-object host 198.51.100.75
+    16	
+    17	object network Wayne-Tech
+    18	 host 10.0.1.2
+    19	 description Application edge firewall
+    20	
+    21	object network Gotham-VPN
+    22	 host 198.51.100.75
+    23	 description Encrypted edge gateway
+    24	
+    25	object network Internet-Relay
+    26	 host 203.0.113.25
+    27	 description Unfiltered outbound NAT IP
+    28	
+    29	access-list OUTSIDE extended permit ip host 10.0.1.2 any
+    30	
+    31	access-list OUTSIDE extended permit ip any host 203.0.113.25
+    32	
+    33	access-list OUTSIDE extended permit ip any host 198.51.100.75
+    34	
+
+Parsing [ cisco ] configs (by: location): 
+Configuration File [ ./resources/configs/cisco/access-sw1-west.cfg ]
+
+     1	hostname access-sw1-west
+     2	
+     3	interface Vlan1
+     4	 ip address 192.168.0.1 255.255.255.0
+     5	 description Management Interface
+     6	
+     7	interface Vlan100
+     8	 ip address 192.168.0.100 255.255.255.0
+     9	 description Guest VLAN Gateway
+    10	
+    11	object-group network MGMT-ACCESS
+    12	 description Management objects
+    13	 network-object host 192.168.0.1
+    14	 network-object host 192.168.0.100
+    15	 network-object host 10.10.10.10
+    16	
+    17	object-group network Mutant-WiFi
+    18	 description Controlled guest devices
+    19	 network-object host 10.10.10.10
+    20	
+
+Parsing [ cisco ] configs (by: location): 
+Configuration File [ ./resources/configs/cisco/core-router-01.cfg ]
+
+     1	hostname core-router-01
+     2	
+     3	interface GigabitEthernet0/0
+     4	 ip address 10.0.1.2 255.255.255.0
+     5	 description Core uplink to WAN
+     6	
+     7	interface GigabitEthernet0/1
+     8	 ip address 192.168.1.10 255.255.255.0
+     9	 description LAN Segment A
+    10	
+    11	interface GigabitEthernet0/2
+    12	 ip address 192.168.1.11 255.255.255.0
+    13	 description LAN Segment B
+    14	
+    15	object-group network Gotham-Internal
+    16	 description Internal datacenter and backup LAN
+    17	 network-object host 10.0.1.2
+    18	 network-object host 192.168.1.11
+    19	 network-object 192.168.1.0 255.255.255.0
+    20	
+    21	object-group network Wakanda-Core
+    22	 description National Core Routing Zone
+    23	 network-object host 192.168.1.10
+    24	 network-object host 10.0.2.3
+    25	 network-object 10.0.0.0 255.255.255.0
+    26	
+    27	object-group network Xmen-LAN
+    28	 description Secure base subnets
+    29	 network-object host 192.168.1.10
+    30	 network-object host 10.0.1.2
+    31	
 
 Parsing [ cisco ] configs (by: location): 
 Configuration File [ ./resources/configs/cisco/core-fw-dmz-01.cfg ]
@@ -1179,34 +2998,168 @@ Configuration File [ ./resources/configs/cisco/core-fw-dmz-01.cfg ]
      2	hostname core-fw-dmz-01
      3	domain-name corp.dmz.local
      4	
-     5	object-group network Wayne-DMZ
-     6	 description External public resources
-     7	 network-object host 203.0.113.25
-     8	 network-object host 198.51.100.75
-     9	
-    10	object network Gotham-VPN
-    11	 host 198.51.100.75
-    12	 description Encrypted edge gateway
-    13	
-    14	access-list OUTSIDE extended permit ip any host 198.51.100.75
-    15	
+     5	interface GigabitEthernet0/0
+     6	 nameif outside
+     7	 security-level 0
+     8	 ip address 203.0.113.25 255.255.255.0
+     9	 description Public ISP Link
+    10	
+    11	interface GigabitEthernet0/1
+    12	 nameif inside
+    13	 security-level 100
+    14	 ip address 10.0.1.2 255.255.255.0
+    15	 description Internal Firewall LAN
+    16	
+    17	object network Wayne-Tech
+    18	 host 10.0.1.2
+    19	 description Application edge firewall
+    20	
+    21	object network Internet-Relay
+    22	 host 203.0.113.25
+    23	 description Unfiltered outbound NAT IP
+    24	
+    25	object-group network Wayne-DMZ
+    26	 description External public resources
+    27	 network-object host 203.0.113.25
+    28	 network-object host 198.51.100.75
+    29	
+    30	object network Gotham-VPN
+    31	 host 198.51.100.75
+    32	 description Encrypted edge gateway
+    33	
+    34	access-list OUTSIDE extended permit ip any host 203.0.113.25
+    35	
+    36	access-list OUTSIDE extended permit ip any host 198.51.100.75
+    37	
+    38	access-list OUTSIDE extended permit ip host 10.0.1.2 any
+    39	
 
 Parsing [ cisco ] configs (by: location): 
 Configuration File [ ./resources/configs/cisco/branch-isr-02.cfg ]
 
      1	hostname branch-isr-02
      2	
-     3	object network Hydra-Link
-     4	 host 198.51.100.75
-     5	 description Branch NAT egress
+     3	interface GigabitEthernet0/0/0
+     4	 ip address 172.16.1.6 255.255.255.0
+     5	 description ISP uplink
      6	
-     7	object-group network Hydra-Edge
-     8	 description Remote site uplink
-     9	 network-object host 192.168.2.12
-    10	 network-object host 198.51.100.75
-    11	
-    12	access-list OUTSIDE extended permit ip any host 198.51.100.75
-    13	
+     7	interface GigabitEthernet0/0/1
+     8	 ip address 192.168.2.12 255.255.255.0
+     9	 description Workstation LAN
+    10	
+    11	interface GigabitEthernet0/0/2
+    12	 ip address 10.0.2.3 255.255.255.0
+    13	 description Dev VLAN
+    14	
+    15	object network BlackWidow-Core
+    16	 host 172.16.1.6
+    17	 description Branch router uplink NAT
+    18	
+    19	object network Hydra-Link
+    20	 host 198.51.100.75
+    21	 description Branch NAT egress
+    22	
+    23	object-group network Hydra-Edge
+    24	 description Remote site uplink
+    25	 network-object host 192.168.2.12
+    26	 network-object host 198.51.100.75
+    27	
+    28	object network Panther-Gateway
+    29	 host 10.0.2.3
+    30	 description Secure outbound concentrator
+    31	
+    32	object-group network Lantern-DMZ
+    33	 description Protected but public-facing zone
+    34	 network-object host 172.18.1.20
+    35	 network-object host 192.168.1.11
+    36	
+    37	access-list OUTSIDE extended permit ip host 10.0.2.3 any
+    38	
+    39	access-list OUTSIDE extended permit ip any host 172.16.1.6
+    40	
+    41	access-list OUTSIDE extended permit ip any host 198.51.100.75
+    42	
+
+Parsing [ cisco ] configs (by: location): 
+Configuration File [ ./resources/configs/cisco/datacenter-fw-core.cfg ]
+
+     1	ASA Version 9.17(1)
+     2	hostname datacenter-fw-core
+     3	domain-name dc.example.com
+     4	
+     5	interface GigabitEthernet0/0
+     6	 nameif dmz
+     7	 ip address 192.0.2.50 255.255.255.0
+     8	 security-level 50
+     9	 description DMZ for public services
+    10	
+    11	interface GigabitEthernet0/1
+    12	 nameif inside
+    13	 ip address 172.31.255.254 255.255.255.0
+    14	 security-level 100
+    15	 description Internal Core Routing
+    16	
+    17	object-group network Justice-LAN
+    18	 description Secure internal office
+    19	 network-object host 172.31.255.254
+    20	 network-object host 10.0.2.3
+    21	
+    22	object-group network Watchtower-DMZ
+    23	 description Global secure relay
+    24	 network-object host 192.0.2.50
+    25	
+    26	object network Watchtower-Core
+    27	 host 192.0.2.50
+    28	 description Public application NAT
+    29	
+    30	object network Titan-WLAN-Host
+    31	 host 192.168.100.100
+    32	 description Wireless NAT
+    33	
+
+Parsing [ cisco ] configs (by: location): 
+Configuration File [ ./resources/configs/cisco/access-switch-07.cfg ]
+
+     1	hostname access-switch-07
+     2	
+     3	interface Vlan1
+     4	 ip address 192.168.0.1 255.255.255.0
+     5	 description Management Interface
+     6	
+     7	interface Vlan10
+     8	 ip address 192.168.0.100 255.255.255.0
+     9	 description Guest VLAN Gateway
+    10	
+    11	object-group network MGMT-ACCESS
+    12	 description Management subnet objects
+    13	 network-object host 192.168.0.1
+    14	 network-object host 192.168.0.100
+    15	 network-object host 10.99.99.1
+    16	
+    17	object-group network Titan-Wireless
+    18	 description Young heroes WiFi
+    19	 network-object host 192.168.100.100
+    20	
+    21	object-group network Mutant-WiFi
+    22	 description Controlled guest devices
+    23	 network-object host 10.10.10.10
+    24	
+
+Parsing [ cisco ] configs (by: location): 
+Configuration File [ ./resources/configs/cisco/campus-sw-access01.cfg ]
+
+     1	hostname campus-sw-access01
+     2	
+     3	interface Vlan1
+     4	 ip address 192.168.0.1 255.255.255.0
+     5	 description Switch Mgmt
+     6	
+     7	object-group network Floor-Networks
+     8	 description End-user and service devices
+     9	 network-object host 192.168.0.1
+    10	 network-object host 192.168.0.100
+    11	 network-object host 10.10.10.10
+    12	
 
 Parsing [ cisco ] configs (by: location): 
 Configuration File [ ./resources/configs/cisco/branch-fw-03.cfg ]
@@ -1221,17 +3174,29 @@ Configuration File [ ./resources/configs/cisco/branch-fw-03.cfg ]
      8	 security-level 0
      9	 description ISP Link
     10	
-    11	object network Hydra-Link
-    12	 host 198.51.100.75
-    13	 description Public NAT IP
-    14	
-    15	object-group network Hydra-Edge
-    16	 description Remote site uplink
-    17	 network-object host 192.168.2.12
-    18	 network-object host 198.51.100.75
-    19	
-    20	access-list OUTSIDE extended permit ip any host 198.51.100.75
-    21	
+    11	interface GigabitEthernet0/1
+    12	 nameif inside
+    13	 ip address 192.168.2.12 255.255.255.0
+    14	 security-level 100
+    15	 description Office LAN
+    16	
+    17	object network Hydra-Link
+    18	 host 198.51.100.75
+    19	 description Public NAT IP
+    20	
+    21	object network Hydra-Core
+    22	 host 192.168.2.12
+    23	 description Local Application Server
+    24	
+    25	object-group network Hydra-Edge
+    26	 description Remote site uplink
+    27	 network-object host 192.168.2.12
+    28	 network-object host 198.51.100.75
+    29	
+    30	access-list OUTSIDE extended permit ip any host 198.51.100.75
+    31	
+    32	access-list OUTSIDE extended permit ip host 192.168.2.12 any
+    33	
 
 Parsing [ cisco ] configs (by: location): 
 Configuration File [ ./resources/configs/cisco/hq-core-rtr-02.cfg ]
@@ -1240,6 +3205,121 @@ Configuration File [ ./resources/configs/cisco/hq-core-rtr-02.cfg ]
      2	
      3	ntp server 198.51.100.75 prefer
      4	
+     5	interface GigabitEthernet0/0
+     6	 ip address 10.0.1.2 255.255.255.0
+     7	 description Core uplink to WAN
+     8	
+     9	interface GigabitEthernet0/1
+    10	 ip address 192.168.1.10 255.255.255.0
+    11	 description Internal VLAN A
+    12	
+    13	object-group network Corps-Core
+    14	 description Internal LAN segments
+    15	 network-object host 10.0.1.2
+    16	 network-object 192.168.1.0 255.255.255.0
+    17	
+
+Parsing [ cisco ] configs (by: location): 
+Configuration File [ ./resources/configs/cisco/perimeter-fw1.cfg ]
+
+     1	ASA Version 9.14(3)
+     2	hostname perimeter-fw1
+     3	domain-name edge.dc.example.com
+     4	
+     5	interface GigabitEthernet0/0
+     6	 nameif outside
+     7	 security-level 0
+     8	 ip address 203.0.113.25 255.255.255.0
+     9	 description External Internet-facing Interface
+    10	
+    11	interface GigabitEthernet0/1
+    12	 nameif inside
+    13	 security-level 100
+    14	 ip address 10.0.0.1 255.255.255.0
+    15	 description Internal Network Interface
+    16	
+    17	object network NAT-Edge
+    18	 host 203.0.113.25
+    19	 description Internet-bound IP NAT
+    20	
+    21	object network Stark-Tower
+    22	 host 10.0.0.1
+    23	 description Core services gateway
+    24	
+    25	object-group network Avengers-DMZ
+    26	 description Public access layer
+    27	 network-object host 192.0.2.50
+    28	 network-object host 203.0.113.25
+    29	 network-object 192.168.2.0 255.255.255.0
+    30	
+    31	object-group network Panther-Edge
+    32	 description Internet-facing proxy systems
+    33	 network-object host 203.0.113.25
+    34	 network-object host 172.16.0.5
+    35	
+    36	object network Magneto-Core
+    37	 host 172.16.0.5
+    38	 description WAN firewall entry point
+    39	
+    40	access-list OUTSIDE extended permit ip host 10.0.0.1 any
+    41	
+    42	access-list OUTSIDE extended permit ip any host 203.0.113.25
+    43	
+    44	access-list OUTSIDE extended permit ip any host 172.16.0.5
+    45	
+
+Parsing [ cisco ] configs (by: location): 
+Configuration File [ ./resources/configs/cisco/hq-core-rtr.cfg ]
+
+     1	hostname hq-core-rtr
+     2	
+     3	interface GigabitEthernet0/0
+     4	 ip address 10.0.2.3 255.255.255.0
+     5	 description Core uplink
+     6	
+     7	interface GigabitEthernet0/1
+     8	 ip address 192.168.1.10 255.255.255.0
+     9	 description Application LAN
+    10	
+    11	interface GigabitEthernet0/2
+    12	 ip address 172.16.0.5 255.255.255.0
+    13	 description DMZ Transfer
+    14	
+    15	object-group network Wakanda-Core
+    16	 description National Core Routing Zone
+    17	 network-object host 192.168.1.10
+    18	 network-object host 10.0.2.3
+    19	 network-object 10.0.0.0 255.255.255.0
+    20	
+    21	object-group network Panther-Edge
+    22	 description Internet-facing proxy systems
+    23	 network-object host 203.0.113.25
+    24	 network-object host 172.16.0.5
+    25	
+
+Parsing [ cisco ] configs (by: location): 
+Configuration File [ ./resources/configs/cisco/branch-fw-snmp.cfg ]
+
+     1	ASA Version 9.12(4)
+     2	hostname branch-fw-snmp
+     3	domain-name br1.office.example.com
+     4	
+     5	interface GigabitEthernet0/0
+     6	 nameif outside
+     7	 ip address 203.0.113.25 255.255.255.0
+     8	
+     9	interface GigabitEthernet0/1
+    10	 nameif inside
+    11	 ip address 192.168.2.12 255.255.255.0
+    12	
+    13	object network Hydra-Core
+    14	 host 192.168.2.12
+    15	 description Branch App Gateway
+    16	
+    17	object network Hydra-NAT
+    18	 host 203.0.113.25
+    19	 description Public NAT Gateway
+    20	
 
 Parsing [ cisco ] configs (by: location): 
 Configuration File [ ./resources/configs/cisco/dmz-fw2-backup.cfg ]
@@ -1248,11 +3328,90 @@ Configuration File [ ./resources/configs/cisco/dmz-fw2-backup.cfg ]
      2	hostname dmz-fw2-backup
      3	domain-name global.dmz.example.net
      4	
-     5	interface GigabitEthernet0/2
-     6	 nameif outside
-     7	 ip address 198.51.100.75 255.255.255.0
-     8	 description Outbound Internet NAT interface
+     5	interface GigabitEthernet0/0
+     6	 nameif guest
+     7	 ip address 10.10.10.10 255.255.255.0
+     8	 description Guest access interface
      9	
+    10	interface GigabitEthernet0/1
+    11	 nameif inside
+    12	 ip address 192.168.100.100 255.255.255.0
+    13	 description Inside LAN segment
+    14	
+    15	interface GigabitEthernet0/2
+    16	 nameif outside
+    17	 ip address 198.51.100.75 255.255.255.0
+    18	 description Outbound Internet NAT interface
+    19	
+    20	object network Titan-WLAN-Host
+    21	 host 192.168.100.100
+    22	 description Backup inside NAT IP
+    23	
+    24	object network Shield-WiFi-Alias
+    25	 host 10.10.10.10
+    26	 description Guest NAT
+    27	
+    28	object network Sentinel-NAT
+    29	 host 203.0.113.25
+    30	 description Corporate NAT edge
+    31	
+    32	object-group network Sector-Wireless
+    33	 description Staff WiFi clients
+    34	 network-object host 192.168.100.100
+    35	 network-object host 10.10.10.10
+    36	
+    37	object-group network Watchtower-DMZ
+    38	 description Global secure relay
+    39	 network-object host 192.0.2.50
+    40	
+
+Parsing [ fortinet ] configs (by: location): 
+Configuration File [ ./resources/configs/fortinet/fg-campus-core.cfg ]
+
+     1	#hostname="fg-campus-core"
+     2	#model="FortiGate-200F"
+     3	
+     4	config system interface
+     5	 edit "core"
+     6	  set ip 10.10.10.10 255.255.255.0
+     7	  set alias "Campus Core Transit"
+     8	 next
+     9	 edit "wifi"
+    10	  set ip 192.168.100.100 255.255.255.0
+    11	  set alias "Wireless VLAN"
+    12	 next
+    13	end
+    14	
+    15	config firewall address
+    16	 edit "Shield-WiFi"
+    17	  set subnet 10.10.10.10 255.255.255.255
+    18	  set comment "Wireless AP Gateway"
+    19	 next
+    20	 edit "Titan-WLAN-Host"
+    21	  set subnet 192.168.100.100 255.255.255.255
+    22	  set comment "Guest WiFi node"
+    23	 next
+    24	end
+    25	
+    26	config firewall address
+    27	 edit "Cap-HQ"
+    28	  set subnet 192.168.1.11 255.255.255.255
+    29	  set comment "Captain America’s secure endpoint"
+    30	 next
+    31	 edit "Vision-Link"
+    32	  set subnet 192.168.2.12 255.255.255.255
+    33	  set comment "Vision’s quantum channel"
+    34	 next
+    35	 edit "Hawkeye-Nest"
+    36	  set subnet 172.16.1.6 255.255.255.255
+    37	  set comment "Remote sniper node"
+    38	 next
+    39	 edit "Wanda-Field"
+    40	  set subnet 192.168.100.100 255.255.255.255
+    41	  set comment "Wanda’s chaos relay"
+    42	 next
+    43	end
+    44	
 
 Parsing [ fortinet ] configs (by: location): 
 Configuration File [ ./resources/configs/fortinet/fg-fw-dmz-01.cfg ]
@@ -1266,13 +3425,56 @@ Configuration File [ ./resources/configs/fortinet/fg-fw-dmz-01.cfg ]
      7	#platform="FortiOS"
      8	#vd="root"
      9	
-    10	config firewall address
-    11	 edit "Falcon-Uplink"
-    12	  set subnet 198.51.100.75 255.255.255.255
-    13	  set comment "Encrypted relay via flight pack"
-    14	 next
-    15	end
-    16	
+    10	config system interface
+    11	 edit "wan1"
+    12	  set ip 203.0.113.25 255.255.255.0
+    13	  set alias "Internet uplink"
+    14	  set allowaccess ping https ssh
+    15	 next
+    16	 edit "dmz"
+    17	  set ip 192.0.2.50 255.255.255.0
+    18	  set alias "Public-facing DMZ"
+    19	 next
+    20	 edit "internal"
+    21	  set ip 10.0.0.1 255.255.255.0
+    22	  set alias "Core LAN"
+    23	 next
+    24	end
+    25	
+    26	config firewall address
+    27	 edit "Stark-Tower"
+    28	  set subnet 10.0.0.1 255.255.255.255
+    29	  set comment "Core services gateway"
+    30	 next
+    31	 edit "Public-Terminal"
+    32	  set subnet 192.0.2.50 255.255.255.255
+    33	  set comment "External untrusted terminal"
+    34	 next
+    35	 edit "NAT-Edge"
+    36	  set subnet 203.0.113.25 255.255.255.255
+    37	  set comment "Public NAT IP"
+    38	 next
+    39	end
+    40	
+    41	config firewall address
+    42	 edit "Doctor-Strange-Gateway"
+    43	  set subnet 172.31.255.254 255.255.255.255
+    44	  set comment "Dimensional access gateway"
+    45	 next
+    46	 edit "Rocket-Toolbox"
+    47	  set subnet 192.168.0.100 255.255.255.255
+    48	  set comment "Utility node for gear access"
+    49	 next
+    50	 edit "Falcon-Uplink"
+    51	  set subnet 198.51.100.75 255.255.255.255
+    52	  set comment "Encrypted relay via flight pack"
+    53	 next
+    54	 edit "Ghost-Node"
+    55	  set subnet 10.0.2.3 255.255.255.255
+    56	  set comment "Phantom test node"
+    57	 next
+    58	end
+    59	
 
 Parsing [ fortinet ] configs (by: location): 
 Configuration File [ ./resources/configs/fortinet/fg-branch-vpn-01.cfg ]
@@ -1286,15 +3488,46 @@ Configuration File [ ./resources/configs/fortinet/fg-branch-vpn-01.cfg ]
      7	  set ip 198.51.100.75 255.255.255.0
      8	  set alias "Branch ISP"
      9	 next
-    10	end
-    11	
-    12	config firewall address
-    13	 edit "Branch-Public"
-    14	  set subnet 198.51.100.75 255.255.255.255
-    15	  set comment "Branch NAT"
-    16	 next
-    17	end
-    18	
+    10	 edit "internal"
+    11	  set ip 192.168.2.12 255.255.255.0
+    12	  set alias "User LAN"
+    13	 next
+    14	end
+    15	
+    16	config firewall address
+    17	 edit "Branch-Gateway"
+    18	  set subnet 192.168.2.12 255.255.255.255
+    19	  set comment "Primary LAN gateway"
+    20	 next
+    21	 edit "Branch-Public"
+    22	  set subnet 198.51.100.75 255.255.255.255
+    23	  set comment "Branch NAT"
+    24	 next
+    25	end
+    26	
+    27	config firewall address
+    28	 edit "IronMan-HQ"
+    29	  set subnet 10.0.0.1 255.255.255.255
+    30	  set comment "Main node at Stark Tower"
+    31	 next
+    32	 edit "Spidey-Sandbox"
+    33	  set subnet 10.0.1.2 255.255.255.255
+    34	  set comment "QA node in Peter's Lab"
+    35	 next
+    36	 edit "Panther-Vault"
+    37	  set subnet 192.168.1.10 255.255.255.255
+    38	  set comment "Wakandan data store"
+    39	 next
+    40	 edit "Public-Test"
+    41	  set subnet 203.0.113.25 255.255.255.255
+    42	  set comment "Public NAT exposure for Red Skull trap"
+    43	 next
+    44	 edit "Guardians-Relay"
+    45	  set subnet 192.168.0.1 255.255.255.255
+    46	  set comment "Backup uplink for Milano crew"
+    47	 next
+    48	end
+    49	
 
 Parsing [ fortinet ] configs (by: location): 
 Configuration File [ ./resources/configs/fortinet/fg-lab-test-fw.cfg ]
@@ -1303,19 +3536,63 @@ Configuration File [ ./resources/configs/fortinet/fg-lab-test-fw.cfg ]
      2	#model="FortiGate-40F"
      3	
      4	config system interface
-     5	 edit "wan1"
-     6	  set ip 198.51.100.75 255.255.255.0
-     7	  set alias "Branch ISP"
-     8	 next
-     9	end
-    10	
-    11	config firewall address
-    12	 edit "Branch-Public"
-    13	  set subnet 198.51.100.75 255.255.255.255
-    14	  set comment "Branch NAT"
-    15	 next
-    16	end
-    17	
+     5	 edit "lab"
+     6	  set ip 10.0.2.3 255.255.255.0
+     7	 next
+     8	end
+     9	
+    10	config firewall address
+    11	 edit "Phantom-Node"
+    12	  set subnet 10.0.2.3 255.255.255.255
+    13	  set comment "Lab test VM"
+    14	 next
+    15	end
+    16	
+    17	config system interface
+    18	 edit "wan1"
+    19	  set ip 198.51.100.75 255.255.255.0
+    20	  set alias "Branch ISP"
+    21	 next
+    22	 edit "internal"
+    23	  set ip 192.168.2.12 255.255.255.0
+    24	  set alias "User LAN"
+    25	 next
+    26	end
+    27	
+    28	config firewall address
+    29	 edit "Branch-Gateway"
+    30	  set subnet 192.168.2.12 255.255.255.255
+    31	  set comment "Primary LAN gateway"
+    32	 next
+    33	 edit "Branch-Public"
+    34	  set subnet 198.51.100.75 255.255.255.255
+    35	  set comment "Branch NAT"
+    36	 next
+    37	end
+    38	
+    39	config firewall address
+    40	 edit "IronMan-HQ"
+    41	  set subnet 10.0.0.1 255.255.255.255
+    42	  set comment "Main node at Stark Tower"
+    43	 next
+    44	 edit "Spidey-Sandbox"
+    45	  set subnet 10.0.1.2 255.255.255.255
+    46	  set comment "QA node in Peter's Lab"
+    47	 next
+    48	 edit "Panther-Vault"
+    49	  set subnet 192.168.1.10 255.255.255.255
+    50	  set comment "Wakandan data store"
+    51	 next
+    52	 edit "Public-Test"
+    53	  set subnet 203.0.113.25 255.255.255.255
+    54	  set comment "Public NAT exposure for Red Skull trap"
+    55	 next
+    56	 edit "Guardians-Relay"
+    57	  set subnet 192.168.0.1 255.255.255.255
+    58	  set comment "Backup uplink for Milano crew"
+    59	 next
+    60	end
+    61	
 
 Parsing [ fortinet ] configs (by: location): 
 Configuration File [ ./resources/configs/fortinet/fg-testing-config.cfg ]
@@ -1337,21 +3614,62 @@ Configuration File [ ./resources/configs/fortinet/fg-testing-config.cfg ]
     15	end
     16	
 
+Parsing [ fortinet ] configs (by: location): 
+Configuration File [ ./resources/configs/fortinet/fg-datacenter-east.cfg ]
+
+     1	#hostname="fg-dc-east"
+     2	#model="FortiGate-500E"
+     3	
+     4	config system interface
+     5	 edit "inside"
+     6	  set ip 192.168.1.10 255.255.255.0
+     7	  set alias "Prod network"
+     8	 next
+     9	 edit "backup"
+    10	  set ip 172.31.255.254 255.255.255.0
+    11	  set alias "Offline DR segment"
+    12	 next
+    13	end
+    14	
+    15	config firewall address
+    16	 edit "Xavier-Core"
+    17	  set subnet 192.168.1.10 255.255.255.255
+    18	  set comment "Production core host"
+    19	 next
+    20	 edit "Justice-LAN"
+    21	  set subnet 172.31.255.254 255.255.255.255
+    22	  set comment "Backup services router"
+    23	 next
+    24	end
+    25	
+
 ./resources
 `-- configs
     |-- cisco
+    |   |-- access-sw1-west.cfg
+    |   |-- access-switch-07.cfg
     |   |-- branch-fw-03.cfg
+    |   |-- branch-fw-snmp.cfg
     |   |-- branch-isr-02.cfg
+    |   |-- campus-sw-access01.cfg
     |   |-- core-fw-dmz-01.cfg
+    |   |-- core-router-01.cfg
+    |   |-- datacenter-fw-core.cfg
     |   |-- dmz-fw2-backup.cfg
-    |   `-- hq-core-rtr-02.cfg
+    |   |-- hq-core-rtr-02.cfg
+    |   |-- hq-core-rtr.cfg
+    |   `-- perimeter-fw1.cfg
     |-- fortinet
     |   |-- fg-branch-vpn-01.cfg
+    |   |-- fg-campus-core.cfg
+    |   |-- fg-datacenter-east.cfg
     |   |-- fg-fw-dmz-01.cfg
     |   |-- fg-lab-test-fw.cfg
     |   `-- fg-testing-config.cfg
     `-- misc
         |-- fw2.cfg
-        `-- fw5.cfg
+        |-- fw3.cfg
+        |-- fw5.cfg
+        `-- fw6.cfg
 
-5 directories, 11 files
+5 directories, 23 files
