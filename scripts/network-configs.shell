@@ -457,9 +457,9 @@ function main () {
       #### -----------------------------------------------------------------------
       if [[ -n "${output_config:-}" ]]; then
               base_output="${output_config%/}";
-              rel_path="$(
-                echo -e "${target_config}" | sed 's|^\./||'
-              )";
+              ## Strip the leading source directory path (e.g., "configs/") from the full config path
+              ## to replicate only the internal structure (e.g., "cisco/fw1.cfg") under the output directory.
+              rel_path="${target_config#${search_location%/}/}";
               target_output="${base_output}/${rel_path}";
         else  config_filename="$(
                 basename "${target_config}"

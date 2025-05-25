@@ -54,6 +54,7 @@ function main () {
 
       #### ---------------------------------------------------------------------
       ## Match accepted arguments
+      [[ $key =~ ^(batch-size|b)$ ]] && export configs_batch_size=true;
       [[ $key =~ ^(classify|g)$ ]] && export classify_targets=true;
       [[ $key =~ ^(configs|c)$ ]] && export configs_dirpath="${value}";
       [[ $key =~ ^(devices|d)$ ]] && export target_devices="${value}";
@@ -79,6 +80,7 @@ function main () {
 
     #### -----------------------------------------------------------------------
     ## Set custom values if not supplied
+    [[ -z ${configs_batch_size:-} ]] && export configs_batch_size=5;
     [[ -z ${delaying_factor:-} ]] && export delaying_factor="0.01";
     [[ -z ${target_addresses:-} ]] && export target_addresses="ips.list";
     [[ -z ${target_devices:-} ]] && export target_devices=false;
@@ -99,7 +101,7 @@ function main () {
       exit 0;
     fi;
 
-    local start_time="$(date '+%Y-%m-%d %H:%M:%S')"
+    local start_time="$(date '+%Y-%m-%d %H:%M:%S')";
     SECONDS=0;  ## Start timer
 
     #### -----------------------------------------------------------------------
@@ -255,6 +257,7 @@ function main () {
       # else  [[ "${verbose}" == true ]] && \
       #       message "Using cached configs.list from ${configs_list_cache}";
     fi;
+    # message "Initial - Configurations List Cache:";
     # print_file "${configs_list_cache}";
 
     #### -----------------------------------------------------------------------
@@ -288,6 +291,7 @@ function main () {
         if [[ "${verbose}" == true ]]; then
           {
             message "Filtered Configurations (count): ${#filtered_configs[@]}";
+            message "${configs_dirpath} contains:";
             newline;
             for config in "${filtered_configs[@]}"; do
               message "  - $( relative_configpath ${config} )";
@@ -317,12 +321,15 @@ function main () {
     fi;
 
     #### -----------------------------------------------------------------------
+    local extracted_resources="${cache_location}/resources";
+    export extracted_resources;
+
     if [[ ${target_devices} == false ]]; then
             ## If no devices filter is set, use all available devices
             $( which bash ) ./scripts/network-configs.shell \
                             --ips-list=ips.list \
                             --location=./configs \
-                            --output=./resources \
+                            --output=${extracted_resources} \
                             --verbose ;
       else  ## If devices filter is set, use the provided device list
             $( which bash ) ./scripts/network-configs.shell \
@@ -331,9 +338,38 @@ function main () {
                                 IFS=','; echo -en "${target_devices_source[*]}"
                               )" \
                             --location=./configs \
-                            --output=./resources \
+                            --output=${extracted_resources} \
                             --verbose ;
     fi;
+
+    #### -----------------------------------------------------------------------
+    ## Reconfiguring environment variables for the extracted resources
+
+    export configs_dirpath="${extracted_resources}";
+    message "${configs_dirpath} contains:";
+
+    if [[ ! -d "${configs_dirpath}" ]]; then
+      error_message "[FATAL] Failed to extract resources to ${configs_dirpath}";
+      exit 100;
+    fi;
+
+    mapfile -t configs_list_cache < <(
+      find "${extracted_resources}" -type f | sort
+    );
+
+    if [[ ! -f "${configs_list_cache}" ]]; then
+      error_message "[FATAL] Configurations list cache not found: ${configs_list_cache}";
+      exit 100;
+    fi;
+    if [[ ! -s "${configs_list_cache}" ]]; then
+      error_message "[FATAL] Configurations list cache is empty: ${configs_list_cache}";
+      exit 100;
+    fi;
+
+    message "Extracted - Configurations List Cache:";
+    for config in "${configs_list_cache[@]}"; do
+      message "  - ${config}";
+    done; newline;
 
     #### -----------------------------------------------------------------------
     if [[ "${verbose}" == true ]]; then
@@ -375,9 +411,12 @@ function main () {
 
     #### -----------------------------------------------------------------------
     ## Superset batching loop: Divide IPs into manageable chunks
+
     ip_batch_size=10;  ## Adjust as needed for system capacity
     total_ips="${#target_addresses_source[@]}";
+
     for (( ip_offset=0; ip_offset<total_ips; ip_offset+=ip_batch_size )); do
+
       target_listing=(
         "${target_addresses_source[@]:ip_offset:ip_batch_size}"
       ); export target_listing;
@@ -393,10 +432,16 @@ function main () {
 
       #### ---------------------------------------------------------------------
       ## Begin placeholder-only batch structure (no processing)
+
+      # mapfile -t site_folders < <(
+      #   cut -d/ -f2 ${configs_list_cache} | sort -u
+      # );
       mapfile -t site_folders < <(
-        cut -d/ -f2 ${configs_list_cache} | sort -u
+        printf '%s\n' "${configs_list_cache[@]}" | \
+        sed -E "s|^${configs_dirpath}/||" | \
+        cut -d/ -f1 | \
+        sort -u
       );
-      local batch_size=5;
 
       #### ---------------------------------------------------------------------
       if [[ "${verbose}" == true ]]; then
@@ -408,7 +453,7 @@ function main () {
           done;
           newline;
           message "Batch processing (outer):";
-          message "Batch size: ${batch_size}";
+          message "Batch size: ${configs_batch_size}";
           newline;
           message "Parallel threads:   ${parallel_threads}";
           message "Target IPs (count): ${#target_listing[@]}";
@@ -420,11 +465,16 @@ function main () {
       for site in "${site_folders[@]}"; do
 
         #### -------------------------------------------------------------------
-        oIFS="${IFS}"; IFS=$'\n';
-        read -r -d '' -a site_files < <(
-          grep -F "/${site}/" "${configs_list_cache}" && printf '\0'
+
+        # oIFS="${IFS}"; IFS=$'\n';
+        # read -r -d '' -a site_files < <(
+        #   grep -F "/${site}/" "${configs_list_cache}" && printf '\0'
+        # );
+        # IFS="${oIFS}";
+        mapfile -t site_files < <(
+          printf '%s\n' "${configs_list_cache[@]}" | grep -F "/${site}/"
         );
-        IFS="${oIFS}";
+
         total_files=${#site_files[@]};
 
         #### -------------------------------------------------------------------
@@ -432,6 +482,10 @@ function main () {
           {
             message "Target Site:   ${site}";
             message "Total Configs: ${total_files}";
+            newline;
+            for file in "${site_files[@]}"; do
+              message "  - $( relative_configpath ${file} )";
+            done;
             newline;
           } >> "${actions_logsfile}";
           # for site in "${site_files[@]}"; do message "Site: ${site}"; done;
@@ -471,7 +525,7 @@ function main () {
           )";
 
           #### -----------------------------------------------------------------
-          batch_slice=( "${site_files[@]:offset:batch_size}" );
+          batch_slice=( "${site_files[@]:offset:configs_batch_size}" );
           batch_suffix="$( date +%s )-${RANDOM}";
           batch_configs_list="configs--${batch_id}-${batch_suffix}.list";
           BATCH_CONFIGS="${TMP_DIR}/${batch_configs_list}";
@@ -497,7 +551,7 @@ function main () {
               message "Batch Ranges:   ${range_first} -> ${range_last}";
               newline;
               for config in "${batch_slice[@]}"; do
-                message "  - $(relative_configpath "${config}")";
+                message "  - $( relative_configpath "${config}" )";
               done;
               newline;
             } >> "${actions_logsfile}";
@@ -540,7 +594,7 @@ function main () {
           ## Launch and monitor parallel config parsing jobs for matched IPs
           manage_configs;
 
-          offset=$(( offset + batch_size ));
+          offset=$(( offset + configs_batch_size ));
 
         done;
 
