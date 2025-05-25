@@ -3,44 +3,6 @@
   "configs": [
     {
       "site": "cisco",
-      "device": "access-switch-07.cfg",
-      "objects": [
-        {
-          "object": "object-group",
-          "type": "network Titan-Wireless",
-          "partner": "Titan-Wireless",
-          "description": "Young heroes WiFi",
-          "items": [
-            "network-object host 192.168.100.100"
-          ],
-          "sets": {
-            "network-object": 1
-          },
-          "group": "Unclassified"
-        }
-      ]
-    },
-    {
-      "site": "cisco",
-      "device": "datacenter-fw-core.cfg",
-      "objects": [
-        {
-          "object": "object",
-          "type": "network Titan-WLAN-Host",
-          "partner": "Titan-WLAN-Host",
-          "description": "Wireless NAT",
-          "items": [
-            "host 192.168.100.100"
-          ],
-          "sets": {
-            "host": 1
-          },
-          "group": "Unclassified"
-        }
-      ]
-    },
-    {
-      "site": "cisco",
       "device": "dmz-fw2-backup.cfg",
       "objects": [
         {
@@ -80,6 +42,57 @@
           ],
           "sets": {
             "host": 1
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "fortinet",
+      "device": "fg-campus-core.cfg",
+      "objects": [
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": false,
+          "description": false,
+          "items": [
+            "set subnet 192.168.100.100 255.255.255.255"
+          ],
+          "sets": {
+            "edit": 2,
+            "next": 2,
+            "set": 4
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": false,
+          "description": false,
+          "items": [
+            "set subnet 192.168.100.100 255.255.255.255"
+          ],
+          "sets": {
+            "edit": 5,
+            "next": 5,
+            "set": 10
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "config",
+          "type": "system interface",
+          "partner": false,
+          "description": false,
+          "items": [
+            "set ip 192.168.100.100 255.255.255.0"
+          ],
+          "sets": {
+            "edit": 3,
+            "next": 3,
+            "set": 6
           },
           "group": "Unclassified"
         }

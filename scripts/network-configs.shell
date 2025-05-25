@@ -39,7 +39,7 @@
 ## -------------------------------------------------------------------------- ##
 
 set -euo pipefail  ## Strict mode: exit on error, undefined var use, and pipeline failure
-# set -x;          ## Enable for execution tracing/debugging
+set -x;          ## Enable for execution tracing/debugging
 
 ## POSIX locale standard
 export LC_ALL=C   ## Ensure consistent sorting and character handling (POSIX-compliant)
@@ -343,7 +343,7 @@ function main () {
       declare -a found_configs=();
       for item in "${search_items[@]}"; do
         result="$(
-          find "${search_location}" -type f -name "${item}" 2>/dev/null
+          find "${search_location}" -type f -name "${item}.*" 2>/dev/null
         )";
         [[ -n "$result" ]] && found_configs+=( "${result}" );
       done;
@@ -503,7 +503,7 @@ function main () {
     newline;
 
     return 0;
-}; alias parse-cisco='main';
+}; alias network-configs='main';
 
 [[ -z "${script_name+x}" ]] && export script_name="${0}";
 

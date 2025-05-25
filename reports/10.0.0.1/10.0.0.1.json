@@ -1,20 +1,22 @@
 {
-  "target": "172.16.1.6",
+  "target": "10.0.0.1",
   "configs": [
     {
       "site": "cisco",
-      "device": "branch-isr-02.cfg",
+      "device": "perimeter-fw1.cfg",
       "objects": [
         {
           "object": "interface",
-          "type": "GigabitEthernet0/0/0",
+          "type": "GigabitEthernet0/1",
           "partner": false,
-          "description": "ISP uplink",
+          "description": "Internal Network Interface",
           "items": [
-            "ip address 172.16.1.6 255.255.255.0"
+            "ip address 10.0.0.1 255.255.255.0"
           ],
           "sets": {
-            "ip": 1
+            "security-level": 1,
+            "ip": 1,
+            "nameif": 1
           },
           "group": "Unclassified"
         },
@@ -24,7 +26,7 @@
           "partner": false,
           "description": false,
           "items": [
-            "access-list OUTSIDE extended permit ip any host 172.16.1.6"
+            "access-list OUTSIDE extended permit ip host 10.0.0.1 any"
           ],
           "sets": {
             "access-list": 1
@@ -33,11 +35,11 @@
         },
         {
           "object": "object",
-          "type": "network BlackWidow-Core",
-          "partner": "BlackWidow-Core",
-          "description": "Branch router uplink NAT",
+          "type": "network Stark-Tower",
+          "partner": "Stark-Tower",
+          "description": "Core services gateway",
           "items": [
-            "host 172.16.1.6"
+            "host 10.0.0.1"
           ],
           "sets": {
             "host": 1
@@ -48,7 +50,7 @@
     },
     {
       "site": "fortinet",
-      "device": "fg-campus-core.cfg",
+      "device": "fg-branch-vpn-01.cfg",
       "objects": [
         {
           "object": "config",
@@ -56,12 +58,12 @@
           "partner": false,
           "description": false,
           "items": [
-            "set subnet 172.16.1.6 255.255.255.255"
+            "set subnet 10.0.0.1 255.255.255.255"
           ],
           "sets": {
-            "edit": 5,
-            "next": 5,
-            "set": 10
+            "edit": 6,
+            "next": 6,
+            "set": 12
           },
           "group": "Unclassified"
         }

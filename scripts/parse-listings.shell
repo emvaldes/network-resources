@@ -6,15 +6,16 @@
 ##          and produce detailed per-IP reports in JSON and CSV format.
 ## Requirements: Bash v4+ and GNU utilities (jq, find, grep, sed, etc.)
 
-## > nohup bash -x ./scripts/parse-listings.shell \
-##     --verbose \
-##     --debug \
-##     --classify \
-##     --logs \
-##     --ips-list=ips.list \
-##     --devices=devices.list \
-##     --sites='cisco,fortinet,misc' \
-##   > ./run.log 2>&1 &
+## nohup bash ./scripts/parse-listings.shell \
+##            --configs=configs \
+##            --classify \
+##            --ips-list=ips.list \
+##            --sites='cisco,fortinet,misc' \
+##            --devices=devices.list \
+##            --verbose \
+##            --debug \
+##            --logs \
+## > ./run.log 2>&1 &
 
 set -euo pipefail  ## Strict mode: exit on error, undefined var use, and pipeline failure
 # set -x;          ## Enable for execution tracing/debugging
@@ -78,7 +79,7 @@ function main () {
 
     #### -----------------------------------------------------------------------
     ## Set custom values if not supplied
-    [[ -z ${delaying_factor:-} ]] && export delaying_factor="0.05";
+    [[ -z ${delaying_factor:-} ]] && export delaying_factor="0.01";
     [[ -z ${target_addresses:-} ]] && export target_addresses="ips.list";
     [[ -z ${target_devices:-} ]] && export target_devices=false;
     [[ -z ${parallel_threads:-} ]] && export parallel_threads=100;
@@ -105,6 +106,7 @@ function main () {
     ## Enabling IP/CIDR Blocks Group Classification
     [[ -z ${classify_targets:-} ]] && local classify_targets=false;
 
+    #### -----------------------------------------------------------------------
     ## Generate master list of config files only once
     ## Custom/Default configs folder:
     export configs_dirpath="${configs_dirpath:-configs}";
@@ -114,20 +116,6 @@ function main () {
     ## Set default file extensions if none provided
     if [[ -z ${file_extensions+x} || ${#file_extensions[@]} -eq 0 ]]; then
       file_extensions=( cfg conf cnf );
-    fi;
-
-    #### -----------------------------------------------------------------------
-    ## Processing Target Devices Listing (default: devices.list or inline string)
-    declare -a target_devices_source=();
-    if [[ -n "${target_devices:-}" && -f "${target_devices}" ]]; then
-            mapfile -t target_devices_source < <(
-              grep -v '^\s*$' "${target_devices}" | tr -d '\r'
-            );
-      elif [[ "${target_devices}" =~ ^[0-9] ]]; then
-            mapfile -t target_devices_source < <(
-              echo -e "${target_devices}" | tr ', ' '\n' | grep -v '^\s*$'
-            );
-      else  message "Project Target Devices-Listing file not found: ${target_devices}";
     fi;
 
     #### -----------------------------------------------------------------------
@@ -150,6 +138,7 @@ function main () {
     export reports_folder="${reports_folder:-reports}";
     mkdir -p "${reports_folder}";
 
+    #### -----------------------------------------------------------------------
     export output_csv="${reports_folder}/reports.csv";
 
     #### -----------------------------------------------------------------------
@@ -157,38 +146,19 @@ function main () {
     [[ -z ${validate_address:-} ]] && export validate_address=false;
 
     #### -----------------------------------------------------------------------
-    if [[ "${verbose}" == true ]]; then
-      {
-        message "[INFO] Date: ${start_time}";
-        newline;
-        message "[INFO] Script: ${script_name}";
-        message "[INFO] PID: $$";
-        newline;
-        message "[INFO] User: $( whoami )";
-        message "[INFO] Host: $( hostname )";
-        message "[INFO] OS: ${OSTYPE}";
-        message "[INFO] Shell: ${BASH_VERSION}";
-        newline;
-        message "[INFO] Logging Output Directory: ${logs_location}";
-        message "[INFO] Temp Directory: ${TMP_DIR}";
-        newline;
-        message "[INFO] Classify Targets: ${classify_targets}";
-        message "[INFO] Configurations Path: ${configs_dirpath}";
-        message "[INFO] Filtering Devices: ${target_devices}";
-        message "[INFO] File Extensions: ${file_extensions}";
-        message "[INFO] Delaying Factor: ${delaying_factor}";
-        message "[INFO] Target Addresses: ${target_addresses}";
-        message "[INFO] Enable Logging: ${enable_logging}";
-        message "[INFO] Parallelism Factor: ${parallel_threads}";
-        message "[INFO] Matrix Filename: ${matrix_filename}";
-        message "[INFO] Reports Folder: ${reports_folder}";
-        message "[INFO] Target Locations: ${target_sites}";
-        message "[INFO] Validate Address: ${validate_address}";
-        message "[INFO] Debug: ${debug}";
-        message "[INFO] Dry-Run: ${dry_run}";
-        message "[INFO] Verbose: ${verbose}";
-        newline;
-      } >> "${actions_logsfile}";
+    ## Loading Target Devices Listing (default: devices.list or inline string)
+    declare -a target_devices_source=();
+    if [[ -n "${target_devices:-}" && -f "${target_devices}" ]]; then
+            ## Reading from File-based parameter
+            mapfile -t target_devices_source < <(
+              grep -v '^\s*$' "${target_devices}" | tr -d '\r'
+            );
+      elif  ## Reading from User-Input parameters:
+            [[ "${target_devices}" =~ ^[0-9] ]]; then
+            mapfile -t target_devices_source < <(
+              echo -e "${target_devices}" | tr ', ' '\n' | grep -v '^\s*$'
+            );
+      else  message "Project Target Devices-Listing file was not found: ${target_devices}";
     fi;
 
     #### -----------------------------------------------------------------------
@@ -203,9 +173,53 @@ function main () {
     fi;
 
     #### -----------------------------------------------------------------------
+    ## Processing Target Addresses Listing (default: ips.list or inline string)
+    declare -a target_addresses_source=();
+    if [[ -f "${target_addresses}" ]]; then
+            mapfile -t target_addresses_source < <(
+              tr -d '\r' < "${target_addresses}" | \
+              tr ' \t,;:|' '\n' | \
+              grep -v '^\s*$' | \
+              sort -t . -k1,1n -k2,2n -k3,3n -k4,4n -u
+            );
+      elif [[ "${target_addresses}" =~ ^[0-9] ]]; then
+            mapfile -t target_addresses_source < <(
+              echo -e "${target_addresses}" | \
+              tr ' \t,;:|' '\n' | \
+              grep -v '^\s*$' | \
+              sort -t . -k1,1n -k2,2n -k3,3n -k4,4n -u
+            );
+      # else  message "Warning: Project Target IPs-listing file not found!";
+      #       message "${target_addresses}";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    if [[ "${verbose}" == true ]]; then
+      {
+        message "Loaded (default) IPs addresses (count): ${#target_addresses_source[@]}";
+        newline;
+        for ip in "${target_addresses_source[@]}"; do
+          message "  - ${ip}";
+        done; newline;
+      } >> "${actions_logsfile}";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Normalize and validate each IP using validate_address()
+    declare -a target_listing=();
+    if [[ ${validate_address} == true ]]; then
+            for raw_ip in "${target_addresses_source[@]}"; do
+              target_address="${raw_ip}";
+              if validate_address; then
+                target_listing+=( "${target_address}" );
+              fi;
+            done;
+      else  target_listing=( "${target_addresses_source[@]}" );
+    fi;
+
+    #### -----------------------------------------------------------------------
     ## Cache list of configuration files to avoid repeated find calls
     local configs_list_cache="${cache_location}/configs.list";
-
     if [[ ! -f "${configs_list_cache}" ]]; then
             local -a find_cmd=(
               find "${configs_dirpath}" -type f \(
@@ -220,26 +234,26 @@ function main () {
               filename="$(
                 basename "${fullpath}"
               )";
-              device_name="${filename%.*}"  ## strip extension like .cfg
+              device_name="${filename%.*}";  ## strip extension like .cfg
               ## Apply --devices filter if present
               if [[ "${#target_devices_source[@]}" -gt 0 ]]; then
                 matched=false;
                 for pattern in "${target_devices_source[@]}"; do
-                  if [[ "${device_name}" =~ ${pattern} ]]; then
+                  if [[ "${device_name}" == "${pattern}" ]]; then
                     matched=true;
                     break;
                   fi;
                 done;
                 [[ "${matched}" == false ]] && \
-                   continue  # skip if no match;
+                   continue;  ## skip if no match;
               fi;
               discovered_files+=( "${fullpath}" );
             done < <( "${find_cmd[@]}" | sort );
             printf '%s\n' "${discovered_files[@]}" > "${configs_list_cache}";
-            [[ "${verbose}" == true ]] && \
-              message "Generated configs.list at ${configs_list_cache}";
-      else  [[ "${verbose}" == true ]] && \
-            message "Using cached configs.list from ${configs_list_cache}";
+            # [[ "${verbose}" == true ]] && \
+            #   message "Generated configs.list at ${configs_list_cache}";
+      # else  [[ "${verbose}" == true ]] && \
+      #       message "Using cached configs.list from ${configs_list_cache}";
     fi;
     # print_file "${configs_list_cache}";
 
@@ -303,46 +317,59 @@ function main () {
     fi;
 
     #### -----------------------------------------------------------------------
-    ## Processing Target Addresses Listing (default: ips.list or inline string)
-    declare -a target_addresses_source=();
-    if [[ -f "${target_addresses}" ]]; then
-            mapfile -t target_addresses_source < <(
-              tr -d '\r' < "${target_addresses}" | \
-              tr ' \t,;:|' '\n' | \
-              grep -v '^\s*$' | \
-              sort -t . -k1,1n -k2,2n -k3,3n -k4,4n -u
-            );
-      elif [[ "${target_addresses}" =~ ^[0-9] ]]; then
-            mapfile -t target_addresses_source < <(
-              echo -e "${target_addresses}" | \
-              tr ' \t,;:|' '\n' | \
-              grep -v '^\s*$' | \
-              sort -t . -k1,1n -k2,2n -k3,3n -k4,4n -u
-            );
-      # else  message "Warning: Project Target IPs-listing file not found!";
-      #       message "${target_addresses}";
+    if [[ ${target_devices} == false ]]; then
+            ## If no devices filter is set, use all available devices
+            $( which bash ) ./scripts/network-configs.shell \
+                            --ips-list=ips.list \
+                            --location=./configs \
+                            --output=./resources \
+                            --verbose ;
+      else  ## If devices filter is set, use the provided device list
+            $( which bash ) ./scripts/network-configs.shell \
+                            --ips-list=ips.list \
+                            --search="$(
+                                IFS=','; echo -en "${target_devices_source[*]}"
+                              )" \
+                            --location=./configs \
+                            --output=./resources \
+                            --verbose ;
     fi;
 
     #### -----------------------------------------------------------------------
     if [[ "${verbose}" == true ]]; then
       {
-        message "Loaded (default) IPs addresses (count): ${#target_addresses_source[@]}";
+        message "[INFO] Date: ${start_time}";
         newline;
-        for ip in "${target_addresses_source[@]}"; do
-          message "  - ${ip}";
-        done; newline;
+        message "[INFO] Script: ${script_name}";
+        message "[INFO] PID: $$";
+        newline;
+        message "[INFO] User: $( whoami )";
+        message "[INFO] Host: $( hostname )";
+        message "[INFO] OS: ${OSTYPE}";
+        message "[INFO] Shell: ${BASH_VERSION}";
+        newline;
+        message "[INFO] Logging Output Directory: ${logs_location}";
+        message "[INFO] Temp Directory: ${TMP_DIR}";
+        newline;
+        message "[INFO] Classify Targets: ${classify_targets}";
+        message "[INFO] Configurations Path: ${configs_dirpath}";
+        message "[INFO] Filtering Devices: ${target_devices}";
+        message "[INFO] File Extensions: ${file_extensions}";
+        message "[INFO] Delaying Factor: ${delaying_factor}";
+        message "[INFO] Target Addresses: ${target_addresses}";
+        message "[INFO] Enable Logging: ${enable_logging}";
+        message "[INFO] Parallelism Factor: ${parallel_threads}";
+        message "[INFO] Matrix Filename: ${matrix_filename}";
+        message "[INFO] Reports Folder: ${reports_folder}";
+        message "[INFO] Target Locations: ${target_sites}";
+        message "[INFO] Validate Address: ${validate_address}";
+        newline;
+        message "[INFO] Debug: ${debug}";
+        message "[INFO] Dry-Run: ${dry_run}";
+        message "[INFO] Verbose: ${verbose}";
+        newline;
       } >> "${actions_logsfile}";
     fi;
-
-    #### -----------------------------------------------------------------------
-    ## Normalize and validate each IP using validate_address()
-    declare -a target_listing=();
-    for raw_ip in "${target_addresses_source[@]}"; do
-      target_address="${raw_ip}";
-      if validate_address; then
-        target_listing+=( "${target_address}" );
-      fi;
-    done;
 
 #### Starting: Batch-Processing - Superset Loop --------------------------- ####
 
@@ -367,7 +394,7 @@ function main () {
       #### ---------------------------------------------------------------------
       ## Begin placeholder-only batch structure (no processing)
       mapfile -t site_folders < <(
-        cut -d/ -f2 ${cache_location}/configs.list | sort -u
+        cut -d/ -f2 ${configs_list_cache} | sort -u
       );
       local batch_size=5;
 
