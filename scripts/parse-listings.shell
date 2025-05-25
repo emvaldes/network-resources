@@ -328,7 +328,7 @@ function main () {
             ## If no devices filter is set, use all available devices
             $( which bash ) ./scripts/network-configs.shell \
                             --ips-list=ips.list \
-                            --location=./configs \
+                            --location="${configs_dirpath}" \
                             --output=${extracted_resources} \
                             --verbose ;
       else  ## If devices filter is set, use the provided device list
@@ -337,7 +337,7 @@ function main () {
                             --search="$(
                                 IFS=','; echo -en "${target_devices_source[*]}"
                               )" \
-                            --location=./configs \
+                            --location="${configs_dirpath}" \
                             --output=${extracted_resources} \
                             --verbose ;
     fi;
