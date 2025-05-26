@@ -142,7 +142,7 @@ function main () {
       if [[ "${target_addresses:-}" =~ ^[[:space:]]*$ ]]; then
         message "Warning: Pattern cannot be empty!" >&2;
         newline;
-        exit 1;
+        exit 19;
       fi;
     done;
 
@@ -153,7 +153,7 @@ function main () {
       if [[ ! -f "${source_config}" ]]; then
         message "Warning: File does not exist!" >&2;
         newline;
-        exit 2;
+        exit 20;
       fi;
     done;
 
@@ -165,7 +165,7 @@ function main () {
               vendor="cisco"
         else  message "Unable to detect vendor platform." >&2;
               newline;
-              exit 3;
+              exit 21;
       fi;
     fi;
 
@@ -193,7 +193,7 @@ function main () {
               mkdir -p "${output_dir}" || {
                 message "Warning: Failed to create output directory: ${output_dir}" >&2;
                 newline;
-                exit 4;
+                exit 22;
               };
             fi;
     fi;

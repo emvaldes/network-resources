@@ -475,7 +475,7 @@ function main () {
     
     if [[ ! -d "${configs_dirpath}" ]]; then
       error_message "[FATAL] Failed to extract resources to ${configs_dirpath}";
-      exit 100;
+      exit 2;
     fi;
 
     mapfile -t configs_list_cache < <(
@@ -484,11 +484,11 @@ function main () {
 
     if [[ ! -f "${configs_list_cache}" ]]; then
       error_message "[FATAL] Configurations list cache not found: ${configs_list_cache}";
-      exit 100;
+      exit 3;
     fi;
     if [[ ! -s "${configs_list_cache}" ]]; then
       error_message "[FATAL] Configurations list cache is empty: ${configs_list_cache}";
-      exit 100;
+      exit 4;
     fi;
 
     message "Extracted - Configurations List Cache:";
@@ -576,7 +576,7 @@ function main () {
           ## Confirm deletion was successful
           if compgen -G "${targets_location}/*.json" >/dev/null; then
             error_message "[FATAL] Failed to delete JSON files in ${targets_location} directory.";
-            exit 2;
+            exit 5;
           fi;
         fi;
 
@@ -587,7 +587,7 @@ function main () {
         ## Confirm ${logs_location}/jobs is fully removed
         if [[ -d ${logs_location}/jobs ]]; then
           error_message "[FATAL] Failed to delete ${logs_location}/jobs directory.";
-          exit 3;
+          exit 6;
         fi;
 
 #### Starting: Batch-Processing - Inner Loop ------------------------------ ####
@@ -788,7 +788,7 @@ function main () {
     ## Confirm ${logs_location}/jobs is fully removed
     if [[ -d ${logs_location}/jobs ]]; then
       error_message "[FATAL] Failed to delete ${logs_location}/jobs directory.";
-      exit 4;
+      exit 7;
     fi;
 
     #### -----------------------------------------------------------------------

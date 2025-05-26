@@ -268,7 +268,7 @@ function main () {
         if [[ ! -d "${search_location}" ]]; then
           warning "Provided --location '${search_location}' is not a valid directory." >&2;
           newline;
-          exit 1;
+          exit 11;
         fi;
       fi;
     fi;
@@ -280,7 +280,7 @@ function main () {
       if [[ "${target_addresses:-}" =~ ^[[:space:]]*$ ]]; then
         warning "A Search Pattern must be provided and cannot be empty!" >&2;
         newline;
-        exit 2;
+        exit 12;
       fi;
     done;
 
@@ -350,15 +350,12 @@ function main () {
         [[ -n "$result" ]] && found_configs+=( "${result}" );
       done;
 
-      # [[ "${#found_configs[@]}" -gt 0 ]] && \
-      #     configs_listing=( "${found_configs[@]}" );
-      # action_class="search";
       if [[ "${#found_configs[@]}" -gt 0 ]]; then
               configs_listing=( "${found_configs[@]}" );
               action_class="search";
         else  warning "No config files matched --search list under [ ${search_location} ]";
               newline;
-              exit 7;
+              exit 13;
       fi;
 
     fi;
@@ -375,7 +372,7 @@ function main () {
       if [[ "${#configs_listing[@]}" -eq 0 ]]; then
         warning "No configuration files found under location [ ${search_location} ]";
         newline;
-        exit 3;
+        exit 14;
       fi;
       if [[ "${#configs_listing[@]}" -gt 0 && \
             -n "${search_location:-}" && \
@@ -415,7 +412,7 @@ function main () {
               fi;
         else  warning "No matches for search pattern '${target_addresses}' in ${search_location:-search scope}";
               newline;
-              exit 4;
+              exit 15;
       fi;
 
     fi;
@@ -429,7 +426,7 @@ function main () {
               configs_listing=( "${source_config}" );
         else  warning "No valid configuration file provided or found." >&2;
               newline;
-              exit 5;
+              exit 16;
       fi;
     fi;
 
@@ -450,11 +447,11 @@ function main () {
             ;;
         3)  warning "Unsupported configuration type: ${target_config}";
             newline 2;
-            exit 6;
+            exit 17;
             ;;
         *)  warning "Unknown configuration type: ${target_config}";
             newline 2;
-            exit 7;
+            exit 18;
             ;;
       esac;
 
