@@ -266,7 +266,7 @@ function manage_configs () {
         fi;
       done;
       configs_jobs_pid=( "${valid_configs_jobs_pid[@]}" );
-      sleep 0.5;
+      sleep ${delaying_factor};  ## Short delay to prevent excessive CPU usage
     done;
     return 0;
 }; alias manage-configs='manage_configs';
@@ -413,7 +413,7 @@ function matching_configs () {
         fi;
       done;
       targets_jobs_pid=( "${valid_targets_jobs_pid[@]}" );
-      sleep 0.5  # Short delay to prevent excessive CPU usage
+      sleep ${delaying_factor}  ## Short delay to prevent excessive CPU usage
     done;
 
     return 0;

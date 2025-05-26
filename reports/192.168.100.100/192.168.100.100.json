@@ -6,42 +6,19 @@
       "device": "dmz-fw2-backup.cfg",
       "objects": [
         {
-          "object": "interface",
-          "type": "GigabitEthernet0/1",
+          "object": "domain-name",
+          "type": "global.dmz.example.net",
           "partner": false,
-          "description": "Inside LAN segment",
+          "description": false,
           "items": [
-            "ip address 192.168.100.100 255.255.255.0"
-          ],
-          "sets": {
-            "ip": 1,
-            "nameif": 1
-          },
-          "group": "Unclassified"
-        },
-        {
-          "object": "object-group",
-          "type": "network Sector-Wireless",
-          "partner": "Sector-Wireless",
-          "description": "Staff WiFi clients",
-          "items": [
+            "ip address 192.168.100.100 255.255.255.0",
+            "host 192.168.100.100",
             "network-object host 192.168.100.100"
           ],
           "sets": {
-            "network-object": 2
-          },
-          "group": "Unclassified"
-        },
-        {
-          "object": "object",
-          "type": "network Titan-WLAN-Host",
-          "partner": "Titan-WLAN-Host",
-          "description": "Backup inside NAT IP",
-          "items": [
-            "host 192.168.100.100"
-          ],
-          "sets": {
-            "host": 1
+            "ip": 3,
+            "network-object": 3,
+            "host": 3
           },
           "group": "Unclassified"
         }

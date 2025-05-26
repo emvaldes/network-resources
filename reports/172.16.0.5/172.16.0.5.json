@@ -6,6 +6,22 @@
       "device": "perimeter-fw1.cfg",
       "objects": [
         {
+          "object": "domain-name",
+          "type": "edge.dc.example.com",
+          "partner": false,
+          "description": false,
+          "items": [
+            "network-object host 172.16.0.5",
+            "host 172.16.0.5"
+          ],
+          "sets": {
+            "ip": 2,
+            "network-object": 4,
+            "host": 3
+          },
+          "group": "Unclassified"
+        },
+        {
           "object": "access-list",
           "type": "false",
           "partner": false,
@@ -15,32 +31,6 @@
           ],
           "sets": {
             "access-list": 1
-          },
-          "group": "Unclassified"
-        },
-        {
-          "object": "object",
-          "type": "network Magneto-Core",
-          "partner": "Magneto-Core",
-          "description": "WAN firewall entry point",
-          "items": [
-            "host 172.16.0.5"
-          ],
-          "sets": {
-            "host": 1
-          },
-          "group": "Unclassified"
-        },
-        {
-          "object": "object-group",
-          "type": "network Panther-Edge",
-          "partner": "Panther-Edge",
-          "description": "Internet-facing proxy systems",
-          "items": [
-            "network-object host 172.16.0.5"
-          ],
-          "sets": {
-            "network-object": 2
           },
           "group": "Unclassified"
         }

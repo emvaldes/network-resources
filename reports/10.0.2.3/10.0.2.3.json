@@ -6,15 +6,18 @@
       "device": "branch-isr-02.cfg",
       "objects": [
         {
-          "object": "interface",
-          "type": "GigabitEthernet0/0/2",
+          "object": "hostname",
+          "type": "branch-isr-02",
           "partner": false,
-          "description": "Dev VLAN",
+          "description": false,
           "items": [
-            "ip address 10.0.2.3 255.255.255.0"
+            "ip address 10.0.2.3 255.255.255.0",
+            "host 10.0.2.3"
           ],
           "sets": {
-            "ip": 1
+            "ip": 3,
+            "network-object": 4,
+            "host": 3
           },
           "group": "Unclassified"
         },
@@ -28,19 +31,6 @@
           ],
           "sets": {
             "access-list": 1
-          },
-          "group": "Unclassified"
-        },
-        {
-          "object": "object",
-          "type": "network Panther-Gateway",
-          "partner": "Panther-Gateway",
-          "description": "Secure outbound concentrator",
-          "items": [
-            "host 10.0.2.3"
-          ],
-          "sets": {
-            "host": 1
           },
           "group": "Unclassified"
         }

@@ -6,15 +6,18 @@
       "device": "branch-isr-02.cfg",
       "objects": [
         {
-          "object": "interface",
-          "type": "GigabitEthernet0/0/0",
+          "object": "hostname",
+          "type": "branch-isr-02",
           "partner": false,
-          "description": "ISP uplink",
+          "description": false,
           "items": [
-            "ip address 172.16.1.6 255.255.255.0"
+            "ip address 172.16.1.6 255.255.255.0",
+            "host 172.16.1.6"
           ],
           "sets": {
-            "ip": 1
+            "ip": 3,
+            "network-object": 4,
+            "host": 3
           },
           "group": "Unclassified"
         },
@@ -28,19 +31,6 @@
           ],
           "sets": {
             "access-list": 1
-          },
-          "group": "Unclassified"
-        },
-        {
-          "object": "object",
-          "type": "network BlackWidow-Core",
-          "partner": "BlackWidow-Core",
-          "description": "Branch router uplink NAT",
-          "items": [
-            "host 172.16.1.6"
-          ],
-          "sets": {
-            "host": 1
           },
           "group": "Unclassified"
         }

@@ -327,6 +327,42 @@ function relative_configpath () {
 }; alias relative-configpath='relative_configpath';
 
 #------------------------------------------------------------------------------#
+
+function system_metrics () {
+    message "System Information Metrics:";
+    newline;
+    message "System Uptime:                        $(uptime | sed 's/^.*up //; s/,.*$//')";
+    message "System Load (1/5/15 min):             $(uptime | awk -F'load averages*: ' '{print $2}')";
+    message "CPU Cores (logical):                  $(getconf _NPROCESSORS_ONLN 2>/dev/null)";
+    message "CPU Architecture:                     $(uname -m)";
+    case "${OSTYPE}" in
+      linux*)
+        if [[ -f /proc/meminfo ]]; then
+          mem_total=$(awk '/MemTotal/ {printf "%.2f GB", $2 / 1024 / 1024}' /proc/meminfo)
+          mem_free=$(awk '/MemFree/ {printf "%.2f GB", $2 / 1024 / 1024}' /proc/meminfo)
+          message "Memory - Total:                       ${mem_total}";
+          message "Memory - Free:                        ${mem_free}";
+        fi
+        disk_root=$(df -h / | awk 'NR==2 {print $2 " total, " $4 " free"}')
+        message "Disk - Root (/):                      ${disk_root}";
+        ;;
+      darwin*)
+        mem_total=$(sysctl -n hw.memsize 2>/dev/null)
+        mem_total_gb=$(awk -v mt="${mem_total}" 'BEGIN { printf "%.2f GB", mt / 1024 / 1024 / 1024 }')
+        mem_free=$(vm_stat | awk '/Pages free/ {free=$3} END { printf "%.2f GB", (free * 4096) / 1024 / 1024 / 1024 }')
+        disk_root=$(df -h / | awk 'NR==2 {print $2 " total, " $4 " free"}')
+        message "Memory - Total:                       ${mem_total_gb}";
+        message "Memory - Free:                        ${mem_free}";
+        message "Disk - Root (/):                      ${disk_root}";
+        ;;
+      msys*|cygwin*|win*)
+        message "Memory/Disk metrics not supported on Windows shell directly";
+        ;;
+    esac;
+    # return 0;
+}; alias system-metrics='system_metrics';
+
+#------------------------------------------------------------------------------#
 # Purpose:
 #   Validates and normalizes an IP address or CIDR block string stored in $target_address.
 #

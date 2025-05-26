@@ -6,17 +6,18 @@
       "device": "perimeter-fw1.cfg",
       "objects": [
         {
-          "object": "interface",
-          "type": "GigabitEthernet0/1",
+          "object": "domain-name",
+          "type": "edge.dc.example.com",
           "partner": false,
-          "description": "Internal Network Interface",
+          "description": false,
           "items": [
-            "ip address 10.0.0.1 255.255.255.0"
+            "ip address 10.0.0.1 255.255.255.0",
+            "host 10.0.0.1"
           ],
           "sets": {
-            "security-level": 1,
-            "ip": 1,
-            "nameif": 1
+            "ip": 2,
+            "network-object": 4,
+            "host": 3
           },
           "group": "Unclassified"
         },
@@ -30,19 +31,6 @@
           ],
           "sets": {
             "access-list": 1
-          },
-          "group": "Unclassified"
-        },
-        {
-          "object": "object",
-          "type": "network Stark-Tower",
-          "partner": "Stark-Tower",
-          "description": "Core services gateway",
-          "items": [
-            "host 10.0.0.1"
-          ],
-          "sets": {
-            "host": 1
           },
           "group": "Unclassified"
         }
