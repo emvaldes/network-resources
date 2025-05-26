@@ -37,7 +37,7 @@ BEGIN {
   next;
 }
 
-/^config / {
+/^[[:space:]]*config[[:space:]]/ {
   if (in_config && length(collected_edits) > 0) {
     output = output config_header "\n" collected_edits "end\n\n";
   }
@@ -47,7 +47,7 @@ BEGIN {
   next;
 }
 
-/^ edit / {
+/^[[:space:]]*edit[[:space:]]/ {
   if (in_edit && match_found) {
     collected_edits = collected_edits edit_block "next\n";
   }
@@ -57,7 +57,7 @@ BEGIN {
   next;
 }
 
-/^ next/ {
+/^[[:space:]]*next[[:space:]]*/ {
   if (in_edit) {
     edit_block = edit_block $0 "\n";
     if (match_found) {
@@ -70,7 +70,7 @@ BEGIN {
   next;
 }
 
-/^end$/ {
+/^[[:space:]]*end[[:space:]]*$/ {
   if (in_edit && match_found) {
     collected_edits = collected_edits edit_block "next\n";
   }

@@ -41,7 +41,7 @@ BEGIN {
 
 /^$/ { next; }
 
-/^[^[:space:]]/ {
+/^[[:space:]]*[^[:space:]]/ {
   if (in_block && block_has_match) {
     collected_blocks = collected_blocks block "\n";
     match_found = 1;
