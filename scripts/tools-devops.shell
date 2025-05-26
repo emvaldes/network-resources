@@ -254,12 +254,14 @@ function display_help () {
     help_lines+=( "  -g, --classify     Provide classification based on matrix.json" );
     help_lines+=( "  -c, --configs      Path to configuration files ( default: ./configs )" );
     help_lines+=( "  -x, --file-ext     Comma-separated list of config file extensions ( e.g., cfg,conf,cnf )" );
+    help_lines+=( "  -e, --export       Exporting JSON to other formats like: CSV, etc." );
     help_lines+=( "  -m, --matrix       Path to translation matrix ( matrix.json )" );
     help_lines+=( "  -r, --reports      Folder to store generated reports ( default: reports )" );
     help_lines+=( "  -v, --validate     Validating IP/CIDR Block addresses" );
     ## Script-Specific Options
     case "${mode}" in
       listings )
+        help_lines+=( "  -b, --batch-size   Define a batch cycle-processing limit (configs set)" );
         help_lines+=( "  -d, --devices      File containing list of target network devices (configurations)" );
         help_lines+=( "  -l, --interval     Interval ( in seconds ) between job dispatch checks [default: 0.1]" );
         help_lines+=( "  -i, --ips-list     File containing list of target IP addresses" );

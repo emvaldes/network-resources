@@ -116,6 +116,51 @@
     },
     {
       "site": "misc",
+      "device": "fw1.cfg",
+      "objects": [
+        {
+          "object": "access-list",
+          "type": "false",
+          "partner": false,
+          "description": false,
+          "items": [
+            "access-list OUTSIDE extended permit ip any host 203.0.113.25"
+          ],
+          "sets": {
+            "access-list": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Krypton-Cloud",
+          "partner": "Krypton-Cloud",
+          "description": "Cloud-facing external nodes",
+          "items": [
+            "network-object host 203.0.113.25"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network Krypton-Gateway",
+          "partner": "Krypton-Gateway",
+          "description": "Secure NAT boundary for cloud access",
+          "items": [
+            "host 203.0.113.25"
+          ],
+          "sets": {
+            "host": 1
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
       "device": "fw3.cfg",
       "objects": [
         {
