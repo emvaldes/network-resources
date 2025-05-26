@@ -339,17 +339,28 @@ function main () {
     #### -----------------------------------------------------------------------
     ## Parameter: --search → overrides --config (comma-separated list, needs lookup)
     if [[ -n "${search_configs:-}" ]]; then
+
       IFS=',' read -r -a search_items <<< "${search_configs}";
       declare -a found_configs=();
+
       for item in "${search_items[@]}"; do
         result="$(
           find "${search_location}" -type f -name "${item}.*" 2>/dev/null
         )";
         [[ -n "$result" ]] && found_configs+=( "${result}" );
       done;
-      [[ "${#found_configs[@]}" -gt 0 ]] && \
-          configs_listing=( "${found_configs[@]}" );
-      action_class="search";
+
+      # [[ "${#found_configs[@]}" -gt 0 ]] && \
+      #     configs_listing=( "${found_configs[@]}" );
+      # action_class="search";
+      if [[ "${#found_configs[@]}" -gt 0 ]]; then
+              configs_listing=( "${found_configs[@]}" );
+              action_class="search";
+        else  warning "No config files matched --search list under [ ${search_location} ]";
+              newline;
+              exit 7;
+      fi;
+
     fi;
 
     #### -----------------------------------------------------------------------
@@ -509,7 +520,7 @@ function main () {
 
 #------------------------------------------------------------------------------#
 
-if [[ ${#@} -ge 1 && "${1,,}" =~ ^-*(h|help)$ ]]; then
+if [[ ${#@} -eq 0 || "${1,,}" =~ ^-*(h|help)$ ]]; then
         main --help ;
   else  newline;
         main "${@}";

@@ -241,7 +241,7 @@ function main () {
     #### -----------------------------------------------------------------------
     if [[ "${verbose}" == true ]]; then
       {
-        message "Loaded (default) IPs addresses (count): ${#target_addresses_source[@]}";
+        message "Loaded (default) IPs addresses (count): ${#target_listing[@]}";
         newline;
         for ip in "${target_listing[@]}"; do
           message "  - ${ip}";
@@ -521,10 +521,6 @@ function main () {
 
       #### ---------------------------------------------------------------------
       ## Begin placeholder-only batch structure (no processing)
-
-      # mapfile -t site_folders < <(
-      #   cut -d/ -f2 ${configs_list_cache} | sort -u
-      # );
       mapfile -t site_folders < <(
         printf '%s\n' "${configs_list_cache[@]}" | \
         sed -E "s|^${configs_dirpath}/||" | \
@@ -554,16 +550,9 @@ function main () {
       for site in "${site_folders[@]}"; do
 
         #### -------------------------------------------------------------------
-
-        # oIFS="${IFS}"; IFS=$'\n';
-        # read -r -d '' -a site_files < <(
-        #   grep -F "/${site}/" "${configs_list_cache}" && printf '\0'
-        # );
-        # IFS="${oIFS}";
         mapfile -t site_files < <(
           printf '%s\n' "${configs_list_cache[@]}" | grep -F "/${site}/"
         );
-
         total_files=${#site_files[@]};
 
         #### -------------------------------------------------------------------
@@ -837,7 +826,7 @@ declare -a file_extensions=();
 
 #------------------------------------------------------------------------------#
 
-if [[ ${#@} -ge 1 && "${1,,}" =~ ^-*(h|help)$ ]]; then
+if [[ ${#@} -eq 0 || "${1,,}" =~ ^-*(h|help)$ ]]; then
         main --help ;
   else  main "${@}";
         ## newline; message "Done."; newline;
