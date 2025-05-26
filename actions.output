@@ -1,7 +1,7 @@
-[INFO] Date: 2025-05-26 10:36:59
+[INFO] Date: 2025-05-26 15:42:09
 
 [INFO] Script: ./scripts/parse-listings.shell
-[INFO] PID: 69411
+[INFO] PID: 10477
 
 [INFO] User: emvaldes
 [INFO] Host: emvaldes-imac-desktop.local
@@ -11,19 +11,19 @@
 System Information Metrics:
 
 System Uptime:                        2 days
-System Load (1/5/15 min):             3.01 2.73 2.43
+System Load (1/5/15 min):             2.23 2.30 2.45
 CPU Cores (logical):                  16
 CPU Architecture:                     x86_64
 Memory - Total:                       128.00 GB
-Memory - Free:                        82.00 GB
+Memory - Free:                        83.49 GB
 Disk - Root (/):                      894Gi total, 305Gi free
 
 [INFO] Logging Output Directory: .logs
-[INFO] Temp Directory: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UcosDunIWw
+[INFO] Temp Directory: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG
 
 Parsed Input Parameters (CLI Flags):
 
-Batch size (configs per batch):       5
+Batch size (configs per batch):       3
 Enable group classification:          true
 Source Configs directory:             configs
 Target Configs directory:             .cache/resources
@@ -31,7 +31,7 @@ Device filter (file or inline):       devices.list
 Default Configs Listing file:         .cache/configs.list
 Export format (JSON/CSV):             reports/reports.csv
 Allowed file extensions:              cfg conf cnf
-Delay between background jobs:        0.01
+Delay between background jobs:        0.1
 IP address input (file or inline):    ips.list
 Enable logging:                       true
 Parallel threads:                     100
@@ -112,7 +112,10 @@ Cached Configs List: .cache/configs.list
     10	configs/misc/fw3.cfg
     11	
 
-Processing IPs [17]: 0 -> 9
+Processing Addresses: [ 1 → 10 ]
+Processing IPs Range: [ 10.0.0.1 → 192.168.0.1 ]
+
+Progress / Completed: 1/2 (50%) → 17 IPs
 
 Site Folders:
 
@@ -121,13 +124,12 @@ Site Folders:
   - misc
 
 Batch processing (outer):
-Batch size: 5
+Batch size: 3
 
-Parallel threads:   100
-Target IPs (count): 10
+Location Name:  cisco
+Location Index: 1/3
 
-Target Site:   cisco
-Total Configs: 5
+Total Configs:  5
 
   - cisco/access-sw1-west.cfg
   - cisco/branch-isr-02.cfg
@@ -136,97 +138,122 @@ Total Configs: 5
   - cisco/perimeter-fw1.cfg
 
 Batch processing (inner):
-Batch ID: MTc0ODI4MTAy
+Batch ID: MTc0ODI5OTMz
 
-Batch offset:   0
-Batch Suffix:   1748281020-15751
-Batch FileName: configs--MTc0ODI4MTAy-1748281020-15751.list
-Batch Configs:  /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UcosDunIWw/configs--MTc0ODI4MTAy-1748281020-15751.list
+Batch Index:    1/2
+Batch Suffix:   1748299331-30055
+Batch FileName: configs--MTc0ODI5OTMz-1748299331-30055.list
+Batch Configs:  /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG/configs--MTc0ODI5OTMz-1748299331-30055.list
 
-File: configs--MTc0ODI4MTAy-1748281020-15751.list
-Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UcosDunIWw
-Size: 213 bytes
-Blocks/Inode: 8 / 239737717
+File: configs--MTc0ODI5OTMz-1748299331-30055.list
+Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG
+Size: 130 bytes
+Blocks/Inode: 8 / 239775354
 Mode: -rw-r--r--
 UID/GID: 501 / 20
-Access: May 26 10:37:00 2025
-Modify: May 26 10:37:00 2025
-Change: May 26 10:37:00 2025
+Access: May 26 15:42:11 2025
+Modify: May 26 15:42:11 2025
+Change: May 26 15:42:11 2025
 
-Batch Size:     5
-Batch Ranges:   1 -> 5
+Batch Size:     3
+Batch Ranges:   1 -> 3
 
   - cisco/access-sw1-west.cfg
   - cisco/branch-isr-02.cfg
   - cisco/campus-sw-access01.cfg
+
+[EXECUTE]   matching_configs
+[PARAMETER] source_configs_list:
+            /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG/configs--MTc0ODI5OTMz-1748299331-30055.list
+
+Matched IPs to [cisco] configs (5):
+-------------------------------------
+PID    | IP Address      => Config(s)
+-------------------------------------
+11112  | 10.0.2.3        => branch-isr-02.cfg
+11072  | 192.168.0.1     => access-sw1-west.cfg campus-sw-access01.cfg
+11140  | 172.16.1.6      => branch-isr-02.cfg
+11058  | 172.18.1.20     => branch-isr-02.cfg
+11089  | 10.10.10.10     => access-sw1-west.cfg campus-sw-access01.cfg
+
+Unmapped IPs (count): 12
+
+Background Jobs -> Managed Configs:
+PID   | IP Address (5)
+-------------------------
+11207 | 192.168.0.1
+11204 | 172.18.1.20
+11211 | 10.10.10.10
+11215 | 10.0.2.3
+11221 | 172.16.1.6
+
+Batch processing (inner):
+Batch ID: MTc0ODI5OTMz
+
+Batch Index:    2/2
+Batch Suffix:   1748299332-18456
+Batch FileName: configs--MTc0ODI5OTMz-1748299332-18456.list
+Batch Configs:  /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG/configs--MTc0ODI5OTMz-1748299332-18456.list
+
+File: configs--MTc0ODI5OTMz-1748299332-18456.list
+Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG
+Size: 83 bytes
+Blocks/Inode: 8 / 239775485
+Mode: -rw-r--r--
+UID/GID: 501 / 20
+Access: May 26 15:42:12 2025
+Modify: May 26 15:42:12 2025
+Change: May 26 15:42:12 2025
+
+Batch Size:     2
+Batch Ranges:   4 -> 5
+
   - cisco/dmz-fw2-backup.cfg
   - cisco/perimeter-fw1.cfg
 
 [EXECUTE]   matching_configs
 [PARAMETER] source_configs_list:
-            /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UcosDunIWw/configs--MTc0ODI4MTAy-1748281020-15751.list
+            /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG/configs--MTc0ODI5OTMz-1748299332-18456.list
 
-Matched IPs to [cisco] configs (8):
+Matched IPs to [cisco] configs (1):
 -------------------------------------
 PID    | IP Address      => Config(s)
 -------------------------------------
-70054  | 172.18.1.20     => branch-isr-02.cfg
-70100  | 10.0.0.1        => perimeter-fw1.cfg
-70202  | 172.16.1.6      => branch-isr-02.cfg
-70127  | 192.168.0.1     => access-sw1-west.cfg:campus-sw-access01.cfg
-70042  | 192.0.2.50      => dmz-fw2-backup.cfg:perimeter-fw1.cfg
-70152  | 10.10.10.10     => access-sw1-west.cfg:campus-sw-access01.cfg:dmz-fw2-backup.cfg
-70175  | 10.0.2.3        => branch-isr-02.cfg
-70074  | 172.16.0.5      => perimeter-fw1.cfg
+12370  | 10.10.10.10     => dmz-fw2-backup.cfg
 
-Unmapped IPs (count): 9
-
-  - 10.0.1.2
-  - 172.31.255.254
-  - 192.168.0.100
-  - 192.168.1.10
-  - 192.168.1.11
-  - 192.168.2.12
-  - 192.168.100.100
-  - 198.51.100.75
-  - 203.0.113.25
+Unmapped IPs (count): 16
 
 Background Jobs -> Managed Configs:
-PID   | IP Address (8)
+PID   | IP Address (1)
 -------------------------
-70283 | 172.16.0.5
-70287 | 10.0.0.1
-70279 | 172.18.1.20
-70276 | 192.0.2.50
-70293 | 192.168.0.1
-70298 | 10.10.10.10
-70303 | 10.0.2.3
-70309 | 172.16.1.6
+12394 | 10.10.10.10
 
-Target Site:   fortinet
-Total Configs: 3
+Location Name:  fortinet
+Location Index: 2/3
+
+Total Configs:  3
 
   - fortinet/fg-branch-vpn-01.cfg
   - fortinet/fg-campus-core.cfg
   - fortinet/fg-testing-config.cfg
 
 Batch processing (inner):
-Batch ID: MTc0ODI4MTAy
+Batch ID: MTc0ODI5OTMz
 
-Batch offset:   0
-Batch Suffix:   1748281021-22598
-Batch FileName: configs--MTc0ODI4MTAy-1748281021-22598.list
-Batch Configs:  /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UcosDunIWw/configs--MTc0ODI4MTAy-1748281021-22598.list
+Batch Index:    1/1
+Batch Suffix:   1748299333-9494
+Batch FileName: configs--MTc0ODI5OTMz-1748299333-9494.list
+Batch Configs:  /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG/configs--MTc0ODI5OTMz-1748299333-9494.list
 
-File: configs--MTc0ODI4MTAy-1748281021-22598.list
-Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UcosDunIWw
+File: configs--MTc0ODI5OTMz-1748299333-9494.list
+Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG
 Size: 140 bytes
-Blocks/Inode: 8 / 239737889
+Blocks/Inode: 8 / 239775566
 Mode: -rw-r--r--
 UID/GID: 501 / 20
-Access: May 26 10:37:01 2025
-Modify: May 26 10:37:01 2025
-Change: May 26 10:37:01 2025
+Access: May 26 15:42:13 2025
+Modify: May 26 15:42:13 2025
+Change: May 26 15:42:13 2025
 
 Batch Size:     3
 Batch Ranges:   1 -> 3
@@ -237,64 +264,46 @@ Batch Ranges:   1 -> 3
 
 [EXECUTE]   matching_configs
 [PARAMETER] source_configs_list:
-            /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UcosDunIWw/configs--MTc0ODI4MTAy-1748281021-22598.list
+            /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG/configs--MTc0ODI5OTMz-1748299333-9494.list
 
-Matched IPs to [fortinet] configs (4):
+Matched IPs to [fortinet] configs (1):
 -------------------------------------
 PID    | IP Address      => Config(s)
 -------------------------------------
-72424  | 10.10.10.10     => fg-campus-core.cfg:fg-testing-config.cfg
-72444  | 172.16.1.6      => fg-campus-core.cfg
-72391  | 10.0.0.1        => fg-branch-vpn-01.cfg
-72405  | 192.168.0.1     => fg-branch-vpn-01.cfg
+12676  | 10.10.10.10     => fg-campus-core.cfg fg-testing-config.cfg
 
-Unmapped IPs (count): 13
-
-  - 10.0.1.2
-  - 10.0.2.3
-  - 172.16.0.5
-  - 172.18.1.20
-  - 172.31.255.254
-  - 192.0.2.50
-  - 192.168.0.100
-  - 192.168.1.10
-  - 192.168.1.11
-  - 192.168.2.12
-  - 192.168.100.100
-  - 198.51.100.75
-  - 203.0.113.25
+Unmapped IPs (count): 16
 
 Background Jobs -> Managed Configs:
-PID   | IP Address (4)
+PID   | IP Address (1)
 -------------------------
-72499 | 10.0.0.1
-72511 | 172.16.1.6
-72502 | 192.168.0.1
-72506 | 10.10.10.10
+12709 | 10.10.10.10
 
-Target Site:   misc
-Total Configs: 2
+Location Name:  misc
+Location Index: 3/3
+
+Total Configs:  2
 
   - misc/fw1.cfg
   - misc/fw3.cfg
 
 Batch processing (inner):
-Batch ID: MTc0ODI4MTAy
+Batch ID: MTc0ODI5OTMz
 
-Batch offset:   0
-Batch Suffix:   1748281023-13796
-Batch FileName: configs--MTc0ODI4MTAy-1748281023-13796.list
-Batch Configs:  /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UcosDunIWw/configs--MTc0ODI4MTAy-1748281023-13796.list
+Batch Index:    1/1
+Batch Suffix:   1748299334-31382
+Batch FileName: configs--MTc0ODI5OTMz-1748299334-31382.list
+Batch Configs:  /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG/configs--MTc0ODI5OTMz-1748299334-31382.list
 
-File: configs--MTc0ODI4MTAy-1748281023-13796.list
-Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UcosDunIWw
+File: configs--MTc0ODI5OTMz-1748299334-31382.list
+Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG
 Size: 60 bytes
-Blocks/Inode: 8 / 239738033
+Blocks/Inode: 8 / 239775653
 Mode: -rw-r--r--
 UID/GID: 501 / 20
-Access: May 26 10:37:03 2025
-Modify: May 26 10:37:03 2025
-Change: May 26 10:37:03 2025
+Access: May 26 15:42:14 2025
+Modify: May 26 15:42:14 2025
+Change: May 26 15:42:14 2025
 
 Batch Size:     2
 Batch Ranges:   1 -> 2
@@ -304,39 +313,25 @@ Batch Ranges:   1 -> 2
 
 [EXECUTE]   matching_configs
 [PARAMETER] source_configs_list:
-            /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UcosDunIWw/configs--MTc0ODI4MTAy-1748281023-13796.list
+            /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG/configs--MTc0ODI5OTMz-1748299334-31382.list
 
 Matched IPs to [misc] configs (1):
 -------------------------------------
 PID    | IP Address      => Config(s)
 -------------------------------------
-73713  | 10.10.10.10     => fw3.cfg
+13197  | 10.10.10.10     => fw3.cfg
 
 Unmapped IPs (count): 16
-
-  - 10.0.0.1
-  - 10.0.1.2
-  - 10.0.2.3
-  - 172.16.0.5
-  - 172.16.1.6
-  - 172.18.1.20
-  - 172.31.255.254
-  - 192.0.2.50
-  - 192.168.0.1
-  - 192.168.0.100
-  - 192.168.1.10
-  - 192.168.1.11
-  - 192.168.2.12
-  - 192.168.100.100
-  - 198.51.100.75
-  - 203.0.113.25
 
 Background Jobs -> Managed Configs:
 PID   | IP Address (1)
 -------------------------
-73738 | 10.10.10.10
+13221 | 10.10.10.10
 
-Processing IPs [17]: 10 -> 19
+Processing Addresses: [ 11 → 17 ]
+Processing IPs Range: [ 192.168.0.100 → 203.0.113.25 ]
+
+Progress / Completed: 2/2 (100%) → 17 IPs
 
 Site Folders:
 
@@ -345,13 +340,12 @@ Site Folders:
   - misc
 
 Batch processing (outer):
-Batch size: 5
+Batch size: 3
 
-Parallel threads:   100
-Target IPs (count): 7
+Location Name:  cisco
+Location Index: 1/3
 
-Target Site:   cisco
-Total Configs: 5
+Total Configs:  5
 
   - cisco/access-sw1-west.cfg
   - cisco/branch-isr-02.cfg
@@ -360,95 +354,120 @@ Total Configs: 5
   - cisco/perimeter-fw1.cfg
 
 Batch processing (inner):
-Batch ID: MTc0ODI4MTAy
+Batch ID: MTc0ODI5OTMz
 
-Batch offset:   0
-Batch Suffix:   1748281024-24853
-Batch FileName: configs--MTc0ODI4MTAy-1748281024-24853.list
-Batch Configs:  /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UcosDunIWw/configs--MTc0ODI4MTAy-1748281024-24853.list
+Batch Index:    1/2
+Batch Suffix:   1748299336-31299
+Batch FileName: configs--MTc0ODI5OTMz-1748299336-31299.list
+Batch Configs:  /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG/configs--MTc0ODI5OTMz-1748299336-31299.list
 
-File: configs--MTc0ODI4MTAy-1748281024-24853.list
-Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UcosDunIWw
-Size: 213 bytes
-Blocks/Inode: 8 / 239738132
+File: configs--MTc0ODI5OTMz-1748299336-31299.list
+Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG
+Size: 130 bytes
+Blocks/Inode: 8 / 239775720
 Mode: -rw-r--r--
 UID/GID: 501 / 20
-Access: May 26 10:37:04 2025
-Modify: May 26 10:37:04 2025
-Change: May 26 10:37:04 2025
+Access: May 26 15:42:16 2025
+Modify: May 26 15:42:16 2025
+Change: May 26 15:42:16 2025
 
-Batch Size:     5
-Batch Ranges:   1 -> 5
+Batch Size:     3
+Batch Ranges:   1 -> 3
 
   - cisco/access-sw1-west.cfg
   - cisco/branch-isr-02.cfg
   - cisco/campus-sw-access01.cfg
+
+[EXECUTE]   matching_configs
+[PARAMETER] source_configs_list:
+            /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG/configs--MTc0ODI5OTMz-1748299336-31299.list
+
+Matched IPs to [cisco] configs (4):
+-------------------------------------
+PID    | IP Address      => Config(s)
+-------------------------------------
+13614  | 198.51.100.75   => branch-isr-02.cfg
+13635  | 192.168.1.11    => branch-isr-02.cfg
+13580  | 192.168.2.12    => branch-isr-02.cfg
+13594  | 192.168.0.100   => access-sw1-west.cfg campus-sw-access01.cfg
+
+Unmapped IPs (count): 13
+
+Background Jobs -> Managed Configs:
+PID   | IP Address (4)
+-------------------------
+13699 | 198.51.100.75
+13691 | 192.168.2.12
+13695 | 192.168.0.100
+13704 | 192.168.1.11
+
+Batch processing (inner):
+Batch ID: MTc0ODI5OTMz
+
+Batch Index:    2/2
+Batch Suffix:   1748299337-19977
+Batch FileName: configs--MTc0ODI5OTMz-1748299337-19977.list
+Batch Configs:  /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG/configs--MTc0ODI5OTMz-1748299337-19977.list
+
+File: configs--MTc0ODI5OTMz-1748299337-19977.list
+Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG
+Size: 83 bytes
+Blocks/Inode: 8 / 239775837
+Mode: -rw-r--r--
+UID/GID: 501 / 20
+Access: May 26 15:42:17 2025
+Modify: May 26 15:42:17 2025
+Change: May 26 15:42:17 2025
+
+Batch Size:     2
+Batch Ranges:   4 -> 5
+
   - cisco/dmz-fw2-backup.cfg
   - cisco/perimeter-fw1.cfg
 
 [EXECUTE]   matching_configs
 [PARAMETER] source_configs_list:
-            /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UcosDunIWw/configs--MTc0ODI4MTAy-1748281024-24853.list
+            /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG/configs--MTc0ODI5OTMz-1748299337-19977.list
 
-Matched IPs to [cisco] configs (6):
+Matched IPs to [cisco] configs (1):
 -------------------------------------
 PID    | IP Address      => Config(s)
 -------------------------------------
-74191  | 203.0.113.25    => dmz-fw2-backup.cfg:perimeter-fw1.cfg
-74285  | 192.168.1.11    => branch-isr-02.cfg
-74211  | 192.168.2.12    => branch-isr-02.cfg
-74232  | 192.168.0.100   => access-sw1-west.cfg:campus-sw-access01.cfg
-74260  | 198.51.100.75   => branch-isr-02.cfg:dmz-fw2-backup.cfg
-74177  | 192.168.100.100 => dmz-fw2-backup.cfg
+14571  | 198.51.100.75   => dmz-fw2-backup.cfg
 
-Unmapped IPs (count): 11
-
-  - 10.0.0.1
-  - 10.0.1.2
-  - 10.0.2.3
-  - 10.10.10.10
-  - 172.16.0.5
-  - 172.16.1.6
-  - 172.18.1.20
-  - 172.31.255.254
-  - 192.0.2.50
-  - 192.168.0.1
-  - 192.168.1.10
+Unmapped IPs (count): 16
 
 Background Jobs -> Managed Configs:
-PID   | IP Address (6)
+PID   | IP Address (1)
 -------------------------
-74355 | 192.168.100.100
-74358 | 203.0.113.25
-74362 | 192.168.2.12
-74367 | 192.168.0.100
-74377 | 192.168.1.11
-74372 | 198.51.100.75
+14595 | 198.51.100.75
 
-Target Site:   fortinet
-Total Configs: 3
+Location Name:  fortinet
+Location Index: 2/3
+
+Total Configs:  3
 
   - fortinet/fg-branch-vpn-01.cfg
   - fortinet/fg-campus-core.cfg
   - fortinet/fg-testing-config.cfg
 
 Batch processing (inner):
-Batch ID: MTc0ODI4MTAy
+Batch ID: MTc0ODI5OTMz
 
-Batch offset:   0
-Batch Suffix:   1748281025-31354
-Batch FileName: configs--MTc0ODI4MTAy-1748281025-31354.list
-Batch Configs:  /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UcosDunIWw/configs--MTc0ODI4MTAy-1748281025-31354.list
+Batch Index:    1/1
+Batch Suffix:   1748299338-208
+Batch FileName: configs--MTc0ODI5OTMz-1748299338-208.list
+Batch Configs:  /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG/configs--MTc0ODI5OTMz-1748299338-208.list
 
-File: configs--MTc0ODI4MTAy-1748281025-31354.list
-Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UcosDunIWw
+File: configs--MTc0ODI5OTMz-1748299338-208.list
+Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG
 Size: 140 bytes
-Blocks/Inode: 8 / 239738293
+Blocks/Inode: 8 / 239775900
 Mode: -rw-r--r--
 UID/GID: 501 / 20
-Access: May 26 10:37:05 2025
-Modify: May 26 10:37:05 2025
-Change: May 26 10:37:05 2025
+Access: May 26 15:42:18 2025
+Modify: May 26 15:42:18 2025
+Change: May 26 15:42:18 2025
 
 Batch Size:     3
 Batch Ranges:   1 -> 3
@@ -459,65 +478,46 @@ Batch Ranges:   1 -> 3
 
 [EXECUTE]   matching_configs
 [PARAMETER] source_configs_list:
-            /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UcosDunIWw/configs--MTc0ODI4MTAy-1748281025-31354.list
+            /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG/configs--MTc0ODI5OTMz-1748299338-208.list
 
-Matched IPs to [fortinet] configs (5):
+Matched IPs to [fortinet] configs (1):
 -------------------------------------
 PID    | IP Address      => Config(s)
 -------------------------------------
-76009  | 198.51.100.75   => fg-branch-vpn-01.cfg
-75967  | 203.0.113.25    => fg-branch-vpn-01.cfg
-75987  | 192.168.2.12    => fg-branch-vpn-01.cfg:fg-campus-core.cfg
-75953  | 192.168.100.100 => fg-campus-core.cfg
-76031  | 192.168.1.11    => fg-campus-core.cfg
+14874  | 198.51.100.75   => fg-branch-vpn-01.cfg
 
-Unmapped IPs (count): 12
-
-  - 10.0.0.1
-  - 10.0.1.2
-  - 10.0.2.3
-  - 10.10.10.10
-  - 172.16.0.5
-  - 172.16.1.6
-  - 172.18.1.20
-  - 172.31.255.254
-  - 192.0.2.50
-  - 192.168.0.1
-  - 192.168.0.100
-  - 192.168.1.10
+Unmapped IPs (count): 16
 
 Background Jobs -> Managed Configs:
-PID   | IP Address (5)
+PID   | IP Address (1)
 -------------------------
-76086 | 192.168.100.100
-76089 | 203.0.113.25
-76093 | 192.168.2.12
-76098 | 198.51.100.75
-76103 | 192.168.1.11
+14898 | 198.51.100.75
 
-Target Site:   misc
-Total Configs: 2
+Location Name:  misc
+Location Index: 3/3
+
+Total Configs:  2
 
   - misc/fw1.cfg
   - misc/fw3.cfg
 
 Batch processing (inner):
-Batch ID: MTc0ODI4MTAy
+Batch ID: MTc0ODI5OTMz
 
-Batch offset:   0
-Batch Suffix:   1748281027-22157
-Batch FileName: configs--MTc0ODI4MTAy-1748281027-22157.list
-Batch Configs:  /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UcosDunIWw/configs--MTc0ODI4MTAy-1748281027-22157.list
+Batch Index:    1/1
+Batch Suffix:   1748299339-14220
+Batch FileName: configs--MTc0ODI5OTMz-1748299339-14220.list
+Batch Configs:  /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG/configs--MTc0ODI5OTMz-1748299339-14220.list
 
-File: configs--MTc0ODI4MTAy-1748281027-22157.list
-Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UcosDunIWw
+File: configs--MTc0ODI5OTMz-1748299339-14220.list
+Parent: /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG
 Size: 60 bytes
-Blocks/Inode: 8 / 239738450
+Blocks/Inode: 8 / 239775996
 Mode: -rw-r--r--
 UID/GID: 501 / 20
-Access: May 26 10:37:07 2025
-Modify: May 26 10:37:07 2025
-Change: May 26 10:37:07 2025
+Access: May 26 15:42:19 2025
+Modify: May 26 15:42:19 2025
+Change: May 26 15:42:19 2025
 
 Batch Size:     2
 Batch Ranges:   1 -> 2
@@ -527,117 +527,68 @@ Batch Ranges:   1 -> 2
 
 [EXECUTE]   matching_configs
 [PARAMETER] source_configs_list:
-            /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UcosDunIWw/configs--MTc0ODI4MTAy-1748281027-22157.list
+            /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.KlDXbCTNWG/configs--MTc0ODI5OTMz-1748299339-14220.list
 
-Matched IPs to [misc] configs (3):
+Matched IPs to [misc] configs (1):
 -------------------------------------
 PID    | IP Address      => Config(s)
 -------------------------------------
-77829  | 198.51.100.75   => fw1.cfg
-77796  | 203.0.113.25    => fw1.cfg:fw3.cfg
-77810  | 192.168.2.12    => fw1.cfg
+15280  | 198.51.100.75   => fw1.cfg
 
-Unmapped IPs (count): 14
-
-  - 10.0.0.1
-  - 10.0.1.2
-  - 10.0.2.3
-  - 10.10.10.10
-  - 172.16.0.5
-  - 172.16.1.6
-  - 172.18.1.20
-  - 172.31.255.254
-  - 192.0.2.50
-  - 192.168.0.1
-  - 192.168.0.100
-  - 192.168.1.10
-  - 192.168.1.11
-  - 192.168.100.100
+Unmapped IPs (count): 16
 
 Background Jobs -> Managed Configs:
-PID   | IP Address (3)
+PID   | IP Address (1)
 -------------------------
-77887 | 198.51.100.75
-77880 | 203.0.113.25
-77883 | 192.168.2.12
+15304 | 198.51.100.75
 
 Post-processing: Normalizing JSON files
 ---------------------------------------
 Grouped by site: .cache/targets
 
-  - 10.0.0.1.json
   - 10.0.2.3.json
   - 10.10.10.10.json
-  - 172.16.0.5.json
   - 172.16.1.6.json
   - 172.18.1.20.json
-  - 192.0.2.50.json
   - 192.168.0.1.json
   - 192.168.0.100.json
   - 192.168.1.11.json
-  - 192.168.100.100.json
   - 192.168.2.12.json
   - 198.51.100.75.json
-  - 203.0.113.25.json
 
 CSV Report Summary (tabulated):
 -------------------------------
      1	target,site,device,object,type,items,partner,description,group
-     2	"10.0.0.1","cisco","perimeter-fw1.cfg","access-list","false","access-list OUTSIDE extended permit ip host 10.0.0.1 any","none","none","Unclassified"
-     3	"10.0.0.1","cisco","perimeter-fw1.cfg","domain-name","edge.dc.example.com","ip address 10.0.0.1 255.255.255.0","none","none","Unclassified"
-     4	"10.0.0.1","fortinet","fg-branch-vpn-01.cfg","config","firewall address","set subnet 10.0.0.1 255.255.255.255","none","none","Unclassified"
-     5	"10.0.2.3","cisco","branch-isr-02.cfg","access-list","false","access-list OUTSIDE extended permit ip host 10.0.2.3 any","none","none","Unclassified"
-     6	"10.0.2.3","cisco","branch-isr-02.cfg","hostname","branch-isr-02","ip address 10.0.2.3 255.255.255.0","none","none","Unclassified"
-     7	"10.10.10.10","cisco","access-sw1-west.cfg","hostname","access-sw1-west","network-object host 10.10.10.10","none","none","Unclassified"
-     8	"10.10.10.10","cisco","campus-sw-access01.cfg","hostname","campus-sw-access01","network-object host 10.10.10.10","none","none","Unclassified"
-     9	"10.10.10.10","cisco","dmz-fw2-backup.cfg","domain-name","global.dmz.example.net","ip address 10.10.10.10 255.255.255.0","none","none","Unclassified"
-    10	"10.10.10.10","fortinet","fg-campus-core.cfg","config","firewall address","set subnet 10.10.10.10 255.255.255.255","none","none","Unclassified"
-    11	"10.10.10.10","fortinet","fg-campus-core.cfg","config","system interface","set ip 10.10.10.10 255.255.255.0","none","none","Unclassified"
-    12	"10.10.10.10","fortinet","fg-testing-config.cfg","config","firewall policy","set srcaddr ""10.10.10.10""","none","none","Unclassified"
-    13	"10.10.10.10","misc","fw3.cfg","access-list","false","access-list OUTSIDE extended permit ip host 10.10.10.10 any","none","none","Unclassified"
-    14	"10.10.10.10","misc","fw3.cfg","network-object","host 192.168.1.10","network-object host 10.10.10.10","none","none","Unclassified"
-    15	"172.16.0.5","cisco","perimeter-fw1.cfg","access-list","false","access-list OUTSIDE extended permit ip any host 172.16.0.5","none","none","Unclassified"
-    16	"172.16.0.5","cisco","perimeter-fw1.cfg","domain-name","edge.dc.example.com","network-object host 172.16.0.5","none","none","Unclassified"
-    17	"172.16.1.6","cisco","branch-isr-02.cfg","access-list","false","access-list OUTSIDE extended permit ip any host 172.16.1.6","none","none","Unclassified"
-    18	"172.16.1.6","cisco","branch-isr-02.cfg","hostname","branch-isr-02","ip address 172.16.1.6 255.255.255.0","none","none","Unclassified"
-    19	"172.16.1.6","fortinet","fg-campus-core.cfg","config","firewall address","set subnet 172.16.1.6 255.255.255.255","none","none","Unclassified"
-    20	"172.18.1.20","cisco","branch-isr-02.cfg","hostname","branch-isr-02","network-object host 172.18.1.20","none","none","Unclassified"
-    21	"192.0.2.50","cisco","dmz-fw2-backup.cfg","domain-name","global.dmz.example.net","network-object host 192.0.2.50","none","none","Unclassified"
-    22	"192.0.2.50","cisco","perimeter-fw1.cfg","domain-name","edge.dc.example.com","network-object host 192.0.2.50","none","none","Unclassified"
-    23	"192.168.0.1","cisco","access-sw1-west.cfg","hostname","access-sw1-west","ip address 192.168.0.1 255.255.255.0","none","none","Unclassified"
-    24	"192.168.0.1","cisco","campus-sw-access01.cfg","hostname","campus-sw-access01","ip address 192.168.0.1 255.255.255.0","none","none","Unclassified"
-    25	"192.168.0.1","fortinet","fg-branch-vpn-01.cfg","config","firewall address","set subnet 192.168.0.1 255.255.255.255","none","none","Unclassified"
-    26	"192.168.0.100","cisco","access-sw1-west.cfg","hostname","access-sw1-west","ip address 192.168.0.100 255.255.255.0","none","none","Unclassified"
-    27	"192.168.0.100","cisco","campus-sw-access01.cfg","hostname","campus-sw-access01","network-object host 192.168.0.100","none","none","Unclassified"
-    28	"192.168.1.11","cisco","branch-isr-02.cfg","hostname","branch-isr-02","network-object host 192.168.1.11","none","none","Unclassified"
-    29	"192.168.1.11","fortinet","fg-campus-core.cfg","config","firewall address","set subnet 192.168.1.11 255.255.255.255","none","none","Unclassified"
-    30	"192.168.100.100","cisco","dmz-fw2-backup.cfg","domain-name","global.dmz.example.net","ip address 192.168.100.100 255.255.255.0","none","none","Unclassified"
-    31	"192.168.100.100","fortinet","fg-campus-core.cfg","config","firewall address","set subnet 192.168.100.100 255.255.255.255","none","none","Unclassified"
-    32	"192.168.100.100","fortinet","fg-campus-core.cfg","config","firewall address","set subnet 192.168.100.100 255.255.255.255","none","none","Unclassified"
-    33	"192.168.100.100","fortinet","fg-campus-core.cfg","config","system interface","set ip 192.168.100.100 255.255.255.0","none","none","Unclassified"
-    34	"192.168.2.12","cisco","branch-isr-02.cfg","hostname","branch-isr-02","ip address 192.168.2.12 255.255.255.0","none","none","Unclassified"
-    35	"192.168.2.12","fortinet","fg-branch-vpn-01.cfg","config","firewall address","set subnet 192.168.2.12 255.255.255.255","none","none","Unclassified"
-    36	"192.168.2.12","fortinet","fg-branch-vpn-01.cfg","config","system interface","set ip 192.168.2.12 255.255.255.0","none","none","Unclassified"
-    37	"192.168.2.12","fortinet","fg-campus-core.cfg","config","firewall address","set subnet 192.168.2.12 255.255.255.255","none","none","Unclassified"
-    38	"192.168.2.12","misc","fw1.cfg","network-object","host 10.0.2.3","network-object host 192.168.2.12","none","none","Unclassified"
-    39	"198.51.100.75","cisco","branch-isr-02.cfg","access-list","false","access-list OUTSIDE extended permit ip any host 198.51.100.75","none","none","Unclassified"
-    40	"198.51.100.75","cisco","branch-isr-02.cfg","hostname","branch-isr-02","host 198.51.100.75","none","none","Unclassified"
-    41	"198.51.100.75","cisco","dmz-fw2-backup.cfg","domain-name","global.dmz.example.net","ip address 198.51.100.75 255.255.255.0","none","none","Unclassified"
-    42	"198.51.100.75","fortinet","fg-branch-vpn-01.cfg","config","firewall address","set subnet 198.51.100.75 255.255.255.255","none","none","Unclassified"
-    43	"198.51.100.75","fortinet","fg-branch-vpn-01.cfg","config","system interface","set ip 198.51.100.75 255.255.255.0","none","none","Unclassified"
-    44	"198.51.100.75","misc","fw1.cfg","access-list","false","access-list OUTSIDE extended permit ip any host 198.51.100.75","none","none","Unclassified"
-    45	"198.51.100.75","misc","fw1.cfg","network-object","host 10.0.2.3","network-object host 198.51.100.75","none","none","Unclassified"
-    46	"203.0.113.25","cisco","dmz-fw2-backup.cfg","domain-name","global.dmz.example.net","host 203.0.113.25","none","none","Unclassified"
-    47	"203.0.113.25","cisco","perimeter-fw1.cfg","access-list","false","access-list OUTSIDE extended permit ip any host 203.0.113.25","none","none","Unclassified"
-    48	"203.0.113.25","cisco","perimeter-fw1.cfg","domain-name","edge.dc.example.com","ip address 203.0.113.25 255.255.255.0","none","none","Unclassified"
-    49	"203.0.113.25","fortinet","fg-branch-vpn-01.cfg","config","firewall address","set subnet 203.0.113.25 255.255.255.255","none","none","Unclassified"
-    50	"203.0.113.25","misc","fw1.cfg","access-list","false","access-list OUTSIDE extended permit ip any host 203.0.113.25","none","none","Unclassified"
-    51	"203.0.113.25","misc","fw1.cfg","network-object","host 10.0.2.3","network-object host 203.0.113.25","none","none","Unclassified"
-    52	"203.0.113.25","misc","fw3.cfg","network-object","host 192.168.1.10","network-object host 203.0.113.25","none","none","Unclassified"
-    53	
+     2	"10.0.2.3","cisco","branch-isr-02.cfg","access-list","false","access-list OUTSIDE extended permit ip host 10.0.2.3 any","none","none","Unclassified"
+     3	"10.0.2.3","cisco","branch-isr-02.cfg","hostname","branch-isr-02","ip address 10.0.2.3 255.255.255.0","none","none","Unclassified"
+     4	"10.10.10.10","cisco","access-sw1-west.cfg","hostname","access-sw1-west","network-object host 10.10.10.10","none","none","Unclassified"
+     5	"10.10.10.10","cisco","campus-sw-access01.cfg","hostname","campus-sw-access01","network-object host 10.10.10.10","none","none","Unclassified"
+     6	"10.10.10.10","cisco","dmz-fw2-backup.cfg","domain-name","global.dmz.example.net","ip address 10.10.10.10 255.255.255.0","none","none","Unclassified"
+     7	"10.10.10.10","fortinet","fg-campus-core.cfg","config","firewall address","set subnet 10.10.10.10 255.255.255.255","none","none","Unclassified"
+     8	"10.10.10.10","fortinet","fg-campus-core.cfg","config","system interface","set ip 10.10.10.10 255.255.255.0","none","none","Unclassified"
+     9	"10.10.10.10","fortinet","fg-testing-config.cfg","config","firewall policy","set srcaddr ""10.10.10.10""","none","none","Unclassified"
+    10	"10.10.10.10","misc","fw3.cfg","access-list","false","access-list OUTSIDE extended permit ip host 10.10.10.10 any","none","none","Unclassified"
+    11	"10.10.10.10","misc","fw3.cfg","network-object","host 192.168.1.10","network-object host 10.10.10.10","none","none","Unclassified"
+    12	"172.16.1.6","cisco","branch-isr-02.cfg","access-list","false","access-list OUTSIDE extended permit ip any host 172.16.1.6","none","none","Unclassified"
+    13	"172.16.1.6","cisco","branch-isr-02.cfg","hostname","branch-isr-02","ip address 172.16.1.6 255.255.255.0","none","none","Unclassified"
+    14	"172.18.1.20","cisco","branch-isr-02.cfg","hostname","branch-isr-02","network-object host 172.18.1.20","none","none","Unclassified"
+    15	"192.168.0.1","cisco","access-sw1-west.cfg","hostname","access-sw1-west","ip address 192.168.0.1 255.255.255.0","none","none","Unclassified"
+    16	"192.168.0.1","cisco","campus-sw-access01.cfg","hostname","campus-sw-access01","ip address 192.168.0.1 255.255.255.0","none","none","Unclassified"
+    17	"192.168.0.100","cisco","access-sw1-west.cfg","hostname","access-sw1-west","ip address 192.168.0.100 255.255.255.0","none","none","Unclassified"
+    18	"192.168.0.100","cisco","campus-sw-access01.cfg","hostname","campus-sw-access01","network-object host 192.168.0.100","none","none","Unclassified"
+    19	"192.168.1.11","cisco","branch-isr-02.cfg","hostname","branch-isr-02","network-object host 192.168.1.11","none","none","Unclassified"
+    20	"192.168.2.12","cisco","branch-isr-02.cfg","hostname","branch-isr-02","ip address 192.168.2.12 255.255.255.0","none","none","Unclassified"
+    21	"198.51.100.75","cisco","branch-isr-02.cfg","access-list","false","access-list OUTSIDE extended permit ip any host 198.51.100.75","none","none","Unclassified"
+    22	"198.51.100.75","cisco","branch-isr-02.cfg","hostname","branch-isr-02","host 198.51.100.75","none","none","Unclassified"
+    23	"198.51.100.75","cisco","dmz-fw2-backup.cfg","domain-name","global.dmz.example.net","ip address 198.51.100.75 255.255.255.0","none","none","Unclassified"
+    24	"198.51.100.75","fortinet","fg-branch-vpn-01.cfg","config","firewall address","set subnet 198.51.100.75 255.255.255.255","none","none","Unclassified"
+    25	"198.51.100.75","fortinet","fg-branch-vpn-01.cfg","config","system interface","set ip 198.51.100.75 255.255.255.0","none","none","Unclassified"
+    26	"198.51.100.75","misc","fw1.cfg","access-list","false","access-list OUTSIDE extended permit ip any host 198.51.100.75","none","none","Unclassified"
+    27	"198.51.100.75","misc","fw1.cfg","network-object","host 10.0.2.3","network-object host 198.51.100.75","none","none","Unclassified"
+    28	
 
 Session Summary:
 -------------------------------
-Started at: 2025-05-26 10:36:59
-[INFO] Total runtime: 00:00:10
+Started at: 2025-05-26 15:42:09
+[INFO] Total runtime: 00:00:12
 

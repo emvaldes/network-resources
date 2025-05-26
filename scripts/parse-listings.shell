@@ -85,8 +85,8 @@ function main () {
 
     #### -----------------------------------------------------------------------
     ## Set custom values if not supplied
-    [[ -z ${configs_batch_size:-} ]] && export configs_batch_size=5;
-    [[ -z ${delaying_factor:-} ]] && export delaying_factor="0.01";
+    [[ -z ${configs_batch_size:-} ]] && export configs_batch_size=3;
+    [[ -z ${delaying_factor:-} ]] && export delaying_factor="0.1";
     [[ -z ${target_addresses:-} ]] && export target_addresses="ips.list";
     [[ -z ${target_devices:-} ]] && export target_devices=false;
     [[ -z ${parallel_threads:-} ]] && export parallel_threads=100;
@@ -509,16 +509,33 @@ function main () {
 
     for (( ip_offset=0; ip_offset<total_ips; ip_offset+=ip_batch_size )); do
 
+      superset_index=$(( ip_offset / ip_batch_size + 1 ));
+      superset_total=$((
+        ( total_ips + ip_batch_size - 1 ) / ip_batch_size
+      ));
+
+      range_start_ip="${target_addresses_source[ip_offset]}"
+      range_end_ip="${target_addresses_source[$((
+        ip_offset + ip_batch_size - 1 < total_ips ? ip_offset + ip_batch_size - 1 : total_ips - 1
+      ))]}";
+      percentage_done=$(( 100 * superset_index / superset_total ))
+
+      local processing="$(( ip_offset + 1 )) → $((
+        ( ip_offset + ip_batch_size < total_ips ) ? ip_offset + ip_batch_size : total_ips
+      ))";
+      local completed="${superset_index}/${superset_total} (${percentage_done}%) → ${total_ips}";
+
+      {
+        message "Processing Addresses: [ ${processing} ]";
+        message "Processing IPs Range: [ ${range_start_ip} → ${range_end_ip} ]";
+        newline;
+        message "Progress / Completed: ${completed} IPs";
+        newline;
+      } >> "${actions_logsfile}";
+
       target_listing=(
         "${target_addresses_source[@]:ip_offset:ip_batch_size}"
       ); export target_listing;
-
-      {
-        message "Processing IPs [${total_ips}]: ${ip_offset} -> $((
-          ip_offset + ip_batch_size - 1
-        ))";
-        newline;
-      } >> "${actions_logsfile}";
 
 #### Starting: Batch-Processing - Outer Loop ------------------------------ ####
 
@@ -542,27 +559,37 @@ function main () {
           newline;
           message "Batch processing (outer):";
           message "Batch size: ${configs_batch_size}";
-          newline;
-          message "Parallel threads:   ${parallel_threads}";
-          message "Target IPs (count): ${#target_listing[@]}";
+          # newline;
+          # message "Parallel threads:   ${parallel_threads}";
+          # message "Target IPs (count): ${#target_listing[@]}";
           newline;
         } >> "${actions_logsfile}";
       fi;
 
       ## Outter Batching (For-loop)
+      local outer_index=0;
+      local outer_batches=${#site_folders[@]};
+
       for site in "${site_folders[@]}"; do
+        outer_index=$(( outer_index + 1 ));
 
         #### -------------------------------------------------------------------
         mapfile -t site_files < <(
           printf '%s\n' "${configs_list_cache[@]}" | grep -F "/${site}/"
         );
-        total_files=${#site_files[@]};
+
+        local total_files=${#site_files[@]};
+        local inner_batches=$((
+          ( total_files + configs_batch_size - 1 ) / configs_batch_size
+        ));
 
         #### -------------------------------------------------------------------
         if [[ "${verbose}" == true ]]; then
           {
-            message "Target Site:   ${site}";
-            message "Total Configs: ${total_files}";
+            message "Location Name:  ${site}";
+            message "Location Index: ${outer_index}/${outer_batches}";
+            newline;
+            message "Total Configs:  ${total_files}";
             newline;
             for file in "${site_files[@]}"; do
               message "  - $( relative_configpath ${file} )";
@@ -596,8 +623,12 @@ function main () {
 #### Starting: Batch-Processing - Inner Loop ------------------------------ ####
 
         ## Inner Batching (While-loop)
-        offset=0;
+        local offset=0;
+        local inner_index=0;
+
         while [[ "${offset}" -lt "${total_files}" ]]; do
+          inner_index=$(( inner_index + 1 ));
+
           export batch_id="$(
             printf '%s-%s' "$( date +%s%N )" "${RANDOM}" | \
             base64 | \
@@ -606,13 +637,16 @@ function main () {
           )";
 
           #### -----------------------------------------------------------------
+
           batch_slice=( "${site_files[@]:offset:configs_batch_size}" );
           batch_suffix="$( date +%s )-${RANDOM}";
           batch_configs_list="configs--${batch_id}-${batch_suffix}.list";
+
           BATCH_CONFIGS="${TMP_DIR}/${batch_configs_list}";
           export BATCH_CONFIGS;
           touch "${BATCH_CONFIGS}";
           printf '%s\n' "${batch_slice[@]}" > "${BATCH_CONFIGS}";
+
           range_first=$(( offset+1 ));
           range_last=$(( offset + ${#batch_slice[@]} ));
 
@@ -622,7 +656,7 @@ function main () {
               message "Batch processing (inner):";
               message "Batch ID: ${batch_id}";
               newline;
-              message "Batch offset:   ${offset}";
+              message "Batch Index:    ${inner_index}/${inner_batches}";
               message "Batch Suffix:   ${batch_suffix}";
               message "Batch FileName: ${batch_configs_list}";
               message "Batch Configs:  ${BATCH_CONFIGS}";
@@ -662,10 +696,10 @@ function main () {
             if [[ "${#discarded_ips[@]}" -gt 0 ]]; then
               {
                 message "Unmapped IPs (count): ${#discarded_ips[@]}";
-                newline;
-                for ip in "${discarded_ips[@]}"; do
-                  message "  - ${ip}";
-                done;
+                # newline;
+                # for ip in "${discarded_ips[@]}"; do
+                #   message "  - ${ip}";
+                # done;
                 newline;
               } >> "${actions_logsfile}";
             fi;

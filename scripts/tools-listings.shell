@@ -393,7 +393,8 @@ function matching_configs () {
           ip="${targets_jobs2ips_mapping[$pid]}";
           config_raw="${ip2files[$ip]:-none}";
           config_cleaned="$(
-            sed "s|${configs_dirpath}/${site}/||g" <<< "${config_raw}"
+            sed "s|${configs_dirpath}/${site}/||g" <<< "${config_raw}" | \
+            tr ':' ' : '
           )";
           printf "%-6s | %-15s => %s\n" "$pid" "$ip" "$config_cleaned";
         done;
