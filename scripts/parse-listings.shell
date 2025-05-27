@@ -18,7 +18,7 @@
 ## > ./run.log 2>&1 &
 
 set -euo pipefail  ## Strict mode: exit on error, undefined var use, and pipeline failure
-# set -x;          ## Enable for execution tracing/debugging
+set -x;          ## Enable for execution tracing/debugging
 
 ## POSIX locale standard
 export LC_ALL=C   ## Ensure consistent sorting and character handling (POSIX-compliant)
@@ -455,13 +455,13 @@ function main () {
     #### -----------------------------------------------------------------------
     if [[ ${target_devices} == false ]]; then
             ## If no devices filter is set, use all available devices
-            $( which bash ) ./scripts/network-configs.shell \
+            $( which bash ) -x ./scripts/network-configs.shell \
                             --ips-list=ips.list \
                             --location="${configs_dirpath}" \
                             --output=${extracted_resources} \
                             --verbose ;
       else  ## If devices filter is set, use the provided device list
-            $( which bash ) ./scripts/network-configs.shell \
+            $( which bash ) -x ./scripts/network-configs.shell \
                             --ips-list=ips.list \
                             --search="$(
                                 IFS=','; echo -en "${target_devices_source[*]}"
