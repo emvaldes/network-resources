@@ -120,6 +120,85 @@
           "group": "Unclassified"
         }
       ]
+    },
+    {
+      "site": "cisco",
+      "device": "branch-fw-03.cfg",
+      "objects": [
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/0",
+          "partner": false,
+          "description": "ISP Link",
+          "items": [
+            "ip address 198.51.100.75 255.255.255.0"
+          ],
+          "sets": {
+            "security-level": 1,
+            "ip": 1,
+            "nameif": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Hydra-Edge",
+          "partner": "Hydra-Edge",
+          "description": "Remote site uplink",
+          "items": [
+            "network-object host 198.51.100.75"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network Hydra-Link",
+          "partner": "Hydra-Link",
+          "description": "Public NAT IP",
+          "items": [
+            "host 198.51.100.75"
+          ],
+          "sets": {
+            "host": 1
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
+      "device": "core-fw-dmz-01.cfg",
+      "objects": [
+        {
+          "object": "object",
+          "type": "network Gotham-VPN",
+          "partner": "Gotham-VPN",
+          "description": "Encrypted edge gateway",
+          "items": [
+            "host 198.51.100.75"
+          ],
+          "sets": {
+            "host": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Wayne-DMZ",
+          "partner": "Wayne-DMZ",
+          "description": "External public resources",
+          "items": [
+            "network-object host 198.51.100.75"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        }
+      ]
     }
   ]
 }
