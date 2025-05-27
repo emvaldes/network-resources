@@ -6,31 +6,28 @@
       "device": "branch-isr-02.cfg",
       "objects": [
         {
-          "object": "hostname",
-          "type": "branch-isr-02",
-          "partner": false,
-          "description": false,
+          "object": "object-group",
+          "type": "network Hydra-Edge",
+          "partner": "Hydra-Edge",
+          "description": "Remote site uplink",
           "items": [
-            "host 198.51.100.75",
             "network-object host 198.51.100.75"
           ],
           "sets": {
-            "ip": 3,
-            "network-object": 4,
-            "host": 3
+            "network-object": 2
           },
           "group": "Unclassified"
         },
         {
-          "object": "access-list",
-          "type": "false",
-          "partner": false,
-          "description": false,
+          "object": "object",
+          "type": "network Hydra-Link",
+          "partner": "Hydra-Link",
+          "description": "Branch NAT egress",
           "items": [
-            "access-list OUTSIDE extended permit ip any host 198.51.100.75"
+            "host 198.51.100.75"
           ],
           "sets": {
-            "access-list": 1
+            "host": 1
           },
           "group": "Unclassified"
         }
@@ -41,17 +38,16 @@
       "device": "dmz-fw2-backup.cfg",
       "objects": [
         {
-          "object": "domain-name",
-          "type": "global.dmz.example.net",
+          "object": "interface",
+          "type": "GigabitEthernet0/2",
           "partner": false,
-          "description": false,
+          "description": "Outbound Internet NAT interface",
           "items": [
             "ip address 198.51.100.75 255.255.255.0"
           ],
           "sets": {
-            "ip": 3,
-            "network-object": 3,
-            "host": 3
+            "ip": 1,
+            "nameif": 1
           },
           "group": "Unclassified"
         }
@@ -98,30 +94,28 @@
       "device": "fw1.cfg",
       "objects": [
         {
-          "object": "access-list",
-          "type": "false",
-          "partner": false,
-          "description": false,
+          "object": "object",
+          "type": "network External-Failover",
+          "partner": "External-Failover",
+          "description": "Secondary outbound route for edge",
           "items": [
-            "access-list OUTSIDE extended permit ip any host 198.51.100.75"
+            "host 198.51.100.75"
           ],
           "sets": {
-            "access-list": 1
+            "host": 1
           },
           "group": "Unclassified"
         },
         {
-          "object": "network-object",
-          "type": "host 10.0.2.3",
-          "partner": false,
-          "description": false,
+          "object": "object-group",
+          "type": "network Krypton-Cloud",
+          "partner": "Krypton-Cloud",
+          "description": "Cloud-facing external nodes",
           "items": [
-            "network-object host 198.51.100.75",
-            "host 198.51.100.75"
+            "network-object host 198.51.100.75"
           ],
           "sets": {
-            "network-object": 5,
-            "host": 3
+            "network-object": 2
           },
           "group": "Unclassified"
         }

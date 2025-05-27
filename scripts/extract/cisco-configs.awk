@@ -19,49 +19,64 @@
 ## -------------------------------------------------------------------------- ##
 
 BEGIN {
-  # Determine delimiter: default to comma if not provided
   delim = (divisor == "") ? "," : divisor;
-
-  # Split target list into array
   split(targets, iplist, delim);
 
-  # Initialize parsing state
-  in_block = 0;
-  match_found = 0;
   block = "";
   block_has_match = 0;
-  headers = "";
-  collected_blocks = "";
-}
-
-/^(ASA Version|hostname|domain-name|#)/ {
-  headers = headers $0 "\n";
-  next;
+  inside_block = 0;
+  collected = "";
 }
 
 /^$/ { next; }
+/^[[:space:]]*!$/ { next; }
 
-/^[[:space:]]*[^[:space:]]/ {
-  if (in_block && block_has_match) {
-    collected_blocks = collected_blocks block "\n";
-    match_found = 1;
+# Always keep header-style or comment lines (even if outside block)
+/^(ASA Version|version|hostname|domain-name|#)/ {
+  if (collected != "") {
+    collected = collected $0 "\n";
+  } else {
+    collected = $0 "\n";
   }
-  in_block = 1;
-  block_has_match = 0;
-  block = $0 "\n";
 
-  for (i in iplist) {
-    if (iplist[i] == "") continue;
-    if ($0 ~ ("(^|[^0-9])" iplist[i] "($|[^0-9])")) {
-      block_has_match = 1;
-      break;
+  # Track last seen header
+  last_header = $0;
+  next;
+}
+
+/^[^[:space:]]/ {
+  # Inject newline after the last header (once)
+  if (last_header != "" && !injected_newline) {
+    collected = collected "\n";
+    injected_newline = 1;
+  }
+
+  if (inside_block && block_has_match) {
+    collected = collected block "\n";
+  }
+
+  block = $0 "\n";
+  block_has_match = 0;
+  inside_block = 1;
+  next;
+}
+
+# End current block when encountering '!'
+/^[[:space:]]*!$/ {
+  if (inside_block) {
+    if (block_has_match) {
+      collected = collected block "\n";
     }
+    block = "";
+    block_has_match = 0;
+    inside_block = 0;
   }
   next;
 }
 
-{
-  if (in_block) {
+# Any indented line belonging to current block
+/^[[:space:]]+/ {
+  if (inside_block) {
     block = block $0 "\n";
     for (i in iplist) {
       if (iplist[i] == "") continue;
@@ -74,12 +89,11 @@ BEGIN {
 }
 
 END {
-  if (in_block && block_has_match) {
-    collected_blocks = collected_blocks block "\n";
-    match_found = 1;
+  if (inside_block && block_has_match) {
+    collected = collected block "\n";
   }
-  if (match_found) {
-    printf "%s\n%s", headers, collected_blocks;
+  if (collected != "") {
+    printf "%s", collected;
   }
 }
 

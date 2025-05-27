@@ -6,18 +6,28 @@
       "device": "branch-isr-02.cfg",
       "objects": [
         {
-          "object": "hostname",
-          "type": "branch-isr-02",
+          "object": "interface",
+          "type": "GigabitEthernet0/0/1",
           "partner": false,
-          "description": false,
+          "description": "Workstation LAN",
           "items": [
-            "ip address 192.168.2.12 255.255.255.0",
+            "ip address 192.168.2.12 255.255.255.0"
+          ],
+          "sets": {
+            "ip": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Hydra-Edge",
+          "partner": "Hydra-Edge",
+          "description": "Remote site uplink",
+          "items": [
             "network-object host 192.168.2.12"
           ],
           "sets": {
-            "ip": 3,
-            "network-object": 4,
-            "host": 3
+            "network-object": 2
           },
           "group": "Unclassified"
         }

@@ -6,17 +6,28 @@
       "device": "access-sw1-west.cfg",
       "objects": [
         {
-          "object": "hostname",
-          "type": "access-sw1-west",
-          "partner": false,
-          "description": false,
+          "object": "object-group",
+          "type": "network MGMT-ACCESS",
+          "partner": "MGMT-ACCESS",
+          "description": "Management objects",
           "items": [
-            "network-object host 10.10.10.10",
             "network-object host 10.10.10.10"
           ],
           "sets": {
-            "ip": 2,
-            "network-object": 4
+            "network-object": 3
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Mutant-WiFi",
+          "partner": "Mutant-WiFi",
+          "description": "Controlled guest devices",
+          "items": [
+            "network-object host 10.10.10.10"
+          ],
+          "sets": {
+            "network-object": 1
           },
           "group": "Unclassified"
         }
@@ -27,15 +38,14 @@
       "device": "campus-sw-access01.cfg",
       "objects": [
         {
-          "object": "hostname",
-          "type": "campus-sw-access01",
-          "partner": false,
-          "description": false,
+          "object": "object-group",
+          "type": "network Floor-Networks",
+          "partner": "Floor-Networks",
+          "description": "End-user and service devices",
           "items": [
             "network-object host 10.10.10.10"
           ],
           "sets": {
-            "ip": 1,
             "network-object": 3
           },
           "group": "Unclassified"
@@ -47,19 +57,42 @@
       "device": "dmz-fw2-backup.cfg",
       "objects": [
         {
-          "object": "domain-name",
-          "type": "global.dmz.example.net",
+          "object": "interface",
+          "type": "GigabitEthernet0/0",
           "partner": false,
-          "description": false,
+          "description": "Guest access interface",
           "items": [
-            "ip address 10.10.10.10 255.255.255.0",
-            "host 10.10.10.10",
+            "ip address 10.10.10.10 255.255.255.0"
+          ],
+          "sets": {
+            "ip": 1,
+            "nameif": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Sector-Wireless",
+          "partner": "Sector-Wireless",
+          "description": "Staff WiFi clients",
+          "items": [
             "network-object host 10.10.10.10"
           ],
           "sets": {
-            "ip": 3,
-            "network-object": 3,
-            "host": 3
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network Shield-WiFi-Alias",
+          "partner": "Shield-WiFi-Alias",
+          "description": "Guest NAT",
+          "items": [
+            "host 10.10.10.10"
+          ],
+          "sets": {
+            "host": 1
           },
           "group": "Unclassified"
         }
@@ -127,32 +160,28 @@
       "device": "fw3.cfg",
       "objects": [
         {
-          "object": "access-list",
-          "type": "false",
-          "partner": false,
-          "description": false,
+          "object": "object-group",
+          "type": "network Shield-WiFi",
+          "partner": "Shield-WiFi",
+          "description": "Shield-controlled wireless network",
           "items": [
-            "access-list OUTSIDE extended permit ip host 10.10.10.10 any"
+            "network-object host 10.10.10.10"
           ],
           "sets": {
-            "access-list": 1
+            "network-object": 2
           },
           "group": "Unclassified"
         },
         {
-          "object": "network-object",
-          "type": "host 192.168.1.10",
-          "partner": false,
-          "description": false,
+          "object": "object",
+          "type": "network Shield-WiFi-Alias",
+          "partner": "Shield-WiFi-Alias",
+          "description": "Guest NAT",
           "items": [
-            "network-object host 10.10.10.10",
-            "network-object host 10.10.10.10",
-            "network-object host 10.10.10.10",
             "host 10.10.10.10"
           ],
           "sets": {
-            "network-object": 6,
-            "host": 3
+            "host": 1
           },
           "group": "Unclassified"
         }
