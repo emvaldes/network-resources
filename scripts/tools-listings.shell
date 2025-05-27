@@ -309,8 +309,8 @@ function matching_configs () {
       message "[PARAMETER] source_configs_list:\n   $(
         printf '%*s' "${#input_parameter}"
       )${source_configs_list}";
+      # newline;
       # print_file "${source_configs_list}";
-      newline;
     } >> "${actions_logsfile}";
 
     # Build IP lookup set and output map
@@ -354,8 +354,26 @@ function matching_configs () {
       done | sort -u;
     } > "${source_configs_list}"
 
+    if [[ "${debug}" == true ]]; then
+      {
+        newline;
+        message "[INFO] Filtered Target IPs: ${#target_listing[@]} found";
+        newline;
+        for ip in "${target_listing[@]}"; do
+          message "[INFO] Filtered Target IP: ${ip}" >> "${actions_logsfile}";
+        done;
+        if (( ${#target_listing[@]} == 0 )); then
+          message "[WARN] No matching IPs found in configs for targets.";
+          return 1;  ## Exit early if no matches
+        fi;
+        newline;
+        print_file "${source_configs_list}";
+      } >> "${actions_logsfile}";
+    fi;
+
     ## Iterate over filtered and cleaned target IP addresses
     for ip_addr in "${target_listing[@]}"; do
+
       target_file="${targets_location}/${ip_addr}.json";
 
       site_name="$(
@@ -380,6 +398,7 @@ function matching_configs () {
       job_pid=$!;
       targets_jobs_pid+=( "${job_pid}" );
       targets_jobs2ips_mapping["${job_pid}"]="${ip_addr}";
+
     done;
 
     #### -----------------------------------------------------------------------
@@ -390,13 +409,13 @@ function matching_configs () {
         message "PID    | IP Address      => Config(s)";
         message "-------------------------------------";
         for pid in "${!targets_jobs2ips_mapping[@]}"; do
-          ip="${targets_jobs2ips_mapping[$pid]}";
-          config_raw="${ip2files[$ip]:-none}";
+          ip="${targets_jobs2ips_mapping[${pid}]}";
+          config_raw="${ip2files[${ip}]:-none}";
           config_cleaned="$(
             sed "s|${configs_dirpath}/${site}/||g" <<< "${config_raw}" | \
-            tr ':' ' : '
+            sed 's/:/ + /g'
           )";
-          printf "%-6s | %-15s => %s\n" "$pid" "$ip" "$config_cleaned";
+          printf "%-6s | %-15s => %s\n" "${pid}" "${ip}" "${config_cleaned}";
         done;
         newline;
       } >> "${actions_logsfile}";
