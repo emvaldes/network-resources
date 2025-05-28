@@ -3,6 +3,53 @@
   "configs": [
     {
       "site": "cisco",
+      "device": "branch-fw-03.cfg",
+      "objects": [
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/0",
+          "partner": false,
+          "description": "ISP Link",
+          "items": [
+            "ip address 198.51.100.75 255.255.255.0"
+          ],
+          "sets": {
+            "security-level": 1,
+            "ip": 1,
+            "nameif": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Hydra-Edge",
+          "partner": "Hydra-Edge",
+          "description": "Remote site uplink",
+          "items": [
+            "network-object host 198.51.100.75"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network Hydra-Link",
+          "partner": "Hydra-Link",
+          "description": "Public NAT IP",
+          "items": [
+            "host 198.51.100.75"
+          ],
+          "sets": {
+            "host": 1
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
       "device": "branch-isr-02.cfg",
       "objects": [
         {
@@ -35,6 +82,38 @@
     },
     {
       "site": "cisco",
+      "device": "core-fw-dmz-01.cfg",
+      "objects": [
+        {
+          "object": "object",
+          "type": "network Gotham-VPN",
+          "partner": "Gotham-VPN",
+          "description": "Encrypted edge gateway",
+          "items": [
+            "host 198.51.100.75"
+          ],
+          "sets": {
+            "host": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Wayne-DMZ",
+          "partner": "Wayne-DMZ",
+          "description": "External public resources",
+          "items": [
+            "network-object host 198.51.100.75"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
       "device": "dmz-fw2-backup.cfg",
       "objects": [
         {
@@ -48,74 +127,6 @@
           "sets": {
             "ip": 1,
             "nameif": 1
-          },
-          "group": "Unclassified"
-        }
-      ]
-    },
-    {
-      "site": "fortinet",
-      "device": "fg-branch-vpn-01.cfg",
-      "objects": [
-        {
-          "object": "config",
-          "type": "firewall address",
-          "partner": false,
-          "description": false,
-          "items": [
-            "set subnet 198.51.100.75 255.255.255.255"
-          ],
-          "sets": {
-            "edit": 2,
-            "next": 2,
-            "set": 4
-          },
-          "group": "Unclassified"
-        },
-        {
-          "object": "config",
-          "type": "system interface",
-          "partner": false,
-          "description": false,
-          "items": [
-            "set ip 198.51.100.75 255.255.255.0"
-          ],
-          "sets": {
-            "edit": 2,
-            "next": 2,
-            "set": 4
-          },
-          "group": "Unclassified"
-        }
-      ]
-    },
-    {
-      "site": "misc",
-      "device": "fw1.cfg",
-      "objects": [
-        {
-          "object": "object",
-          "type": "network External-Failover",
-          "partner": "External-Failover",
-          "description": "Secondary outbound route for edge",
-          "items": [
-            "host 198.51.100.75"
-          ],
-          "sets": {
-            "host": 1
-          },
-          "group": "Unclassified"
-        },
-        {
-          "object": "object-group",
-          "type": "network Krypton-Cloud",
-          "partner": "Krypton-Cloud",
-          "description": "Cloud-facing external nodes",
-          "items": [
-            "network-object host 198.51.100.75"
-          ],
-          "sets": {
-            "network-object": 2
           },
           "group": "Unclassified"
         }
