@@ -66,7 +66,7 @@ function generate_objects () {
       local objs_json="[]";
       if (( ${#objects[@]} > 0 )); then
         objs_json="$(
-          jq --slurp . <<< "${objects[*]}"
+          jq -s . <<< "${objects[*]}"
         )";
       fi;
 
@@ -88,7 +88,7 @@ function generate_objects () {
     ## Final output JSON structure
     local cfgs_json="[]";
     if (( ${#configs[@]} > 0 )); then
-      cfgs_json="$( jq --slurp . <<< "${configs[*]}" )";
+      cfgs_json="$( jq -s . <<< "${configs[*]}" )";
     fi;
     jq -n --arg ip "${ip_address}" \
           --argjson cfgs "${cfgs_json}" \

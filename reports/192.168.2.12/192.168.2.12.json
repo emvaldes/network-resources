@@ -3,6 +3,38 @@
   "configs": [
     {
       "site": "cisco",
+      "device": "branch-isr-02.cfg",
+      "objects": [
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/0/1",
+          "partner": false,
+          "description": "Workstation LAN",
+          "items": [
+            "ip address 192.168.2.12 255.255.255.0"
+          ],
+          "sets": {
+            "ip": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network Hydra-Edge",
+          "partner": "Hydra-Edge",
+          "description": "Remote site uplink",
+          "items": [
+            "network-object host 192.168.2.12"
+          ],
+          "sets": {
+            "network-object": 2
+          },
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
       "device": "branch-fw-03.cfg",
       "objects": [
         {
@@ -76,25 +108,6 @@
           ],
           "sets": {
             "host": 1
-          },
-          "group": "Unclassified"
-        }
-      ]
-    },
-    {
-      "site": "cisco",
-      "device": "branch-isr-02.cfg",
-      "objects": [
-        {
-          "object": "object-group",
-          "type": "network Hydra-Edge",
-          "partner": "Hydra-Edge",
-          "description": "Remote site uplink",
-          "items": [
-            "network-object host 192.168.2.12"
-          ],
-          "sets": {
-            "network-object": 2
           },
           "group": "Unclassified"
         }

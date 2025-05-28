@@ -40,13 +40,10 @@ readonly __TOOLS_EXTRACTION_SOURCED=1;
 
 function extract_configs () {
 
-    local config_file="${1}";
-    local target_pattern="${2}";
-    local target_listing="${3}";
-    local json_output="${4}";
-
-    ## Recording the generated_configslist actions
-    local target_logfile="${5:-${TMP_DIR:-/tmp}/extract_configs--${ip_addr}.log}";
+    local config_file="$1";
+    local target_pattern="$2";
+    local target_listing="$3";
+    local json_output="$4";
 
     # local target_object="${TMP_DIR}/$(basename "${config_file}").objects"
 
@@ -56,104 +53,6 @@ function extract_configs () {
       error "[extract_configs] Config file not found: ${config_file}";
       return 1;
     fi;
-
-    # #### -----------------------------------------------------------------------
-    # ## Check if config file exists or is empty
-    # if [[ "${verbose}" == true ]]; then
-    #   {
-    #     # message "[extract_configs] Processing file:  ${config_file:-/dev/null}";
-    #     # message "[extract_configs] Target Listing:   ${target_listing:-/dev/null}";
-    #     if [[ ! -s "${config_file}" ]]; then
-    #       message "Warning: Configuration file '${config_file}' is missing or empty!";
-    #     fi;
-    #     # newline;
-    #   } >> "${target_logfile:-/dev/null}";
-    # fi;
-
-    # #### -----------------------------------------------------------------------
-    # ## Read and sanitize config file into array
-    # mapfile -t config_rawdata < <(
-    #   sed '/^\s*$/d;/^\s*!.*$/d' < "${config_file}"
-    # );
-
-    # #### -----------------------------------------------------------------------
-    # ## Extract first 6 lines as metadata
-    # local metadata_header="$(
-    #   printf '%s\n' "${config_rawdata[@]:0:7}"
-    # )";
-
-    # #### -----------------------------------------------------------------------
-    # ## Remove metadata from config
-    # sanitized_content=( "${config_rawdata[@]:7}" );
-
-    # #### -----------------------------------------------------------------------
-    # if [[ "${verbose}" == true ]]; then
-    #   {
-    #     message "[extract_configs] Metadata Header:";
-    #     message "${metadata_header}";
-    #     newline;
-    #     message "Sanitized Content [${config_file}]:";
-    #     for line in "${sanitized_content[@]}"; do
-    #       message "${line}";
-    #     done;
-    #     newline;
-    #   } >> "${target_logfile:-/dev/null}";
-    # fi;
-
-    # #### -----------------------------------------------------------------------
-    # ## Derive site/device/ext from config path
-    # local cfg_path="${config_file}";
-    # message "[extract_configs] Config Path: ${cfg_path}";
-    # local rel_path="${cfg_path#${configs_dirpath}/}";  ## e.g., cisco/fw1.cfg
-    # message "[extract_configs] Relative Path: ${rel_path}";
-    # local site="${rel_path%%/*}";                      ## -> cisco
-    # message "[extract_configs] Site: ${site}";
-    # local device_filename="${rel_path#*/}";            ## -> fw1.cfg
-    # message "[extract_configs] Device Filename: ${device_filename}";
-    # local extension="${device_filename##*.}";          ## -> cfg
-    # message "[extract_configs] Extension: ${extension}";
-
-    # ## Construct output path: ./reports/<ip>/<site>/<device>.<ext>
-    # local objects_dir="${reports_folder}/${target_address}/${site}";
-    # local objects_file="${objects_dir}/${device_filename}";
-
-    # #### -----------------------------------------------------------------------
-    # mkdir -p "${objects_dir}" 2>/dev/null || true;
-
-    # $( which bash ) -x ./scripts/network-configs.shell \
-    #                 --ips-list="${target_pattern}" \
-    #                 --config="${config_file}" \
-    #                 --output="${objects_file}" \
-    # ;
-
-    # #### -----------------------------------------------------------------------
-    # if [[ "${verbose}" == true ]]; then
-    #   {
-    #     message "[extract_configs] Extracted config into: ${objects_file}";
-    #     ls -al "${objects_file}" || true;
-    #   } >> "${target_logfile:-/dev/null}";
-    # fi;
-
-    # # #### -----------------------------------------------------------------------
-    # # ## Load extracted config from disk into matched_objects
-    # # mapfile -t __matched_objects__ < "${objects_file}";
-
-    # # if [[ "${#__matched_objects__[@]}" -eq 0 ]]; then
-    # #   if [[ "${verbose}" == true ]]; then
-    # #     {
-    # #       message "[extract_configs] No configuration lines loaded from: ${objects_file}";
-    # #     } >> "${target_logfile:-/dev/null}";
-    # #   fi;
-    # # fi;
-
-    # # if [[ "${verbose}" == true ]]; then
-    # #   {
-    # #     message "[extract_configs] Loaded ${#__matched_objects__[@]} lines from: ${objects_file}";
-    # #     for i in "${!__matched_objects__[@]}"; do
-    # #       message "|---> Line [${i}]: ${__matched_objects__[$i]}";
-    # #     done; newline;
-    # #   } >> "${target_logfile:-/dev/null}";
-    # # fi;
 
     #### -----------------------------------------------------------------------
     ## [INSERT HERE] Check if config is readable and has content
@@ -202,7 +101,7 @@ function extract_configs () {
       printf '%s\0' "${restored_lines}"
     );
 
-    if [[ "${verbose}" == true ]]; then
+    if [[ "${debug}" == true ]]; then
       message "Loaded ${#config_objects[@]} config blocks";
       # for i in "${!config_objects[@]}"; do
       #   message "|---> Block [${i}]\n${config_objects[$i]}";
@@ -227,21 +126,16 @@ function extract_configs () {
 
     IFS="${oIFS}";
 
-    if [[ "${verbose}" == true ]]; then
+    if [[ "${debug}" == true ]]; then
       message "Loaded ${#matched_objects[@]} config blocks";
       # for i in "${!matched_objects[@]}"; do
       #   message "|---> Block [$i]\n${matched_objects[$i]}"
       # done; newline;
     fi;
 
-#### Marked for removal (end-block)
-
-    #### -----------------------------------------------------------------------
-    local process_configs__logfile="${TMP_DIR}/process_configs.logs";
-    :> "${process_configs__logfile}";
-
     #### -----------------------------------------------------------------------
     ## Deserializing matched_objects:
+    # declare -a restored_block=();
     for serialized_line in "${matched_objects[@]}"; do
       [[ "${verbose}" == true ]] && \
          message "Serialized Line: ${serialized_line[@]}";
@@ -274,7 +168,7 @@ function extract_configs () {
         fi;
       fi;
 
-      mkdir -p "${objects_dir}" 2>/dev/null || true;
+      mkdir -p "${objects_dir}";
       {
         message "${restored_block}";
         message "!";
@@ -288,11 +182,10 @@ function extract_configs () {
       process_configs "${target_pattern}" \
                       "${config_file}" \
                       "${restored_block}" \
-                      "${process_configs__logfile}" \
       ;
 
       if [[ -n "${target_object:-}" ]]; then
-        if [[ "${verbose}" == true ]]; then
+        if [[ "${debug}" == true ]]; then
           message "|-----> Target Objects: ${target_object}";
         fi;
       fi;
@@ -302,7 +195,7 @@ function extract_configs () {
       if [[ -n "${target_object}" ]]; then
         wrapped_block="$(
           printf '%s\n' "${target_object}" | \
-          jq --slurp \
+          jq -s \
             --arg site "${config_file%/*}" \
             --arg device "${config_file##*/}" \
             '{
@@ -373,9 +266,6 @@ function process_configs () {
     local target_pattern="$1";
     local config_path="$2";
     local restored_block="$3";
-
-    ## Recording the generated_configslist actions
-    local target_logfile="${4:-${TMP_DIR:-/tmp}/process_configs--${ip_addr}.log}";
 
     #### -----------------------------------------------------------------------
     ## Sanitize and validate non-empty block
@@ -470,7 +360,7 @@ function process_configs () {
     local matched_items_json="$(
       printf '%s\n' "${matched_items[@]}" | \
       jq -R . | \
-      jq --slurp .
+      jq -s .
     )";
 
     #### -----------------------------------------------------------------------
@@ -514,9 +404,7 @@ function process_configs () {
     ## -----------------------------------------------------------------------
     ## Convert Bash array data_sets[] to JSON-safe array string
     local items_2json="$(
-      printf '%s\n' "${data_sets[@]}" | \
-      jq -R . | \
-      jq --slurp .
+      printf '%s\n' "${data_sets[@]}" | jq -R . | jq -s .
     )";
 
     #### -----------------------------------------------------------------------
@@ -538,7 +426,7 @@ function process_configs () {
     local sets_json="$(
       for k in "${!sets_map[@]}"; do
         printf '{ "key": "%s", "val": %d }\n' "$k" "${sets_map[$k]}"
-      done | jq --slurp 'map({(.key): .val}) | add'
+      done | jq -s 'map({(.key): .val}) | add'
     )";
 
     #### -----------------------------------------------------------------------

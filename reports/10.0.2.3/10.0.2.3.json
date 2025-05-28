@@ -1,0 +1,37 @@
+{
+  "target": "10.0.2.3",
+  "configs": [
+    {
+      "site": "cisco",
+      "device": "branch-isr-02.cfg",
+      "objects": [
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/0/2",
+          "partner": false,
+          "description": "Dev VLAN",
+          "items": [
+            "ip address 10.0.2.3 255.255.255.0"
+          ],
+          "sets": {
+            "ip": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network Panther-Gateway",
+          "partner": "Panther-Gateway",
+          "description": "Secure outbound concentrator",
+          "items": [
+            "host 10.0.2.3"
+          ],
+          "sets": {
+            "host": 1
+          },
+          "group": "Unclassified"
+        }
+      ]
+    }
+  ]
+}

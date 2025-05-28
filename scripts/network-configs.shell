@@ -39,7 +39,7 @@
 ## -------------------------------------------------------------------------- ##
 
 set -euo pipefail  ## Strict mode: exit on error, undefined var use, and pipeline failure
-# set -x;          ## Enable for execution tracing/debugging
+set -x;          ## Enable for execution tracing/debugging
 
 ## POSIX locale standard
 export LC_ALL=C   ## Ensure consistent sorting and character handling (POSIX-compliant)
@@ -304,7 +304,7 @@ function main () {
       else  {
               message "Project Target IPs-listing file not found!";
               message "${target_addresses}";
-            } ## >> "${actions_logfile:-/dev/null}";
+            } ## >> "${actions_logsfile}";
     fi;
 
     #### -----------------------------------------------------------------------
@@ -315,7 +315,7 @@ function main () {
         for ip in "${target_addresses_source[@]}"; do
           message "  - ${ip}";
         done; newline;
-      } ## >> "${actions_logfile:-/dev/null}";
+      } ## >> "${actions_logsfile}";
     fi;
 
     #### -----------------------------------------------------------------------
@@ -333,7 +333,7 @@ function main () {
       {
         message "Search Pattern: [ ${target_addresses} ]";
         newline;
-      } ## >> "${actions_logfile:-/dev/null}";
+      } ## >> "${actions_logsfile}";
     fi;
 
     #### -----------------------------------------------------------------------
@@ -408,7 +408,7 @@ function main () {
                     message "  - ${item}";
                   done;
                   newline;
-                } ## >> "${actions_logfile:-/dev/null}";
+                } ## >> "${actions_logsfile}";
               fi;
         else  warning "No matches for search pattern '${target_addresses}' in ${search_location:-search scope}";
               newline;
@@ -459,52 +459,28 @@ function main () {
       if [[ "${verbose}" == true ]]; then
         {
           message "Parsing [ ${target_platform} ] configs (by: ${action_class}): ";
-        } ## >> "${actions_logfile:-/dev/null}";
+        } ## >> "${actions_logsfile}";
       fi;
 
       #### -----------------------------------------------------------------------
-      # if [[ -n "${output_config:-}" ]]; then
-      #         base_output="${output_config%/}";
-      #         ## Strip the leading source directory path (e.g., "configs/") from the full config path
-      #         ## to replicate only the internal structure (e.g., "cisco/fw1.cfg") under the output directory.
-      #         rel_path="${target_config#${search_location%/}/}";
-      #         target_output="${base_output}/${rel_path}";
-      #   else  config_filename="$(
-      #           basename "${target_config}"
-      #         )";
-      #         target_output="$( pwd )/${target_platform}--${config_filename}";
-      # fi;
-
-if [[ -n "${output_config:-}" ]]; then
-  if [[ -d "${output_config}" ]]; then
-    # output_config is a directory → replicate internal structure
-    base_output="${output_config%/}"
-    if [[ -n "${search_location:-}" && "${search_location}" != false ]]; then
-      rel_path="${target_config#${search_location%/}/}"
-    else
-      rel_path="$( basename "${target_config}" )"
-    fi
-    target_output="${base_output}/${rel_path}"
-  else
-    # output_config is a file → use it directly
-    target_output="${output_config}"
-  fi
-
-  dir="$( dirname "${target_output}" )"
-  mkdir -p "${dir}" || {
-    warning "Failed to create directory: ${dir}" >&2
-    newline
-    exit 9
-  }
-  : > "${target_output}"
-fi
+      if [[ -n "${output_config:-}" ]]; then
+              base_output="${output_config%/}";
+              ## Strip the leading source directory path (e.g., "configs/") from the full config path
+              ## to replicate only the internal structure (e.g., "cisco/fw1.cfg") under the output directory.
+              rel_path="${target_config#${search_location%/}/}";
+              target_output="${base_output}/${rel_path}";
+        else  config_filename="$(
+                basename "${target_config}"
+              )";
+              target_output="$( pwd )/${target_platform}--${config_filename}";
+      fi;
 
       # #### -----------------------------------------------------------------------
       # if [[ "${verbose}" == true ]]; then
       #   {
       #     message "Target Output: [ ${target_output} ]";
       #     newline;
-      #   } ## >> "${actions_logfile:-/dev/null}";
+      #   } ## >> "${actions_logsfile}";
       # fi;
 
       #### -----------------------------------------------------------------------
@@ -518,7 +494,7 @@ fi
 
       #### -----------------------------------------------------------------------
       ## Execute and propagate exit status
-      $( which bash ) -x "${execute[@]}" >/dev/null 2>&1;
+      $( which bash ) "${execute[@]}" >/dev/null 2>&1;
 
       if [[ "${verbose}" == true ]]; then
         {
@@ -526,7 +502,7 @@ fi
           newline;
           cat -n "${target_output}";
           newline;
-        } ## >> "${actions_logfile:-/dev/null}";
+        } ## >> "${actions_logsfile}";
       fi;
 
     done;

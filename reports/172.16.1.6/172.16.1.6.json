@@ -1,0 +1,37 @@
+{
+  "target": "172.16.1.6",
+  "configs": [
+    {
+      "site": "cisco",
+      "device": "branch-isr-02.cfg",
+      "objects": [
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/0/0",
+          "partner": false,
+          "description": "ISP uplink",
+          "items": [
+            "ip address 172.16.1.6 255.255.255.0"
+          ],
+          "sets": {
+            "ip": 1
+          },
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network BlackWidow-Core",
+          "partner": "BlackWidow-Core",
+          "description": "Branch router uplink NAT",
+          "items": [
+            "host 172.16.1.6"
+          ],
+          "sets": {
+            "host": 1
+          },
+          "group": "Unclassified"
+        }
+      ]
+    }
+  ]
+}

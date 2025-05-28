@@ -18,7 +18,7 @@
 ## > ./run.log 2>&1 &
 
 set -euo pipefail  ## Strict mode: exit on error, undefined var use, and pipeline failure
-set -x;          ## Enable for execution tracing/debugging
+# set -x;          ## Enable for execution tracing/debugging
 
 ## POSIX locale standard
 export LC_ALL=C   ## Ensure consistent sorting and character handling (POSIX-compliant)
@@ -106,16 +106,12 @@ function main () {
       exit 0;
     fi;
 
-    #### -----------------------------------------------------------------------
-    local parse_listings__logfile="${TMP_DIR}/parse-listings.log";
-    :> "${parse_listings__logfile}";
-
     local start_time="$(date '+%Y-%m-%d %H:%M:%S')";
     SECONDS=0;  ## Start timer
 
     #### -----------------------------------------------------------------------
     ## Enabling IP/CIDR Blocks Group Classification
-    [[ -z ${classify_targets:-} ]] && export classify_targets=false;
+    [[ -z ${classify_targets:-} ]] && local classify_targets=false;
 
     #### -----------------------------------------------------------------------
     ## Generate master list of config files only once
@@ -156,8 +152,7 @@ function main () {
     #### -----------------------------------------------------------------------
     ## Custom/Default reports folder:
     export reports_folder="${reports_folder:-reports}";
-    ## Ensure reports folder is clean before starting
-    rm -rf "${reports_folder}" && mkdir -p "${reports_folder}";
+    mkdir -p "${reports_folder}";
 
     #### -----------------------------------------------------------------------
     export output_csv="${reports_folder}/reports.csv";
@@ -209,7 +204,7 @@ function main () {
         message "Dry run mode:                         ${dry_run:-unset}";
         message "Enable verbose output:                ${verbose:-unset}";
         newline;
-      } >> "${actions_logfile:-/dev/null}";
+      } >> "${actions_logsfile}";
     fi;
 
     #### -----------------------------------------------------------------------
@@ -254,7 +249,7 @@ function main () {
         for ip in "${target_listing[@]}"; do
           message "  - ${ip}";
         done; newline;
-      } >> "${actions_logfile:-/dev/null}";
+      } >> "${actions_logsfile}";
     fi;
 
     #### -----------------------------------------------------------------------
@@ -300,7 +295,7 @@ function main () {
             message "  - ${extension}";
           done;
           newline;
-        } >> "${actions_logfile:-/dev/null}";
+        } >> "${actions_logsfile}";
       fi;
       filtered=();  ## Reset for next filtering step
 
@@ -347,7 +342,7 @@ function main () {
             message "  - ${site}";
           done;
           newline;
-        } >> "${actions_logfile:-/dev/null}";
+        } >> "${actions_logsfile}";
       fi;
 
     fi;
@@ -370,7 +365,7 @@ function main () {
             {
               message "Devices-Filtering configurations is not required: ${target_devices}";
               newline;
-            } >> "${actions_logfile:-/dev/null}";
+            } >> "${actions_logsfile}";
     fi;
 
     #### -----------------------------------------------------------------------
@@ -417,7 +412,7 @@ function main () {
           for device in "${target_devices_source[@]}"; do
             message "  - ${device}";
           done; newline;
-        } >> "${actions_logfile:-/dev/null}";
+        } >> "${actions_logsfile}";
       fi;
 
     fi;
@@ -430,7 +425,7 @@ function main () {
       for file in "${configs_listing[@]}"; do
         message "  - $( relative_configpath ${file} )";
       done;
-    } >> "${actions_logfile:-/dev/null}";
+    } >> "${actions_logsfile}";
 
     #### -----------------------------------------------------------------------
     ## Only generate the list if it doesn't already exist
@@ -442,7 +437,7 @@ function main () {
         newline;
         print_file "${configs_list_cache}" | cat -n;
         newline;
-      } >> "${actions_logfile:-/dev/null}";
+      } >> "${actions_logsfile}";
     fi;
 
     #### -----------------------------------------------------------------------
@@ -454,19 +449,19 @@ function main () {
         newline;
         print_file "${configs_list_cache}" | cat -n;
         newline;
-      } >> "${actions_logfile:-/dev/null}";
+      } >> "${actions_logsfile}";
     fi;
 
     #### -----------------------------------------------------------------------
     if [[ ${target_devices} == false ]]; then
             ## If no devices filter is set, use all available devices
-            $( which bash ) -x ./scripts/network-configs.shell \
+            $( which bash ) ./scripts/network-configs.shell \
                             --ips-list=ips.list \
                             --location="${configs_dirpath}" \
                             --output=${extracted_resources} \
                             --verbose ;
       else  ## If devices filter is set, use the provided device list
-            $( which bash ) -x ./scripts/network-configs.shell \
+            $( which bash ) ./scripts/network-configs.shell \
                             --ips-list=ips.list \
                             --search="$(
                                 IFS=','; echo -en "${target_devices_source[*]}"
@@ -536,7 +531,7 @@ function main () {
         newline;
         message "Progress / Completed: ${completed} IPs";
         newline;
-      } >> "${actions_logfile:-/dev/null}";
+      } >> "${actions_logsfile}";
 
       target_listing=(
         "${target_addresses_source[@]:ip_offset:ip_batch_size}"
@@ -568,7 +563,7 @@ function main () {
           # message "Parallel threads:   ${parallel_threads}";
           # message "Target IPs (count): ${#target_listing[@]}";
           newline;
-        } >> "${actions_logfile:-/dev/null}";
+        } >> "${actions_logsfile}";
       fi;
 
       ## Outter Batching (For-loop)
@@ -600,7 +595,7 @@ function main () {
               message "  - $( relative_configpath ${file} )";
             done;
             newline;
-          } >> "${actions_logfile:-/dev/null}";
+          } >> "${actions_logsfile}";
           # for site in "${site_files[@]}"; do message "Site: ${site}"; done;
         fi;
 
@@ -674,13 +669,13 @@ function main () {
                 message "  - $( relative_configpath "${config}" )";
               done;
               newline;
-            } >> "${actions_logfile:-/dev/null}";
+            } >> "${actions_logsfile}";
           fi;
 
           #### -----------------------------------------------------------------
           ## Advanced Background Jobs management workflow
           matching_configs ${BATCH_CONFIGS};
-          :> "${targets_logfile}";
+          :> "${targets_logsfile}";
 
           #### -----------------------------------------------------------------
           ## Compute and log unmapped IPs directly from difference
@@ -706,7 +701,7 @@ function main () {
                 #   message "  - ${ip}";
                 # done;
                 newline;
-              } >> "${actions_logfile:-/dev/null}";
+              } >> "${actions_logsfile}";
             fi;
           fi;
 
@@ -742,21 +737,19 @@ function main () {
           );
           [[ "${#site_jsons[@]}" -eq 0 ]] && continue;
           if [[ -f "${final_file}" ]]; then
-                jq --slurp  '{
-                              configs: (
-                                map(.configs) | add |
-                                unique_by( .config.site + ":" + .config.device )
-                              )
-                            }' "${final_file}" "${site_jsons[@]}" \
-                > "${final_file}.tmp" && \
+                jq -s '{
+                  configs: (
+                    map(.configs) | add |
+                    unique_by( .config.site + ":" + .config.device )
+                  )
+                }' "${final_file}" "${site_jsons[@]}" > "${final_file}.tmp" && \
                 mv -f "${final_file}.tmp" "${final_file}";
-          else  jq --slurp  '{
-                              configs: (
-                                map(.configs) | add |
-                                unique_by(.config.site + ":" + .config.device)
-                              )
-                            }' "${site_jsons[@]}" \
-                > "${final_file}";
+          else  jq -s '{
+                  configs: (
+                    map(.configs) | add |
+                    unique_by(.config.site + ":" + .config.device)
+                  )
+                }' "${site_jsons[@]}" > "${final_file}";
           fi;
         done;
         shopt -u nullglob;
@@ -791,7 +784,7 @@ function main () {
           message "  - ${ip}";
         done;
         newline;
-      } >> "${actions_logfile:-/dev/null}";
+      } >> "${actions_logsfile}";
     fi;
 
     shopt -s nullglob;
@@ -823,17 +816,17 @@ function main () {
         message "-------------------------------";
         print_file "${output_csv}" | cat -n;
         newline;
-      } >> "${actions_logfile:-/dev/null}";
+      } >> "${actions_logsfile}";
     fi;
 
-    # #### -----------------------------------------------------------------------
-    # ## Delete ${logs_location}/jobs directory and wait until fully removed
-    # rm -rf ${logs_location}/jobs; while [[ -d ${logs_location}/jobs ]]; do sleep 0.1; done;
-    # ## Confirm ${logs_location}/jobs is fully removed
-    # if [[ -d ${logs_location}/jobs ]]; then
-    #   error_message "[FATAL] Failed to delete ${logs_location}/jobs directory.";
-    #   exit 7;
-    # fi;
+    #### -----------------------------------------------------------------------
+    ## Delete ${logs_location}/jobs directory and wait until fully removed
+    rm -rf ${logs_location}/jobs; while [[ -d ${logs_location}/jobs ]]; do sleep 0.1; done;
+    ## Confirm ${logs_location}/jobs is fully removed
+    if [[ -d ${logs_location}/jobs ]]; then
+      error_message "[FATAL] Failed to delete ${logs_location}/jobs directory.";
+      exit 7;
+    fi;
 
     #### -----------------------------------------------------------------------
     local elapsed="${SECONDS}";
@@ -846,14 +839,14 @@ function main () {
               $(( ( elapsed % 3600 ) / 60 )) \
               $(( elapsed % 60 ));
       newline;
-    } >> "${actions_logfile:-/dev/null}";
+    } >> "${actions_logsfile}";
 
     return 0;
 }; alias parse-listings='main';
 
 #------------------------------------------------------------------------------#
 
-:> ${actions_logfile};
+:> ${actions_logsfile};
 
 rm -rf ${cache_location};
 mkdir -p ${cache_location}/{jobs,targets};
