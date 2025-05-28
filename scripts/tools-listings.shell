@@ -27,8 +27,8 @@ readonly __TOOLS_LISTINGS_SOURCED=1;
 
 function generate_configslist () {
 
-    local ip_addr="$1";
-    local target_file="$2";
+    local ip_addr="${1}";
+    local target_file="${2}";
 
     local source_configs_list="${3:-${configs_list_cache}}";
     # message "[generate_configslist] Configurations File: ${source_configs_list}";
@@ -36,15 +36,19 @@ function generate_configslist () {
     ## Recording iteration configuration
     local tracing_record="${4:-}";
 
-    ## Match configuration files for the current IP address
+    ## Recording the generated_configslist actions
+    local target_logfile="${5:-${TMP_DIR:-/tmp}/generate_configslist--${ip_addr}.log}";
 
-    local matched_files=$(
-      grep -lE "(^|[^0-9.])${ip_addr//./\\.}([^0-9.]|$)" \
-               $( <"${source_configs_list}" ) 2>/dev/null || true
-    );
+    ## Objective: Match configuration files for the current IP address
+    ## Warning:   Avoiding additional disk I/O in favor of in-memory mapping (associative array: ip2files)
+    # local matched_files=$(
+    #   grep -lE "(^|[^0-9.])${ip_addr//./\\.}([^0-9.]|$)" \
+    #            $( <"${source_configs_list}" ) 2>/dev/null || true
+    # );
 
     ## If matched files exist, generate the JSON structure
-    if [[ -n "${matched_files}" ]]; then
+    # if [[ -n "${matched_files}" ]]; then
+    if [[ -n "${ip2files[${ip_addr}]:-}" ]]; then
       ## Initialize an empty JSON array
       config_json="[]";
 
@@ -76,8 +80,11 @@ function generate_configslist () {
              --argjson lines "${config_lines}" \
              --argjson count "${match_count}" \
              '. += [ { "config": { "site": $site, "device": $device }, "lines": $lines, "count": $count } ]'
-        )
-      done <<< "${matched_files}";
+        );
+      # done <<< "${matched_files}";
+      done <<< "$(
+        tr ':' '\n' <<< "${ip2files[${ip_addr}]}"
+      )";
 
       ## Wrap the array into the final structure with {configs: $configs}
       final_json=$(
@@ -90,7 +97,9 @@ function generate_configslist () {
       if [[ -n "${tracing_record}" ]]; then
         if [[ -f "${tracing_record}" ]]; then
                 # Merge new configs into existing file
-                jq -s '{ configs: map(.configs) | add }' "${tracing_record}" "${target_file}" \
+                jq --slurp  '{ configs: map(.configs) | add }' \
+                            "${tracing_record}" \
+                            "${target_file}" \
                 > "${tracing_record}.tmp" && \
                 mv -f "${tracing_record}.tmp" "${tracing_record}";
           else  cp -f "${target_file}" "${tracing_record}";  ## First write
@@ -101,7 +110,7 @@ function generate_configslist () {
       {
         message "Generated Config-File: ${target_file}";
         # print_file "${target_file}";
-      } >> "${targets_logsfile}";
+      } >> "${targets_logfile}";
 
     fi;
     return 0;
@@ -213,7 +222,7 @@ function generate_csvoutput () {
 #   - Waits until all parsing jobs are done before exiting.
 #
 # Logging:
-#   - Logs job start metadata and PID-to-IP mapping to ${actions_logsfile}.
+#   - Logs job start metadata and PID-to-IP mapping to ${actions_logfile}.
 #   - Optionally logs job completion (currently commented out).
 #
 # Notes:
@@ -239,21 +248,24 @@ function manage_configs () {
       job_pid=$!;
       configs_jobs_pid+=( "${job_pid}" );
       configs_jobs2ips_mapping["$job_pid"]="${ip_addr}";
-      # message "[INFO] Started Managed-Configs (${job_pid}): ${ip_addr}" \
-      #       >> "${actions_logsfile}";
-      # list_file "${actions_logsfile}";
+      # if [[ "${verbose}" == true ]]; then
+      #   {
+      #     message "[INFO] Started Managed-Configs (${job_pid}): ${ip_addr}";
+      #   } >> "${actions_logfile:-/dev/null}";
+      # fi;
     done;
-    # newline >> "${actions_logsfile}";
 
-    {
-      message "Background Jobs -> Managed Configs:";
-      message "PID   | IP Address (${#configs_jobs2ips_mapping[@]})";
-      message "-------------------------";
-      for pid in "${!configs_jobs2ips_mapping[@]}"; do
-        printf "%-5s | %s\n" "${pid}" "${configs_jobs2ips_mapping[$pid]}";
-      done;
-      newline;
-    } >> "${actions_logsfile}";
+    if [[ "${verbose}" == true ]]; then
+      {
+        message "Background Jobs -> Managed Configs:";
+        message "PID   | IP Address (${#configs_jobs2ips_mapping[@]})";
+        message "-------------------------";
+        for pid in "${!configs_jobs2ips_mapping[@]}"; do
+          printf "%-5s | %s\n" "${pid}" "${configs_jobs2ips_mapping[$pid]}";
+        done;
+        newline;
+      } >> "${actions_logfile:-/dev/null}";
+    fi;
 
     ## Monitor background jobs
     while (( ${#configs_jobs_pid[@]} > 0 )); do
@@ -261,7 +273,7 @@ function manage_configs () {
       for pid in "${configs_jobs_pid[@]}"; do
         if ! kill -0 "$pid" 2>/dev/null; then
                 ip="${configs_jobs2ips_mapping[$pid]}"
-                # message "[INFO] Completed ($pid): ${ip}" >> "${actions_logsfile}";
+                # message "[INFO] Completed ($pid): ${ip}" >> "${actions_logfile:-/dev/null}";
           else  valid_configs_jobs_pid+=( "$pid" );
         fi;
       done;
@@ -304,14 +316,16 @@ function matching_configs () {
     declare -ga targets_jobs_pid=();          ## Array to hold the PIDs of the background jobs
     declare -gA targets_jobs2ips_mapping=();  ## Associative array to map PIDs to IPs
 
-    {
-      message "[EXECUTE]   ${FUNCNAME}";
-      message "[PARAMETER] source_configs_list:\n   $(
-        printf '%*s' "${#input_parameter}"
-      )${source_configs_list}";
-      # print_file "${source_configs_list}";
-      newline;
-    } >> "${actions_logsfile}";
+    if [[ "${verbose}" == true ]]; then
+      {
+        message "[EXECUTE]   ${FUNCNAME}";
+        message "[${input_parameter}] source_configs_list:\n   $(
+          printf '%*s' "${#input_parameter}"
+        )${source_configs_list}";
+        # newline;
+        # print_file "${source_configs_list}";
+      } >> "${actions_logfile:-/dev/null}";
+    fi;
 
     # Build IP lookup set and output map
     declare -A targets=();
@@ -354,8 +368,21 @@ function matching_configs () {
       done | sort -u;
     } > "${source_configs_list}"
 
+    if [[ "${verbose}" == true ]]; then
+      {
+        newline;
+        print_file "${source_configs_list}";
+        newline;
+      } >> "${actions_logfile:-/dev/null}";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    local generate_configslist__logfile="${TMP_DIR}/generate_configslist.logs";
+    :> "${generate_configslist__logfile}";
+
     ## Iterate over filtered and cleaned target IP addresses
     for ip_addr in "${target_listing[@]}"; do
+
       target_file="${targets_location}/${ip_addr}.json";
 
       site_name="$(
@@ -370,16 +397,18 @@ function matching_configs () {
       touch "${tracing_record}";
 
       (
-        generate_configslist "${ip_addr}" \
-                             "${target_file}" \
-                             "${source_configs_list}" \
+        generate_configslist  "${ip_addr}" \
+                              "${target_file}" \
+                              "${source_configs_list}" \
                               "${tracing_record}" \
+                              "${generate_configslist__logfile}" \
         ;
       ) &
 
       job_pid=$!;
       targets_jobs_pid+=( "${job_pid}" );
       targets_jobs2ips_mapping["${job_pid}"]="${ip_addr}";
+
     done;
 
     #### -----------------------------------------------------------------------
@@ -390,16 +419,17 @@ function matching_configs () {
         message "PID    | IP Address      => Config(s)";
         message "-------------------------------------";
         for pid in "${!targets_jobs2ips_mapping[@]}"; do
-          ip="${targets_jobs2ips_mapping[$pid]}";
-          config_raw="${ip2files[$ip]:-none}";
+          ip="${targets_jobs2ips_mapping[${pid}]}";
+          config_raw="${ip2files[${ip}]:-none}";
           config_cleaned="$(
             sed "s|${configs_dirpath}/${site}/||g" <<< "${config_raw}" | \
-            tr ':' ' : '
+            sed 's/:/ + /g'
           )";
-          printf "%-6s | %-15s => %s\n" "$pid" "$ip" "$config_cleaned";
+          printf "%-6s | %-15s => %s\n" "${pid}" "${ip}" "${config_cleaned}";
         done;
         newline;
-      } >> "${actions_logsfile}";
+        print_file "${generate_configslist__logfile}";
+      } >> "${actions_logfile:-/dev/null}";
     fi;
 
     ## Monitor the background jobs until all are completed
@@ -409,7 +439,7 @@ function matching_configs () {
         if ! kill -0 "$pid" 2>/dev/null; then
                 ## Job completed
                 ip_address="${targets_jobs2ips_mapping[$pid]}"  ## Retrieve the IP associated with this job PID
-                # message "[INFO] Completed ($pid): ${ip_address}" >> "${actions_logsfile}";
+                # message "[INFO] Completed ($pid): ${ip_address}" >> "${actions_logfile:-/dev/null}";
           else  valid_targets_jobs_pid+=( "$pid" );  ## Job still running
         fi;
       done;
@@ -445,8 +475,10 @@ function matching_configs () {
 #   - Must remain synchronous to preserve PID tracking integrity.
 
 function parse_configs () {
+
     local ip_addr="${1}";
     local padded_index="${2}";
+
     declare -a execute=(
       ./scripts/parse-configs.shell
       --configs="${configs_dirpath}"
@@ -458,23 +490,26 @@ function parse_configs () {
         IFS=,; print "${file_extensions[*]}"
       )"
     );
+
     [[ "${classify_targets}" == true ]] && execute+=( --classify );
     [[ "${validate_address}" == true ]] && execute+=( --validate );
     [[ "${verbose}" == true ]] && execute+=( --verbose );
-    [[ "${debug}" == true ]] && execute+=( --debug );
+    [[ "${verbose}" == true ]] && execute+=( --debug );
+
     if [[ "${enable_logging:-}" == true ]]; then
             mkdir -p "${logs_location}/jobs" "${logs_location}/errors";
             logfile="${logs_location}/jobs/${ip_addr}.job";
-            if [[ "${debug}" == true ]]; then
+            if [[ "${verbose}" == true ]]; then
                     bash -x "${execute[@]}" > "${logfile}" 2>&1;
               else  "${execute[@]}" > "${logfile}" 2>&1;
             fi;
             # list_file "${logfile}";
-      else  if [[ "${debug}" == true ]]; then
+      else  if [[ "${verbose}" == true ]]; then
                     bash -x "${execute[@]}" >/dev/null 2>&1;
               else  "${execute[@]}" >/dev/null 2>&1;
             fi;
     fi;
+
     local status=$?;
     if (( status != 0 )); then
             errors_logfile="${logs_location}/errors/errors.log";
@@ -483,8 +518,8 @@ function parse_configs () {
               message "  See: ${logfile}";
             } >> "${errors_logfile}";
             # list_file "${errors_logfile}";
-      # else  message "[DONE] IP: ${ip_addr}" >> "${actions_logsfile}";
-      #       # list_file "${actions_logsfile}";
+      # else  message "[DONE] IP: ${ip_addr}" >> "${actions_logfile:-/dev/null}";
+      #       # list_file "${actions_logfile}";
     fi;
     return "${status}";
 }; alias parse-configs='parse_configs';
