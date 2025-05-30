@@ -460,11 +460,15 @@ export LC_ALL=C;
 export nl="\n";
 
 export cache_location=".cache";
-export logs_location=".logs";
-export targets_location="targets";
 
-export actions_logfile="$( pwd )/actions.output";
-export targets_logfile="${logs_location}/targets.jobs";
+export logs_location="logs";
+mkdir -p ${logs_location}/{console,jobs} 2>/dev/null || true;
+
+export actions_logfile="./logs/console/run.console";
+touch "${actions_logfile}" 2>/dev/null || true;
+
+export targets_location="targets";
+export targets_logfile="${logs_location}/jobs/targets.jobs";
 
 export divisor="$(
   date +%s%N | base64 | tr -dc 'a-zA-Z0-9'

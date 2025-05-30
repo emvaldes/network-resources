@@ -76,10 +76,6 @@ function main () {
     fi;
 
     #### -----------------------------------------------------------------------
-    local parse_configs__logfile="${TMP_DIR}/parse-configs.log";
-    :> "${parse_configs__logfile}";
-
-    #### -----------------------------------------------------------------------
     ## Enabling IP/CIDR Blocks Group Classification
     [[ -z ${classify_targets:-} ]] && export classify_targets=false;
 
@@ -278,19 +274,26 @@ function main () {
 
     fi;
 
-if [[ "${verbose}" == true ]]; then
-  {
-    print_file "${parse_configs__logfile:-/dev/null}";
-  } >> "${actions_logfile:-/dev/null}";
-fi;
+    if [[ "${verbose}" == true ]]; then
+      {
+        print_file "${parse_configs__logfile:-/dev/null}";
+      } >> "${actions_logfile:-/dev/null}";
+    fi;
 
     return 0;
 }; alias parse-configs='main';
 
 #------------------------------------------------------------------------------#
 
-declare -gA matched_blocks_byfile=();
-export script_name="${0}";
+[[ -z "${script_name+x}" ]] && script_name="${0}";
+
+script_filename="${BASH_SOURCE[0]##*/}";
+script_filename="${script_filename%.*}";
+
+parse_configs__logfile="${TMP_DIR}/${script_filename}.log";
+:> "${parse_configs__logfile}";
+
+#------------------------------------------------------------------------------#
 
 if [[ ${#@} -eq 0 || "${1,,}" =~ ^-*(h|help)$ ]]; then
         main --help ;

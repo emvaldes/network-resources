@@ -52,6 +52,9 @@ function main () {
         echo -e "${xitem}" | sed -e '1s|^\(-\)\{1,\}||'
       )"; #echo -e "\nxitem: '${xitem}'\nkey: '${key}'\t->\tvalue: '${value}'";
 
+      ## Available arguments:
+      ## a, f, h, k, n, p, q, z 
+
       #### ---------------------------------------------------------------------
       ## Match accepted arguments
       [[ $key =~ ^(batch-size|b)$ ]] && export configs_batch_size="${value}";
@@ -69,8 +72,10 @@ function main () {
       [[ $key =~ ^(interval|l)$ ]] && export delaying_factor="${value}";
       [[ $key =~ ^(ips-list|i)$ ]] && export target_addresses="${value}";
       [[ $key =~ ^(logs|o)$ ]] && export enable_logging=true;
-      [[ $key =~ ^(jobs|j)$ ]] && export parallel_threads="${value}";
+      [[ $key =~ ^(threads|t)$ ]] && export parallel_threads="${value}";
       [[ $key =~ ^(matrix|m)$ ]] && export matrix_filename="${value}";
+      [[ $key =~ ^(purge-jobs|u)$ ]] && export remove_jobsfile=true;
+      [[ $key =~ ^(purge-logs|w)$ ]] && export remove_logsfile=true;
       [[ $key =~ ^(reports|r)$ ]] && export reports_folder="${value}";
       [[ $key =~ ^(sites|s)$ ]] && export target_sites="${value}";
       [[ $key =~ ^(validate|v)$ ]] && export validate_address=true;
@@ -88,28 +93,27 @@ function main () {
     [[ -z ${configs_batch_size:-} ]] && export configs_batch_size=3;
     [[ -z ${delaying_factor:-} ]] && export delaying_factor="0.1";
     [[ -z ${target_addresses:-} ]] && export target_addresses="ips.list";
-    [[ -z ${target_devices:-} ]] && export target_devices=false;
     [[ -z ${parallel_threads:-} ]] && export parallel_threads=100;
+    [[ -z ${target_devices:-} ]] && export target_devices=false;
     [[ -z ${target_sites:-} ]] && export target_sites=false;
+    [[ -z ${remove_jobsfile:-} ]] && export remove_jobsfile=false;
+    [[ -z ${remove_logsfile:-} ]] && export remove_logsfile=false;
 
     #### -----------------------------------------------------------------------
     ## Set default values if not supplied
-    [[ -z ${script_helper:-} ]] && script_helper=false;
     [[ -z ${debug:-} ]] && debug=false;
     [[ -z ${dry_run:-} ]] && dry_run=false;
     [[ -z ${verbose:-} ]] && verbose=false;
 
     #### -----------------------------------------------------------------------
     ## Display usage help if requested
+    [[ -z ${script_helper:-} ]] && script_helper=false;
     if [[ ${script_helper:-} == true ]]; then
       display_help "${script_name}" "listings";
       exit 0;
     fi;
 
     #### -----------------------------------------------------------------------
-    local parse_listings__logfile="${TMP_DIR}/parse-listings.log";
-    :> "${parse_listings__logfile}";
-
     local start_time="$(date '+%Y-%m-%d %H:%M:%S')";
     SECONDS=0;  ## Start timer
 
@@ -167,6 +171,14 @@ function main () {
     [[ -z ${validate_address:-} ]] && export validate_address=false;
 
     #### -----------------------------------------------------------------------
+
+    local target_addresses_filetype="$(
+      file --mime-type -b "${target_addresses}" 2>/dev/null
+    )";
+    local target_devices_filetype="$(
+      file --mime-type -b "${target_devices}" 2>/dev/null
+    )";
+
     if [[ "${verbose}" == true ]]; then
       {
         message "[INFO] Date: ${start_time}";
@@ -191,12 +203,12 @@ function main () {
         message "Enable group classification:          ${classify_targets:-unset}";
         message "Source Configs directory:             ${configs_dirpath:-unset}";
         message "Target Configs directory:             ${extracted_resources:-unset}";
-        message "Device filter (file or inline):       ${target_devices:-unset}";
+        message "Device filter (file or inline):       ${target_devices:-unset} (${target_devices_filetype:-unset})";
         message "Default Configs Listing file:         ${configs_list_cache:-unset}";
         message "Export format (JSON/CSV):             ${output_csv:-unset}";
         message "Allowed file extensions:              ${file_extensions[*]:-unset}";
         message "Delay between background jobs:        ${delaying_factor:-unset}";
-        message "IP address input (file or inline):    ${target_addresses:-unset}";
+        message "IP address input (file or inline):    ${target_addresses:-unset} (${target_addresses_filetype:-unset})";
         message "Enable logging:                       ${enable_logging:-unset}";
         message "Parallel threads:                     ${parallel_threads:-unset}";
         message "Translation matrix file:              ${matrix_filename:-unset}";
@@ -229,8 +241,7 @@ function main () {
               grep -v '^\s*$' | \
               sort -t . -k1,1n -k2,2n -k3,3n -k4,4n -u
             );
-      # else  message "Warning: Project Target IPs-listing file not found!";
-      #       message "${target_addresses}";
+      else  message "Warning: Project Target IPs-listing file not found!";
     fi;
 
     #### -----------------------------------------------------------------------
@@ -249,11 +260,13 @@ function main () {
     #### -----------------------------------------------------------------------
     if [[ "${verbose}" == true ]]; then
       {
-        message "Loaded (default) IPs addresses (count): ${#target_listing[@]}";
+        message "Source Target Addresses (count): ${#target_addresses_source[@]}";
+        message "Loaded (default) IPs addresses:  ${#target_listing[@]}";
         newline;
         for ip in "${target_listing[@]}"; do
           message "  - ${ip}";
-        done; newline;
+        done | cat -n;
+        newline;
       } >> "${actions_logfile:-/dev/null}";
     fi;
 
@@ -270,41 +283,67 @@ function main () {
       sort -u 2>/dev/null
     );
 
+    #### -----------------------------------------------------------------------
+    if [[ "${verbose}" == true ]]; then
+      {
+        message "All available configurations (count): ${#configs_listing[@]}";
+        newline;
+        for config in "${configs_listing[@]}"; do
+          message "  - $( relative_configpath ${config} )";
+        done | cat -n;
+        newline;
+      } >> "${actions_logfile:-/dev/null}";
+    fi;
+
+    #### ---------------------------------------------------------------------
+    if [[ "${verbose}" == true ]]; then
+      {
+        message "Filtered Config by extension: ${#file_extensions[@]}: ";
+        newline;
+        for extension in "${file_extensions[@]}"; do
+          message "  - ${extension}";
+        done | cat -n;
+        newline;
+      } >> "${actions_logfile:-/dev/null}";
+    fi;
+
     ## Generic filtering and buffering array
     declare -a filtered=();
 
     #### -----------------------------------------------------------------------
     ## Apply file extension filtering
-    if [[
-          -v file_extensions && \
-          ${#file_extensions[@]} -gt 0
-        ]]; then
-
-      for filepath in "${configs_listing[@]}"; do
-        for ext in "${file_extensions[@]}"; do
-          if [[ "${filepath,,}" == *".${ext,,}" ]]; then
-            filtered+=( "${filepath}" );
-            break;
-          fi;
-        done;
-      done;
-
-      ## Update listings with extension-filtered results
-      configs_listing=( "${filtered[@]}" );
-
-      if [[ "${user_defined__file_extensions}" == true ]]; then
-        {
-          message "Filtered Config Files by extension: ${#file_extensions[@]}: ";
-          newline;
-          for extension in "${file_extensions[@]}"; do
-            message "  - ${extension}";
+    if [[ "${user_defined__file_extensions}" == true ]]; then
+      if [[
+            -v file_extensions && \
+            ${#file_extensions[@]} -gt 0
+          ]]; then
+        for filepath in "${configs_listing[@]}"; do
+          for ext in "${file_extensions[@]}"; do
+            if [[ "${filepath,,}" == *".${ext,,}" ]]; then
+              filtered+=( "${filepath}" );
+              break;
+            fi;
           done;
-          newline;
-        } >> "${actions_logfile:-/dev/null}";
-      fi;
-      filtered=();  ## Reset for next filtering step
+        done;
 
+        ## Update listings with extension-filtered results
+        configs_listing=( "${filtered[@]}" );
+
+        #### ---------------------------------------------------------------------
+        if [[ "${verbose}" == true ]]; then
+          {
+            message "Filtered Configs (extension): ${#configs_listing[@]}";
+            newline;
+            for listing in "${configs_listing[@]}"; do
+              message "  - $( relative_configpath ${listing} )";
+            done | cat -n;
+            newline;
+          } >> "${actions_logfile:-/dev/null}";
+        fi;
+
+      fi;
     fi;
+    filtered=();  ## Reset for next filtering step
 
     #### -----------------------------------------------------------------------
     ## Optional --sites filter: limit to specific site directories only
@@ -335,48 +374,76 @@ function main () {
 
       ## Update listing with site-filtered results
       configs_listing=( "${filtered[@]}" );
-      filtered=();  ## Reset for next filtering step
 
       #### -------------------------------------------------------------------
       if [[ "${verbose}" == true ]]; then
         {
-          message "Filtered Config Files by Sites (matched): ${#configs_listing[@]}";
-          message "Sites requested: ${#site_filters[@]}";
+          message "Target Sites (requested):   ${#site_filters[@]}";
+          message "Filtered Configs (matched): ${#configs_listing[@]}";
           newline;
           for site in "${site_filters[@]}"; do
-            message "  - ${site}";
-          done;
+            message "  - $( relative_configpath ${site} )";
+          done | cat -n;
           newline;
         } >> "${actions_logfile:-/dev/null}";
       fi;
 
     fi;
+    filtered=();  ## Reset for next filtering step
 
     #### -----------------------------------------------------------------------
     ## Load devices list from file or inline string
 
     declare -a target_devices_source=();
     if [[ -n "${target_devices:-}" && -f "${target_devices}" ]]; then
+
             ## If target_devices is a file, read it line by line
             mapfile -t target_devices_source < <(
               grep -v '^\s*$' "${target_devices}" | tr -d '\r'
             );
-      elif [[ "${target_devices}" != "false" && "${target_devices}" =~ [a-zA-Z0-9] ]]; then
+            #### -------------------------------------------------------------------
+            if [[ "${verbose}" == true ]]; then
+              {
+                message "Loaded Device (Source - File): ${target_devices}";
+                message "Devices (count): ${#target_devices_source[@]}";
+                newline;
+                for device in "${target_devices_source[@]}"; do
+                  message "  - ${device}";
+                done | cat -n;
+                newline;
+              } >> "${actions_logfile:-/dev/null}";
+            fi;
+
+      elif  [[ "${target_devices}" != "false" && "${target_devices}" =~ [a-zA-Z0-9] ]]; then
             ## User-Inputs then normalize all delimiters to newlines
             mapfile -t target_devices_source < <(
               echo -e "${target_devices}" | tr ',|;: \t\n' '\n' | grep -v '^\s*$'
             );
+            #### -------------------------------------------------------------------
+            if [[ "${verbose}" == true ]]; then
+              {
+                message "Loaded Device (Source - Parameter)";
+                message "Devices (count): ${#target_devices_source[@]}";
+                newline;
+                for device in "${target_devices_source[@]}"; do
+                  message "  - ${device}";
+                done | cat -n;
+                newline;
+              } >> "${actions_logfile:-/dev/null}";
+            fi;
+
       else  ## Documenting that Device-Limited filter is not set
             {
-              message "Devices-Filtering configurations is not required: ${target_devices}";
+              message "Is Devices-Filtering required: ${target_devices}";
               newline;
             } >> "${actions_logfile:-/dev/null}";
+
     fi;
+    filtered=();  ## Reset for next filtering step
 
     #### -----------------------------------------------------------------------
     ## Filter configs by device name
     if [[ ${#target_devices_source[@]} -gt 0 ]]; then
-      declare -a filtered=();
 
       for filepath in "${configs_listing[@]}"; do
         device_name="${filepath##*/}";
@@ -388,13 +455,27 @@ function main () {
           fi;
         done;
       done;
+
       ## Update listing with devices-filtered results
       configs_listing=( "${filtered[@]}" );
-      filtered=();  ## Reset for next filtering step
+
+      #### -----------------------------------------------------------------------
+      if [[ "${verbose}" == true ]]; then
+        {
+          message "Target Devices (requested):  ${#target_devices_source[@]}";
+          message "Filtered Configs (matched):  ${#configs_listing[@]}";
+          newline;
+          for config in "${configs_listing[@]}"; do
+            message "  - $( relative_configpath ${config} )";
+          done | cat -n;
+          newline;
+        } >> "${actions_logfile:-/dev/null}";
+      fi;
 
       #### -----------------------------------------------------------------------
       ## Remove non-compliant devices without sites requirements
       if [[ ${target_sites} != false ]]; then
+
         valid_devices=();
         for dev in "${target_devices_source[@]}"; do
           for cfg in "${configs_listing[@]}"; do
@@ -407,30 +488,11 @@ function main () {
 
         target_devices_source=( "${valid_devices[@]}" );
         target_devices_count=${#target_devices_source[@]};
-      fi;
 
-      #### -----------------------------------------------------------------------
-      if [[ "${verbose}" == true ]]; then
-        {
-          message "Filtered Config Files by Device (matched): ${#configs_listing[@]}";
-          newline;
-          for device in "${target_devices_source[@]}"; do
-            message "  - ${device}";
-          done; newline;
-        } >> "${actions_logfile:-/dev/null}";
       fi;
 
     fi;
-
-    #### -----------------------------------------------------------------------
-    printf '%s\n' "${configs_listing[@]}" > "${configs_list_cache}";
-    {
-      message "Discovered Config Files (count): ${#configs_listing[@]}";
-      newline;
-      for file in "${configs_listing[@]}"; do
-        message "  - $( relative_configpath ${file} )";
-      done;
-    } >> "${actions_logfile:-/dev/null}";
+    filtered=();  ## Reset for next filtering step
 
     #### -----------------------------------------------------------------------
     ## Only generate the list if it doesn't already exist
@@ -438,19 +500,7 @@ function main () {
       printf '%s\n' "${configs_listing[@]}" > "${configs_list_cache}"
 
       {
-        message "Listing Configurations List Cache: ";
-        newline;
-        print_file "${configs_list_cache}" | cat -n;
-        newline;
-      } >> "${actions_logfile:-/dev/null}";
-    fi;
-
-    #### -----------------------------------------------------------------------
-    ## Generate a cached list of configurations
-    if [[ "${verbose}" == true ]]; then
-      {
-        newline;
-        message "Cached Configs List: ${configs_list_cache}";
+        message "Listing Configurations List Cache: ${configs_list_cache}";
         newline;
         print_file "${configs_list_cache}" | cat -n;
         newline;
@@ -461,19 +511,22 @@ function main () {
     if [[ ${target_devices} == false ]]; then
             ## If no devices filter is set, use all available devices
             $( which bash ) -x ./scripts/network-configs.shell \
-                            --ips-list=ips.list \
+                            --search=ips.list \
                             --location="${configs_dirpath}" \
-                            --output=${extracted_resources} \
-                            --verbose ;
+                            --extract=${extracted_resources} \
+                            --verbose \
+                            > ${logs_location}/network-configs.log 2>&1 \
+            >> "${actions_logfile:-/dev/null}";
+
       else  ## If devices filter is set, use the provided device list
             $( which bash ) -x ./scripts/network-configs.shell \
-                            --ips-list=ips.list \
-                            --search="$(
-                                IFS=','; echo -en "${target_devices_source[*]}"
-                              )" \
+                            --search=ips.list \
+                            --configs=${target_devices} \
                             --location="${configs_dirpath}" \
-                            --output=${extracted_resources} \
-                            --verbose ;
+                            --extract=${extracted_resources} \
+                            --verbose \
+                            > ${logs_location}/network-configs.log 2>&1 \
+            >> "${actions_logfile:-/dev/null}";
     fi;
 
     #### -----------------------------------------------------------------------
@@ -504,7 +557,7 @@ function main () {
       message "  - ${config}";
     done; newline;
 
-#### Starting: Batch-Processing - Superset Loop --------------------------- ####
+    #### Starting: Batch-Processing - Superset Loop --------------------------- ####
 
     #### -----------------------------------------------------------------------
     ## Superset batching loop: Divide IPs into manageable chunks
@@ -542,7 +595,7 @@ function main () {
         "${target_addresses_source[@]:ip_offset:ip_batch_size}"
       ); export target_listing;
 
-#### Starting: Batch-Processing - Outer Loop ------------------------------ ####
+      #### Starting: Batch-Processing - Outer Loop ------------------------------ ####
 
       #### ---------------------------------------------------------------------
       ## Begin placeholder-only batch structure (no processing)
@@ -615,17 +668,19 @@ function main () {
           fi;
         fi;
 
-        #### -------------------------------------------------------------------
-        ## Delete ${logs_location}/jobs directory and wait until fully removed
-        rm -rf ${logs_location}/jobs;
-        while [[ -d ${logs_location}/jobs ]]; do sleep 0.1; done;
-        ## Confirm ${logs_location}/jobs is fully removed
-        if [[ -d ${logs_location}/jobs ]]; then
-          error_message "[FATAL] Failed to delete ${logs_location}/jobs directory.";
-          exit 6;
+        if [[ "${remove_jobsfile}" == true ]]; then
+          #### -------------------------------------------------------------------
+          ## Delete ${logs_location}/jobs directory and wait until fully removed
+          rm -rf ${logs_location}/jobs;
+          while [[ -d ${logs_location}/jobs ]]; do sleep 0.1; done;
+          ## Confirm ${logs_location}/jobs is fully removed
+          if [[ -d ${logs_location}/jobs ]]; then
+            error_message "[FATAL] Failed to delete ${logs_location}/jobs directory.";
+            exit 6;
+          fi;
         fi;
 
-#### Starting: Batch-Processing - Inner Loop ------------------------------ ####
+        #### Starting: Batch-Processing - Inner Loop ------------------------------ ####
 
         ## Inner Batching (While-loop)
         local offset=0;
@@ -718,7 +773,7 @@ function main () {
 
         done;
 
-#### Completed: Batch-Processing - Inner Loop ----------------------------- ####
+        #### Completed: Batch-Processing - Inner Loop ----------------------------- ####
 
         ## Exporting ./reports/reports.json data-sets into CSV output
         generate_csvoutput;
@@ -770,11 +825,11 @@ function main () {
 
       done;
 
-#### Completed:  Batch-Processing - Outer Loop ---------------------------- ####
+      #### Completed:  Batch-Processing - Outer Loop ---------------------------- ####
 
     done;
 
-#### Completed: Batch-Processing - Superset Loop -------------------------- ####
+    #### Completed: Batch-Processing - Superset Loop -------------------------- ####
 
     #### -----------------------------------------------------------------------
     ## Post-processing: Normalize ./cache/targets/<ip>.json to grouped by site
@@ -856,17 +911,27 @@ function main () {
 :> ${actions_logfile};
 
 rm -rf ${cache_location};
-mkdir -p ${cache_location}/{jobs,targets};
+mkdir -p ${cache_location}/{jobs,targets} 2>/dev/null || true;
 
-rm -rf ${logs_location} 2>/dev/null;
-mkdir -p ${logs_location}/{errors,jobs};
+[[ ! -d ${logs_location} ]] && \
+  mkdir -p ${logs_location}/{console,jobs} 2>/dev/null || true;
+# find ${logs_location} -type f -delete 2>/dev/null;
 
 rm -rf ${targets_location} 2>/dev/null;
-mkdir -p ${targets_location};
+mkdir -p ${targets_location} 2>/dev/null || true;
 
-[[ -z "${script_name+x}" ]] && export script_name="${0}";
+## Flush content of all files under ./logs without deleting them
+[[ -d "${logs_location}" ]] && find "${logs_location}" -type f -exec truncate -s 0 {} +
 
-declare -a file_extensions=();
+#------------------------------------------------------------------------------#
+
+[[ -z "${script_name+x}" ]] && script_name="${0}";
+
+script_filename="${BASH_SOURCE[0]##*/}";
+script_filename="${script_filename%.*}";
+
+parse_listings__logfile="${TMP_DIR}/${script_filename}.log";
+:> "${parse_listings__logfile}";
 
 #------------------------------------------------------------------------------#
 

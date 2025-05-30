@@ -4,41 +4,39 @@
 ## File: scripts/extract-configs.shell
 ##
 ## Purpose:
-##   Unified pre-parsing engine to extract reduced configuration blocks
-##   from vendor-native network configuration files (e.g., Cisco, Fortinet).
+##   Extracts targeted configuration blocks from vendor-native network
+##   configuration files (e.g., Cisco, Fortinet) using platform-specific
+##   AWK reducers. Designed for use as a high-speed preprocessing engine.
 ##
-##   This wrapper detects or accepts a vendor platform, invokes the appropriate
-##   vendor-specific AWK script, and writes a minimized output containing only
-##   relevant configuration entries matched against a search pattern.
-##
-## Description:
-##   - Automatically detects config vendor if not specified.
-##   - Dispatches to ./scripts/extract/<vendor>-configs.awk
-##   - Captures matched config blocks based on IPs, phrases, or identifiers.
-##   - Supports clean JSON-oriented output production downstream.
-##   - Serves as a bridge between `network-configs.shell` and vendor logic.
+## Overview:
+##   - Accepts a config file and a search pattern (IPs, names, etc).
+##   - Detects platform automatically (or accepts it via --platform).
+##   - Dispatches to: ./scripts/extract/<vendor>-configs.awk
+##   - Outputs reduced config to file (--extract) or to console (--console).
+##   - Fully traceable via verbose logs.
 ##
 ## Usage:
 ##   bash ./scripts/extract-configs.shell \
-##     --ips-list=10.0.0.1 \
+##     --search=10.0.0.1 \
 ##     --config=configs/fw-1.cfg \
-##     --output=./tmp/fw1-reduced.cfg \
+##     --extract=./tmp/fw1-reduced.cfg \
 ##     [--platform=cisco|fortinet] \
+##     [--console] \
 ##     [--verbose]
 ##
 ## Requirements:
 ##   - Bash v4+, GNU awk, grep, sed
-##   - scripts/extract/<vendor>-configs.awk must exist
+##   - ./scripts/extract/<vendor>-configs.awk must exist
 ##
 ## Notes:
-##   - This script should never contain vendor-specific logic internally.
-##     All pattern logic resides in vendor-specific AWK scripts.
-##   - Compatible with project-wide caching and pre-reduction workflows.
+##   - Never embed vendor-specific parsing logic in this script.
+##   - This script is called by network-configs.shell as a subroutine.
+##   - Designed for compatibility with JSON-ready parsing workflows.
 ##
 ## -------------------------------------------------------------------------- ##
 
 set -euo pipefail  ## Strict mode: exit on error, undefined var use, and pipeline failure
-set -x;          ## Enable for execution tracing/debugging
+# set -x;          ## Enable for execution tracing/debugging
 
 ## POSIX locale standard
 export LC_ALL=C   ## Ensure consistent sorting and character handling (POSIX-compliant)
@@ -94,6 +92,36 @@ function message () {
 }; alias print-message='message';
 
 #------------------------------------------------------------------------------#
+## Output Utilities: Print a message (no-newline) in consistent format
+function print () {
+    [[ -n ${1:-} ]] && local message="${1}" || return 0;
+    echo -en "${message}";
+    # return 0;
+  }; alias print-inline='print';
+
+#------------------------------------------------------------------------------#
+## Output Utilities: Print an error message in consistent format
+function warning () {
+    [[ -n ${1:-} ]] && local message="${1}" || return 0;
+    echo -e "Warning: ${message}";
+    # return 0;
+}; alias error-message='warning';
+
+#------------------------------------------------------------------------------#
+function detect_vendor () {
+    local config_file="${1}";
+    local fortinet_pattern='fortinet|fortigate';
+    local cisco_pattern='\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b';
+    if grep -qiE "${fortinet_pattern}" "${config_file}"; then
+            return 1;
+      elif  grep -qiE "${cisco_pattern}" "${config_file}" 2>/dev/null; then
+            return 2;
+      else  return 3;
+    fi;
+    # return 0;
+}; alias detect-vendor='detect_vendor';
+
+#------------------------------------------------------------------------------#
 function main () {
     ## tracking_process ${FUNCNAME} "${@}";
     oIFS="${IFS}";
@@ -106,10 +134,11 @@ function main () {
 
       #### ---------------------------------------------------------------------
       ## Match accepted arguments
-      [[ $key =~ ^(ips-list|i)$ ]] && local target_addresses="${value}";
-      [[ $key =~ ^(config|c)$ ]] && local source_config="${value}";
-      [[ $key =~ ^(output|o)$ ]] && local output_config="${value}";
+      [[ $key =~ ^(config|c)$ ]] && local target_config="${value}";
+      [[ $key =~ ^(console|o)$ ]] && local console_output=true;
+      [[ $key =~ ^(extract|x)$ ]] && local extract_location="${value}";
       [[ $key =~ ^(platform|p)$ ]] && local target_platform="${value}";
+      [[ $key =~ ^(search|s)$ ]] && local search_pattern="${value}";
 
       #### ---------------------------------------------------------------------
       ## Special options
@@ -121,112 +150,268 @@ function main () {
 
     #### -----------------------------------------------------------------------
     ## Set default values if not supplied
-    [[ -z ${script_helper:-} ]] && script_helper=false;
     [[ -z ${debug:-} ]] && debug=false;
     [[ -z ${dry_run:-} ]] && dry_run=false;
     [[ -z ${verbose:-} ]] && verbose=false;
 
     #### -----------------------------------------------------------------------
+    [[ -z "${console_output:-}" ]] && export console_output=false;
+
+    #### -----------------------------------------------------------------------
     ## Display usage help if requested
+    [[ -z ${script_helper:-} ]] && script_helper=false;
     if [[ ${script_helper:-} == true ]]; then
       display_help;
       exit 0;
     fi;
 
     #### -----------------------------------------------------------------------
-    while [[ -z ${target_addresses:-} ]]; do
+    ## Prompt for search pattern if not provided
+    local prompt_message="Enter search pattern (IP address, CIDR, etc.): ";
+    while [[ -z "${search_pattern}" ]]; do
       newline;
-      read -e -p "Enter target search pattern: " target_addresses
-      if [[ "${target_addresses:-}" =~ ^[[:space:]]*$ ]]; then
-        message "Warning: Pattern cannot be empty!" >&2;
-        newline;
-        exit 19;
+      read -e -p "${prompt_message}" search_pattern;
+      if [[ "${search_pattern// /}" == "" ]]; then
+        warning "Search pattern is required.";
+        search_pattern=false;
+        return 1;
       fi;
     done;
 
     #### -----------------------------------------------------------------------
-    while [[ -z ${source_config:-} || ! -f "${source_config}" ]]; do
-      newline;
-      read -e -p "Enter source configuration file: " source_config;
-      if [[ ! -f "${source_config}" ]]; then
-        message "Warning: File does not exist!" >&2;
+    ## Normalize search pattern input into search_terms[]
+    declare -a search_terms=();
+
+    if [[ -f "${search_pattern}" && "${search_pattern}" != *,* ]]; then
+            ## Read IPs from file
+            mapfile -t search_terms < <(
+              tr -d '\r' < "${search_pattern}" | \
+              grep -v '^\s*$' | grep -v '^#'
+            );
+      else  ## Inline string — preserve full IPs and split only on clear delimiters
+            IFS=$'\n' read -r -d '' -a search_terms <<< "$(
+              echo "${search_pattern}" | \
+              sed 's/[][|;:]/ /g' | tr ', ' '\n\n' | \
+              grep -v '^\s*$'
+            )" || true;
+            ## Write to temp file
+            search_pattern="${TMP_DIR}/ips.list";
+            printf "%s\n" "${search_terms[@]}" > "${search_pattern}";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Compact form of targets for logging (first and last elements only)
+    local first_search_entry="${search_terms[0]}"
+    local last_search_entry="${search_terms[-1]}"
+    local target_search_range="${first_search_entry}, ... ,${last_search_entry}"
+
+    #### -----------------------------------------------------------------------
+    if [[ "${verbose}" == true ]]; then
+      {
         newline;
-        exit 20;
+        message "Search Pattern: [ ${search_pattern} ]";
+        local count=${#search_terms[@]};
+        if (( count == 0 )); then
+                warning "No search terms provided or extracted.";
+          else  print "Search Terms (${count}): ";
+                print "[ ${target_search_range} ]"
+
+        fi;
+        newline;
+      } >> "${trace_logfile:-/dev/null}";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Prompt for source configuration file if not provided
+    local prompt_message="Enter configuration file to be parsed: ";
+    while [[ -z "${target_config:-}" ]]; do
+      newline;
+      read -e -p "${prompt_message}" target_config;
+      if [[ -z "${target_config}" || ! -f "${target_config}" || ! -r "${target_config}" ]]; then
+        warning "Provided file [ ${target_config:-} ] does not exist or is not readable.";
+        target_config="";
+        continue;
       fi;
     done;
 
     #### -----------------------------------------------------------------------
     if [[ -z "${target_platform:-}" ]]; then
-      if grep -qiE 'fortinet|fortigate' "${source_config}"; then
-              vendor="fortinet"
-        elif  grep -qiE '\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b' "${source_config}" 2>/dev/null; then
-              vendor="cisco"
-        else  message "Unable to detect vendor platform." >&2;
-              newline;
-              exit 21;
-      fi;
+      set +e;
+      detect_vendor "${target_config}";
+      local vendor_code=${?};
+      set -e;
+      case "${vendor_code}" in
+        1)  target_platform="fortinet";
+            ;;
+        2)  target_platform="cisco";
+            ;;
+        3)  target_platform="unknown";
+            {
+              warning "Unsupported configuration type: ${target_config}";
+              newline 2;
+            } >> "${trace_logfile:-/dev/null}";
+            return 1;
+            ;;
+        *)  target_platform="unknown";
+            {
+              warning "Unknown configuration type: ${target_config}";
+              newline 2;
+            } >> "${trace_logfile:-/dev/null}";
+            return 1;
+            ;;
+      esac;
+
     fi;
 
-    #### -----------------------------------------------------------------------
-    ## Output path handling and validation
-    if [[ -z "${output_config:-}" ]]; then
-            if [[ "${verbose}" == true ]]; then
-              message "Info: No --output specified. Displaying output inline.";
-            fi;
-            output_to_stdout=true;
-      else  output_to_stdout=false;
-            # Determine if output_config is a file (same extension as source)
-            if [[ "${output_config##*.}" == "${source_config##*.}" ]]; then
-                    final_output="${output_config}";
-              else  # Always clone structure inside provided directory
-                    base_output="${output_config%/}";
-                    rel_path="$(
-                      echo "${source_config}" | sed "s|^\./||"
-                    )";
+    #### -------------------------------------------------------------------------
+    if [[ "${verbose}" == true ]]; then
+      {
+        newline;
+        message "Target Config: [ ${target_config} ] ( ${target_platform} )";
+        ls -al --color=auto "${target_config}" 2>/dev/null;
+      } >> "${trace_logfile:-/dev/null}";
+    fi;
+
+    #### -------------------------------------------------------------------------
+    ## Extraction path resolution (optional, silent if unset)
+    if [[ -n "${extract_location:-}" ]]; then
+            if [[ "${extract_location##*.}" == "${target_config##*.}" ]]; then
+                    ## If same extension as source, treat as direct file path
+                    final_output="${extract_location}";
+              else  ## Otherwise treat as a base directory and replicate source path inside
+                    base_output="${extract_location%/}";
+                    rel_path="$( echo "${target_config}" | sed 's|^\./||' )";
                     final_output="${base_output}/${rel_path}";
             fi;
-            output_config="${final_output}";
-            output_dir="$( dirname "${output_config}" )";
+            extract_location="${final_output}";
+            output_dir="$( dirname "${extract_location}" )";
             if [[ ! -d "${output_dir}" ]]; then
               mkdir -p "${output_dir}" || {
-                message "Warning: Failed to create output directory: ${output_dir}" >&2;
-                newline;
-                exit 22;
+                  message "Warning: Failed to create output directory: ${output_dir}" >&2
+                  newline;
               };
             fi;
+      else  {
+              warning "Skipping step to export the extracted configuration.";
+            } >> "${trace_logfile:-/dev/null}";
     fi;
 
     #### -----------------------------------------------------------------------
-    local extracted_configuration="$(
-      $( which awk ) -v targets="${target_addresses}" \
-                     -f "./scripts/extract/${vendor}-configs.awk" \
-                     "${source_config}"
+    ## Resolve the real path of this script
+    local SCRIPT_PATH="$(
+      command -v -- "${BASH_SOURCE[0]}"
     )";
-    result=$?;
-    # message "AWK exit code: ${result}";
+    local SCRIPT_DIR="$(
+      dirname -- "${SCRIPT_PATH}"
+    )";
+
+    ## Locate vendor-specific AWK parser
+    local script_filename="${target_platform}-configs.awk";
+    local script_filepath="${SCRIPT_DIR}/extract/${script_filename}";
+
+    ## Validate presence of the AWK script
+    if [[ ! -f "${script_filepath}" ]]; then
+      {
+        warning "AWK script '${script_filename}' was not found [ ${target_platform} ]";
+        message "Expected path: ${script_filepath}";
+        newline;
+      } >> "${trace_logfile:-/dev/null}";
+      return 1;
+    fi;
+
+    # #### -----------------------------------------------------------------------
+    # local extracted_configuration="$(
+    #   $( which awk ) -v targets="${search_pattern}" \
+    #                  -f "${script_filepath}" \
+    #                     "${target_config}" \
+    #   ;
+    # )";
+    # result=$?;
+    # # message "AWK exit code: ${result}";
 
     #### -----------------------------------------------------------------------
-    # newline;
+    ## Prepare AWK command
+    declare -a execute=(
+      $(which awk)
+      -v "targets=$( IFS=','; echo "${search_terms[*]}" )"
+      -f "${script_filepath}"
+      "${target_config}"
+    );
+
+    local awk_bin="$( which awk )";
+    local awk_args="-v targets=\"${target_search_range}\"";
+    local base_cmd="${awk_bin} ${awk_args}";
+
+    # Calculate indent based on the length of base_cmd
+    local indent=$( printf '%*s' "${#awk_bin}" '' );
+
+    #### -----------------------------------------------------------------------
+    ## Log execution if verbose
+    if [[ "${verbose}" == true ]]; then
+      {
+        newline;
+        message "Executing AWK script [ ${script_filepath} ]";
+        message "${base_cmd} \\";
+        message "${indent} -f ${script_filepath} \\";
+        message "${indent}    ${target_config}";
+        newline;
+      } >> "${trace_logfile:-/dev/null}";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Execute and capture output
+    local extracted_configuration="$( "${execute[@]}" 2>&1 )";
+    result=$?;
+
+    #### -----------------------------------------------------------------------
     if [[ -n "${extracted_configuration}" ]]; then
-            # echo -n "${extracted_configuration}" > "${output_config}";
-            echo -n "${extracted_configuration}" | \
+
+            # print "${extracted_configuration}" > "${extract_location}";
+            print "${extracted_configuration}" | \
             sed '1{/^[[:space:]]*$/d;}' \
-            > "${output_config}";
-            newline 2 >> "${output_config}";
+            > "${extract_location}";
+            newline 2 >> "${extract_location}";
+
             if [[ "${verbose}" == true ]]; then
-              message "Configuration File [ ${output_config} ]";
-              newline;
-              cat -n "${output_config}";
+              {
+                message "Configuration File [ ${extract_location} ]";
+                newline;
+                cat -n "${extract_location}";
+              } >> "${trace_logfile:-/dev/null}";
             fi;
-      else  message "Warning: No matching blocks found. Output file not written.";
-            newline;
+
+            if [[ "${console_output}" == true ]]; then
+              {
+                message "Extracted Configuration:";
+                newline;
+                print "${extracted_configuration}" | \
+                sed '1{/^[[:space:]]*$/d;}';
+              };
+            fi;
+
+      else  {
+              warning "No matching blocks were found. Output to file was not written.";
+              newline;
+            } >> "${trace_logfile:-/dev/null}";
             return 1;
+
     fi;
 
     # return 0;
 }; alias parse-cisco='main';
 
+#------------------------------------------------------------------------------#
+
 [[ -z "${script_name+x}" ]] && export script_name="${0}";
+
+export logs_location="logs";
+mkdir -p ${logs_location}/console 2>/dev/null || true;
+
+script_filename="${BASH_SOURCE[0]##*/}";
+script_filename="${script_filename%.*}";
+
+trace_logfile="${logs_location}/console/${script_filename}.console";
+touch "${trace_logfile}";
 
 #------------------------------------------------------------------------------#
 
@@ -242,35 +427,35 @@ fi;
 ##
 ## 1. Extract from Cisco config using IP matches:
 ##    bash scripts/extract-configs.shell \
-##         --ips-list="10.0.0.1,192.168.1.1" \
+##         --search="10.0.0.1,192.168.1.1" \
 ##         --config=./configs/core-fw.cfg \
-##         --output=./reduced/core-fw.cfg \
+##         --extract=./reduced/core-fw.cfg \
 ##         --platform=cisco
 ##
 ## 2. Extract from Fortinet config using VPN object names:
 ##    bash scripts/extract-configs.shell \
-##         --ips-list="edit VPN-PROFILE,edit BRANCH-ACCESS" \
+##         --search="edit VPN-PROFILE,edit BRANCH-ACCESS" \
 ##         --config=./configs/fg-dmz.cfg \
-##         --output=./reduced/fg-dmz.cfg \
+##         --extract=./reduced/fg-dmz.cfg \
 ##         --platform=fortinet
 ##
 ## 3. Auto-detect platform from config content:
 ##    bash scripts/extract-configs.shell \
-##         --ips-list="permit ip any" \
+##         --search="permit ip any" \
 ##         --config=./configs/asa-fw.cfg \
-##         --output=./reduced/asa-fw.cfg
+##         --extract=./reduced/asa-fw.cfg
 ##
-## 4. Use custom pipe delimiter:
+## 4. Display output to console instead of writing to file:
 ##    bash scripts/extract-configs.shell \
-##         --ips-list="object-group DMZ|object-group CORE" \
-##         --config=./configs/fw-acl.cfg \
-##         --output=./reduced/fw-acl.cfg \
-##         --platform=cisco
+##         --search="10.1.1.1" \
+##         --config=./configs/switch.cfg \
+##         --console
 ##
-## 5. Basic interactive mode (will prompt for missing values):
+## 5. Run interactively (prompts for search/config/platform):
 ##    bash scripts/extract-configs.shell
 ##
 ## Notes:
-##   - The --ips-list pattern string is passed to the AWK script as-is.
-##   - Use --platform to bypass detection and force a specific parser.
+##   - The --search string is passed directly to the AWK script.
+##   - Use --platform to override automatic detection.
+##   - Use --console to display output without writing to disk.
 ## -------------------------------------------------------------------------- ##
