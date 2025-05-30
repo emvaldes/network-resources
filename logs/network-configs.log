@@ -2,8 +2,8 @@
 + export LC_ALL=C
 + LC_ALL=C
 ++ mktemp -d
-+ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.47msDFvfdp
-+ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.47msDFvfdp
++ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.uylgT0B83k
++ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.uylgT0B83k
 + trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
 + export 'nl=\n'
 + nl='\n'
@@ -180,7 +180,6 @@
 + [[ -n - 10.0.0.1 ]]
 + local 'message=- 10.0.0.1'
 + echo -e '- 10.0.0.1'
-+ cat -n
 + (( i++ ))
 + (( i < count && i < 25 ))
 + message '- 10.0.1.2'
@@ -195,6 +194,7 @@
 + echo -e '- 10.0.2.3'
 + (( i++ ))
 + (( i < count && i < 25 ))
++ cat -n
 + message '- 192.168.1.10'
 + [[ -n - 192.168.1.10 ]]
 + local 'message=- 192.168.1.10'
@@ -412,7 +412,7 @@
 +++ IFS='|'
 +++ echo 'access-sw1-west|branch-isr-02|campus-sw-access01|dmz-fw2-backup|fg-branch-vpn-01|fg-campus-core|fg-testing-config|fw1|fw3|perimeter-fw1|switch1|switch3'
 ++ egrep 'access-sw1-west|branch-isr-02|campus-sw-access01|dmz-fw2-backup|fg-branch-vpn-01|fg-campus-core|fg-testing-config|fw1|fw3|perimeter-fw1|switch1|switch3'
-+ search_configs=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.47msDFvfdp/configs.list
++ search_configs=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.uylgT0B83k/configs.list
 + printf '%s\n' configs/cisco/access-sw1-west.cfg configs/cisco/branch-isr-02.cfg configs/cisco/campus-sw-access01.cfg configs/cisco/dmz-fw2-backup.cfg configs/cisco/perimeter-fw1.cfg configs/fortinet/fg-branch-vpn-01.cfg configs/fortinet/fg-campus-core.cfg configs/fortinet/fg-testing-config.cfg configs/misc/fw1.cfg configs/misc/fw3.cfg configs/misc/switch1.conf configs/misc/switch3.conf
 + matched_ips=()
 + declare -a matched_ips
@@ -1021,12 +1021,12 @@
 ++ grep -v '^\s*$'
 ++ sort -u
 + readarray -t configs_listing
-++ printf '%s\n' configs/cisco/access-sw1-west.cfg configs/cisco/access-sw1-west.cfg configs/cisco/access-sw1-west.cfg configs/cisco/branch-isr-02.cfg configs/cisco/branch-isr-02.cfg configs/cisco/branch-isr-02.cfg configs/cisco/branch-isr-02.cfg configs/cisco/branch-isr-02.cfg configs/cisco/branch-isr-02.cfg configs/cisco/campus-sw-access01.cfg configs/cisco/campus-sw-access01.cfg configs/cisco/campus-sw-access01.cfg configs/cisco/dmz-fw2-backup.cfg configs/cisco/dmz-fw2-backup.cfg configs/cisco/dmz-fw2-backup.cfg configs/cisco/dmz-fw2-backup.cfg configs/cisco/dmz-fw2-backup.cfg configs/cisco/perimeter-fw1.cfg configs/cisco/perimeter-fw1.cfg configs/cisco/perimeter-fw1.cfg configs/cisco/perimeter-fw1.cfg configs/fortinet/fg-branch-vpn-01.cfg configs/fortinet/fg-branch-vpn-01.cfg configs/fortinet/fg-branch-vpn-01.cfg configs/fortinet/fg-branch-vpn-01.cfg configs/fortinet/fg-branch-vpn-01.cfg configs/fortinet/fg-branch-vpn-01.cfg configs/fortinet/fg-branch-vpn-01.cfg configs/fortinet/fg-campus-core.cfg configs++ grep -v '^\s*$'
-/fortinet/fg-campus-core.cfg configs/fortinet/fg-campus-core.cfg configs/fortinet/fg-campus-core.cfg configs/fortinet/fg-campus-core.cfg configs/fortinet/fg-testing-config.cfg configs/misc/fw1.cfg configs/misc/fw1.cfg configs/misc/fw1.cfg configs/misc/fw1.cfg configs/misc/fw1.cfg configs/misc/fw1.cfg configs/misc/fw3.cfg configs/misc/fw3.cfg configs/misc/fw3.cfg configs/misc/fw3.cfg configs/misc/fw3.cfg configs/misc/switch1.conf configs/misc/switch1.conf configs/misc/switch1.conf configs/misc/switch1.conf configs/misc/switch3.conf configs/misc/switch3.conf
+++ printf '%s\n' configs/cisco/access-sw1-west.cfg configs/cisco/access-sw1-west.cfg configs/cisco/access-sw1-west.cfg configs/cisco/branch-isr-02.cfg configs/cisco/branch-isr-02.cfg configs/cisco/branch-isr-02.cfg configs/cisco/branch-isr-02.cfg configs/cisco/branch-isr-02.cfg configs/cisco/branch-isr-02.cfg configs/cisco/campus-sw-access01.cfg configs/cisco/campus-sw-access01.cfg configs/cisco/campus-sw-access01.cfg configs/cisco/dmz-fw2-backup.cfg configs/cisco/dmz-fw2-backup.cfg configs/cisco/dmz-fw2-backup.cfg configs/cisco/dmz-fw2-backup.cfg configs/cisco/dmz-fw2-backup.cfg configs/cisco/perimeter-fw1.cfg configs/cisco/perimeter-fw1.cfg configs/cisco/perimeter-fw1.cfg configs/cisco/perimeter-fw1.cfg configs/fortinet/fg-branch-vpn-01.cfg configs/fortinet/fg-branch-vpn-01.cfg configs/fortinet/fg-branch-vpn-01.cfg configs/fortinet/fg-branch-vpn-01.cfg configs/fortinet/fg-branch-vpn-01.cfg configs/fortinet/fg-branch-vpn-01.cfg configs/fortinet/fg-branch-vpn-01.cfg configs/fortinet/fg-campus-core.cfg configs/fortinet/fg-campus-core.cfg configs/fortinet/fg-campus-core.cfg configs/fortinet/fg-campus-core.cfg configs/fortinet/fg-campus-core.cfg configs/fortinet/fg-testing-config.cfg configs/misc/fw1.cfg configs/misc/fw1.cfg configs/misc/fw1.cfg configs/misc/fw1.cfg configs/misc/fw1.cfg configs/misc/fw1.cfg configs/misc/fw3.cfg configs/misc/fw3.cfg configs/misc/fw3.cfg configs/misc/fw3.cfg configs/misc/fw3.cfg configs/misc/switch1.conf configs/misc/switch1.conf configs/misc/switch1.conf configs/misc/switch1.conf configs/misc/switch3.conf configs/misc/switch3.conf
+++ grep -v '^\s*$'
 ++ sort -u
 + [[ 17 -eq 0 ]]
 + [[ 12 -eq 0 ]]
-+ [[ -w /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.47msDFvfdp/configs.list ]]
++ [[ -w /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.uylgT0B83k/configs.list ]]
 + printf '%s\n' configs/cisco/access-sw1-west.cfg configs/cisco/branch-isr-02.cfg configs/cisco/campus-sw-access01.cfg configs/cisco/dmz-fw2-backup.cfg configs/cisco/perimeter-fw1.cfg configs/fortinet/fg-branch-vpn-01.cfg configs/fortinet/fg-campus-core.cfg configs/fortinet/fg-testing-config.cfg configs/misc/fw1.cfg configs/misc/fw3.cfg configs/misc/switch1.conf configs/misc/switch3.conf
 + ((  17 > 0  ))
 + printf '%s\n' 10.0.0.1 10.0.1.2 10.0.2.3 10.10.10.10 172.16.0.5 172.16.1.6 172.18.1.20 172.31.255.254 192.0.2.50 192.168.0.1 192.168.0.100 192.168.1.10 192.168.1.11 192.168.100.100 192.168.2.12 198.51.100.75 203.0.113.25
@@ -1069,9 +1069,9 @@
 + for item in "${configs_listing[@]}"
 + message '- configs/cisco/access-sw1-west.cfg'
 + [[ -n - configs/cisco/access-sw1-west.cfg ]]
++ cat -n
 + local 'message=- configs/cisco/access-sw1-west.cfg'
 + echo -e '- configs/cisco/access-sw1-west.cfg'
-+ cat -n
 + for item in "${configs_listing[@]}"
 + message '- configs/cisco/branch-isr-02.cfg'
 + [[ -n - configs/cisco/branch-isr-02.cfg ]]
@@ -2131,5 +2131,5 @@
 + return 0
 + result=0
 + exit 0
-+ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.47msDFvfdp ]]
-+ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.47msDFvfdp
++ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.uylgT0B83k ]]
++ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.uylgT0B83k

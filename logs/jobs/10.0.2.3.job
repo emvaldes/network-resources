@@ -3,8 +3,8 @@
 + export LC_ALL=C
 + LC_ALL=C
 ++ mktemp -d
-+ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1
-+ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1
++ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l
++ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l
 + trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
 + source ./scripts/tools-devops.shell
 ++ [[ -n '' ]]
@@ -45,8 +45,8 @@
 +++ date +%s%N
 +++ base64
 +++ tr -dc a-zA-Z0-9
-++ export divisor=MTc0ODU5MTg4MTEzNDEwNDAwMAo
-++ divisor=MTc0ODU5MTg4MTEzNDEwNDAwMAo
+++ export divisor=MTc0ODU5MjQ2Mzk4MjIyMDAwMAo
+++ divisor=MTc0ODU5MjQ2Mzk4MjIyMDAwMAo
 + source ./scripts/tools-configs.shell
 ++ [[ -n '' ]]
 ++ readonly __TOOLS_EXTRACTION_SOURCED=1
@@ -58,7 +58,7 @@
 + script_name=./scripts/parse-configs.shell
 + script_filename=parse-configs.shell
 + script_filename=parse-configs
-+ parse_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/parse-configs.log
++ parse_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/parse-configs.log
 + :
 + [[ 9 -eq 0 ]]
 + [[ --configs=.cache/resources =~ ^-*(h|help)$ ]]
@@ -353,22 +353,22 @@
 + [[ -z 10.0.2.3 ]]
 ++ print 10.0.2.3
 ++ [[ -n 10.0.2.3 ]]
-++ sed -E 's/[[:space:]]+//g'
 ++ echo -en 10.0.2.3
+++ sed -E 's/[[:space:]]+//g'
 ++ tr -d '\r'
 + target_address=10.0.2.3
 + [[ false == true ]]
-+ export tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/fragments.json
-+ tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/fragments.json
-+ local extract_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/extract-configs.log
++ export tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/fragments.json
++ tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/fragments.json
++ local extract_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/extract-configs.log
 + :
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs .cache/resources/cisco/branch-isr-02.cfg 10.0.2.3 targets/10.0.2.3.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/fragments.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/extract-configs.log
++ extract_configs .cache/resources/cisco/branch-isr-02.cfg 10.0.2.3 targets/10.0.2.3.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/fragments.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/extract-configs.log
 + local config_file=.cache/resources/cisco/branch-isr-02.cfg
 + local target_pattern=10.0.2.3
 + local target_listing=targets/10.0.2.3.json
-+ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/fragments.json
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/extract-configs.log
++ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/fragments.json
++ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/extract-configs.log
 + [[ ! -f .cache/resources/cisco/branch-isr-02.cfg ]]
 + message '[DEBUG] Checking if config file exists and is readable: .cache/resources/cisco/branch-isr-02.cfg'
 + [[ -n [DEBUG] Checking if config file exists and is readable: .cache/resources/cisco/branch-isr-02.cfg ]]
@@ -377,11 +377,11 @@
 [DEBUG] Checking if config file exists and is readable: .cache/resources/cisco/branch-isr-02.cfg
 + [[ ! -s .cache/resources/cisco/branch-isr-02.cfg ]]
 ++ stat -f %m .cache/resources/cisco/branch-isr-02.cfg
-+ message '[OK] File '\''.cache/resources/cisco/branch-isr-02.cfg'\'' is readable and size is 1748591879 bytes'
-+ [[ -n [OK] File '.cache/resources/cisco/branch-isr-02.cfg' is readable and size is 1748591879 bytes ]]
-+ local 'message=[OK] File '\''.cache/resources/cisco/branch-isr-02.cfg'\'' is readable and size is 1748591879 bytes'
-+ echo -e '[OK] File '\''.cache/resources/cisco/branch-isr-02.cfg'\'' is readable and size is 1748591879 bytes'
-[OK] File '.cache/resources/cisco/branch-isr-02.cfg' is readable and size is 1748591879 bytes
++ message '[OK] File '\''.cache/resources/cisco/branch-isr-02.cfg'\'' is readable and size is 1748592462 bytes'
++ [[ -n [OK] File '.cache/resources/cisco/branch-isr-02.cfg' is readable and size is 1748592462 bytes ]]
++ local 'message=[OK] File '\''.cache/resources/cisco/branch-isr-02.cfg'\'' is readable and size is 1748592462 bytes'
++ echo -e '[OK] File '\''.cache/resources/cisco/branch-isr-02.cfg'\'' is readable and size is 1748592462 bytes'
+[OK] File '.cache/resources/cisco/branch-isr-02.cfg' is readable and size is 1748592462 bytes
 + local 'imported_content={
   "vendor": "cisco",
   "model": "",
@@ -859,44 +859,44 @@ object-group network Lantern-DMZ
  description Protected but public-facing zone
  network-object host 172.18.1.20
  network-object host 192.168.1.11
-++ perl -pe 's/\n/MTc0ODU5MTg4MTEzNDEwNDAwMAo/g'
-+ local 'serialized_objects={MTc0ODU5MTg4MTEzNDEwNDAwMAo  "vendor": "cisco",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "model": "",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "version": "16.9",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "domain": "",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "hostname": "branch-isr-02"MTc0ODU5MTg4MTEzNDEwNDAwMAo}MTc0ODU5MTg4MTEzNDEwNDAwMAoversion 16.9MTc0ODU5MTg4MTEzNDEwNDAwMAohostname branch-isr-02MTc0ODU5MTg4MTEzNDEwNDAwMAointerface GigabitEthernet0/0/0MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 172.16.1.6 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description ISP uplinkMTc0ODU5MTg4MTEzNDEwNDAwMAointerface GigabitEthernet0/0/1MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 192.168.2.12 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description Workstation LANMTc0ODU5MTg4MTEzNDEwNDAwMAointerface GigabitEthernet0/0/2MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description Dev VLANMTc0ODU5MTg4MTEzNDEwNDAwMAoobject network BlackWidow-CoreMTc0ODU5MTg4MTEzNDEwNDAwMAo host 172.16.1.6MTc0ODU5MTg4MTEzNDEwNDAwMAo description Branch router uplink NATMTc0ODU5MTg4MTEzNDEwNDAwMAoobject network Hydra-LinkMTc0ODU5MTg4MTEzNDEwNDAwMAo host 198.51.100.75MTc0ODU5MTg4MTEzNDEwNDAwMAo description Branch NAT egressMTc0ODU5MTg4MTEzNDEwNDAwMAoobject-group network Hydra-EdgeMTc0ODU5MTg4MTEzNDEwNDAwMAo description Remote site uplinkMTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 192.168.2.12MTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 198.51.100.75MTc0ODU5MTg4MTEzNDEwNDAwMAoobject network Panther-GatewayMTc0ODU5MTg4MTEzNDEwNDAwMAo host 10.0.2.3MTc0ODU5MTg4MTEzNDEwNDAwMAo description Secure outbound concentratorMTc0ODU5MTg4MTEzNDEwNDAwMAoobject-group network Lantern-DMZMTc0ODU5MTg4MTEzNDEwNDAwMAo description Protected but public-facing zoneMTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 172.18.1.20MTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 192.168.1.11MTc0ODU5MTg4MTEzNDEwNDAwMAo'
+++ perl -pe 's/\n/MTc0ODU5MjQ2Mzk4MjIyMDAwMAo/g'
++ local 'serialized_objects={MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "vendor": "cisco",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "model": "",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "version": "16.9",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "domain": "",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "hostname": "branch-isr-02"MTc0ODU5MjQ2Mzk4MjIyMDAwMAo}MTc0ODU5MjQ2Mzk4MjIyMDAwMAoversion 16.9MTc0ODU5MjQ2Mzk4MjIyMDAwMAohostname branch-isr-02MTc0ODU5MjQ2Mzk4MjIyMDAwMAointerface GigabitEthernet0/0/0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 172.16.1.6 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description ISP uplinkMTc0ODU5MjQ2Mzk4MjIyMDAwMAointerface GigabitEthernet0/0/1MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 192.168.2.12 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Workstation LANMTc0ODU5MjQ2Mzk4MjIyMDAwMAointerface GigabitEthernet0/0/2MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Dev VLANMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject network BlackWidow-CoreMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 172.16.1.6MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Branch router uplink NATMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject network Hydra-LinkMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 198.51.100.75MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Branch NAT egressMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject-group network Hydra-EdgeMTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Remote site uplinkMTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 192.168.2.12MTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 198.51.100.75MTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject network Panther-GatewayMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 10.0.2.3MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Secure outbound concentratorMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject-group network Lantern-DMZMTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Protected but public-facing zoneMTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 172.18.1.20MTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 192.168.1.11MTc0ODU5MjQ2Mzk4MjIyMDAwMAo'
 + [[ true == true ]]
-+ message 'Serialized Objects: {MTc0ODU5MTg4MTEzNDEwNDAwMAo  "vendor": "cisco",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "model": "",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "version": "16.9",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "domain": "",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "hostname": "branch-isr-02"MTc0ODU5MTg4MTEzNDEwNDAwMAo}MTc0ODU5MTg4MTEzNDEwNDAwMAoversion 16.9MTc0ODU5MTg4MTEzNDEwNDAwMAohostname branch-isr-02MTc0ODU5MTg4MTEzNDEwNDAwMAointerface GigabitEthernet0/0/0MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 172.16.1.6 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description ISP uplinkMTc0ODU5MTg4MTEzNDEwNDAwMAointerface GigabitEthernet0/0/1MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 192.168.2.12 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description Workstation LANMTc0ODU5MTg4MTEzNDEwNDAwMAointerface GigabitEthernet0/0/2MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description Dev VLANMTc0ODU5MTg4MTEzNDEwNDAwMAoobject network BlackWidow-CoreMTc0ODU5MTg4MTEzNDEwNDAwMAo host 172.16.1.6MTc0ODU5MTg4MTEzNDEwNDAwMAo description Branch router uplink NATMTc0ODU5MTg4MTEzNDEwNDAwMAoobject network Hydra-LinkMTc0ODU5MTg4MTEzNDEwNDAwMAo host 198.51.100.75MTc0ODU5MTg4MTEzNDEwNDAwMAo description Branch NAT egressMTc0ODU5MTg4MTEzNDEwNDAwMAoobject-group network Hydra-EdgeMTc0ODU5MTg4MTEzNDEwNDAwMAo description Remote site uplinkMTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 192.168.2.12MTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 198.51.100.75MTc0ODU5MTg4MTEzNDEwNDAwMAoobject network Panther-GatewayMTc0ODU5MTg4MTEzNDEwNDAwMAo host 10.0.2.3MTc0ODU5MTg4MTEzNDEwNDAwMAo description Secure outbound concentratorMTc0ODU5MTg4MTEzNDEwNDAwMAoobject-group network Lantern-DMZMTc0ODU5MTg4MTEzNDEwNDAwMAo description Protected but public-facing zoneMTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 172.18.1.20MTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 192.168.1.11MTc0ODU5MTg4MTEzNDEwNDAwMAo'
-+ [[ -n Serialized Objects: {MTc0ODU5MTg4MTEzNDEwNDAwMAo  "vendor": "cisco",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "model": "",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "version": "16.9",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "domain": "",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "hostname": "branch-isr-02"MTc0ODU5MTg4MTEzNDEwNDAwMAo}MTc0ODU5MTg4MTEzNDEwNDAwMAoversion 16.9MTc0ODU5MTg4MTEzNDEwNDAwMAohostname branch-isr-02MTc0ODU5MTg4MTEzNDEwNDAwMAointerface GigabitEthernet0/0/0MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 172.16.1.6 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description ISP uplinkMTc0ODU5MTg4MTEzNDEwNDAwMAointerface GigabitEthernet0/0/1MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 192.168.2.12 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description Workstation LANMTc0ODU5MTg4MTEzNDEwNDAwMAointerface GigabitEthernet0/0/2MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description Dev VLANMTc0ODU5MTg4MTEzNDEwNDAwMAoobject network BlackWidow-CoreMTc0ODU5MTg4MTEzNDEwNDAwMAo host 172.16.1.6MTc0ODU5MTg4MTEzNDEwNDAwMAo description Branch router uplink NATMTc0ODU5MTg4MTEzNDEwNDAwMAoobject network Hydra-LinkMTc0ODU5MTg4MTEzNDEwNDAwMAo host 198.51.100.75MTc0ODU5MTg4MTEzNDEwNDAwMAo description Branch NAT egressMTc0ODU5MTg4MTEzNDEwNDAwMAoobject-group network Hydra-EdgeMTc0ODU5MTg4MTEzNDEwNDAwMAo description Remote site uplinkMTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 192.168.2.12MTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 198.51.100.75MTc0ODU5MTg4MTEzNDEwNDAwMAoobject network Panther-GatewayMTc0ODU5MTg4MTEzNDEwNDAwMAo host 10.0.2.3MTc0ODU5MTg4MTEzNDEwNDAwMAo description Secure outbound concentratorMTc0ODU5MTg4MTEzNDEwNDAwMAoobject-group network Lantern-DMZMTc0ODU5MTg4MTEzNDEwNDAwMAo description Protected but public-facing zoneMTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 172.18.1.20MTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 192.168.1.11MTc0ODU5MTg4MTEzNDEwNDAwMAo ]]
-+ local 'message=Serialized Objects: {MTc0ODU5MTg4MTEzNDEwNDAwMAo  "vendor": "cisco",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "model": "",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "version": "16.9",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "domain": "",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "hostname": "branch-isr-02"MTc0ODU5MTg4MTEzNDEwNDAwMAo}MTc0ODU5MTg4MTEzNDEwNDAwMAoversion 16.9MTc0ODU5MTg4MTEzNDEwNDAwMAohostname branch-isr-02MTc0ODU5MTg4MTEzNDEwNDAwMAointerface GigabitEthernet0/0/0MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 172.16.1.6 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description ISP uplinkMTc0ODU5MTg4MTEzNDEwNDAwMAointerface GigabitEthernet0/0/1MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 192.168.2.12 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description Workstation LANMTc0ODU5MTg4MTEzNDEwNDAwMAointerface GigabitEthernet0/0/2MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description Dev VLANMTc0ODU5MTg4MTEzNDEwNDAwMAoobject network BlackWidow-CoreMTc0ODU5MTg4MTEzNDEwNDAwMAo host 172.16.1.6MTc0ODU5MTg4MTEzNDEwNDAwMAo description Branch router uplink NATMTc0ODU5MTg4MTEzNDEwNDAwMAoobject network Hydra-LinkMTc0ODU5MTg4MTEzNDEwNDAwMAo host 198.51.100.75MTc0ODU5MTg4MTEzNDEwNDAwMAo description Branch NAT egressMTc0ODU5MTg4MTEzNDEwNDAwMAoobject-group network Hydra-EdgeMTc0ODU5MTg4MTEzNDEwNDAwMAo description Remote site uplinkMTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 192.168.2.12MTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 198.51.100.75MTc0ODU5MTg4MTEzNDEwNDAwMAoobject network Panther-GatewayMTc0ODU5MTg4MTEzNDEwNDAwMAo host 10.0.2.3MTc0ODU5MTg4MTEzNDEwNDAwMAo description Secure outbound concentratorMTc0ODU5MTg4MTEzNDEwNDAwMAoobject-group network Lantern-DMZMTc0ODU5MTg4MTEzNDEwNDAwMAo description Protected but public-facing zoneMTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 172.18.1.20MTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 192.168.1.11MTc0ODU5MTg4MTEzNDEwNDAwMAo'
-+ echo -e 'Serialized Objects: {MTc0ODU5MTg4MTEzNDEwNDAwMAo  "vendor": "cisco",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "model": "",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "version": "16.9",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "domain": "",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "hostname": "branch-isr-02"MTc0ODU5MTg4MTEzNDEwNDAwMAo}MTc0ODU5MTg4MTEzNDEwNDAwMAoversion 16.9MTc0ODU5MTg4MTEzNDEwNDAwMAohostname branch-isr-02MTc0ODU5MTg4MTEzNDEwNDAwMAointerface GigabitEthernet0/0/0MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 172.16.1.6 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description ISP uplinkMTc0ODU5MTg4MTEzNDEwNDAwMAointerface GigabitEthernet0/0/1MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 192.168.2.12 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description Workstation LANMTc0ODU5MTg4MTEzNDEwNDAwMAointerface GigabitEthernet0/0/2MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description Dev VLANMTc0ODU5MTg4MTEzNDEwNDAwMAoobject network BlackWidow-CoreMTc0ODU5MTg4MTEzNDEwNDAwMAo host 172.16.1.6MTc0ODU5MTg4MTEzNDEwNDAwMAo description Branch router uplink NATMTc0ODU5MTg4MTEzNDEwNDAwMAoobject network Hydra-LinkMTc0ODU5MTg4MTEzNDEwNDAwMAo host 198.51.100.75MTc0ODU5MTg4MTEzNDEwNDAwMAo description Branch NAT egressMTc0ODU5MTg4MTEzNDEwNDAwMAoobject-group network Hydra-EdgeMTc0ODU5MTg4MTEzNDEwNDAwMAo description Remote site uplinkMTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 192.168.2.12MTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 198.51.100.75MTc0ODU5MTg4MTEzNDEwNDAwMAoobject network Panther-GatewayMTc0ODU5MTg4MTEzNDEwNDAwMAo host 10.0.2.3MTc0ODU5MTg4MTEzNDEwNDAwMAo description Secure outbound concentratorMTc0ODU5MTg4MTEzNDEwNDAwMAoobject-group network Lantern-DMZMTc0ODU5MTg4MTEzNDEwNDAwMAo description Protected but public-facing zoneMTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 172.18.1.20MTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 192.168.1.11MTc0ODU5MTg4MTEzNDEwNDAwMAo'
-Serialized Objects: {MTc0ODU5MTg4MTEzNDEwNDAwMAo  "vendor": "cisco",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "model": "",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "version": "16.9",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "domain": "",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "hostname": "branch-isr-02"MTc0ODU5MTg4MTEzNDEwNDAwMAo}MTc0ODU5MTg4MTEzNDEwNDAwMAoversion 16.9MTc0ODU5MTg4MTEzNDEwNDAwMAohostname branch-isr-02MTc0ODU5MTg4MTEzNDEwNDAwMAointerface GigabitEthernet0/0/0MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 172.16.1.6 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description ISP uplinkMTc0ODU5MTg4MTEzNDEwNDAwMAointerface GigabitEthernet0/0/1MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 192.168.2.12 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description Workstation LANMTc0ODU5MTg4MTEzNDEwNDAwMAointerface GigabitEthernet0/0/2MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description Dev VLANMTc0ODU5MTg4MTEzNDEwNDAwMAoobject network BlackWidow-CoreMTc0ODU5MTg4MTEzNDEwNDAwMAo host 172.16.1.6MTc0ODU5MTg4MTEzNDEwNDAwMAo description Branch router uplink NATMTc0ODU5MTg4MTEzNDEwNDAwMAoobject network Hydra-LinkMTc0ODU5MTg4MTEzNDEwNDAwMAo host 198.51.100.75MTc0ODU5MTg4MTEzNDEwNDAwMAo description Branch NAT egressMTc0ODU5MTg4MTEzNDEwNDAwMAoobject-group network Hydra-EdgeMTc0ODU5MTg4MTEzNDEwNDAwMAo description Remote site uplinkMTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 192.168.2.12MTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 198.51.100.75MTc0ODU5MTg4MTEzNDEwNDAwMAoobject network Panther-GatewayMTc0ODU5MTg4MTEzNDEwNDAwMAo host 10.0.2.3MTc0ODU5MTg4MTEzNDEwNDAwMAo description Secure outbound concentratorMTc0ODU5MTg4MTEzNDEwNDAwMAoobject-group network Lantern-DMZMTc0ODU5MTg4MTEzNDEwNDAwMAo description Protected but public-facing zoneMTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 172.18.1.20MTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 192.168.1.11MTc0ODU5MTg4MTEzNDEwNDAwMAo
-++ sed -E 's/MTc0ODU5MTg4MTEzNDEwNDAwMAo([^[:space:]])/\n\1/g'
-+ local 'restored_lines={MTc0ODU5MTg4MTEzNDEwNDAwMAo  "vendor": "cisco",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "model": "",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "version": "16.9",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "domain": "",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "hostname": "branch-isr-02"
++ message 'Serialized Objects: {MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "vendor": "cisco",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "model": "",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "version": "16.9",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "domain": "",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "hostname": "branch-isr-02"MTc0ODU5MjQ2Mzk4MjIyMDAwMAo}MTc0ODU5MjQ2Mzk4MjIyMDAwMAoversion 16.9MTc0ODU5MjQ2Mzk4MjIyMDAwMAohostname branch-isr-02MTc0ODU5MjQ2Mzk4MjIyMDAwMAointerface GigabitEthernet0/0/0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 172.16.1.6 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description ISP uplinkMTc0ODU5MjQ2Mzk4MjIyMDAwMAointerface GigabitEthernet0/0/1MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 192.168.2.12 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Workstation LANMTc0ODU5MjQ2Mzk4MjIyMDAwMAointerface GigabitEthernet0/0/2MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Dev VLANMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject network BlackWidow-CoreMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 172.16.1.6MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Branch router uplink NATMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject network Hydra-LinkMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 198.51.100.75MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Branch NAT egressMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject-group network Hydra-EdgeMTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Remote site uplinkMTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 192.168.2.12MTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 198.51.100.75MTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject network Panther-GatewayMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 10.0.2.3MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Secure outbound concentratorMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject-group network Lantern-DMZMTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Protected but public-facing zoneMTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 172.18.1.20MTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 192.168.1.11MTc0ODU5MjQ2Mzk4MjIyMDAwMAo'
++ [[ -n Serialized Objects: {MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "vendor": "cisco",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "model": "",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "version": "16.9",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "domain": "",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "hostname": "branch-isr-02"MTc0ODU5MjQ2Mzk4MjIyMDAwMAo}MTc0ODU5MjQ2Mzk4MjIyMDAwMAoversion 16.9MTc0ODU5MjQ2Mzk4MjIyMDAwMAohostname branch-isr-02MTc0ODU5MjQ2Mzk4MjIyMDAwMAointerface GigabitEthernet0/0/0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 172.16.1.6 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description ISP uplinkMTc0ODU5MjQ2Mzk4MjIyMDAwMAointerface GigabitEthernet0/0/1MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 192.168.2.12 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Workstation LANMTc0ODU5MjQ2Mzk4MjIyMDAwMAointerface GigabitEthernet0/0/2MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Dev VLANMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject network BlackWidow-CoreMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 172.16.1.6MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Branch router uplink NATMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject network Hydra-LinkMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 198.51.100.75MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Branch NAT egressMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject-group network Hydra-EdgeMTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Remote site uplinkMTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 192.168.2.12MTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 198.51.100.75MTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject network Panther-GatewayMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 10.0.2.3MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Secure outbound concentratorMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject-group network Lantern-DMZMTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Protected but public-facing zoneMTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 172.18.1.20MTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 192.168.1.11MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ]]
++ local 'message=Serialized Objects: {MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "vendor": "cisco",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "model": "",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "version": "16.9",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "domain": "",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "hostname": "branch-isr-02"MTc0ODU5MjQ2Mzk4MjIyMDAwMAo}MTc0ODU5MjQ2Mzk4MjIyMDAwMAoversion 16.9MTc0ODU5MjQ2Mzk4MjIyMDAwMAohostname branch-isr-02MTc0ODU5MjQ2Mzk4MjIyMDAwMAointerface GigabitEthernet0/0/0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 172.16.1.6 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description ISP uplinkMTc0ODU5MjQ2Mzk4MjIyMDAwMAointerface GigabitEthernet0/0/1MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 192.168.2.12 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Workstation LANMTc0ODU5MjQ2Mzk4MjIyMDAwMAointerface GigabitEthernet0/0/2MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Dev VLANMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject network BlackWidow-CoreMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 172.16.1.6MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Branch router uplink NATMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject network Hydra-LinkMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 198.51.100.75MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Branch NAT egressMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject-group network Hydra-EdgeMTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Remote site uplinkMTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 192.168.2.12MTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 198.51.100.75MTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject network Panther-GatewayMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 10.0.2.3MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Secure outbound concentratorMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject-group network Lantern-DMZMTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Protected but public-facing zoneMTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 172.18.1.20MTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 192.168.1.11MTc0ODU5MjQ2Mzk4MjIyMDAwMAo'
++ echo -e 'Serialized Objects: {MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "vendor": "cisco",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "model": "",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "version": "16.9",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "domain": "",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "hostname": "branch-isr-02"MTc0ODU5MjQ2Mzk4MjIyMDAwMAo}MTc0ODU5MjQ2Mzk4MjIyMDAwMAoversion 16.9MTc0ODU5MjQ2Mzk4MjIyMDAwMAohostname branch-isr-02MTc0ODU5MjQ2Mzk4MjIyMDAwMAointerface GigabitEthernet0/0/0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 172.16.1.6 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description ISP uplinkMTc0ODU5MjQ2Mzk4MjIyMDAwMAointerface GigabitEthernet0/0/1MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 192.168.2.12 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Workstation LANMTc0ODU5MjQ2Mzk4MjIyMDAwMAointerface GigabitEthernet0/0/2MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Dev VLANMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject network BlackWidow-CoreMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 172.16.1.6MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Branch router uplink NATMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject network Hydra-LinkMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 198.51.100.75MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Branch NAT egressMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject-group network Hydra-EdgeMTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Remote site uplinkMTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 192.168.2.12MTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 198.51.100.75MTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject network Panther-GatewayMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 10.0.2.3MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Secure outbound concentratorMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject-group network Lantern-DMZMTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Protected but public-facing zoneMTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 172.18.1.20MTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 192.168.1.11MTc0ODU5MjQ2Mzk4MjIyMDAwMAo'
+Serialized Objects: {MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "vendor": "cisco",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "model": "",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "version": "16.9",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "domain": "",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "hostname": "branch-isr-02"MTc0ODU5MjQ2Mzk4MjIyMDAwMAo}MTc0ODU5MjQ2Mzk4MjIyMDAwMAoversion 16.9MTc0ODU5MjQ2Mzk4MjIyMDAwMAohostname branch-isr-02MTc0ODU5MjQ2Mzk4MjIyMDAwMAointerface GigabitEthernet0/0/0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 172.16.1.6 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description ISP uplinkMTc0ODU5MjQ2Mzk4MjIyMDAwMAointerface GigabitEthernet0/0/1MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 192.168.2.12 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Workstation LANMTc0ODU5MjQ2Mzk4MjIyMDAwMAointerface GigabitEthernet0/0/2MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Dev VLANMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject network BlackWidow-CoreMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 172.16.1.6MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Branch router uplink NATMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject network Hydra-LinkMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 198.51.100.75MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Branch NAT egressMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject-group network Hydra-EdgeMTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Remote site uplinkMTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 192.168.2.12MTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 198.51.100.75MTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject network Panther-GatewayMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 10.0.2.3MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Secure outbound concentratorMTc0ODU5MjQ2Mzk4MjIyMDAwMAoobject-group network Lantern-DMZMTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Protected but public-facing zoneMTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 172.18.1.20MTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 192.168.1.11MTc0ODU5MjQ2Mzk4MjIyMDAwMAo
+++ sed -E 's/MTc0ODU5MjQ2Mzk4MjIyMDAwMAo([^[:space:]])/\n\1/g'
++ local 'restored_lines={MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "vendor": "cisco",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "model": "",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "version": "16.9",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "domain": "",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "hostname": "branch-isr-02"
 }
 version 16.9
 hostname branch-isr-02
-interface GigabitEthernet0/0/0MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 172.16.1.6 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description ISP uplink
-interface GigabitEthernet0/0/1MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 192.168.2.12 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description Workstation LAN
-interface GigabitEthernet0/0/2MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description Dev VLAN
-object network BlackWidow-CoreMTc0ODU5MTg4MTEzNDEwNDAwMAo host 172.16.1.6MTc0ODU5MTg4MTEzNDEwNDAwMAo description Branch router uplink NAT
-object network Hydra-LinkMTc0ODU5MTg4MTEzNDEwNDAwMAo host 198.51.100.75MTc0ODU5MTg4MTEzNDEwNDAwMAo description Branch NAT egress
-object-group network Hydra-EdgeMTc0ODU5MTg4MTEzNDEwNDAwMAo description Remote site uplinkMTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 192.168.2.12MTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 198.51.100.75
-object network Panther-GatewayMTc0ODU5MTg4MTEzNDEwNDAwMAo host 10.0.2.3MTc0ODU5MTg4MTEzNDEwNDAwMAo description Secure outbound concentrator
-object-group network Lantern-DMZMTc0ODU5MTg4MTEzNDEwNDAwMAo description Protected but public-facing zoneMTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 172.18.1.20MTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 192.168.1.11MTc0ODU5MTg4MTEzNDEwNDAwMAo'
+interface GigabitEthernet0/0/0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 172.16.1.6 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description ISP uplink
+interface GigabitEthernet0/0/1MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 192.168.2.12 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Workstation LAN
+interface GigabitEthernet0/0/2MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Dev VLAN
+object network BlackWidow-CoreMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 172.16.1.6MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Branch router uplink NAT
+object network Hydra-LinkMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 198.51.100.75MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Branch NAT egress
+object-group network Hydra-EdgeMTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Remote site uplinkMTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 192.168.2.12MTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 198.51.100.75
+object network Panther-GatewayMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 10.0.2.3MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Secure outbound concentrator
+object-group network Lantern-DMZMTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Protected but public-facing zoneMTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 172.18.1.20MTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 192.168.1.11MTc0ODU5MjQ2Mzk4MjIyMDAwMAo'
 + restored_lines+='
 '
 + IFS='
 '
 + read -r -d '' -a config_objects
-++ printf '%s\0' '{MTc0ODU5MTg4MTEzNDEwNDAwMAo  "vendor": "cisco",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "model": "",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "version": "16.9",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "domain": "",MTc0ODU5MTg4MTEzNDEwNDAwMAo  "hostname": "branch-isr-02"
+++ printf '%s\0' '{MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "vendor": "cisco",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "model": "",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "version": "16.9",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "domain": "",MTc0ODU5MjQ2Mzk4MjIyMDAwMAo  "hostname": "branch-isr-02"
 }
 version 16.9
 hostname branch-isr-02
-interface GigabitEthernet0/0/0MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 172.16.1.6 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description ISP uplink
-interface GigabitEthernet0/0/1MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 192.168.2.12 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description Workstation LAN
-interface GigabitEthernet0/0/2MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description Dev VLAN
-object network BlackWidow-CoreMTc0ODU5MTg4MTEzNDEwNDAwMAo host 172.16.1.6MTc0ODU5MTg4MTEzNDEwNDAwMAo description Branch router uplink NAT
-object network Hydra-LinkMTc0ODU5MTg4MTEzNDEwNDAwMAo host 198.51.100.75MTc0ODU5MTg4MTEzNDEwNDAwMAo description Branch NAT egress
-object-group network Hydra-EdgeMTc0ODU5MTg4MTEzNDEwNDAwMAo description Remote site uplinkMTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 192.168.2.12MTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 198.51.100.75
-object network Panther-GatewayMTc0ODU5MTg4MTEzNDEwNDAwMAo host 10.0.2.3MTc0ODU5MTg4MTEzNDEwNDAwMAo description Secure outbound concentrator
-object-group network Lantern-DMZMTc0ODU5MTg4MTEzNDEwNDAwMAo description Protected but public-facing zoneMTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 172.18.1.20MTc0ODU5MTg4MTEzNDEwNDAwMAo network-object host 192.168.1.11MTc0ODU5MTg4MTEzNDEwNDAwMAo
+interface GigabitEthernet0/0/0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 172.16.1.6 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description ISP uplink
+interface GigabitEthernet0/0/1MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 192.168.2.12 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Workstation LAN
+interface GigabitEthernet0/0/2MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Dev VLAN
+object network BlackWidow-CoreMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 172.16.1.6MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Branch router uplink NAT
+object network Hydra-LinkMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 198.51.100.75MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Branch NAT egress
+object-group network Hydra-EdgeMTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Remote site uplinkMTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 192.168.2.12MTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 198.51.100.75
+object network Panther-GatewayMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 10.0.2.3MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Secure outbound concentrator
+object-group network Lantern-DMZMTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Protected but public-facing zoneMTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 172.18.1.20MTc0ODU5MjQ2Mzk4MjIyMDAwMAo network-object host 192.168.1.11MTc0ODU5MjQ2Mzk4MjIyMDAwMAo
 '
 + [[ true == true ]]
 + message 'Loaded 12 config blocks'
@@ -944,16 +944,16 @@ Loaded 12 config blocks
 + local 'message=Loaded 2 config blocks'
 + echo -e 'Loaded 2 config blocks'
 Loaded 2 config blocks
-+ local process_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/process_configs.logs
++ local process_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/process_configs.logs
 + :
 + for serialized_line in "${matched_objects[@]}"
 + [[ true == true ]]
-+ message 'Serialized Line: interface GigabitEthernet0/0/2MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description Dev VLAN'
-+ [[ -n Serialized Line: interface GigabitEthernet0/0/2MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description Dev VLAN ]]
-+ local 'message=Serialized Line: interface GigabitEthernet0/0/2MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description Dev VLAN'
-+ echo -e 'Serialized Line: interface GigabitEthernet0/0/2MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description Dev VLAN'
-Serialized Line: interface GigabitEthernet0/0/2MTc0ODU5MTg4MTEzNDEwNDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MTg4MTEzNDEwNDAwMAo description Dev VLAN
-++ perl -pe 's/MTc0ODU5MTg4MTEzNDEwNDAwMAo/\n/g'
++ message 'Serialized Line: interface GigabitEthernet0/0/2MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Dev VLAN'
++ [[ -n Serialized Line: interface GigabitEthernet0/0/2MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Dev VLAN ]]
++ local 'message=Serialized Line: interface GigabitEthernet0/0/2MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Dev VLAN'
++ echo -e 'Serialized Line: interface GigabitEthernet0/0/2MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Dev VLAN'
+Serialized Line: interface GigabitEthernet0/0/2MTc0ODU5MjQ2Mzk4MjIyMDAwMAo ip address 10.0.2.3 255.255.255.0MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Dev VLAN
+++ perl -pe 's/MTc0ODU5MjQ2Mzk4MjIyMDAwMAo/\n/g'
 + restored_block='interface GigabitEthernet0/0/2
  ip address 10.0.2.3 255.255.255.0
  description Dev VLAN'
@@ -1008,13 +1008,13 @@ interface GigabitEthernet0/0/2
  description Dev VLAN
 + process_configs 10.0.2.3 .cache/resources/cisco/branch-isr-02.cfg 'interface GigabitEthernet0/0/2
  ip address 10.0.2.3 255.255.255.0
- description Dev VLAN' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/process_configs.logs
+ description Dev VLAN' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/process_configs.logs
 + local target_pattern=10.0.2.3
 + local config_path=.cache/resources/cisco/branch-isr-02.cfg
 + local 'restored_block=interface GigabitEthernet0/0/2
  ip address 10.0.2.3 255.255.255.0
  description Dev VLAN'
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/process_configs.logs
++ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/process_configs.logs
 + local cleaned_block
 ++ sed '/^[[:space:]]*$/d'
 + cleaned_block='interface GigabitEthernet0/0/2
@@ -1232,7 +1232,6 @@ interface GigabitEthernet0/0/2
   },
   "group": "Unclassified"
 }'
-+ jq .
 + [[ -n {
   "object": "interface",
   "type": "GigabitEthernet0/0/2",
@@ -1259,6 +1258,7 @@ interface GigabitEthernet0/0/2
   },
   "group": "Unclassified"
 }'
++ jq .
 {
   "object": "interface",
   "type": "GigabitEthernet0/0/2",
@@ -1566,12 +1566,12 @@ interface GigabitEthernet0/0/2
 }'
 + for serialized_line in "${matched_objects[@]}"
 + [[ true == true ]]
-+ message 'Serialized Line: object network Panther-GatewayMTc0ODU5MTg4MTEzNDEwNDAwMAo host 10.0.2.3MTc0ODU5MTg4MTEzNDEwNDAwMAo description Secure outbound concentrator'
-+ [[ -n Serialized Line: object network Panther-GatewayMTc0ODU5MTg4MTEzNDEwNDAwMAo host 10.0.2.3MTc0ODU5MTg4MTEzNDEwNDAwMAo description Secure outbound concentrator ]]
-+ local 'message=Serialized Line: object network Panther-GatewayMTc0ODU5MTg4MTEzNDEwNDAwMAo host 10.0.2.3MTc0ODU5MTg4MTEzNDEwNDAwMAo description Secure outbound concentrator'
-+ echo -e 'Serialized Line: object network Panther-GatewayMTc0ODU5MTg4MTEzNDEwNDAwMAo host 10.0.2.3MTc0ODU5MTg4MTEzNDEwNDAwMAo description Secure outbound concentrator'
-Serialized Line: object network Panther-GatewayMTc0ODU5MTg4MTEzNDEwNDAwMAo host 10.0.2.3MTc0ODU5MTg4MTEzNDEwNDAwMAo description Secure outbound concentrator
-++ perl -pe 's/MTc0ODU5MTg4MTEzNDEwNDAwMAo/\n/g'
++ message 'Serialized Line: object network Panther-GatewayMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 10.0.2.3MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Secure outbound concentrator'
++ [[ -n Serialized Line: object network Panther-GatewayMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 10.0.2.3MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Secure outbound concentrator ]]
++ local 'message=Serialized Line: object network Panther-GatewayMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 10.0.2.3MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Secure outbound concentrator'
++ echo -e 'Serialized Line: object network Panther-GatewayMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 10.0.2.3MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Secure outbound concentrator'
+Serialized Line: object network Panther-GatewayMTc0ODU5MjQ2Mzk4MjIyMDAwMAo host 10.0.2.3MTc0ODU5MjQ2Mzk4MjIyMDAwMAo description Secure outbound concentrator
+++ perl -pe 's/MTc0ODU5MjQ2Mzk4MjIyMDAwMAo/\n/g'
 + restored_block='object network Panther-Gateway
  host 10.0.2.3
  description Secure outbound concentrator'
@@ -1634,13 +1634,13 @@ object network Panther-Gateway
  description Secure outbound concentrator
 + process_configs 10.0.2.3 .cache/resources/cisco/branch-isr-02.cfg 'object network Panther-Gateway
  host 10.0.2.3
- description Secure outbound concentrator' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/process_configs.logs
+ description Secure outbound concentrator' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/process_configs.logs
 + local target_pattern=10.0.2.3
 + local config_path=.cache/resources/cisco/branch-isr-02.cfg
 + local 'restored_block=object network Panther-Gateway
  host 10.0.2.3
  description Secure outbound concentrator'
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/process_configs.logs
++ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/process_configs.logs
 + local cleaned_block
 ++ sed '/^[[:space:]]*$/d'
 + cleaned_block='object network Panther-Gateway
@@ -2195,18 +2195,18 @@ object network Panther-Gateway
 }'
 + return 0
 + [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/extract-configs.log
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/extract-configs.log ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/extract-configs.log
++ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/extract-configs.log
++ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/extract-configs.log ]]
++ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/extract-configs.log
 + [[ true == true ]]
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/extract-configs.log ]]
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/extract-configs.log ]]
 + case "${target_file}" in
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/extract-configs.log
-+ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/10.0.2.3
-+ export json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/10.0.2.3/10.0.2.3--MTc0ODU5MTg4.json
-+ json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/10.0.2.3/10.0.2.3--MTc0ODU5MTg4.json
++ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/extract-configs.log
++ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/10.0.2.3
++ export json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/10.0.2.3/10.0.2.3--MTc0ODU5MjQ2.json
++ json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/10.0.2.3/10.0.2.3--MTc0ODU5MjQ2.json
 + [[ true == true ]]
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/fragments.json ]]
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/fragments.json ]]
 + jq --raw-output --slurp --arg ipref targets/10.0.2.3.json '
                           sort_by( .site, .device ) |
                           group_by( .site + "/" + .device )[] as $group |
@@ -2217,7 +2217,7 @@ object network Panther-Gateway
                             "  • object: " + ( .object // "unknown" ) + 
                             " ( type: " + ( .type // "n/a" ) + " )"
                           )
-                          ' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/fragments.json
+                          ' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/fragments.json
 + newline
 + local count=1
 + (( i = 0 ))
@@ -2225,16 +2225,16 @@ object network Panther-Gateway
 + echo
 + (( i++ ))
 + (( i < count ))
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/fragments.json ]]
-+ jq --slurp --arg target 10.0.2.3 '{ target: $target, configs: . }' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/fragments.json
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/fragments.json ]]
++ jq --slurp --arg target 10.0.2.3 '{ target: $target, configs: . }' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/fragments.json
 + [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/10.0.2.3/10.0.2.3--MTc0ODU5MTg4.json
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/10.0.2.3/10.0.2.3--MTc0ODU5MTg4.json ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/10.0.2.3/10.0.2.3--MTc0ODU5MTg4.json
++ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/10.0.2.3/10.0.2.3--MTc0ODU5MjQ2.json
++ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/10.0.2.3/10.0.2.3--MTc0ODU5MjQ2.json ]]
++ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/10.0.2.3/10.0.2.3--MTc0ODU5MjQ2.json
 + [[ true == true ]]
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/10.0.2.3/10.0.2.3--MTc0ODU5MTg4.json ]]
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/10.0.2.3/10.0.2.3--MTc0ODU5MjQ2.json ]]
 + case "${target_file}" in
-+ jq . /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/10.0.2.3/10.0.2.3--MTc0ODU5MTg4.json
++ jq . /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/10.0.2.3/10.0.2.3--MTc0ODU5MjQ2.json
 + newline
 + local count=1
 + (( i = 0 ))
@@ -2243,7 +2243,7 @@ object network Panther-Gateway
 + (( i++ ))
 + (( i < count ))
 ++ mktemp
-+ tmp_merged=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.EVkPj1sOzb
++ tmp_merged=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.v2mCRGwQMm
 + local final_outfile=reports/10.0.2.3/10.0.2.3.json
 ++ dirname reports/10.0.2.3/10.0.2.3.json
 + mkdir -p reports/10.0.2.3
@@ -2281,9 +2281,9 @@ object network Panther-Gateway
               )
             else . + [ $cfg ] end
           ))
-      }' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/10.0.2.3/10.0.2.3--MTc0ODU5MTg4.json
-+ mv /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.EVkPj1sOzb reports/10.0.2.3/10.0.2.3.json
-+ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/10.0.2.3/10.0.2.3--MTc0ODU5MTg4.json
+      }' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/10.0.2.3/10.0.2.3--MTc0ODU5MjQ2.json
++ mv /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.v2mCRGwQMm reports/10.0.2.3/10.0.2.3.json
++ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/10.0.2.3/10.0.2.3--MTc0ODU5MjQ2.json
 + [[ true == true ]]
 + print 'Merged [ targets/10.0.2.3.json ] → reports/10.0.2.3/10.0.2.3.json'
 + [[ -n Merged [ targets/10.0.2.3.json ] → reports/10.0.2.3/10.0.2.3.json ]]
@@ -2299,14 +2299,14 @@ object network Panther-Gateway
 + (( i++ ))
 + (( i < count ))
 + [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/parse-configs.log
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/parse-configs.log ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/parse-configs.log
++ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/parse-configs.log
++ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/parse-configs.log ]]
++ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/parse-configs.log
 + [[ true == true ]]
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/parse-configs.log ]]
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/parse-configs.log ]]
 + case "${target_file}" in
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1/parse-configs.log
++ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l/parse-configs.log
 + return 0
 + unset verbose debug
-+ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1 ]]
-+ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.PXifXS56J1
++ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l ]]
++ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.1ziEAcvs4l
