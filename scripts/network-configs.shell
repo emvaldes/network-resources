@@ -13,7 +13,7 @@
 ##   - Accepts a list of IPs (--configs), device names (--search), or a full
 ##     directory scan (--location). Prompts interactively if missing.
 ##   - Automatically detects platform type (Cisco, Fortinet, or unknown).
-##   - Delegates to `extract-configs.shell` for vendor-specific reduction.
+##   - Delegates to `network-extract.shell` for vendor-specific reduction.
 ##   - Only configuration files containing matching IPs are extracted.
 ##   - Extracted outputs mirror the original structure under the --extract path
 ##     or default to `./resources/` if unspecified.
@@ -54,111 +54,17 @@ trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT;
 export nl="\n";
 
 #------------------------------------------------------------------------------#
-function display_help () {
 
-    local -a help_lines=();
-    local indent="    ";
-    local padding="$( printf '%*s' ${#script_name} ' ' )";
-    ## Header
-    help_lines+=( "Usage: ${script_name} [OPTIONS]${nl}" );
-    ## Available Operational Requests
-    help_lines+=( "Options:${nl}" );
-    help_lines+=( "  -s, --search       List of device names or patterns to include in config filtering" );
-    help_lines+=( "  -c, --configs      File containing configuration paths to evaluate (output of discovery)" );
-    help_lines+=( "  -l, --location     Root directory to scan for configs (required with --search)" );
-    help_lines+=( "  -o, --extract      Destination directory for extracted config subsets (default: .cache/resources)${nl}" );
-    ## Default Application Flags
-    help_lines+=( "Flags:${nl}" );
-    help_lines+=( "  --help             Show this help message and exit" );
-    help_lines+=( "  --verbose          Enable verbose output${nl}" );
-    ## Exit Codes Details
-    help_lines+=( "Exit Codes:${nl}" );
-    help_lines+=( "   4 = Failed to create cache directory (e.g., permissions error)${nl}" );
-    help_lines+=( "   5 = Invalid or unreadable --location directory provided${nl}" );
-    help_lines+=( "   6 = No IPs or configs matched during evaluation${nl}" );
-    help_lines+=( "   7 = Failed to write matching IPs to .cache/ips.list${nl}" );
-    help_lines+=( "   8 = No valid IPs found — skipped writing .cache/ips.list${nl}" );
-    help_lines+=( "   9 = Failed to write matched config paths to .cache/configs.list${nl}" );
-    help_lines+=( "  10 = No valid configs found — skipped writing .cache/configs.list${nl}" );
-    help_lines+=( "  11 = Unsupported configuration format detected in a source file${nl}" );
-    help_lines+=( "  12 = Unknown configuration type — vendor detection failed${nl}" );
-    ## Application Notes
-    help_lines+=( "Application Notes:${nl}" );
-    help_lines+=( "  * All search patterns may be individual, comma-separated, or wildcard-based." );
-    help_lines+=( "  * Option: --extract is the preferred output directory override." );
-    help_lines+=( "  * Option: --location is required when filtering configs by name or scope.${nl}" );
-    ## Application Examples
-    help_lines+=( "Examples:${nl}" );
-    help_lines+=( "  1. Reduce a known configuration file against a list of IPs:" );
-    help_lines+=( "     bash ${script_name} \\" );
-    help_lines+=( "          --search=ips.list \\" );
-    help_lines+=( "          --configs=devices.list \\" );
-    help_lines+=( "          --location=./configs \\" );
-    help_lines+=( "          --extract=.cache/resources \\" );
-    help_lines+=( "          --verbose${nl}" );
-    help_lines+=( "  2. Run a full scan across all configs in a folder for a batch of IPs:" );
-    help_lines+=( "     bash ${script_name} \\" );
-    help_lines+=( "          --search=ips.list \\" );
-    help_lines+=( "          --location=./configs \\" );
-    help_lines+=( "          --extract=./reduced \\" );
-    help_lines+=( "          --verbose${nl}" );
-    ## Display Built-In Help
-    newline;
-    for line in "${help_lines[@]}"; do
-      message "${indent}${line}";
-    done;
+# Load common utility functions (logging, platform detection, etc.)
+source ./scripts/devops-resources.shell;
 
-    return 0;
-}; alias display-help='display_help';
+## Load common or function-based helping modules
+source ./scripts/devops-helpers.shell;
 
 #------------------------------------------------------------------------------#
-## Output Utilities: Print N newlines (default: 1)
-function newline () {
-    local count="${1:-1}";
-    for ((i = 0; i < count; i++)); do echo; done;
-    # return 0;
-  }; alias new-line='newline';
 
-#------------------------------------------------------------------------------#
-## Output Utilities: Print message in consistent format
-function message () {
-    [[ -n ${1:-} ]] && local message="${1}" || return 0;
-    echo -e "${message}";
-    # return 0;
-  }; alias print-message='message';
-
-#------------------------------------------------------------------------------#
-## Output Utilities: Print a message (no-newline) in consistent format
-function print () {
-    [[ -n ${1:-} ]] && local message="${1}" || return 0;
-    echo -en "${message}";
-    # return 0;
-  }; alias print-inline='print';
-
-#------------------------------------------------------------------------------#
-## Output Utilities: Print an error message in consistent format
-function warning () {
-    [[ -n ${1:-} ]] && local message="${1}" || return 0;
-    echo -e "Warning: ${message}";
-    # return 0;
-}; alias error-message='warning';
-
-#------------------------------------------------------------------------------#
-function detect_vendor () {
-    local config_file="${1}";
-    local fortinet_pattern='fortinet|fortigate';
-    local cisco_pattern='\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b';
-    if grep -qiE "${fortinet_pattern}" "${config_file}"; then
-            return 1;
-      elif  grep -qiE "${cisco_pattern}" "${config_file}" 2>/dev/null; then
-            return 2;
-      else  return 3;
-    fi;
-    # return 0;
-}; alias detect-vendor='detect_vendor';
-
-#------------------------------------------------------------------------------#
 function main () {
+
     ## tracking_process ${FUNCNAME} "${@}";
     oIFS="${IFS}";
 
@@ -170,11 +76,13 @@ function main () {
 
       #### ---------------------------------------------------------------------
       ## Match accepted arguments
-      [[ $key =~ ^(search|s)$ ]] && local search_pattern="${value}";
-      [[ $key =~ ^(configs|c)$ ]] && local search_configs="${value}";
-      [[ $key =~ ^(location|l)$ ]] && local search_location="${value}";
-      [[ $key =~ ^(extract|x)$ ]] && local extract_location="${value}";
       [[ $key =~ ^(cache|e)$ ]] && local cache_location="${value}";
+      [[ $key =~ ^(configs|c)$ ]] && local search_configs="${value}";
+      [[ $key =~ ^(extract|x)$ ]] && local extract_location="${value}";
+      [[ $key =~ ^(location|l)$ ]] && local search_location="${value}";
+      [[ $key =~ ^(search|s)$ ]] && local search_pattern="${value}";
+      [[ $key =~ ^(update|u)$ ]] && local update_sources="${value}";
+      [[ $key =~ ^(logger|o)$ ]] && local target_logfile="${value}";
 
       #### ---------------------------------------------------------------------
       ## Special options
@@ -182,6 +90,7 @@ function main () {
       [[ $key == "debug" ]] && local debug=true;
       [[ $key == "dry-run" ]] && local dry_run=true;
       [[ $key == "verbose" ]] && local verbose=true;
+
     done; IFS="${oIFS}";
 
     #### -----------------------------------------------------------------------
@@ -191,35 +100,59 @@ function main () {
     [[ -z ${verbose:-} ]] && verbose=false;
 
     #### -----------------------------------------------------------------------
+    [[ -z "${cache_location:-}" ]] && export cache_location="./.cache";
+    [[ -z "${extract_location:-}" ]] && export extract_location="./resources";
     [[ -z "${search_pattern:-}" ]] && export search_pattern=;
     [[ -z "${search_configs:-}" ]] && export search_configs=;
     [[ -z "${search_location:-}" ]] && export search_location=;
-    [[ -z "${cache_location:-}" ]] && export cache_location="./.cache";
-    [[ -z "${extract_location:-}" ]] && export extract_location="./resources";
+    [[ -z "${update_sources:-}" ]] && local update_sources=false;
+
+    if [[ -z "${target_logfile:-}" ]]; then
+      local target_logfile="${logs_location}/console/${script_filename}.console";
+      touch "${target_logfile}";
+    fi;
+    # touchh "${target_logfile}";  ## Clear the log file if it exists
 
     #### -----------------------------------------------------------------------
     ## Display usage help if requested
     [[ -z ${script_helper:-} ]] && local script_helper=false;
     if [[ ${script_helper:-} == true ]]; then
-      display_help;
+      network_configs__helper;
       exit 0;
     fi;
 
     #### -----------------------------------------------------------------------
-    ## Persist filtered IPs to .cache/ips.list (only) — never modify the ./ips.list
-    mkdir -p "${cache_location}" 2>/dev/null || {
-      warning "Failed to create ${cache_location} directory.";
-      return 4;
-    };
+    ## Ensure required directories exist
+    if [[ ! -d "${cache_location}" ]]; then
+      warning "Cache location is not set or does not exist!";
+      mkdir -p "${cache_location}" 2>/dev/null || {
+        warning "Failed to create ${cache_location} directory.";
+        return 4;
+      };
+    fi;
 
     #### -----------------------------------------------------------------------
     ## Application's cache-related components
-    export active_ips_file="${cache_location}/ips.list";
-    export active_configs_file="${cache_location}/configs.list";
+    if [[ "${update_sources}" == true ]]; then
+            export active_ips_file="${cache_location}/ips.list";
+            export active_configs_file="${cache_location}/configs.list";
+      else  ## Use existing cache files if available
+            export active_ips_file="${TMP_DIR}/network-configs--ips.list";
+            export active_configs_file="${TMP_DIR}/network-configs--configs.list";
+    fi;
 
-    # Always reset before use to avoid stale data
-    : > "${active_ips_file}" 2>/dev/null || rm -f "${active_ips_file}" 2>/dev/null;
-    : > "${active_configs_file}" 2>/dev/null || rm -f "${active_configs_file}" 2>/dev/null;
+    ## Always reset before use to avoid stale data
+    touch "${active_ips_file}" 2>/dev/null;      ## || rm -f "${active_ips_file}" 2>/dev/null;
+    touch "${active_configs_file}" 2>/dev/null;  ## || rm -f "${active_configs_file}" 2>/dev/null;
+
+    #### -----------------------------------------------------------------------
+    if [[ "${verbose}" == true ]]; then
+      {
+        message "Updating IPS listings in: [ ${active_ips_file} ] ("${update_sources}")";
+        message "Updating Configs List in: [ ${active_configs_file} ] ("${update_sources}")";
+        newline;
+      } >> "${target_logfile:-/dev/null}";
+    fi;
 
     #### -----------------------------------------------------------------------
     ## Prompt for search pattern if not provided
@@ -251,7 +184,7 @@ function main () {
               grep -v '^\s*$'
             )" || true;
             ## Write to temp file
-            search_pattern="${TMP_DIR}/ips.list";
+            search_pattern="${active_ips_file}";
             printf "%s\n" "${search_terms[@]}" > "${search_pattern}";
     fi;
 
@@ -297,19 +230,18 @@ function main () {
     #### -----------------------------------------------------------------------
     if [[ "${verbose}" == true ]]; then
       {
-        newline;
-        message "Search Pattern: [ ${search_pattern} ]";
+        message "Search Patterns File: [ ${search_pattern} ]";
         local count=${#search_terms[@]};
         if (( count == 0 )); then
                 warning "No search terms provided or extracted.";
-          else  message "Search Terms (${count}): ";
+          else  message "Search Patterns (${count}): ";
                 newline;
                 for ((i = 0; i < count && i < 25; i++)); do
-                  message "- ${search_terms[$i]}";
+                  message "  - ${search_terms[$i]}";
                 done | cat -n;
         fi;
         newline;
-      } >> "${trace_logfile:-/dev/null}";
+      } >> "${target_logfile:-/dev/null}";
     fi;
     
     #### -----------------------------------------------------------------------
@@ -388,6 +320,36 @@ function main () {
       grep -v '^\s*$' | \
       sort -u
     );
+
+    #### -----------------------------------------------------------------------
+    ## Abort early if no valid IPs or configs matched
+    if [[ ${#matched_ips[@]} -eq 0 ]]; then
+
+            if [[ "${verbose}" == true ]]; then
+              {
+                warning "No matching IPs or valid configuration files were found.";
+                if (( ${#search_terms[@]} == 0 )); then
+                  warning "Matched-IPs yielded no Search Patterns to evaluate.";
+                fi;
+                newline;
+                message "Skip processing Search Patterns — no valid correlation between IPs and configurations.";
+              } >> "${target_logfile:-/dev/null}";
+            fi;
+            return 6;
+
+      elif  [[ "${verbose}" == true ]]; then
+              {
+                message "Processed Patterns: [ ${#matched_ips[@]} ]";
+                # newline;
+                # for ip in "${search_terms[@]}"; do
+                #   message "- ${ip}";
+                # done | cat -n;
+              } >> "${target_logfile:-/dev/null}";
+
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Deduplicate and sanitize Network Configurations (e.g.: devices)
     readarray -t configs_listing < <(
       printf "%s\n" "${matched_configs[@]}" | \
       grep -v '^\s*$' | \
@@ -396,44 +358,41 @@ function main () {
 
     #### -----------------------------------------------------------------------
     ## Abort early if no valid IPs or configs matched
-    if [[ ${#matched_ips[@]} -eq 0 || ${#configs_listing[@]} -eq 0 ]]; then
-      {
-        warning "No matching IPs or valid configuration files were found.";
-        if (( ${#search_terms[@]} == 0 )); then
-                warning "Search pattern yielded no IPs to evaluate.";
-          # else  message "Total IPs provided: ${#search_terms[@]}";
-          #       for ip in "${search_terms[@]}"; do
-          #         message "- ${ip}";
-          #       done | cat -n;
-        fi;
-        if (( ${#configs_listing[@]} == 0 )); then
-                warning "No config files were retained after filtering.";
-          # else  message "Config files provided (but no IP match found): ${#configs_listing[@]}";
-          #       for cfg in "${configs_listing[@]}"; do
-          #         message "- ${cfg}";
-          #       done | cat -n;
-        fi;
-        newline;
-        message "Aborting parsing — no valid correlation between IPs and configurations.";
-      } >> "${trace_logfile:-/dev/null}";
-      return 6;
-    fi;
+    if [[ ${#configs_listing[@]} -eq 0 ]]; then
 
-    #### -----------------------------------------------------------------------
-    ## Write final validated config file list
-    if [[ -w "${search_configs}" ]]; then
-            printf "%s\n" "${configs_listing[@]}" > "${search_configs}";
-      else  search_configs="${TMP_DIR}/configs.list";
-            printf "%s\n" "${configs_listing[@]}" > "${search_configs}";
+            if [[ "${verbose}" == true ]]; then
+              {
+                warning "No config files were retained after filtering.";
+                if (( ${#configs_listing[@]} == 0 )); then
+                  warning "Configs-Listing yielded no Network Configurations to evaluate.";
+                fi;
+                newline;
+                message "Skip processing Network Configurations — no valid correlation between IPs and configurations.";
+              } >> "${target_logfile:-/dev/null}";
+            fi;
+            return 6;
+
+      elif  [[ "${verbose}" == true ]]; then
+              {
+                message "Identified Matches: [ ${#matched_configs[@]} ]";
+                # newline;
+                # for config in "${matched_configs[@]}"; do
+                #   message "- ${config}";
+                # done | cat -n;
+              } >> "${target_logfile:-/dev/null}";
+
     fi;
 
     #### -----------------------------------------------------------------------
     ## Conditionally write .cache/ips.list only if there are matching IPs
     if (( ${#matched_ips[@]} > 0 )); then
-            if ! printf "%s\n" "${matched_ips[@]}" > "${active_ips_file}"; then
+            # if ! printf "%s\n" "${matched_ips[@]}" > "${active_ips_file}"; then
+            if ! printf "%s\n" "${matched_ips[@]}" | \
+                 sort -t . -k1,1n -k2,2n -k3,3n -k4,4n \
+            > "${active_ips_file}"; then
                     {
                       warning "Failed to write validated IPs to: ${active_ips_file}";
-                    } >> "${trace_logfile:-/dev/null}";
+                    } >> "${target_logfile:-/dev/null}";
                     return 7;
               else  search_pattern="${active_ips_file}";
             fi;
@@ -442,15 +401,15 @@ function main () {
               warning "No valid IPs were found — skipping creation of: ${active_ips_file}";
               message "Please, check your search pattern or input files.";
               return 8;
-            } >> "${trace_logfile:-/dev/null}";
+            } >> "${target_logfile:-/dev/null}";
     fi;
 
     #### -----------------------------------------------------------------------
     ## Persist filtered configs to .cache/configs.list — always runtime, never fallback
     if (( ${#configs_listing[@]} > 0 )); then
             if ! printf "%s\n" "${configs_listing[@]}" > "${active_configs_file}"; then
-              warning "Failed to write validated configs to: ${active_configs_file}";
-              return 9;
+                    warning "Failed to write validated configs to: ${active_configs_file}";
+                    return 9;
               else  search_configs="${active_configs_file}";
             fi;
       else  ## Do not create the file — absence is an implicit signal of failure
@@ -458,31 +417,23 @@ function main () {
               warning "No valid Configs were found — skipping creation of: ${active_configs_file}";
               message "Please, check your configurations or input files.";
               return 10;
-            } >> "${trace_logfile:-/dev/null}";
+            } >> "${target_logfile:-/dev/null}";
     fi;
 
     #### -----------------------------------------------------------------------
     if [[ "${verbose}" == true ]]; then
       {
-        message "Validated IPs exported to:  [ ${active_ips_file} ]";
-        message "Validated Configs saved to: [ ${active_configs_file} ]";
-        # message "IPs retained: ${#matched_ips[@]}";
-        # message "Configs retained: ${#configs_listing[@]}";
         newline;
-      } >> "${trace_logfile:-/dev/null}";
+        message "Validated List exported to: [ ${active_ips_file} ] = ${#matched_ips[@]}";
+        message "Validated Configs saved to: [ ${active_configs_file} ] = ${#configs_listing[@]}";
+        newline;
+      } >> "${target_logfile:-/dev/null}";
     fi;
 
     #### -----------------------------------------------------------------------
-    if [[ "${verbose}" == true ]]; then
-      {
-        message "Resolved Configs: [ ${#configs_listing[@]} ]";
-        message "Listing Configs:  [ ${search_configs:-${search_location}} ]";
-        newline;
-        for item in "${configs_listing[@]}"; do
-          message "- ${item}";
-        done | cat -n;
-      } >> "${trace_logfile:-/dev/null}";
-    fi;
+    local network_extract__script="network-extract";
+    local network_extract__console="${TMP_DIR}/${network_extract__script}.console";
+    : > "${network_extract__console}";
 
     #### -----------------------------------------------------------------------
     # Loop through configs_listing array
@@ -503,14 +454,14 @@ function main () {
             {
               warning "Unsupported configuration type: ${target_config}";
               newline 2;
-            } >> "${trace_logfile:-/dev/null}";
+            } >> "${target_logfile:-/dev/null}";
             return 11;
             ;;
         *)  target_platform="unknown";
             {
               warning "Unknown configuration type: ${target_config}";
               newline 2;
-            } >> "${trace_logfile:-/dev/null}";
+            } >> "${target_logfile:-/dev/null}";
             return 12;
             ;;
       esac;
@@ -518,9 +469,8 @@ function main () {
       #### -----------------------------------------------------------------------
       if [[ "${verbose}" == true ]]; then
         {
-          newline;
           message "Source Config: [ ${target_config} ] ( ${target_platform} )";
-        } >> "${trace_logfile:-/dev/null}";
+        } >> "${target_logfile:-/dev/null}";
       fi;
 
       #### -----------------------------------------------------------------------
@@ -543,16 +493,16 @@ function main () {
 
       #### -----------------------------------------------------------------------
       declare -a execute=(
-        ./scripts/extract-configs.shell
+        ./scripts/${network_extract__script}.shell
         --search="${active_ips_file}"
         --config="${target_config}"
         --extract="${target_output}"
         --platform="${target_platform}"
+        --logger="${network_extract__console}"
       );
       [[ "${verbose}" == true ]] && execute+=( --verbose );
 
       #### -----------------------------------------------------------------------
-      ## Execute and propagate exit status
       if [[ "${verbose}" == true ]]; then
         {
           message "Output Config: [ ${target_output} ]";
@@ -560,20 +510,46 @@ function main () {
           for item in "${execute[@]}"; do
             message "\t${item}";
           done;
-        } >> "${trace_logfile:-/dev/null}";
+          newline;
+        } >> "${target_logfile:-/dev/null}";
       fi;
 
-      $( which bash ) -x "${execute[@]}" >/dev/null 2>&1;
+      #### -----------------------------------------------------------------------
+      ## Execute the extraction script with logging
+      :> "${network_extract__console}";
+      $( which bash ) -x "${execute[@]}" \
+      >> ${logs_location}/${network_extract__script}.log 2>&1 ;
+
+      #### -----------------------------------------------------------------------
+      if [[ "${verbose}" == true ]]; then
+        {
+          print_file "${network_extract__console:-/dev/null}";
+        } >> "${target_logfile:-/dev/null}";
+      fi;
 
     done;
 
-    tree "${extract_location}";
-    newline;
+    #### -----------------------------------------------------------------------
+    ## Finalize .cache/configs.list with reduced config paths
+    if [[ -d "${extract_location}" ]]; then
+      mapfile -t extracted_configs < <(
+        find "${extract_location}" -type f 2>/dev/null | sort -u
+      );
+      if (( ${#extracted_configs[@]} > 0 )); then
+        printf "%s\n" "${extracted_configs[@]}" > "${active_configs_file}";
+        if [[ "${verbose}" == true ]]; then
+          {
+            message "Updated ${active_configs_file} with extracted configs: ${#extracted_configs[@]}";
+            newline;
+          } >> "${target_logfile:-/dev/null}";
+        fi;
+      fi;
+    fi;
 
     return 0;
 }; alias network-configs='main';
 
-#### -----------------------------------------------------------------------
+#------------------------------------------------------------------------------#
 
 [[ -z "${script_name+x}" ]] && export script_name="${0}";
 
@@ -582,12 +558,6 @@ mkdir -p ${logs_location}/console 2>/dev/null || true;
 
 script_filename="${BASH_SOURCE[0]##*/}";
 script_filename="${script_filename%.*}";
-
-trace_logfile="${logs_location}/console/${script_filename}.console";
-: > "${trace_logfile}";
-
-extract_configs_logfile="${logs_location}/console/extract-configs.console";
-touch "${extract_configs_logfile}";
 
 #------------------------------------------------------------------------------#
 
@@ -599,6 +569,4 @@ if [[ ${#@} -eq 0 || "${1,,}" =~ ^-*(h|help)$ ]]; then
         ## newline; message "Done."; newline;
 fi;
 
-## -------------------------------------------------------------------------- ##
-## Examples: Please, check built-in help (--help) for details
-## -------------------------------------------------------------------------- ##
+#------------------------------------------------------------------------------#
