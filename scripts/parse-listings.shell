@@ -721,8 +721,8 @@ function main () {
     #### -----------------------------------------------------------------------
     ## Extracting per-IP reports into ./reports/<ip-address>/ using background jobs
 
-    declare -ga extract_jobs_pid=();
-    declare -gA extract_jobs2ips_mapping=();
+    declare -ga configs_jobs_pid=();
+    declare -gA configs_jobs2ips_mapping=();
 
     local network_configs__logfile="${TMP_DIR}/${network_configs__script}--reports";
     :> "${network_configs__logfile}";
@@ -744,31 +744,31 @@ function main () {
       ) &
 
       job_pid=$!;
-      extract_jobs_pid+=( "${job_pid}" );
-      extract_jobs2ips_mapping["${job_pid}"]="${address}";
+      configs_jobs_pid+=( "${job_pid}" );
+      configs_jobs2ips_mapping["${job_pid}"]="${address}";
 
     done;
 
     ## Wait for all extract jobs to complete
-    while (( ${#extract_jobs_pid[@]} > 0 )); do
-      valid_extract_jobs_pid=();
-      for pid in "${extract_jobs_pid[@]}"; do
+    while (( ${#configs_jobs_pid[@]} > 0 )); do
+      valid_configs_jobs_pid=();
+      for pid in "${configs_jobs_pid[@]}"; do
         if ! kill -0 "${pid}" 2>/dev/null; then
                 ## Job completed
-                ip_address="${extract_jobs2ips_mapping[$pid]}";  ## Retrieve the IP associated with this job PID
+                ip_address="${configs_jobs2ips_mapping[$pid]}";  ## Retrieve the IP associated with this job PID
                 # message "[INFO] Completed (${pid}): ${ip_address}" >> "${actions_logfile:-/dev/null}"
-          else  valid_extract_jobs_pid+=( "${pid}" )
+          else  valid_configs_jobs_pid+=( "${pid}" )
         fi;
       done;
-      extract_jobs_pid=( "${valid_extract_jobs_pid[@]}" );
+      configs_jobs_pid=( "${valid_configs_jobs_pid[@]}" );
       sleep "${delaying_factor}";
     done;
 
     #### -----------------------------------------------------------------------
     ## Collecting all background-jobs console outputs
     {
-      for pid in "${!extract_jobs2ips_mapping[@]}"; do
-        ip_address="${extract_jobs2ips_mapping[${pid}]}"
+      for pid in "${!configs_jobs2ips_mapping[@]}"; do
+        ip_address="${configs_jobs2ips_mapping[${pid}]}"
         job_log="${TMP_DIR}/${network_configs__logfile}--${ip_address}.console"
         [[ -s "${job_log}" ]] && cat "${job_log}"
       done
@@ -1159,27 +1159,29 @@ function main () {
 
 #------------------------------------------------------------------------------#
 
-:> ${actions_logfile};
+[[ -z "${script_name+x}" ]] && script_name="${0}";
+
+script_filename="${BASH_SOURCE[0]##*/}";
+script_filename="${script_filename%.*}";
+
+#------------------------------------------------------------------------------#
+
+if [[ "${actions_logfile:-}" != "$(readlink -f /proc/$$/fd/1)" ]]; then
+  : > "${actions_logfile}";
+fi;
 
 rm -rf ${cache_location};
 mkdir -p ${cache_location}/{jobs,targets} 2>/dev/null || true;
 
 [[ ! -d ${logs_location} ]] && \
   mkdir -p ${logs_location}/{console,jobs} 2>/dev/null || true;
-# find ${logs_location} -type f -delete 2>/dev/null;
+find ${logs_location} -type f ! -name "${script_filename}.log" -delete 2>/dev/null;
 
 rm -rf ${targets_location} 2>/dev/null;
 mkdir -p ${targets_location} 2>/dev/null || true;
 
 ## Flush content of all files under ./logs without deleting them
 [[ -d "${logs_location}" ]] && find "${logs_location}" -type f -exec truncate -s 0 {} +
-
-#------------------------------------------------------------------------------#
-
-[[ -z "${script_name+x}" ]] && script_name="${0}";
-
-script_filename="${BASH_SOURCE[0]##*/}";
-script_filename="${script_filename%.*}";
 
 #------------------------------------------------------------------------------#
 

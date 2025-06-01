@@ -432,8 +432,9 @@ function main () {
 
     #### -----------------------------------------------------------------------
     local network_extract__script="network-extract";
-    local network_extract__console="${TMP_DIR}/${network_extract__script}.console";
-    : > "${network_extract__console}";
+
+    declare -ga extract_jobs_pid=();
+    declare -gA extract_jobs2cfg_mapping=();
 
     #### -----------------------------------------------------------------------
     # Loop through configs_listing array
@@ -474,7 +475,7 @@ function main () {
       fi;
 
       #### -----------------------------------------------------------------------
-      local base_output="${extract_location%/}"
+      local base_output="${extract_location%/}";
 
       if [[ -n "${search_location:-}" && "${search_location}" != false ]]; then
               rel_path="${target_config#${search_location%/}/}";
@@ -485,27 +486,32 @@ function main () {
       local output_dir="$( dirname "${target_output}" )";
 
       mkdir -p "${output_dir}" || {
-        warning "Failed to create directory: ${output_dir}" >&2
-        newline
+        warning "Failed to create directory: ${output_dir}" >&2;
+        newline;
         exit 0;
-      }
+      };
       : > "${target_output}";
 
       #### -----------------------------------------------------------------------
+      local logger_index="$( basename "${target_config}" )";
+
+      local network_extract__logger="${TMP_DIR}/${network_extract__script}--${logger_index}";
+      : > "${network_extract__logger}";
+
       declare -a execute=(
         ./scripts/${network_extract__script}.shell
         --search="${active_ips_file}"
         --config="${target_config}"
         --extract="${target_output}"
         --platform="${target_platform}"
-        --logger="${network_extract__console}"
+        --logger="${network_extract__logger}.console"
       );
       [[ "${verbose}" == true ]] && execute+=( --verbose );
 
       #### -----------------------------------------------------------------------
       if [[ "${verbose}" == true ]]; then
         {
-          message "Output Config: [ ${target_output} ]";
+          message "Target Config: [ ${target_output} ]";
           newline;
           for item in "${execute[@]}"; do
             message "\t${item}";
@@ -515,19 +521,55 @@ function main () {
       fi;
 
       #### -----------------------------------------------------------------------
-      ## Execute the extraction script with logging
-      :> "${network_extract__console}";
-      $( which bash ) -x "${execute[@]}" \
-      >> ${logs_location}/${network_extract__script}.log 2>&1 ;
 
-      #### -----------------------------------------------------------------------
-      if [[ "${verbose}" == true ]]; then
-        {
-          print_file "${network_extract__console:-/dev/null}";
-        } >> "${target_logfile:-/dev/null}";
-      fi;
+      # ## Execute the extraction script with logging
+      # :> "${network_extract__console}";
+      # $( which bash ) -x "${execute[@]}" \
+      # >> ${logs_location}/${network_extract__script}.log 2>&1 ;
+
+      (
+        # bash "${execute[@]}" > "${job_console_log}" 2>&1
+        $( which bash ) -x "${execute[@]}" \
+        >> "${logs_location}/${network_extract__script}.log" 2>&1 ;
+
+      ) &
+
+      extract_jobs_pid+=( "$!" );
+      extract_jobs2cfg_mapping["$!"]="${logger_index}";
 
     done;
+
+    #### -----------------------------------------------------------------------
+    ## Wait for all background jobs to complete (non-blocking check loop)
+    while (( ${#extract_jobs_pid[@]} > 0 )); do
+      valid_extract_jobs_pid=();
+      for pid in "${extract_jobs_pid[@]}"; do
+        if ! kill -0 "${pid}" 2>/dev/null; then
+                logger="${extract_jobs2cfg_mapping[$pid]}";
+                ## Job finished — no action here
+          else  valid_extract_jobs_pid+=( "${pid}" );
+        fi;
+      done;
+      extract_jobs_pid=( "${valid_extract_jobs_pid[@]}" );
+      sleep "${delaying_factor}";
+    done;
+
+    #### -----------------------------------------------------------------------
+    ## Collecting all background-jobs console outputs
+    {
+      for pid in "${!extract_jobs2cfg_mapping[@]}"; do
+        logger="${extract_jobs2cfg_mapping[${pid}]}";
+        console="${TMP_DIR}/${logger}.console";
+        [[ -s "${console}" ]] && cat "${console}";
+      done;
+    } >> "${network_configs__console}";
+
+    #### -----------------------------------------------------------------------
+    if [[ "${verbose}" == true ]]; then
+      {
+        print_file "${network_configs__console:-/dev/null}";
+      } >> "${target_logfile:-/dev/null}";
+    fi;
 
     #### -----------------------------------------------------------------------
     ## Finalize .cache/configs.list with reduced config paths

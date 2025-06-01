@@ -1172,9 +1172,8 @@ fi;
 rm -rf ${cache_location};
 mkdir -p ${cache_location}/{jobs,targets} 2>/dev/null || true;
 
-if [[ ! -d ${logs_location} ]]; then
+[[ ! -d ${logs_location} ]] && \
   mkdir -p ${logs_location}/{console,jobs} 2>/dev/null || true;
-fi;
 find ${logs_location} -type f ! -name "${script_filename}.log" -delete 2>/dev/null;
 
 rm -rf ${targets_location} 2>/dev/null;

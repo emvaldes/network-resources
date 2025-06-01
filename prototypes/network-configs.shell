@@ -500,6 +500,7 @@ function main () {
 
       #### -----------------------------------------------------------------------
       local logger_index="$( basename "${target_config}" )";
+
       declare -a execute=(
         ./scripts/${network_extract__script}.shell
         --search="${active_ips_file}"
@@ -526,7 +527,7 @@ function main () {
 
       (
         $( which bash ) -x "${execute[@]}" \
-        >> "${network_extract__logfile}-${logger_index}.log" 2>&1 ;
+        >> ${logs_location}/${network_extract__script}.log 2>&1 ;
       ) &
 
       job_pid=$!;
@@ -574,13 +575,19 @@ function main () {
         find "${extract_location}" -type f 2>/dev/null | sort -u
       );
       if (( ${#extracted_configs[@]} > 0 )); then
-        printf "%s\n" "${extracted_configs[@]}" > "${active_configs_file}";
-        if [[ "${verbose}" == true ]]; then
-          {
-            message "Updated ${active_configs_file} with extracted configs: ${#extracted_configs[@]}";
-            newline;
-          } >> "${target_logfile:-/dev/null}";
-        fi;
+              printf "%s\n" "${extracted_configs[@]}" > "${active_configs_file}";
+              if [[ "${verbose}" == true ]]; then
+                {
+                  message "Updated ${active_configs_file} with extracted configs: ${#extracted_configs[@]}";
+                  newline;
+                } >> "${target_logfile:-/dev/null}";
+              fi;
+        else  if [[ "${verbose}" == true ]]; then
+                {
+                  warning "No extracted configurations found in: ${extract_location}";
+                  message "Please, check your extraction process.";
+                } >> "${target_logfile:-/dev/null}";
+              fi;
       fi;
     fi;
 
