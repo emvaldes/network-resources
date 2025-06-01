@@ -357,12 +357,6 @@ mkdir -p ${logs_location}/console 2>/dev/null || true;
 script_filename="${BASH_SOURCE[0]##*/}";
 script_filename="${script_filename%.*}";
 
-export network_extract__console="${logs_location}/console/${script_filename}.console";
-touch "${network_extract__console}" || {
-  warning "Failed to create console log file: ${network_extract__console}";
-  network_extract__console="/dev/null";
-};
-
 #------------------------------------------------------------------------------#
 
 if [[ ${#@} -eq 0 || "${1,,}" =~ ^-*(h|help)$ ]]; then

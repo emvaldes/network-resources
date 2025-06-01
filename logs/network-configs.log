@@ -2,8 +2,8 @@
 + export LC_ALL=C
 + LC_ALL=C
 ++ mktemp -d
-+ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB
-+ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB
++ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW
++ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW
 + trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
 + export 'nl=\n'
 + nl='\n'
@@ -45,8 +45,8 @@
 +++ date +%s%N
 +++ base64
 +++ tr -dc a-zA-Z0-9
-++ export divisor=MTc0ODcyNjA5NjQyMTAwOTAwMAo
-++ divisor=MTc0ODcyNjA5NjQyMTAwOTAwMAo
+++ export divisor=MTc0ODc0Nzg2MjI0MDk0NjAwMAo
+++ divisor=MTc0ODc0Nzg2MjI0MDk0NjAwMAo
 + source ./scripts/devops-helpers.shell
 ++ [[ -n '' ]]
 ++ readonly __DEVOPS_HELPERS_SOURCED=1
@@ -64,6 +64,9 @@
 + mkdir -p logs/console
 + script_filename=network-configs.shell
 + script_filename=network-configs
++ export network_configs__console=logs/console/network-configs.console
++ network_configs__console=logs/console/network-configs.console
++ touch logs/console/network-configs.console
 + [[ 7 -eq 0 ]]
 + [[ --search=ips.list =~ ^-*(h|help)$ ]]
 + newline
@@ -74,7 +77,7 @@
 
 + (( i++ ))
 + (( i < count ))
-+ main --search=ips.list --configs=devices.list --location=configs --extract=.cache/resources --update=true --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Cf2pjwp8rJ/network-configs--resources.console --verbose
++ main --search=ips.list --configs=devices.list --location=configs --extract=.cache/resources --update=true --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6WYB5sSJ46/network-configs--resources.console --verbose
 + oIFS=' 	
 '
 + for xitem in "${@}"
@@ -165,7 +168,7 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Cf2pjwp8rJ/network-configs--resources.console
+++ echo -e --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6WYB5sSJ46/network-configs--resources.console
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ logger =~ ^(cache|e)$ ]]
 + [[ logger =~ ^(configs|c)$ ]]
@@ -174,7 +177,7 @@
 + [[ logger =~ ^(search|s)$ ]]
 + [[ logger =~ ^(update|u)$ ]]
 + [[ logger =~ ^(logger|o)$ ]]
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Cf2pjwp8rJ/network-configs--resources.console
++ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6WYB5sSJ46/network-configs--resources.console
 + [[ logger == \h\e\l\p ]]
 + [[ logger == \d\e\b\u\g ]]
 + [[ logger == \d\r\y\-\r\u\n ]]
@@ -209,7 +212,7 @@
 + [[ -z devices.list ]]
 + [[ -z configs ]]
 + [[ -z true ]]
-+ [[ -z /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Cf2pjwp8rJ/network-configs--resources.console ]]
++ [[ -z /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.6WYB5sSJ46/network-configs--resources.console ]]
 + [[ -z '' ]]
 + local script_helper=false
 + [[ false == true ]]
@@ -275,11 +278,11 @@
 + [[ -n   - 10.0.0.1 ]]
 + local 'message=  - 10.0.0.1'
 + echo -e '  - 10.0.0.1'
-+ cat -n
 + (( i++ ))
 + (( i < count && i < 25 ))
 + message '  - 10.0.1.2'
 + [[ -n   - 10.0.1.2 ]]
++ cat -n
 + local 'message=  - 10.0.1.2'
 + echo -e '  - 10.0.1.2'
 + (( i++ ))
@@ -507,7 +510,7 @@
 +++ IFS='|'
 +++ echo 'access-sw1-west|branch-isr-02|campus-sw-access01|dmz-fw2-backup|fg-branch-vpn-01|fg-campus-core|fg-testing-config|fw1|fw3|perimeter-fw1|switch1|switch3'
 ++ egrep 'access-sw1-west|branch-isr-02|campus-sw-access01|dmz-fw2-backup|fg-branch-vpn-01|fg-campus-core|fg-testing-config|fw1|fw3|perimeter-fw1|switch1|switch3'
-+ search_configs=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/configs.list
++ search_configs=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/configs.list
 + printf '%s\n' configs/cisco/access-sw1-west.cfg configs/cisco/branch-isr-02.cfg configs/cisco/campus-sw-access01.cfg configs/cisco/dmz-fw2-backup.cfg configs/cisco/perimeter-fw1.cfg configs/fortinet/fg-branch-vpn-01.cfg configs/fortinet/fg-campus-core.cfg configs/fortinet/fg-testing-config.cfg configs/misc/fw1.cfg configs/misc/fw3.cfg configs/misc/switch1.conf configs/misc/switch3.conf
 + matched_ips=()
 + declare -a matched_ips
@@ -1162,7 +1165,7 @@
 + (( i++ ))
 + (( i < count ))
 + local network_extract__script=network-extract
-+ local network_extract__console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
++ local network_extract__console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
 + :
 + for target_config in "${configs_listing[@]}"
 + [[ ! -f configs/cisco/access-sw1-west.cfg ]]
@@ -1192,7 +1195,7 @@
 + local output_dir=.cache/resources/cisco
 + mkdir -p .cache/resources/cisco
 + :
-+ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/cisco/access-sw1-west.cfg' '--extract=.cache/resources/cisco/access-sw1-west.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console')
++ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/cisco/access-sw1-west.cfg' '--extract=.cache/resources/cisco/access-sw1-west.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
@@ -1234,10 +1237,10 @@
 + local 'message=\t--platform=cisco'
 + echo -e '\t--platform=cisco'
 + for item in "${execute[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
 + for item in "${execute[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -1252,14 +1255,14 @@
 + (( i < count ))
 + :
 ++ which bash
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/cisco/access-sw1-west.cfg --extract=.cache/resources/cisco/access-sw1-west.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console --verbose
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/cisco/access-sw1-west.cfg --extract=.cache/resources/cisco/access-sw1-west.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console --verbose
 + [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
++ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
 + case "${target_file}" in
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
++ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
 + for target_config in "${configs_listing[@]}"
 + [[ ! -f configs/cisco/branch-isr-02.cfg ]]
 + set +e
@@ -1288,7 +1291,7 @@
 + local output_dir=.cache/resources/cisco
 + mkdir -p .cache/resources/cisco
 + :
-+ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/cisco/branch-isr-02.cfg' '--extract=.cache/resources/cisco/branch-isr-02.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console')
++ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/cisco/branch-isr-02.cfg' '--extract=.cache/resources/cisco/branch-isr-02.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
@@ -1330,10 +1333,10 @@
 + local 'message=\t--platform=cisco'
 + echo -e '\t--platform=cisco'
 + for item in "${execute[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
 + for item in "${execute[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -1348,14 +1351,14 @@
 + (( i < count ))
 + :
 ++ which bash
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/cisco/branch-isr-02.cfg --extract=.cache/resources/cisco/branch-isr-02.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console --verbose
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/cisco/branch-isr-02.cfg --extract=.cache/resources/cisco/branch-isr-02.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console --verbose
 + [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
++ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
 + case "${target_file}" in
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
++ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
 + for target_config in "${configs_listing[@]}"
 + [[ ! -f configs/cisco/campus-sw-access01.cfg ]]
 + set +e
@@ -1384,7 +1387,7 @@
 + local output_dir=.cache/resources/cisco
 + mkdir -p .cache/resources/cisco
 + :
-+ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/cisco/campus-sw-access01.cfg' '--extract=.cache/resources/cisco/campus-sw-access01.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console')
++ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/cisco/campus-sw-access01.cfg' '--extract=.cache/resources/cisco/campus-sw-access01.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
@@ -1426,10 +1429,10 @@
 + local 'message=\t--platform=cisco'
 + echo -e '\t--platform=cisco'
 + for item in "${execute[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
 + for item in "${execute[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -1444,14 +1447,14 @@
 + (( i < count ))
 + :
 ++ which bash
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/cisco/campus-sw-access01.cfg --extract=.cache/resources/cisco/campus-sw-access01.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console --verbose
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/cisco/campus-sw-access01.cfg --extract=.cache/resources/cisco/campus-sw-access01.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console --verbose
 + [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
++ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
 + case "${target_file}" in
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
++ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
 + for target_config in "${configs_listing[@]}"
 + [[ ! -f configs/cisco/dmz-fw2-backup.cfg ]]
 + set +e
@@ -1480,7 +1483,7 @@
 + local output_dir=.cache/resources/cisco
 + mkdir -p .cache/resources/cisco
 + :
-+ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/cisco/dmz-fw2-backup.cfg' '--extract=.cache/resources/cisco/dmz-fw2-backup.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console')
++ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/cisco/dmz-fw2-backup.cfg' '--extract=.cache/resources/cisco/dmz-fw2-backup.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
@@ -1522,10 +1525,10 @@
 + local 'message=\t--platform=cisco'
 + echo -e '\t--platform=cisco'
 + for item in "${execute[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
 + for item in "${execute[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -1540,14 +1543,14 @@
 + (( i < count ))
 + :
 ++ which bash
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/cisco/dmz-fw2-backup.cfg --extract=.cache/resources/cisco/dmz-fw2-backup.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console --verbose
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/cisco/dmz-fw2-backup.cfg --extract=.cache/resources/cisco/dmz-fw2-backup.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console --verbose
 + [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
++ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
 + case "${target_file}" in
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
++ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
 + for target_config in "${configs_listing[@]}"
 + [[ ! -f configs/cisco/perimeter-fw1.cfg ]]
 + set +e
@@ -1576,7 +1579,7 @@
 + local output_dir=.cache/resources/cisco
 + mkdir -p .cache/resources/cisco
 + :
-+ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/cisco/perimeter-fw1.cfg' '--extract=.cache/resources/cisco/perimeter-fw1.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console')
++ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/cisco/perimeter-fw1.cfg' '--extract=.cache/resources/cisco/perimeter-fw1.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
@@ -1618,10 +1621,10 @@
 + local 'message=\t--platform=cisco'
 + echo -e '\t--platform=cisco'
 + for item in "${execute[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
 + for item in "${execute[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -1636,14 +1639,14 @@
 + (( i < count ))
 + :
 ++ which bash
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/cisco/perimeter-fw1.cfg --extract=.cache/resources/cisco/perimeter-fw1.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console --verbose
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/cisco/perimeter-fw1.cfg --extract=.cache/resources/cisco/perimeter-fw1.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console --verbose
 + [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
++ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
 + case "${target_file}" in
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
++ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
 + for target_config in "${configs_listing[@]}"
 + [[ ! -f configs/fortinet/fg-branch-vpn-01.cfg ]]
 + set +e
@@ -1671,7 +1674,7 @@
 + local output_dir=.cache/resources/fortinet
 + mkdir -p .cache/resources/fortinet
 + :
-+ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/fortinet/fg-branch-vpn-01.cfg' '--extract=.cache/resources/fortinet/fg-branch-vpn-01.cfg' '--platform=fortinet' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console')
++ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/fortinet/fg-branch-vpn-01.cfg' '--extract=.cache/resources/fortinet/fg-branch-vpn-01.cfg' '--platform=fortinet' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
@@ -1713,10 +1716,10 @@
 + local 'message=\t--platform=fortinet'
 + echo -e '\t--platform=fortinet'
 + for item in "${execute[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
 + for item in "${execute[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -1731,14 +1734,14 @@
 + (( i < count ))
 + :
 ++ which bash
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/fortinet/fg-branch-vpn-01.cfg --extract=.cache/resources/fortinet/fg-branch-vpn-01.cfg --platform=fortinet --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console --verbose
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/fortinet/fg-branch-vpn-01.cfg --extract=.cache/resources/fortinet/fg-branch-vpn-01.cfg --platform=fortinet --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console --verbose
 + [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
++ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
 + case "${target_file}" in
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
++ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
 + for target_config in "${configs_listing[@]}"
 + [[ ! -f configs/fortinet/fg-campus-core.cfg ]]
 + set +e
@@ -1766,7 +1769,7 @@
 + local output_dir=.cache/resources/fortinet
 + mkdir -p .cache/resources/fortinet
 + :
-+ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/fortinet/fg-campus-core.cfg' '--extract=.cache/resources/fortinet/fg-campus-core.cfg' '--platform=fortinet' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console')
++ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/fortinet/fg-campus-core.cfg' '--extract=.cache/resources/fortinet/fg-campus-core.cfg' '--platform=fortinet' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
@@ -1808,10 +1811,10 @@
 + local 'message=\t--platform=fortinet'
 + echo -e '\t--platform=fortinet'
 + for item in "${execute[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
 + for item in "${execute[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -1826,14 +1829,14 @@
 + (( i < count ))
 + :
 ++ which bash
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/fortinet/fg-campus-core.cfg --extract=.cache/resources/fortinet/fg-campus-core.cfg --platform=fortinet --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console --verbose
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/fortinet/fg-campus-core.cfg --extract=.cache/resources/fortinet/fg-campus-core.cfg --platform=fortinet --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console --verbose
 + [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
++ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
 + case "${target_file}" in
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
++ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
 + for target_config in "${configs_listing[@]}"
 + [[ ! -f configs/fortinet/fg-testing-config.cfg ]]
 + set +e
@@ -1861,7 +1864,7 @@
 + local output_dir=.cache/resources/fortinet
 + mkdir -p .cache/resources/fortinet
 + :
-+ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/fortinet/fg-testing-config.cfg' '--extract=.cache/resources/fortinet/fg-testing-config.cfg' '--platform=fortinet' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console')
++ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/fortinet/fg-testing-config.cfg' '--extract=.cache/resources/fortinet/fg-testing-config.cfg' '--platform=fortinet' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
@@ -1903,10 +1906,10 @@
 + local 'message=\t--platform=fortinet'
 + echo -e '\t--platform=fortinet'
 + for item in "${execute[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
 + for item in "${execute[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -1921,14 +1924,14 @@
 + (( i < count ))
 + :
 ++ which bash
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/fortinet/fg-testing-config.cfg --extract=.cache/resources/fortinet/fg-testing-config.cfg --platform=fortinet --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console --verbose
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/fortinet/fg-testing-config.cfg --extract=.cache/resources/fortinet/fg-testing-config.cfg --platform=fortinet --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console --verbose
 + [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
++ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
 + case "${target_file}" in
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
++ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
 + for target_config in "${configs_listing[@]}"
 + [[ ! -f configs/misc/fw1.cfg ]]
 + set +e
@@ -1957,7 +1960,7 @@
 + local output_dir=.cache/resources/misc
 + mkdir -p .cache/resources/misc
 + :
-+ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/misc/fw1.cfg' '--extract=.cache/resources/misc/fw1.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console')
++ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/misc/fw1.cfg' '--extract=.cache/resources/misc/fw1.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
@@ -1999,10 +2002,10 @@
 + local 'message=\t--platform=cisco'
 + echo -e '\t--platform=cisco'
 + for item in "${execute[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
 + for item in "${execute[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -2017,14 +2020,14 @@
 + (( i < count ))
 + :
 ++ which bash
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/misc/fw1.cfg --extract=.cache/resources/misc/fw1.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console --verbose
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/misc/fw1.cfg --extract=.cache/resources/misc/fw1.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console --verbose
 + [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
++ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
 + case "${target_file}" in
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
++ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
 + for target_config in "${configs_listing[@]}"
 + [[ ! -f configs/misc/fw3.cfg ]]
 + set +e
@@ -2053,7 +2056,7 @@
 + local output_dir=.cache/resources/misc
 + mkdir -p .cache/resources/misc
 + :
-+ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/misc/fw3.cfg' '--extract=.cache/resources/misc/fw3.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console')
++ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/misc/fw3.cfg' '--extract=.cache/resources/misc/fw3.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
@@ -2095,10 +2098,10 @@
 + local 'message=\t--platform=cisco'
 + echo -e '\t--platform=cisco'
 + for item in "${execute[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
 + for item in "${execute[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -2113,14 +2116,14 @@
 + (( i < count ))
 + :
 ++ which bash
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/misc/fw3.cfg --extract=.cache/resources/misc/fw3.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console --verbose
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/misc/fw3.cfg --extract=.cache/resources/misc/fw3.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console --verbose
 + [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
++ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
 + case "${target_file}" in
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
++ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
 + for target_config in "${configs_listing[@]}"
 + [[ ! -f configs/misc/switch1.conf ]]
 + set +e
@@ -2149,7 +2152,7 @@
 + local output_dir=.cache/resources/misc
 + mkdir -p .cache/resources/misc
 + :
-+ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/misc/switch1.conf' '--extract=.cache/resources/misc/switch1.conf' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console')
++ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/misc/switch1.conf' '--extract=.cache/resources/misc/switch1.conf' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
@@ -2191,10 +2194,10 @@
 + local 'message=\t--platform=cisco'
 + echo -e '\t--platform=cisco'
 + for item in "${execute[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
 + for item in "${execute[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -2209,14 +2212,14 @@
 + (( i < count ))
 + :
 ++ which bash
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/misc/switch1.conf --extract=.cache/resources/misc/switch1.conf --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console --verbose
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/misc/switch1.conf --extract=.cache/resources/misc/switch1.conf --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console --verbose
 + [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
++ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
 + case "${target_file}" in
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
++ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
 + for target_config in "${configs_listing[@]}"
 + [[ ! -f configs/misc/switch3.conf ]]
 + set +e
@@ -2245,7 +2248,7 @@
 + local output_dir=.cache/resources/misc
 + mkdir -p .cache/resources/misc
 + :
-+ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/misc/switch3.conf' '--extract=.cache/resources/misc/switch3.conf' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console')
++ execute=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/misc/switch3.conf' '--extract=.cache/resources/misc/switch3.conf' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console')
 + declare -a execute
 + [[ true == true ]]
 + execute+=(--verbose)
@@ -2287,10 +2290,10 @@
 + local 'message=\t--platform=cisco'
 + echo -e '\t--platform=cisco'
 + for item in "${execute[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console'
 + for item in "${execute[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -2305,14 +2308,14 @@
 + (( i < count ))
 + :
 ++ which bash
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/misc/switch3.conf --extract=.cache/resources/misc/switch3.conf --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console --verbose
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/misc/switch3.conf --extract=.cache/resources/misc/switch3.conf --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console --verbose
 + [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console ]]
++ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
++ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console ]]
 + case "${target_file}" in
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB/network-extract.console
++ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW/network-extract.console
 + [[ -d .cache/resources ]]
 + mapfile -t extracted_configs
 ++ find .cache/resources -type f
@@ -2334,5 +2337,5 @@
 + return 0
 + result=0
 + exit 0
-+ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB ]]
-+ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UIcClA9RZB
++ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW ]]
++ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.LTPmGvpdpW
