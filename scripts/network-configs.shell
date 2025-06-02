@@ -78,6 +78,7 @@ function main () {
       ## Match accepted arguments
       [[ $key =~ ^(cache|e)$ ]] && local cache_location="${value}";
       [[ $key =~ ^(configs|c)$ ]] && local search_configs="${value}";
+      [[ $key =~ ^(export|r)$ ]] && local export_objects=true;
       [[ $key =~ ^(extract|x)$ ]] && local extract_location="${value}";
       [[ $key =~ ^(location|l)$ ]] && local search_location="${value}";
       [[ $key =~ ^(search|s)$ ]] && local search_pattern="${value}";
@@ -102,6 +103,7 @@ function main () {
     #### -----------------------------------------------------------------------
     [[ -z "${cache_location:-}" ]] && export cache_location="./.cache";
     [[ -z "${extract_location:-}" ]] && export extract_location="./resources";
+    [[ -z "${export_objects:-}" ]] && local export_objects=false;
     [[ -z "${search_pattern:-}" ]] && export search_pattern=;
     [[ -z "${search_configs:-}" ]] && export search_configs=;
     [[ -z "${search_location:-}" ]] && export search_location=;
@@ -506,6 +508,8 @@ function main () {
         --platform="${target_platform}"
         --logger="${network_extract__logger}.console"
       );
+
+      [[ "${export_objects}" == true ]] && execute+=( --export );
       [[ "${verbose}" == true ]] && execute+=( --verbose );
 
       #### -----------------------------------------------------------------------

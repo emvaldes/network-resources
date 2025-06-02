@@ -732,14 +732,15 @@ function main () {
       mkdir -p "${reports_folder}/${address}" 2>/dev/null || true;
 
       (
-        bash -x ./scripts/${network_configs__script}.shell \
-          --search="${address}" \
-          --configs="${configs_list_cache}" \
-          --location="${configs_dirpath}" \
-          --extract="${reports_folder}/${address}" \
-          --update=false \
-          --logger="${network_configs__logfile}--${address}.console" \
-          --verbose \
+        $(which bash )  -x ./scripts/${network_configs__script}.shell \
+                        --search="${address}" \
+                        --configs="${configs_list_cache}" \
+                        --location="${configs_dirpath}" \
+                        --extract="${reports_folder}/${address}" \
+                        --update=false \
+                        --logger="${network_configs__logfile}--${address}.console" \
+                        --export \
+                        --verbose \
         >> "${network_configs__logfile}--${address}.log" 2>&1 ;
       ) &
 

@@ -57,6 +57,101 @@ source ./scripts/devops-helpers.shell;
 
 #------------------------------------------------------------------------------#
 
+function serialize_objects () {
+
+    local parent_dir="$(
+            dirname "${extract_location}"
+          )";
+    local object_path="${parent_dir}/.objects/$(
+            basename "${extract_location%.*}"
+          ).list";
+    mkdir -p "${parent_dir}/.objects" || return 100;
+    {
+      case "${target_platform}" in
+        cisco)  awk -v divisor="${divisor}" '
+                  BEGIN {
+                    in_json_header = 0;
+                    blk = "";
+                  }
+                  /^[[:space:]]*$/ { next }
+                  /^{$/ { in_json_header = 1; next }
+                  /^}$/ {
+                    if (in_json_header == 1) {
+                      in_json_header = 0;
+                      next;
+                    }
+                  }
+                  (in_json_header == 1) { next }
+                  /^[^[:space:]]/ {
+                    if (blk != "" && !seen[blk]++) print blk "\n";
+                    blk = $0;
+                    next;
+                  }
+                  {
+                    blk = blk divisor " " $0;
+                  }
+                  END {
+                    if (blk != "" && !seen[blk]++) print blk "\n";
+                  }
+                ' "${extract_location}";
+        ;;
+        fortinet) awk -v divisor="${divisor}" '
+                    BEGIN {
+                      in_json_header = 0;
+                      blk = "";
+                    }
+                    /^[[:space:]]*$/ { next }
+                    /^{$/ { in_json_header = 1; next }
+                    /^}$/ {
+                      if (in_json_header == 1) {
+                        in_json_header = 0;
+                        next;
+                      }
+                    }
+                    (in_json_header == 1) { next }
+                    /^#(hostname|model|config-version)=/ { next }
+                    /^config / { print $0; next }
+                    /^end$/    { print $0 "\n"; next }
+                    /^ edit / {
+                      if (blk != "" && !seen[blk]++) print blk;
+                      blk = $0;
+                      next;
+                    }
+                    /^ next$/ {
+                      blk = blk divisor " " $0;
+                      if (blk != "" && !seen[blk]++) print blk;
+                      blk = "";
+                      next;
+                    }
+                    {
+                      blk = blk divisor " " $0;
+                    }
+                    END {
+                      if (blk != "" && !seen[blk]++) print blk;
+                    }
+                  ' "${extract_location}";
+        ;;
+        *)  warning "Unsupported platform: ${target_platform}" >&2
+        ;;
+      esac;
+    } | sed '/^[[:space:]]*$/d' > "${object_path}";
+    result=$?;
+    if [[ ${result} -ne 0 ]]; then
+      warning "Failed to serialize objects from: ${extract_location}";
+      return 1;
+    fi;
+    if [[ "${verbose}" == true ]]; then
+      {
+        message "Serialized objects to: ${object_path}";
+        newline;
+        print_file "${object_path}" | cat -n;
+        newline;
+      } >> "${target_logfile:-/dev/null}";
+    fi;
+
+    return 0;
+}; alias serialize-object='serialize_objects';
+
 function main () {
 
     ## tracking_process ${FUNCNAME} "${@}";
@@ -72,6 +167,7 @@ function main () {
       ## Match accepted arguments
       [[ $key =~ ^(config|c)$ ]] && local target_config="${value}";
       [[ $key =~ ^(console|o)$ ]] && local console_output=true;
+      [[ $key =~ ^(export|r)$ ]] && local export_objects=true;
       [[ $key =~ ^(extract|x)$ ]] && local extract_location="${value}";
       [[ $key =~ ^(logger|l)$ ]] && local target_logfile="${value}";
       [[ $key =~ ^(platform|p)$ ]] && local target_platform="${value}";
@@ -94,6 +190,7 @@ function main () {
 
     #### -----------------------------------------------------------------------
     [[ -z "${console_output:-}" ]] && export console_output=false;
+    [[ -z "${export_objects:-}" ]] && local export_objects=false;
 
     if [[ -z "${target_logfile:-}" ]]; then
       local target_logfile="${logs_location}/console/${script_filename}.console";
@@ -328,6 +425,15 @@ function main () {
             } >> "${target_logfile:-/dev/null}";
             return 1;
 
+    fi;
+
+    #### -----------------------------------------------------------------------
+    if [[ "${export_objects}" == true ]]; then
+      {
+        message "Exported objects from: ${extract_location}";
+        ## Serialize objects to a structured format
+        serialize_objects;
+      } >> "${target_logfile:-/dev/null}";
     fi;
 
     #### -----------------------------------------------------------------------

@@ -732,14 +732,15 @@ function main () {
       mkdir -p "${reports_folder}/${address}" 2>/dev/null || true;
 
       (
-        bash -x ./scripts/${network_configs__script}.shell \
-          --search="${address}" \
-          --configs="${configs_list_cache}" \
-          --location="${configs_dirpath}" \
-          --extract="${reports_folder}/${address}" \
-          --update=false \
-          --logger="${network_configs__logfile}--${address}.console" \
-          --verbose \
+        $(which bash )  -x ./scripts/${network_configs__script}.shell \
+                        --search="${address}" \
+                        --configs="${configs_list_cache}" \
+                        --location="${configs_dirpath}" \
+                        --extract="${reports_folder}/${address}" \
+                        --update=false \
+                        --logger="${network_configs__logfile}--${address}.console" \
+                        --export \
+                        --verbose \
         >> "${network_configs__logfile}--${address}.log" 2>&1 ;
       ) &
 
@@ -749,14 +750,14 @@ function main () {
 
     done;
 
-    #### -----------------------------------------------------------------------
-    ## Wait for all network-configs jobs to complete
+    ## Wait for all extract jobs to complete
     while (( ${#configs_jobs_pid[@]} > 0 )); do
       valid_configs_jobs_pid=();
       for pid in "${configs_jobs_pid[@]}"; do
         if ! kill -0 "${pid}" 2>/dev/null; then
-                ## Evaluating if the job is completed
-                logger="${configs_jobs2ips_mapping[$pid]}";
+                ## Job completed
+                ip_address="${configs_jobs2ips_mapping[$pid]}";  ## Retrieve the IP associated with this job PID
+                # message "[INFO] Completed (${pid}): ${ip_address}" >> "${actions_logfile:-/dev/null}"
           else  valid_configs_jobs_pid+=( "${pid}" )
         fi;
       done;
@@ -768,11 +769,12 @@ function main () {
     ## Collecting all background-jobs console outputs
     {
       for pid in "${!configs_jobs2ips_mapping[@]}"; do
-        logger="${configs_jobs2ips_mapping[${pid}]}";
-        console="${TMP_DIR}/${network_configs__logfile}--${logger}.console";
-        [[ -s "${console}" ]] && cat "${console}";
-      done;
+        ip_address="${configs_jobs2ips_mapping[${pid}]}"
+        job_log="${TMP_DIR}/${network_configs__logfile}--${ip_address}.console"
+        [[ -s "${job_log}" ]] && cat "${job_log}"
+      done
     } >> "${network_configs__console}";
+
 
     #### -----------------------------------------------------------------------
     if [[ "${verbose}" == true ]]; then
@@ -829,252 +831,6 @@ function main () {
       fi;
 
       #### Starting: Batch-Processing - Outer Loop ------------------------------ ####
-
-      #### ---------------------------------------------------------------------
-      ## Begin placeholder-only batch structure (no processing)
-      mapfile -t site_folders < <(
-        printf '%s\n' "${configs_listing[@]}" | \
-        sed -E "s|^${extracted_resources}/||" | \
-        cut -d/ -f1 | \
-        sort -u
-      );
-
-      #### ---------------------------------------------------------------------
-      if [[ "${verbose}" == true ]]; then
-        {
-          message "Site Folders:";
-          newline;
-          for site in "${site_folders[@]}"; do
-            message "  - ${site}";
-          done;
-          newline;
-          message "Batch processing (outer):";
-          message "Batch size: ${configs_batch_size}";
-          # newline;
-          # message "Parallel threads:   ${parallel_threads}";
-          # message "Target IPs (count): ${#target_listing[@]}";
-          newline;
-        } >> "${actions_logfile:-/dev/null}";
-      fi;
-
-      ## Outter Batching (For-loop)
-      local outer_index=0;
-      local outer_batches=${#site_folders[@]};
-
-      for site in "${site_folders[@]}"; do
-        outer_index=$(( outer_index + 1 ));
-
-        #### -------------------------------------------------------------------
-        mapfile -t site_files < <(
-          printf '%s\n' "${configs_listing[@]}" | grep -F "/${site}/"
-        );
-
-        local total_files=${#site_files[@]};
-        local inner_batches=$((
-          ( total_files + configs_batch_size - 1 ) / configs_batch_size
-        ));
-
-        #### -------------------------------------------------------------------
-        if [[ "${verbose}" == true ]]; then
-          {
-            message "Location Name:  ${site}";
-            message "Location Index: ${outer_index}/${outer_batches}";
-            newline;
-            message "Total Configs:  ${total_files}";
-            newline;
-            for file in "${site_files[@]}"; do
-              message "  - $( relative_configpath ${file} )";
-            done;
-            newline;
-          } >> "${actions_logfile:-/dev/null}";
-          # for site in "${site_files[@]}"; do message "Site: ${site}"; done;
-        fi;
-
-        #### -------------------------------------------------------------------
-        ## Delete only top-level JSON files in ${targets_location} (preserve subfolders)
-        if [[ -d ${targets_location} ]]; then
-          ## Delete all JSON files in ${targets_location} directory
-          #### -------------------------------------------------------------------
-          if [[ "${verbose}" == true ]]; then
-            {
-              message "Deleting JSON files in ${targets_location} directory";
-              find "${targets_location}" -type f 2>/dev/null;
-              newline;
-            } >> "${actions_logfile:-/dev/null}";
-          fi;
-          find ${targets_location} -maxdepth 1 -type f -name '*.json' -delete 2>/dev/null;
-          ## Confirm deletion was successful
-          if compgen -G "${targets_location}/*.json" >/dev/null; then
-            warning "Failed to delete JSON files in ${targets_location} directory.";
-            exit 5;
-          fi;
-        fi;
-
-        if [[ "${remove_jobsfile}" == true ]]; then
-          #### -------------------------------------------------------------------
-          ## Delete ${logs_location}/jobs directory and wait until fully removed
-          if [[ "${verbose}" == true ]]; then
-            {
-              message "Deleting ${logs_location}/jobs directory";
-              find "${logs_location}/jobs" -type f 2>/dev/null;
-              newline;
-            } >> "${actions_logfile:-/dev/null}";
-          fi;
-          rm -rf ${logs_location}/jobs;
-          while [[ -d ${logs_location}/jobs ]]; do sleep 0.1; done;
-          ## Confirm ${logs_location}/jobs is fully removed
-          if [[ -d ${logs_location}/jobs ]]; then
-            warning "Failed to delete ${logs_location}/jobs directory.";
-            exit 6;
-          fi;
-        fi;
-
-        #### Starting: Batch-Processing - Inner Loop ------------------------------ ####
-
-        ## Inner Batching (While-loop)
-        local offset=0;
-        local inner_index=0;
-
-        while [[ "${offset}" -lt "${total_files}" ]]; do
-          inner_index=$(( inner_index + 1 ));
-
-          export batch_id="$(
-            printf '%s-%s' "$( date +%s%N )" "${RANDOM}" | \
-            base64 | \
-            tr -dc 'a-zA-Z0-9' | \
-            cut -c1-12
-          )";
-
-          #### -----------------------------------------------------------------
-
-          batch_slice=( "${site_files[@]:offset:configs_batch_size}" );
-          batch_suffix="$( date +%s )-${RANDOM}";
-
-          batch_configs_list="configs--${batch_id}-${batch_suffix}.list";
-          BATCH_CONFIGS="${TMP_DIR}/${batch_configs_list}";
-          export BATCH_CONFIGS;
-
-          touch "${BATCH_CONFIGS}";
-          printf '%s\n' "${batch_slice[@]}" > "${BATCH_CONFIGS}";
-
-          range_first=$(( offset+1 ));
-          range_last=$(( offset + ${#batch_slice[@]} ));
-
-          #### -----------------------------------------------------------------
-          if [[ "${verbose}" == true ]]; then
-            {
-              message "Batch processing (inner):";
-              message "Batch ID: ${batch_id}";
-              newline;
-              message "Batch Index:    ${inner_index}/${inner_batches}";
-              message "Batch Suffix:   ${batch_suffix}";
-              newline;
-              message "Batch FileName: ${batch_configs_list}";
-              message "Batch Configs:  ${BATCH_CONFIGS}";
-              list_file "${BATCH_CONFIGS}";
-              newline;
-              message "Batch Size:     ${#batch_slice[@]}";
-              message "Batch Ranges:   ${range_first} -> ${range_last}";
-              newline;
-              for config in "${batch_slice[@]}"; do
-                message "  - $( relative_configpath "${config}" )";
-              done;
-              newline;
-            } >> "${actions_logfile:-/dev/null}";
-          fi;
-
-          #### -----------------------------------------------------------------
-          ## Advanced Background Jobs management workflow
-          matching_configs ${BATCH_CONFIGS};
-
-          #### -----------------------------------------------------------------
-          ## Compute and log unmapped IPs directly from difference
-          declare -a discarded_ips=();
-          for ip in "${target_listing[@]}"; do
-            found=false;
-            for current in "${target_listing[@]}"; do
-              if [[ "${ip}" == "${current}" ]]; then
-                found=true;
-                break;
-              fi;
-            done;
-            [[ "${found}" == false ]] && discarded_ips+=( "${ip}" );
-          done;
-
-          #### -----------------------------------------------------------------
-          if [[ "${verbose}" == true ]]; then
-            if [[ "${#discarded_ips[@]}" -gt 0 ]]; then
-              {
-                message "Unmapped IPs (count): ${#discarded_ips[@]}";
-                # newline;
-                # for ip in "${discarded_ips[@]}"; do
-                #   message "  - ${ip}";
-                # done;
-                newline;
-              } >> "${actions_logfile:-/dev/null}";
-            fi;
-          fi;
-
-          #### -----------------------------------------------------------------
-          ## Launch and monitor parallel config parsing jobs for matched IPs
-          manage_configs;
-
-          offset=$(( offset + configs_batch_size ));
-
-        done;
-
-        #### Completed: Batch-Processing - Inner Loop ----------------------------- ####
-
-        ## Exporting ./reports/reports.json data-sets into CSV output
-        generate_csvoutput;
-
-        #### -------------------------------------------------------------------
-        ## Final consolidation step:
-        ## Merge all per-site JSON files from ./targets/<ip>/<ip>--<site>.json
-        ## into a single unified output at .cache/targets/<ip>.json.
-        ## This runs only after all parsing and processing is complete.
-        ## The intermediate ./targets/*.json files are already deleted after use.
-
-        shopt -s nullglob;
-        for ip_dir in "${targets_location}"/*/; do
-          ip="$(
-            basename "${ip_dir}"
-          )";
-          final_file="${cache_location}/targets/${ip}.json";
-          mkdir -p "${cache_location}/targets";
-          site_jsons=(
-            "${ip_dir}/${ip}"--*.json
-          );
-          [[ "${#site_jsons[@]}" -eq 0 ]] && continue;
-          if [[ -f "${final_file}" ]]; then
-                jq --slurp  '{
-                              configs: (
-                                map(.configs) | add |
-                                unique_by( .config.site + ":" + .config.device )
-                              )
-                            }' "${final_file}" "${site_jsons[@]}" \
-                > "${final_file}.tmp" && \
-                mv -f "${final_file}.tmp" "${final_file}";
-          else  jq --slurp  '{
-                              configs: (
-                                map(.configs) | add |
-                                unique_by(.config.site + ":" + .config.device)
-                              )
-                            }' "${site_jsons[@]}" \
-                > "${final_file}";
-          fi;
-        done;
-        shopt -u nullglob;
-
-        #### -------------------------------------------------------------------
-        ## Final cleanup: remove any remaining per-site JSON files and empty folders
-        if [[ -d ${targets_location} ]]; then
-          find "${targets_location}" -type f -name "*.json" -delete 2>/dev/null;
-          find "${targets_location}" -type d -empty -delete 2>/dev/null;
-        fi;
-
-      done;
-
       #### Completed:  Batch-Processing - Outer Loop ---------------------------- ####
 
     done;

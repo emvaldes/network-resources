@@ -1,0 +1,7 @@
+ASA Version 9.14(3)
+hostname perimeter-fw1
+domain-name edge.dc.example.com
+interface GigabitEthernet0/0[ MTc0ODgzMjc1MTkwMjIxNTAwMAo ]  nameif outside[ MTc0ODgzMjc1MTkwMjIxNTAwMAo ]  security-level 0[ MTc0ODgzMjc1MTkwMjIxNTAwMAo ]  ip address 203.0.113.25 255.255.255.0[ MTc0ODgzMjc1MTkwMjIxNTAwMAo ]  description External Internet-facing Interface
+object network NAT-Edge[ MTc0ODgzMjc1MTkwMjIxNTAwMAo ]  host 203.0.113.25[ MTc0ODgzMjc1MTkwMjIxNTAwMAo ]  description Internet-bound IP NAT
+object-group network Avengers-DMZ[ MTc0ODgzMjc1MTkwMjIxNTAwMAo ]  description Public access layer[ MTc0ODgzMjc1MTkwMjIxNTAwMAo ]  network-object host 192.0.2.50[ MTc0ODgzMjc1MTkwMjIxNTAwMAo ]  network-object host 203.0.113.25[ MTc0ODgzMjc1MTkwMjIxNTAwMAo ]  network-object 192.168.2.0 255.255.255.0
+object-group network Panther-Edge[ MTc0ODgzMjc1MTkwMjIxNTAwMAo ]  description Internet-facing proxy systems[ MTc0ODgzMjc1MTkwMjIxNTAwMAo ]  network-object host 203.0.113.25[ MTc0ODgzMjc1MTkwMjIxNTAwMAo ]  network-object host 172.16.0.5
