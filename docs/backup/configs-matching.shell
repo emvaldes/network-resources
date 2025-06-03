@@ -46,7 +46,7 @@ function matching_configs () {
   for ip_addr in "${target_listing[@]}"; do
 
     local report_path="./reports/${ip_addr}";
-    local tmp_config_list="${TMP_DIR}/generate-configslist--${ip_addr}.list";
+    local tmp_config_list="${TMP_DIR}/configslist--${ip_addr}.list";
 
     : > "${tmp_config_list}";
 
@@ -65,8 +65,7 @@ function matching_configs () {
       generate_configslist  "${ip_addr}" \
                             "${target_file}" \
                             "${tmp_config_list}" \
-                            "${generate_configslist__logfile}" \
-      ;
+                            "${generate_configslist__logfile}";
 
       #### -----------------------------------------------------------------------
       if [[ "${verbose}" == true ]]; then
@@ -156,9 +155,7 @@ function generate_configslist () {
 
       local config_lines match_count rel_path site device;
 
-      config_lines=$(
-        wc -l < "${config_file}"
-      );
+      config_lines=$( wc -l < "${config_file}" );
       local match_count=$(
         grep -oE "(^|[^0-9.])${ip_addr//./\\.}([^0-9.]|$)" "${config_file}" | \
         wc -l | tr -d ' '

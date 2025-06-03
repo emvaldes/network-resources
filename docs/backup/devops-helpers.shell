@@ -1,0 +1,253 @@
+#!/usr/bin/env bash
+
+## -------------------------------------------------------------------------- ##
+## File: scripts/devops-helpers.shell
+##
+## Purpose: Sharing common features across scripts.
+##          Utility library of shared shell functions and environment exports
+##    Note: Used by both parse-listings.shell and parse-configs.shell
+## -------------------------------------------------------------------------- ##
+
+## Prevent re-sourcing and ensure one-time initialization
+if [[ -n "${__DEVOPS_HELPERS_SOURCED:-}" ]]; then return 0; fi;
+readonly __DEVOPS_HELPERS_SOURCED=1;
+
+## Require Bash 4.0+ for associative array support (only runs once)
+if [[ "${BASH_VERSINFO[0]}" -lt 4 ]]; then
+  echo "Error: Bash 4.0 or newer is required. Current version: ${BASH_VERSINFO[*]}";
+  exit 1;
+fi;
+
+## -------------------------------------------------------------------------- ##
+## Function: display_help ()
+##
+## Purpose:
+##   Displays contextual usage instructions and supported command-line options
+##   based on the operational mode of the script (either `listings` or `configs`).
+##
+## Inputs:
+##   $1 = Name of the script (used in help display and examples)
+##   $2 = Mode of operation: one of `listings` or `configs`
+##
+## Behavior:
+##   - Prints usage banner and available CLI options.
+##   - Outputs mode-specific flags and examples:
+##       - `listings` → shows options for IP batching and config directories
+##       - `configs`  → shows options for single-IP parsing workflows
+##   - Categorizes flags into Shared Options, Examples, and Additional Flags.
+##   - Adds consistent left-padding and alignment for readability.
+##
+## Notes:
+##   - Does not rely on `getopts`; statically prints descriptions for known arguments.
+##   - Intended for invocation via `--help` flag from main script entrypoints.
+##   - Adds trailing newline for terminal cleanliness.
+## -------------------------------------------------------------------------- ##
+
+function parse_listings__helper () {
+
+    local script_name="${1}";
+    local mode="${2}";
+    local -a help_lines=();
+    local indent="    ";
+    local padding="$( printf '%*s' ${#script_name} ' ' )";
+
+    ## Header
+    help_lines+=( "Usage: ${script_name} [OPTIONS]${nl}" );
+
+    ## Shared Options
+    help_lines+=( "Options:${nl}" );
+    help_lines+=( "  -g, --classify     Provide classification based on matrix.json" );
+    help_lines+=( "  -c, --configs      Path to configuration files ( default: ./configs )" );
+    help_lines+=( "  -x, --file-ext     Comma-separated list of config file extensions ( e.g., cfg,conf,cnf )" );
+    help_lines+=( "  -e, --export       Exporting JSON to other formats like: CSV, etc." );
+    help_lines+=( "  -m, --matrix       Path to translation matrix ( matrix.json )" );
+    help_lines+=( "  -r, --reports      Folder to store generated reports ( default: reports )" );
+    help_lines+=( "  -v, --validate     Validating IP/CIDR Block addresses" );
+
+    ## Script-Specific Options
+    case "${mode}" in
+      listings )
+
+        help_lines+=( "  -b, --batch-size   Define a batch cycle-processing limit (configs set)" );
+        help_lines+=( "  -d, --devices      File containing list of target network devices (configurations)" );
+        help_lines+=( "  -l, --interval     Interval ( in seconds ) between job dispatch checks [default: 0.1]" );
+        help_lines+=( "  -i, --ips-list     File containing list of target IP addresses" );
+        help_lines+=( "  -j, --jobs         Count of concurrent jobs to run in parallel${nl}" );
+        help_lines+=( "  -o, --logging      Enabling Logging-operations (files)${nl}" );
+        help_lines+=( "  -s, --sites        Custom list of locations to process (batching)" );
+
+        ## Examples for listings
+        help_lines+=( "Examples:${nl}" );
+        help_lines+=( "${script_name} --interval=0.05 \\" );
+        help_lines+=( "${padding} --ips-list=\"ips.list\" \\" );
+        help_lines+=( "${padding} --jobs=10 \\" );
+
+        ;;
+      configs )
+        help_lines+=( "  -n, --index        Padded job index ( provided by controlling script )" );
+        help_lines+=( "  -i, --ip-addr      Target IP address to scan for in configurations${nl}" );
+        ## Examples for configs
+        help_lines+=( "Examples:${nl}" );
+        help_lines+=( "${script_name} --index=\"  --> \" \\" );
+        help_lines+=( "${padding} --ip-addr=\"10.0.0.1\" \\" );
+        ;;
+    esac;
+
+    ## Flags
+    help_lines+=( "${padding} --configs=\"configs\" \\" );
+    help_lines+=( "${padding} --file-ext=\"cfg\" \\" );
+    help_lines+=( "${padding} --matrix=\"matrix.json\" \\" );
+    help_lines+=( "${padding} --reports=\"reports\" ;${nl}" );
+
+    help_lines+=( "Flags:${nl}" );
+    help_lines+=( "  --help             Show this help message and exit" );
+    help_lines+=( "  --debug            Enable debug mode with trace output" );
+    help_lines+=( "  --dry-run          Print actions without executing them" );
+    help_lines+=( "  --verbose          Enable verbose output${nl}" );
+
+    ## Output
+    newline;
+    for line in "${help_lines[@]}"; do
+      echo -e "${indent}${line}";
+    done;
+
+    # return 0;
+}; alias parse-listings--helper='parse_listings__helper'
+
+#------------------------------------------------------------------------------#
+
+function netowrk_configs__helper () {
+
+    local -a help_lines=();
+    local indent="    ";
+    local padding="$( printf '%*s' ${#script_name} ' ' )";
+
+    ## Header
+    help_lines+=( "Usage: ${script_name} [OPTIONS]${nl}" );
+
+    ## Available Operational Requests
+    help_lines+=( "Options:${nl}" );
+    help_lines+=( "  -s, --search       List of device names or patterns to include in config filtering" );
+    help_lines+=( "  -c, --configs      File containing configuration paths to evaluate (output of discovery)" );
+    help_lines+=( "  -l, --location     Root directory to scan for configs (required with --search)" );
+    help_lines+=( "  -o, --extract      Destination directory for extracted config subsets (default: .cache/resources)${nl}" );
+    help_lines+=( "  -e, --cache        Parent directory for the 'resources' directory containing extracted config subsets (default: .cache)${nl}" );
+    help_lines+=( "  -u, --update       Updating Search Pattern and Network Configurations source files (default: ips.list, configs.list)${nl}" );
+
+    ## Default Application Flags
+    help_lines+=( "Flags:${nl}" );
+    help_lines+=( "  --help             Show this help message and exit" );
+    help_lines+=( "  --verbose          Enable verbose output${nl}" );
+
+    ## Exit Codes Details
+    help_lines+=( "Exit Codes:${nl}" );
+    help_lines+=( "   4 = Failed to create cache directory (e.g., permissions error)${nl}" );
+    help_lines+=( "   5 = Invalid or unreadable --location directory provided${nl}" );
+    help_lines+=( "   6 = No IPs or configs matched during evaluation${nl}" );
+    help_lines+=( "   7 = Failed to write matching IPs to .cache/ips.list${nl}" );
+    help_lines+=( "   8 = No valid IPs found — skipped writing .cache/ips.list${nl}" );
+    help_lines+=( "   9 = Failed to write matched config paths to .cache/configs.list${nl}" );
+    help_lines+=( "  10 = No valid configs found — skipped writing .cache/configs.list${nl}" );
+    help_lines+=( "  11 = Unsupported configuration format detected in a source file${nl}" );
+    help_lines+=( "  12 = Unknown configuration type — vendor detection failed${nl}" );
+
+    ## Application Notes
+    help_lines+=( "Application Notes:${nl}" );
+    help_lines+=( "  * All search patterns may be individual, comma-separated, or wildcard-based." );
+    help_lines+=( "  * Option: --extract is the preferred output directory override." );
+    help_lines+=( "  * Option: --location is required when filtering configs by name or scope.${nl}" );
+
+    ## Application Examples
+    help_lines+=( "Examples:${nl}" );
+    help_lines+=( "  1. Reduce a known configuration file against a list of IPs:" );
+    help_lines+=( "     bash ${script_name} \\" );
+    help_lines+=( "          --search=ips.list \\" );
+    help_lines+=( "          --configs=devices.list \\" );
+    help_lines+=( "          --location=./configs \\" );
+    help_lines+=( "          --extract=.cache/resources \\" );
+    help_lines+=( "          --verbose${nl}" );
+    help_lines+=( "  2. Run a full scan across all configs in a folder for a batch of IPs:" );
+    help_lines+=( "     bash ${script_name} \\" );
+    help_lines+=( "          --search=ips.list \\" );
+    help_lines+=( "          --location=./configs \\" );
+    help_lines+=( "          --extract=./reduced \\" );
+    help_lines+=( "          --verbose${nl}" );
+
+    ## Display Built-In Help
+    newline;
+    for line in "${help_lines[@]}"; do
+      message "${indent}${line}";
+    done;
+
+    return 0;
+}; alias network-configs--helper='network_configs__helper';
+
+#------------------------------------------------------------------------------#
+
+function network_extract__helper () {
+
+    local -a help_lines=();
+    local indent="    ";
+    local padding="$( printf '%*s' ${#script_name} ' ' )";
+
+    ## Header
+    help_lines+=( "Usage: ${script_name} [OPTIONS]${nl}" );
+
+    ## Shared Options
+    help_lines+=( "Options:${nl}" );
+    help_lines+=( "  -i, --ips-list     Custom Search Pattern: IP Address, etc." );
+    help_lines+=( "  -c, --config       Source Configuration filepath to be parsed" );
+    help_lines+=( "  -o, --output       Output Filepath for extracted datasets (*.cfg)" );
+    help_lines+=( "  -p, --platform     Provide platform-specific config (cisco, fortinet)" );
+    help_lines+=( "${nl}" );
+
+    ## Flags
+    help_lines+=( "Flags:${nl}" );
+    help_lines+=( "  --help             Show this help message and exit" );
+    # help_lines+=( "  --debug            Enable debug mode with trace output" );
+    # help_lines+=( "  --dry-run          Print actions without executing them" );
+    help_lines+=( "  --verbose          Enable verbose output${nl}" );
+
+    ## Application Notes
+    help_lines+=( "Application Notes:${nl}" );
+    help_lines+=( "  * The --search string is passed directly to the AWK script." );
+    help_lines+=( "  * Use --platform to override automatic detection." );
+    help_lines+=( "  * Use --console to display output without writing to disk.${nl}" );
+
+    ## Application Examples
+    help_lines+=( "Examples:${nl}" );
+    help_lines+=( "  1. Extract from Cisco config using IP matches:" );
+    help_lines+=( "     bash scripts/network-extract.shell \\" );
+    help_lines+=( "          --search="10.0.0.1,192.168.1.1" \\" );
+    help_lines+=( "          --config=./configs/core-fw.cfg \\" );
+    help_lines+=( "          --extract=./reduced/core-fw.cfg \\" );
+    help_lines+=( "          --platform=cisco${nl}" );
+    help_lines+=( "  2. Extract from Fortinet config using VPN object names:" );
+    help_lines+=( "     bash scripts/network-extract.shell \\" );
+    help_lines+=( "          --search="edit VPN-PROFILE,edit BRANCH-ACCESS" \\" );
+    help_lines+=( "          --config=./configs/fg-dmz.cfg \\" );
+    help_lines+=( "          --extract=./reduced/fg-dmz.cfg \\" );
+    help_lines+=( "          --platform=fortinet${nl}" );
+    help_lines+=( "  3. Auto-detect platform from config content:" );
+    help_lines+=( "     bash scripts/network-extract.shell \\" );
+    help_lines+=( "          --search="permit ip any" \\" );
+    help_lines+=( "          --config=./configs/asa-fw.cfg \\" );
+    help_lines+=( "          --extract=./reduced/asa-fw.cfg${nl}" );
+    help_lines+=( "  4. Display output to console instead of writing to file:" );
+    help_lines+=( "     bash scripts/network-extract.shell \\" );
+    help_lines+=( "          --search="10.1.1.1" \\" );
+    help_lines+=( "          --config=./configs/switch.cfg \\" );
+    help_lines+=( "          --console${nl}" );
+    help_lines+=( "  5. Run interactively (prompts for search/config/platform):" );
+    help_lines+=( "     bash scripts/network-extract.shell${nl}" );
+
+    ## Output
+    newline;
+    for line in "${help_lines[@]}"; do
+      message "${indent}${line}";
+    done;
+
+    # return 0;
+}; alias network-extract--helper='network_extract__helper';
+
+#------------------------------------------------------------------------------#

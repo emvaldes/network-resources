@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+
+## File: scripts/configs-export.shell
+
+## Prevent re-sourcing and ensure one-time initialization
+if [[ -n "${__CONFIGS_EXPORT_SOURCED:-}" ]]; then return 0; fi;
+readonly __CONFIGS_EXPORT_SOURCED=1;
+
+## -------------------------------------------------------------------------- ##
+## Function: configs-export :: generate-csvoutput ()
+##
+## Purpose:
+##   Converts structured per-IP JSON reports into a single unified CSV file.
+##   Extracts relevant fields from each matching config object using `jq`.
+##
+## Input:
+##   None (operates on all *.json files under ${reports_folder}/<ip>/<ip>.json)
+##
+## Output:
+##   Generates sorted CSV at ${output_csv}, with columns:
+##     target, site, device, object, type, items, partner, description, group
+##
+## Method:
+##   - Uses jq to extract rows per object in each config.
+##   - Applies fallback values (e.g., "none") for missing fields.
+##   - Sorts output by: target, site, device, object.
+##   - Header is inserted manually; rows appended below.
+##
+## Notes:
+##   - Uses a temporary file to build unsorted content before final sort.
+##   - Logs each processed JSON file to stderr for traceability.
+## -------------------------------------------------------------------------- ##
+
+function generate_csvoutput () {
+
+    local tmp_csv="$( mktemp )";  ## Temporary file for accumulating unsorted CSV rows
+
+    ## Ensure JSON directory exists and contains files
+    if [[ ! -d "${reports_folder}" ]]; then
+      warning "Missing ${reports_folder}, cannot generate CSV.";
+      return 10;
+    fi;
+
+    find "${reports_folder}" \
+         -type f \
+         -name '*.json' \
+         -mindepth 2 \
+         -maxdepth 2 | \
+    sort | \
+    while read -r json; do
+        message "Processing ${json}" >&2;
+
+        ## Description: jq streaming transformation – filter composition with variable binding and object iteration.
+        ## - Uses variable binding with `as` (e.g., `.target as $target`)
+        ## - Composes filters with `|` to drill into arrays and nested structures
+        ## - Constructs arrays using `[ ... ]` to represent each CSV row
+        ## - Formats final output as CSV with `@csv`
+
+        ## Objective: Generate a CSV from structured JSON files using jq.
+        ## - Binds the top-level "target" field once for reuse in each row.
+        ## - Iterates over each "config" entry, then over each "object" inside it.
+        ## - Extracts key fields: target, site, device, object, type, first matching line (items[0]), description, and group.
+        ## - Outputs each row as a properly quoted CSV line using `@csv`.
+        ## - Final output is sorted by target, site, device, and object for readability.
+
+        json2csv_transformation='.target as $target
+                    | .configs[]
+                    | select( .objects != null and ( .objects | type == "array" and length > 0 ) )
+                    | .objects[] as $obj
+                    | [
+                        $target,
+                        ( .site // "none" ),
+                        ( .device // "none" ),
+                        ( $obj.object // "none" ),
+                        ( $obj.type // "none" ),
+                        ( $obj.items[0] // "none" ),
+                        ( $obj.partner // "none" ),
+                        ( $obj.description // "none" ),
+                        ( $obj.group // "none" )
+                      ]
+                    | @csv';
+
+        ## Apply the jq transformation defined above to each JSON file:
+        ## - Uses -e to exit with failure status if the filter fails (ensures robustness)
+        ## - Uses -r to output raw strings instead of JSON-encoded strings
+        ## - Applies the `json2csv_transformation` filter to the current JSON file
+        ## - Appends each generated CSV row to the temporary output file
+
+        jq -e -r "${json2csv_transformation}" "${json}" >> "${tmp_csv}" \
+        || message "[WARN] Failed CSV append for ${json}" >&2;
+
+    done;
+
+    ## Sort the CSV (preserve header)
+    {
+      message "target,site,device,object,type,items,partner,description,group";
+      sort -t',' -k1,1 -k2,2 -k3,3 -k4,4 "${tmp_csv}";
+    } > "${output_csv}" && \
+    rm -f "${tmp_csv}";
+
+    return 0;
+}; alias generate-csvoutput='generate_csvoutput';
+
+#------------------------------------------------------------------------------#

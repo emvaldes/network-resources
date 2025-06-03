@@ -55,54 +55,7 @@ source ./scripts/devops-resources.shell;
 ## Load common or function-based helping modules
 source ./scripts/devops-helpers.shell;
 
-## -------------------------------------------------------------------------- ##
-## Function: network-extract :: serialize_objects ()
-##
-## Purpose:
-##   Transforms extracted configuration blocks into a serialized `.list` format
-##   containing only lines and blocks that reference the target IP(s).
-##
-## Overview:
-##   - Operates on a reduced `.cfg` file (output of vendor-specific AWK extraction).
-##   - Detects the platform (Cisco, Fortinet) and applies specialized collapsing rules.
-##   - Strips all metadata (e.g., JSON headers, version lines, hostnames) not tied to
-##     the actual IP match.
-##   - Collapses multi-line configuration blocks into compact one-liner strings,
-##     delimited by a unique encoding token to preserve boundaries.
-##   - Ensures the resulting `.list` file contains only relevant, minimal fragments
-##     to support downstream JSON building, grep-based queries, and visualization.
-##
-## Input:
-##   - ${extract_location}      → Full path to the extracted .cfg file for a single IP
-##   - ${target_platform}       → Detected platform name (e.g., "cisco", "fortinet")
-##   - ${divisor}               → Unique boundary token used to split and rejoin blocks
-##
-## Output:
-##   - Writes serialized content to:
-##       ./reports/<ip>/<vendor>/.objects/<device>.list
-##   - If `--verbose` is enabled, prints the serialized file to the current log stream.
-##
-## Key Behavior:
-##   - **Cisco**: Skips JSON headers and non-matching metadata lines.
-##     Collapses contiguous configuration blocks into delimiter-separated one-liners.
-##   - **Fortinet**: Preserves structural blocks (e.g., `config ... end`) but
-##     collapses `edit ... next` into one-liners tagged with the IP.
-##     Also removes legacy metadata (e.g., `#hostname=`, `config-version=`).
-##
-## Notes:
-##   - This process guarantees that only IP-relevant lines are preserved.
-##   - Acts as a filtering and compression stage before any JSON post-processing.
-##   - Downstream deserialization is optional; one-liner `.list` files are already safe
-##     for grep, explode, and transform workflows.
-##
-## Example:
-##   Input:  ./reports/203.0.113.25/misc/fw3.cfg
-##   Output: ./reports/203.0.113.25/misc/.objects/fw3.list
-##
-## Dependencies:
-##   - Relies on AWK for efficient platform-aware collapsing.
-##   - Must be called after `extract_configs()` has produced the reduced .cfg file.
-## -------------------------------------------------------------------------- ##
+#------------------------------------------------------------------------------#
 
 function serialize_objects () {
 
@@ -112,16 +65,9 @@ function serialize_objects () {
     local object_path="${parent_dir}/.objects/$(
             basename "${extract_location%.*}"
           ).list";
-
-    ## Extract target IP address from path like: reports/10.0.2.3/cisco/...
-    local search_pattern;
-    search_pattern="$( echo "${extract_location}" | cut -d'/' -f2 )";
-
     mkdir -p "${parent_dir}/.objects" || return 100;
-
     {
       case "${target_platform}" in
-
         cisco)  awk -v divisor="${divisor}" '
                   BEGIN {
                     in_json_header = 0;
@@ -149,74 +95,51 @@ function serialize_objects () {
                   }
                 ' "${extract_location}";
         ;;
-
         fortinet) awk -v divisor="${divisor}" '
                     BEGIN {
-                      blk = "";
                       in_json_header = 0;
+                      blk = "";
                     }
-
-                    # Skip blank lines
                     /^[[:space:]]*$/ { next }
-
-                    # Skip JSON preamble
-                    /^{$/            { in_json_header = 1; next }
-                    /^}$/            { if (in_json_header) { in_json_header = 0; next } }
+                    /^{$/ { in_json_header = 1; next }
+                    /^}$/ {
+                      if (in_json_header == 1) {
+                        in_json_header = 0;
+                        next;
+                      }
+                    }
                     (in_json_header == 1) { next }
-
-                    # Skip platform metadata
                     /^#(hostname|model|config-version)=/ { next }
-
-                    # Start of a new block
-                    /^config / {
-                      if (blk != "") print blk;
+                    /^config / { print $0; next }
+                    /^end$/    { print $0 "\n"; next }
+                    /^ edit / {
+                      if (blk != "" && !seen[blk]++) print blk;
                       blk = $0;
                       next;
                     }
-
-                    # Add 'edit' line to current block
-                    /^ edit / {
-                      blk = blk divisor " " $0;
-                      next;
-                    }
-
-                    # Add 'next' to block
                     /^ next$/ {
-                      blk = blk divisor " " $0;
-                      next;
-                    }
-
-                    # Finalize block at 'end'
-                    /^end$/ {
                       blk = blk divisor " " $0;
                       if (blk != "" && !seen[blk]++) print blk;
                       blk = "";
                       next;
                     }
-
-                    # Accumulate middle lines
                     {
                       blk = blk divisor " " $0;
                     }
-
                     END {
-                      # No need for final print — all blocks end with 'end'
+                      if (blk != "" && !seen[blk]++) print blk;
                     }
                   ' "${extract_location}";
         ;;
         *)  warning "Unsupported platform: ${target_platform}" >&2
         ;;
       esac;
-
-    } | grep -F "${search_pattern}" | sed '/^[[:space:]]*$/d' > "${object_path}";
-
-    ## Check if the serialization was successful
+    } | sed '/^[[:space:]]*$/d' > "${object_path}";
     result=$?;
     if [[ ${result} -ne 0 ]]; then
       warning "Failed to serialize objects from: ${extract_location}";
       return 1;
     fi;
-
     if [[ "${verbose}" == true ]]; then
       {
         message "Serialized objects to: ${object_path}";
@@ -228,8 +151,6 @@ function serialize_objects () {
 
     return 0;
 }; alias serialize-object='serialize_objects';
-
-#------------------------------------------------------------------------------#
 
 function main () {
 
@@ -472,11 +393,13 @@ function main () {
 
     #### -----------------------------------------------------------------------
     if [[ -n "${extracted_configuration}" ]]; then
+
             # print "${extracted_configuration}" > "${extract_location}";
             print "${extracted_configuration}" | \
             sed '1{/^[[:space:]]*$/d;}' \
             > "${extract_location}";
             newline 2 >> "${extract_location}";
+
             if [[ "${verbose}" == true ]]; then
               {
                 message "Configuration File [ ${extract_location} ]";
@@ -485,6 +408,7 @@ function main () {
                 newline;
               } >> "${target_logfile:-/dev/null}";
             fi;
+
             if [[ "${console_output}" == true ]]; then
               {
                 message "Extracted Configuration:";
@@ -494,11 +418,13 @@ function main () {
                 newline;
               };
             fi;
+
       else  {
               warning "No matching blocks were found. Output to file was not written.";
               newline;
             } >> "${target_logfile:-/dev/null}";
             return 1;
+
     fi;
 
     #### -----------------------------------------------------------------------
