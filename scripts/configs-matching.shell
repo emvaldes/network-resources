@@ -46,7 +46,7 @@ function matching_configs () {
   for ip_addr in "${target_listing[@]}"; do
 
     local report_path="./reports/${ip_addr}";
-    local tmp_config_list="${TMP_DIR}/generate-configslist--${ip_addr}.list";
+    local tmp_config_list="${TMP_DIR}/generate-targets--${ip_addr}.list";
 
     : > "${tmp_config_list}";
 
@@ -62,10 +62,10 @@ function matching_configs () {
     local target_file="${targets_location}/${ip_addr}.json";
 
     (
-      generate_configslist  "${ip_addr}" \
-                            "${target_file}" \
-                            "${tmp_config_list}" \
-                            "${generate_configslist__logfile}" \
+      generate_targets  "${ip_addr}" \
+                        "${target_file}" \
+                        "${tmp_config_list}" \
+                        "${generate_configslist__logfile}" \
       ;
 
       #### -----------------------------------------------------------------------
@@ -119,84 +119,124 @@ function matching_configs () {
 }; alias matching-configs='matching_configs';
 
 ## -------------------------------------------------------------------------- ##
-## Function: configs-matching :: generate_configslist ()
+## Function: configs-matching :: generate_targets ()
 ##
 ## Purpose:
-##   Scans a list of configuration files for matches of a specific IP address.
-##   For each match, it builds a summarized JSON structure capturing:
-##     - the site and device (parsed from the config path)
-##     - total line count in the config
-##     - number of IP matches
+##   Builds a detailed, structured JSON object per IP address by reading
+##   pre-extracted configuration files from the reports directory.
+##
+##   For each matching config, it extracts the embedded metadata header,
+##   calculates the line count, and constructs a JSON entry that includes:
+##     - the source filename
+##     - the line count
+##     - the path to the serialized .list object file
+##     - the full specs header (vendor, model, version, domain, hostname)
+##
+##   All devices are grouped by site (e.g. "cisco", "fortinet", "misc"),
+##   and the final JSON is written as:
+##
+##     {
+##       "target": "<ip>",
+##       "locations": {
+##         "site": {
+##           "devices": [ ... ]
+##         }
+##       }
+##     }
 ##
 ## Inputs:
 ##   $1 = target IP address (e.g. 10.0.0.1)
-##   $2 = output JSON path (e.g. ./targets/10.0.0.1.json)
-##   $3 = optional: path to list of config files (default: ${configs_list_cache})
-##   $4 = optional: tracing file to record intermediate state (used during batching)
+##   $2 = output JSON file (e.g. ./reports/10.0.0.1/10.0.0.1.json)
+##   $3 = optional: list of extracted config files (default: ${configs_list_cache})
+##   $4 = optional: log file to write malformed header errors (default: TMP_DIR)
 ##
 ## Output:
-##   Writes a JSON object to $2 in the form: { "configs": [ ... ] }
-##   If tracing file ($4) is set, it merges into that file as well.
-##   Logs the operation to the actions log.
+##   Writes structured JSON to $2 with grouped device entries per site.
+##   Logs parsing errors (if any) to $4.
 ## -------------------------------------------------------------------------- ##
 
-function generate_configslist () {
+function generate_targets () {
 
-  local ip_addr="${1}";
-  local target_file="${2}";
-  local source_configs_list="${3}";
+    local ip_addr="${1}";
+    local target_file="${2}";
+    local source_configs_list="${3:-${configs_list_cache}}";
+    local targets_logfile="${4:-${TMP_DIR:-/tmp}/generate_configslist.logs}";
 
-  local targets_logfile="${4:-${TMP_DIR:-/tmp}/generate_configslist--${ip_addr}.log}";
-  declare -A site_json_map=();
+    [[ ! -s "${source_configs_list}" ]] && return 1;
 
-  if [[ -s "${source_configs_list}" ]]; then
+    declare -A site_device_map=();
+    local rel_path site device cfg_lines json_head json_spec;
 
     while IFS= read -r config_file; do
-      [[ -f "${config_file}" ]] || continue;
+      [[ ! -f "${config_file}" ]] && continue;
 
-      local config_lines match_count rel_path site device;
-
-      config_lines=$(
-        wc -l < "${config_file}"
-      );
-      local match_count=$(
-        grep -oE "(^|[^0-9.])${ip_addr//./\\.}([^0-9.]|$)" "${config_file}" | \
-        wc -l | tr -d ' '
-      );
-      [[ "${match_count}" -eq 0 ]] && continue;
-
-      ## Strip ./reports/<ip>/ prefix → isolate vendor/device path
       rel_path="${config_file#./reports/${ip_addr}/}";
+      site="${rel_path%%/*}";
+      device="${rel_path##*/}";
 
-      ## Extract vendor and device filename
-      site="${rel_path%%/*}";   ## → cisco / fortinet / misc
-      device="${rel_path#*/}";  ## → access-sw1-west.cfg, etc
+      cfg_lines="$(wc -l < "${config_file}" | tr -d ' ')";
 
-      site_json_map["$site"]+=$(
+      json_head="$(
+        awk '
+          BEGIN { in_json=0; depth=0; }
+          {
+            if (!in_json && $0 ~ /^[[:space:]]*{/) in_json=1;
+            if (in_json) {
+              print;
+              depth += gsub(/{/, "{");
+              depth -= gsub(/}/, "}");
+              if (depth == 0) exit;
+            }
+          }
+        ' "${config_file}"
+      )";
+
+      if ! echo "${json_head}" | jq -e . >/dev/null 2>&1; then
+        warning "Malformed JSON header in: ${config_file}" >> "${targets_logfile}";
+        continue;
+      fi;
+
+      json_spec="$(
         jq -n \
-          --arg device "${device}" \
-          --argjson lines "${config_lines}" \
-          --argjson count "${match_count}" \
-          '{ device: $device, lines: $lines, count: $count }'
-      )
-      site_json_map["$site"]+=$'\n';
+          --arg file "${device}" \
+          --argjson lines "${cfg_lines}" \
+          --arg path ".objects/${device%.cfg}.list" \
+          --argjson specs "${json_head}" \
+          '{
+            specs: $specs,
+            config: {
+              file: $file,
+              lines: $lines,
+              object: $path
+            }
+          }'
+      )";
+
+      site_device_map["${site}"]+="${json_spec}"$'\n';
     done < "${source_configs_list}";
 
     {
-      echo -n '{';
-      local first=true;
-      for site in "${!site_json_map[@]}"; do
-        [[ "${first}" == true ]] && first=false || echo ',';
-        echo -n "  \"${site}\": [";
-        jq -s '.' <<< "${site_json_map[$site]}" | sed '1d;$d';
-        echo -n ']';
+
+      printf ' { "target": "%s", "locations": { ' "${ip_addr}";
+      first=true;
+
+      for site in $(
+        printf '%s\n' "${!site_device_map[@]}" | sort -u
+      ); do
+
+        [[ -z "${site_device_map[${site}]:-}" ]] && continue;
+        ${first} && first=false || printf ',';
+
+        printf ' "%s": { "devices": ' "${site}";
+        print  "${site_device_map[${site}]}" | jq -s '.';
+        printf ' } ';
+
       done;
-      echo -n '}';
-    } | jq -S -r . > "${target_file}";
+      printf ' } } ';
 
-  fi;
+    } | jq . > "${target_file}";
 
-  return 0;
-}; alias generate-configslist='generate_configslist';
+    return 0;
+}; alias generate-targets='generate_targets';
 
 #------------------------------------------------------------------------------#
