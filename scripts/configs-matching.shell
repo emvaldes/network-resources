@@ -7,31 +7,30 @@ if [[ -n "${__CONFIGS_MATCHING_SOURCED:-}" ]]; then return 0; fi;
 readonly __CONFIGS_MATCHING_SOURCED=1;
 
 ## -------------------------------------------------------------------------- ##
-## Function: configs-matching :: matching-configs ()
+## Function: configs-matching :: matching_configs ()
 ##
 ## Purpose:
-##   Filters target IPs to only those that match configuration files,
-##   then launches parallel `generate_configslist` jobs to process them.
+##   Filters target IPs to only those that have matching reduced config files,
+##   then launches parallel `generate_targets` jobs to build structured summaries.
 ##
-## Input:
+## Inputs:
 ##   $1 = optional path to the config list file (defaults to ${configs_list_cache})
 ##
 ## Behavior:
-##   - Uses `grep -F -f` to locate all lines in all config files that match any target IP.
-##   - Builds an in-memory mapping of IP → matched config files.
-##   - Overwrites `target_listing[]` to only include matched IPs.
-##   - Deduplicates and rewrites `source_configs_list` to include only matched files.
-##   - Spawns background jobs (one per matched IP) to generate per-IP JSON summaries.
+##   - Scans per-IP `./reports/<ip>/` folders for presence of reduced config files.
+##   - Filters out IPs without any matching config files.
+##   - Builds a temporary per-IP list of reduced config files.
+##   - Spawns background jobs (one per IP) to call `generate_targets()`,
+##     which assembles the JSON summary with metadata and `.list` references.
 ##
-## Output:
-##   - Creates `targets/<ip>/<ip>--<site>--<batch_id>.json` for each matched IP.
-##   - Logs PID-to-IP mappings and configuration associations for traceability.
+## Outputs:
+##   - Writes: `./targets/<ip>.json` for each IP, structured by site/vendor/device.
+##   - Logs mappings and execution status for traceability.
 ##
 ## Notes:
-##   - Maintains two critical maps:
+##   - Tracks background job completion using:
 ##       targets_jobs2ips_mapping[pid] → ip
-##       ip2files[ip] → colon-delimited config file paths
-##   - Ensures background jobs are tracked and completed before exiting.
+##   - Summary logs are written to ${TMP_DIR}/generate_configslist.logs
 ## -------------------------------------------------------------------------- ##
 
 function matching_configs () {
