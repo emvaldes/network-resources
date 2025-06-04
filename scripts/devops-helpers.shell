@@ -79,7 +79,7 @@ function parse_listings__helper () {
         ## Examples for listings
         help_lines+=( "Examples:${nl}" );
         help_lines+=( "${script_name} --interval=0.05 \\" );
-        help_lines+=( "${padding} --ips-list=\"ips.list\" \\" );
+        help_lines+=( "${padding} --ips-list=\"${default_addresses}\" \\" );
         help_lines+=( "${padding} --jobs=10 \\" );
 
         ;;
@@ -144,8 +144,8 @@ function netowrk_configs__helper () {
     help_lines+=( "   4 = Failed to create cache directory (e.g., permissions error)${nl}" );
     help_lines+=( "   5 = Invalid or unreadable --location directory provided${nl}" );
     help_lines+=( "   6 = No IPs or configs matched during evaluation${nl}" );
-    help_lines+=( "   7 = Failed to write matching IPs to .cache/ips.list${nl}" );
-    help_lines+=( "   8 = No valid IPs found — skipped writing .cache/ips.list${nl}" );
+    help_lines+=( "   7 = Failed to write matching IPs to .cache/${default_addresses}${nl}" );
+    help_lines+=( "   8 = No valid IPs found — skipped writing .cache/${default_addresses}${nl}" );
     help_lines+=( "   9 = Failed to write matched config paths to .cache/configs.list${nl}" );
     help_lines+=( "  10 = No valid configs found — skipped writing .cache/configs.list${nl}" );
     help_lines+=( "  11 = Unsupported configuration format detected in a source file${nl}" );
@@ -161,14 +161,14 @@ function netowrk_configs__helper () {
     help_lines+=( "Examples:${nl}" );
     help_lines+=( "  1. Reduce a known configuration file against a list of IPs:" );
     help_lines+=( "     bash ${script_name} \\" );
-    help_lines+=( "          --search=ips.list \\" );
-    help_lines+=( "          --configs=devices.list \\" );
+    help_lines+=( "          --search=${default_addresses} \\" );
+    help_lines+=( "          --configs=${default_devices} \\" );
     help_lines+=( "          --location=./configs \\" );
     help_lines+=( "          --extract=.cache/resources \\" );
     help_lines+=( "          --verbose${nl}" );
     help_lines+=( "  2. Run a full scan across all configs in a folder for a batch of IPs:" );
     help_lines+=( "     bash ${script_name} \\" );
-    help_lines+=( "          --search=ips.list \\" );
+    help_lines+=( "          --search=${default_addresses} \\" );
     help_lines+=( "          --location=./configs \\" );
     help_lines+=( "          --extract=./reduced \\" );
     help_lines+=( "          --verbose${nl}" );

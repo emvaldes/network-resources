@@ -213,7 +213,7 @@ function main () {
     ## Set custom values if not supplied
     [[ -z ${configs_batch_size:-} ]] && export configs_batch_size=3;
     [[ -z ${delaying_factor:-} ]] && export delaying_factor="0.1";
-    [[ -z ${source_addresses:-} ]] && export source_addresses="ips.list";
+    [[ -z ${source_addresses:-} ]] && export source_addresses="${default_addresses}";
     [[ -z ${parallel_threads:-} ]] && export parallel_threads=100;
     [[ -z ${target_devices:-} ]] && export target_devices=false;
     [[ -z ${target_sites:-} ]] && export target_sites=false;
@@ -267,7 +267,7 @@ function main () {
     ## Processing Custom/Default the Translation-Matrix (source):
     ## Load and validate translation matrix (used for grouping logic)
     [[ -z "${matrix_filename:-}" ]] && \
-      export matrix_filename="matrix.json";
+      export matrix_filename="${default_matrix}";
 
     if [[ ! -f "${matrix_filename}" ]]; then
             if [[ "${verbose}" == true ]]; then
@@ -648,7 +648,7 @@ function main () {
 
             ## If no devices filter is set, use all available devices
             $( which bash ) -x ./scripts/${network_configs__script}.shell \
-                            --search=ips.list \
+                            --search=${default_addresses} \
                             --location="${configs_dirpath}" \
                             --extract=${extracted_resources} \
                             --update=true \
@@ -658,7 +658,7 @@ function main () {
 
       else  ## If devices filter is set, use the provided device list
             $( which bash ) -x ./scripts/${network_configs__script}.shell \
-                            --search=ips.list \
+                            --search=${default_addresses} \
                             --configs=${target_devices} \
                             --location="${configs_dirpath}" \
                             --extract=${extracted_resources} \
@@ -692,7 +692,7 @@ function main () {
     export configs_dirpath="${extracted_resources}";
 
     ## Validating that $source_addresses (.cache/ips.list) is not empty
-    source_addresses="${cache_location}/ips.list";
+    source_addresses="${cache_location}/${default_addresses}";
     [[ -s "${source_addresses}" ]] || {
       warning "Missing or empty: ${source_addresses}"; exit 2;
     }

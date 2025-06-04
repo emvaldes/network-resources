@@ -445,6 +445,10 @@ function warning () {
 export LC_ALL=C;
 export nl="\n";
 
+export default_addresses="ips.list";
+export default_devices="devices.list";
+export default_matrix="matrix.json";
+
 export cache_location=".cache";
 
 export logs_location="logs";
@@ -462,15 +466,10 @@ touch "${actions_logfile}" 2>/dev/null || true;
 export targets_location="targets";
 export targets_logfile="${cache_location}/targets.jobs";
 
-# export divisor="--$(
-#   date +%s%N | base64 | tr -dc 'a-zA-Z0-9'
-# )--";  ## message "DEBUG: divisor = '${divisor}'";
-
-script_basename="$(
-  basename "${BASH_SOURCE[0]}"
-)";
 export divisor="--$(
-  echo -n "${script_basename}" | base64 | tr -dc 'a-zA-Z0-9'
-)--";
+  echo -n "$( basename "${BASH_SOURCE[0]}" )" | \
+  base64 | \
+  tr -dc 'a-zA-Z0-9'
+)--";  ## message "DEBUG: divisor = '${divisor}'";
 
 #------------------------------------------------------------------------------#

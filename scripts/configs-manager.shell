@@ -322,6 +322,7 @@ function configs_parser () {
     if [[ "${verbose}" == true ]]; then
       {
         message "Found ${#source_configs[@]} configurations:";
+        newline;
         for config in "${source_configs[@]}"; do
           message "  - ${config}";
         done;
@@ -374,7 +375,7 @@ function configs_parser () {
 
         ) >> "${logs_location}/${configs_extract__script}.log" 2>&1 &
 
-        job_pid=$!;
+        local job_pid=$!;
         extract_jobs_pid+=( "${job_pid}" );
         extract_jobs2files_mapping["${job_pid}"]="${object_fragments_per_file}";
 
