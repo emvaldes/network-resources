@@ -9,337 +9,6 @@ if [[ -n "${__CONFIGS_PARSER_SOURCED:-}" ]]; then return 0; fi;
 readonly __CONFIGS_PARSER_SOURCED=1;
 
 ## -------------------------------------------------------------------------- ##
-## Function: configs-parser :: configs_parser ()
-##
-## Purpose:
-##   Main entrypoint for per-IP parsing pipeline. Replaces `parse-configs.shell`.
-##   Drives the full parsing lifecycle from argument handling to report generation.
-##
-## Responsibilities:
-##   - Parses CLI arguments and applies defaults for configs, reports, and matrix
-##   - Extracts relevant config paths for a given target IP
-##   - Validates input files and structures
-##   - Applies grouping/classification (if enabled) via matrix matching
-##   - Executes `extract_configs()` to collect relevant config blocks
-##   - Deduplicates and merges structured JSON objects per IP
-##   - Stores final output under `${reports_location}/<ip>/<ip>.json`
-##
-## Input Parameters (as key=value args):
-##   - ip-addr      : IP address to process (required)
-##   - configs      : Path to configuration root folder (default: ./configs)
-##   - reports      : Path to write output JSON (default: ./reports)
-##   - matrix       : Translation matrix for classification (optional)
-##   - file-ext     : Comma-delimited list of config extensions (default: cfg,conf,cnf)
-##   - index        : Optional ID used for per-IP processing context
-##   - validate     : Enables IP format validation before proceeding
-##   - classify     : Enables matrix-based group classification
-##   - verbose/debug/dry-run/help/logs : Optional behavior toggles
-##
-## Output:
-##   - Structured per-IP JSON report at ${reports_location}/<ip>/<ip>.json
-##   - Temp fragments, logs, and debug traces under ${TMP_DIR}
-##
-## Notes:
-##   - Replaces standalone script `parse-configs.shell` with fully modular logic
-##   - Compatible with batch systems that expect this function to be run in parallel
-## -------------------------------------------------------------------------- ##
-
-function configs_parser () {
-
-    ## tracking_process ${FUNCNAME} "${@}";
-    declare -a file_extensions=();
-    oIFS="${IFS}";
-
-    ## Process command-line arguments and map them to local variables
-    for xitem in "${@}"; do
-
-      IFS='=' read -r key value <<< "$(
-        echo -e "${xitem}" | sed -e '1s|^\(-\)\{1,\}||'
-      )"; #echo -e "\nxitem: '${xitem}'\nkey: '${key}'\t->\tvalue: '${value}'";
-
-      #### ---------------------------------------------------------------------
-      ## Match accepted arguments
-      [[ $key =~ ^(classify|g)$ ]] && export classify_targets=true;
-      [[ $key =~ ^(configs|c)$ ]] && export configs_dirpath="${value}";
-      [[ $key =~ ^(file-ext|x)$ ]] && file_extensions+=(
-        $( print "${value}" | tr ':,;\n ' '\n' )
-      );
-      [[ $key =~ ^(index|n)$ ]] && local target_index="${value}";
-      [[ $key =~ ^(ip-addr|i)$ ]] && local target_address="${value}";
-      [[ $key =~ ^(logs|o)$ ]] && export enable_logging=true;
-      [[ $key =~ ^(matrix|m)$ ]] && local matrix_filename="${value}";
-      [[ $key =~ ^(reports|r)$ ]] && local reports_location="${value}";
-      [[ $key =~ ^(validate|v)$ ]] && local validate_address=true;
-
-      #### ---------------------------------------------------------------------
-      ## Special options
-      [[ $key == "help" ]] && local script_helper=true;
-      [[ $key == "debug" ]] && export debug=true;
-      [[ $key == "dry-run" ]] && local dry_run=true;
-      [[ $key == "verbose" ]] && export verbose=true;
-
-    done; IFS="${oIFS}";
-
-    #### -----------------------------------------------------------------------
-    ## Set default values if not supplied
-    [[ -z ${debug:-} ]] && export debug=false;
-    [[ -z ${verbose:-} ]] && export verbose=false;
-
-    #### -----------------------------------------------------------------------
-    ## Display usage help if requested
-    if [[ ${script_helper:-} == true ]]; then
-      display_help "${script_name}" "configs";
-      exit 0;
-    fi;
-
-    export parse_configs__logfile="${logs_location}/configs-parser.log";
-    :> "${parse_configs__logfile}";
-
-    local extract_configs__logfile="${TMP_DIR}/parse-configs--extract-configs.log";
-    :> "${extract_configs__logfile}";
-
-    #### -----------------------------------------------------------------------
-    [[ -z ${matrix_filename:-} ]] && export classify_targets="matrix.json";
-    if [[ ! -f "${matrix_filename}" ]]; then
-      warning "Translation Matrix file '${matrix_filename}' was not found!";
-    fi;
-
-    #### -----------------------------------------------------------------------
-    ## Enabling IP/CIDR Blocks Group Classification
-    [[ -z ${classify_targets:-} ]] && export classify_targets=false;
-
-    #### -----------------------------------------------------------------------
-    ## Target Configurations (file-extensions):
-    ## Set default file extensions if none provided
-    if [[ -z ${file_extensions+x} || ${#file_extensions[@]} -eq 0 ]]; then
-      declare -a file_extensions=( cfg conf cnf );
-    fi;
-
-    #### -----------------------------------------------------------------------
-    ## Load all source configs from target JSON
-    export configs_dirpath="${configs_dirpath:-configs}";
-    declare -ga source_configs=();
-
-    local target_configlist_json="targets/${target_address}.json";
-    if [[ ! -f "${target_configlist_json}" ]]; then
-      [[ "${verbose}" == true ]] && \
-        warning "Required config list not found: ${target_configlist_json}";
-      return 3;
-    fi;
-
-    message "Loading target config list from: ${target_configlist_json}";
-
-    # mapfile -t source_configs < <(
-    #   jq -r '
-    #     .locations | to_entries[] |
-    #     .key as $site |
-    #     .value.devices[] |
-    #     "\($site)/\(.config.file)"
-    #   ' "${target_configlist_json}"
-    # )
-    mapfile -t source_configs < <(
-      jq -r '
-        .locations | to_entries[] |
-        .key as $site |
-        .value.devices[] |
-        "\($site)/.objects/\(.config.file | split(".")[0]).list"
-      ' "${target_configlist_json}"
-    )
-
-    [[ "${verbose}" == true ]] && {
-      message "Found ${#source_configs[@]} config files:";
-      for item in "${source_configs[@]}"; do
-        message "  - ${item}";
-      done;
-    }
-
-    #### -----------------------------------------------------------------------
-    ## Normalize paths (prepend configs_dirpath if relative)
-    for i in "${!source_configs[@]}"; do
-      if [[ "${source_configs[$i]}" != "${reports_location}/${target_address}/"* ]]; then
-        source_configs[$i]="${source_configs[$i]}"
-      fi;
-
-      #### -----------------------------------------------------------------------
-      ## Processing Custom/Default the Translation-Matrix (source):
-      ## Load and validate translation matrix (used for grouping logic)
-
-      if [[ "${classify_targets}" == true ]]; then
-        if [[ ! -f "${matrix_filename}" ]]; then
-                [[ "${verbose}" == true ]] && \
-                  warning "Project Source Matrix-Configs file not found: ${matrix_filename}";
-                return 7;
-          elif  ! jq -e 'length > 0' "${matrix_filename}" &>/dev/null; then
-                [[ "${verbose}" == true ]] && \
-                  warning "Matrix file is missing, invalid, or empty: ${matrix_filename}";
-                return 8;
-          else  export matrix_configs="$( cat "${matrix_filename}" )";
-        fi;
-      fi;
-
-      #### -----------------------------------------------------------------------
-      ## Custom/Default reports folder:
-      export reports_location="${reports_location:-reports}";
-      
-      #### -----------------------------------------------------------------------
-      ## Presetting Target-Index Marker
-      [[ -z ${target_index:-} ]] && target_index='';
-
-      #### -----------------------------------------------------------------------
-      ## Validating IP Addresses (Skipping?)
-      [[ -z ${validate_address:-} ]] && export validate_address=false;
-
-      ## Target IP Address (required):
-      if [[ -z "${target_address:-}" ]]; then
-              [[ "${debug}" == true ]] && \
-                warning "No IP address provided.";
-              return 2;
-        else  target_address="$(
-                print "${target_address}" | sed -E 's/[[:space:]]+//g' | tr -d '\r'
-              )";
-              ## Validating Target-Address (IP/CIDR):
-              if [[ ${validate_address} == true ]]; then
-                validate_address;
-              fi;
-      fi;
-
-      #### -----------------------------------------------------------------------
-      # export tmp_json="${TMP_DIR}/partial.json";
-      export tmp_fragments="${TMP_DIR}/fragments.json";
-
-      #### -----------------------------------------------------------------------
-      for cfg_file in "${source_configs[@]}"; do
-        extract_configs "${cfg_file}" \
-                        "${target_address}" \
-                        "${target_configlist_json}" \
-                        "${tmp_fragments}" \
-                        "${extract_configs__logfile}" \
-        ;
-      done;
-
-      ## Insert diagnostic check here
-      if [[ "${verbose}" == true && -s "${tmp_fragments}" ]]; then
-        {
-          jq -r '.[] | "\(.site)/\(.device) → \( .objects | length ) objects"' "${tmp_fragments}"
-          newline
-        } >> "${parse_configs__logfile:-/dev/null}";
-      fi;
-
-    done;
-
-    #### -----------------------------------------------------------------------
-    if [[ "${verbose}" == true ]]; then
-      {
-        print_file "${extract_configs__logfile:-/dev/null}";
-      } >> "${parse_configs__logfile:-/dev/null}";
-    fi;
-
-    #### -----------------------------------------------------------------------
-    ## Ensure batch output subdirectory exists
-    mkdir -p "${TMP_DIR}/${target_address}";
-
-    ## Create a temporary batch-specific output file for this IP
-    export json_outfile="${TMP_DIR}/${target_address}/${target_address}.json";
-
-    if [[ "${verbose}" == true ]]; then
-      if [[ -s "${tmp_fragments}" ]]; then
-        {
-          jq  --raw-output \
-              --slurp \
-              --arg ipref "targets/${target_address}.json" \
-                          '
-                          sort_by( .site, .device ) |
-                          group_by( .site + "/" + .device )[] as $group |
-                          "- " + ( $group[0].site + "/" + $group[0].device ) + 
-                          " ( " + ( $group | length | tostring ) + " fragments ) -> " + $ipref,
-                          (
-                            $group[].objects[]? |
-                            "  • object: " + ( .object // "unknown" ) + 
-                            " ( type: " + ( .type // "n/a" ) + " )"
-                          )
-                          ' "${tmp_fragments}";
-          newline;
-        } >> "${parse_configs__logfile:-/dev/null}";
-      fi;
-    fi;
-
-    if [[ -s "${tmp_fragments}" ]]; then
-
-      jq --slurp --arg target "${target_address}" \
-                              '{ target: $target, configs: . }' \
-                              "${tmp_fragments}" \
-      > "${json_outfile}";
-      if [[ "${verbose}" == true ]]; then
-        {
-          print_file "${json_outfile}";
-          newline;
-        } >> "${parse_configs__logfile:-/dev/null}";
-      fi;
-
-      #### ---------------------------------------------------------------------
-      ## Merge batch result into persistent output for this IP
-      tmp_merged="$( mktemp )";
-      local final_outfile="${reports_location}/${target_address}/${target_address}.json";
-      mkdir -p "$(
-        dirname "${final_outfile}"
-      )";
-
-      #### ---------------------------------------------------------------------
-      # Objective: Merge logic for per-IP JSON output.
-      # Ensures that if a config (by site/device) already exists, its `.objects` array
-      # is merged with the incoming batch and deduplicated based on composite fields
-      # (.type, .name, .object, .sets). This prevents bloating caused by re-appending
-      # identical blocks across batches or multiple runs.
-
-      local jq_merge_expr=$'{
-        target: .[0].target,
-        configs:
-          ( reduce .[].configs[] as $cfg (
-            [];
-            if any( .[]; .site == $cfg.site and .device == $cfg.device )
-              then map(
-                if .site == $cfg.site and .device == $cfg.device
-                  then .objects = (
-                    ( .objects + $cfg.objects )
-                    | unique_by( .type, .name, .object, ( .sets | tostring ) )
-                  )
-                else . end
-              )
-            else . + [ $cfg ] end
-          ))
-      }';
-
-      if [[ -f "${final_outfile}" ]]; then
-              jq --slurp "${jq_merge_expr}" \
-                         "${final_outfile}" \
-                         "${json_outfile}" \
-              > "${tmp_merged}";
-        else  jq --slurp "${jq_merge_expr}" \
-                         "${json_outfile}" \
-              > "${tmp_merged}";
-      fi;
-      mv "${tmp_merged}" "${final_outfile}" && \
-      rm -f "${json_outfile}";
-
-      if [[ "${verbose}" == true ]]; then
-        {
-          print "Merged [ targets/${target_address}.json ] → ${final_outfile}";
-          newline 2;
-        } >> "${parse_configs__logfile:-/dev/null}";
-      fi;
-
-    fi;
-
-    if [[ "${verbose}" == true ]]; then
-      {
-        print_file "${parse_configs__logfile:-/dev/null}";
-      } >> "${actions_logfile:-/dev/null}";
-    fi;
-
-    return 0;
-}; alias configs-parser='configs_parser';
-
-## -------------------------------------------------------------------------- ##
 ## Function: configs-parser :: extract_configs ()
 ##
 ## Purpose:
@@ -372,7 +41,7 @@ function configs_parser () {
 ##   - Designed to run synchronously per config file, called from `parse-configs`.
 ## -------------------------------------------------------------------------- ##
 
-function legacy__extract_configs () {
+function extract_configs () {
 
     local config_file="${1}";
     local target_pattern="${2}";
@@ -380,7 +49,7 @@ function legacy__extract_configs () {
     local json_output="${4}";
 
     ## Recording the generated_configslist actions
-    local target_logfile="${5:-${TMP_DIR:-/tmp}/tools-configs--extract-configs--${ip_addr}.log}";
+    local target_logfile="${5:-${TMP_DIR:-/tmp}/extract_configs--${ip_addr}.log}";
 
     # local target_object="${TMP_DIR}/$(basename "${config_file}").objects"
 
@@ -571,7 +240,7 @@ function legacy__extract_configs () {
   #### Marked for removal (end-block)
 
     #### -----------------------------------------------------------------------
-    local process_configs__logfile="${TMP_DIR}/tools-configs--process-configs.logs";
+    local process_configs__logfile="${TMP_DIR}/process_configs.logs";
     :> "${process_configs__logfile}";
 
     #### -----------------------------------------------------------------------
@@ -667,56 +336,6 @@ function legacy__extract_configs () {
     done;
 
     return 0;
-}; alias legacy--extract-configs='legacy__extract_configs';
-
-function extract_configs () {
-
-    local relative_list_path="${1}"       # e.g., fortinet/.objects/fw1.list
-    local target_pattern="${2}"           # e.g., 10.0.0.1
-    local target_configlist_json="${3}"   # e.g., targets/10.0.0.1.json
-    local json_output="${4}"              # e.g., TMP_DIR/fragments.json
-    local target_logfile="${5:-${TMP_DIR}/tools-configs--extract-configs--${target_pattern}.log}"
-
-    local full_list_path="${reports_location}/${target_pattern}/${relative_list_path}"
-
-    [[ ! -f "${full_list_path}" ]] && {
-      warning "Missing serialized file: ${full_list_path}"
-      return 1
-    }
-
-    local site="${relative_list_path%%/*}"
-    local filename="${relative_list_path##*/}"
-    local device="${filename%.list}"
-
-    declare -a objects_json=()
-
-    while IFS= read -r serialized_line || [[ -n "${serialized_line}" ]]; do
-      [[ -z "${serialized_line}" ]] && continue
-
-      # Deserialize block
-      local restored_block
-      restored_block="$( sed "s/${divisor}/\n/g" <<< "${serialized_line}" )"
-
-      [[ "${verbose}" == true ]] && message "[restored] →\n${restored_block}"
-
-      process_configs "${target_pattern}" \
-                      "${relative_list_path}" \
-                      "${restored_block}" \
-                      "${target_logfile}"
-
-      [[ -n "${target_object}" ]] && objects_json+=( "${target_object}" )
-    done < "${full_list_path}"
-
-    if (( ${#objects_json[@]} > 0 )); then
-      printf '%s\n' "${objects_json[@]}" | \
-        jq --slurp \
-           --arg site "${site}" \
-           --arg device "${device}" \
-           '{ site: $site, device: $device, objects: . }' \
-        >> "${json_output}"
-    fi
-
-    return 0
 }; alias extract-configs='extract_configs';
 
 ## -------------------------------------------------------------------------- ##
@@ -767,7 +386,7 @@ function process_configs () {
     local restored_block="$3";
 
     ## Recording the generated_configslist actions
-    local target_logfile="${4:-${TMP_DIR:-/tmp}/tools-configs--process-configs--${ip_addr}.log}";
+    local target_logfile="${4:-${TMP_DIR:-/tmp}/process_configs--${ip_addr}.log}";
 
     #### -----------------------------------------------------------------------
     ## Sanitize and validate non-empty block

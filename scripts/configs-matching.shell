@@ -194,26 +194,32 @@ function configs_targets () {
     [[ -z ${verbose:-} ]] && verbose=false;
 
     #### -----------------------------------------------------------------------
-    [[ -z "${source_config:-}" ]] && local source_config="${configs_list_cache}";
-
-    #### -----------------------------------------------------------------------
     if [[ -z "${target_logfile:-}" ]]; then
       local target_logfile="${console_location}/configs-targets.console";
       touch "${target_logfile}";
     fi;
     # touch "${target_logfile}";  ## Clear the log file if it exists
 
+    #### -----------------------------------------------------------------------
+    [[ -z   "${source_config:-}" ]] && local source_config="${configs_list_cache}";
     [[ ! -s "${source_config}" ]] && return 1;
 
     declare -A site_device_map=();
     local rel_path site device cfg_lines json_head json_spec;
 
     while IFS= read -r config_file; do
+
       [[ ! -f "${config_file}" ]] && continue;
 
-      rel_path="${config_file#./${reports_location}/${search_pattern}/}";
+      rel_path="${config_file#${reports_location}/${search_pattern}/}";
       site="${rel_path%%/*}";
       device="${rel_path##*/}";
+
+      ## Validate vendor/site folder name
+      if [[ ! -d "${reports_location}/${search_pattern}/${site}" ]]; then
+        warning "Unexpected vendor/site folder: '${site}' in '${config_file}'" >> "${target_logfile}";
+        continue;
+      fi;
 
       cfg_lines="$(
         wc -l < "${config_file}" | \
@@ -259,6 +265,7 @@ function configs_targets () {
       )";
 
       site_device_map["${site}"]+="${json_spec}"$'\n';
+
     done < "${source_config}";
 
     {
