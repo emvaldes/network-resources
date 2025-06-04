@@ -79,7 +79,7 @@ source ./scripts/devops-helpers.shell;
 ##
 ## Output:
 ##   - Writes serialized content to:
-##       ./reports/<ip>/<vendor>/.objects/<device>.list
+##       ${reports_folder}/<ip-address>/<location>/.objects/<device>.list
 ##   - If `--verbose` is enabled, prints the serialized file to the current log stream.
 ##
 ## Key Behavior:
@@ -96,8 +96,8 @@ source ./scripts/devops-helpers.shell;
 ##     for grep, explode, and transform workflows.
 ##
 ## Example:
-##   Input:  ./reports/203.0.113.25/misc/fw3.cfg
-##   Output: ./reports/203.0.113.25/misc/.objects/fw3.list
+##   Input:  ${reports_folder}/203.0.113.25/misc/fw3.cfg
+##   Output: ${reports_folder}/203.0.113.25/misc/.objects/fw3.list
 ##
 ## Dependencies:
 ##   - Relies on AWK for efficient platform-aware collapsing.
@@ -272,7 +272,7 @@ function main () {
     [[ -z "${export_objects:-}" ]] && local export_objects=false;
 
     if [[ -z "${target_logfile:-}" ]]; then
-      local target_logfile="${logs_location}/console/${script_filename}.console";
+      local target_logfile="${console_location}/${script_filename}.console";
       touch "${target_logfile}";
     fi;
     # touchh "${target_logfile}";  ## Clear the log file if it exists
@@ -438,7 +438,7 @@ function main () {
 
     #### -----------------------------------------------------------------------
     ## Prepare AWK command
-    declare -a execute=(
+    declare -a execute__netwowrk_extract=(
       $( which awk )
       -v "targets=$( IFS=','; echo "${search_terms[*]}" )"
       -f "${script_filepath}"
@@ -467,7 +467,7 @@ function main () {
 
     #### -----------------------------------------------------------------------
     ## Execute and capture output
-    local extracted_configuration="$( "${execute[@]}" 2>&1 )";
+    local extracted_configuration="$( "${execute__netwowrk_extract[@]}" 2>&1 )";
     result=$?;
 
     #### -----------------------------------------------------------------------
@@ -537,7 +537,7 @@ mkdir -p ${logs_location}/console 2>/dev/null || true;
 script_filename="${BASH_SOURCE[0]##*/}";
 script_filename="${script_filename%.*}";
 
-export network_extract__console="${logs_location}/console/${script_filename}.console";
+export network_extract__console="${console_location}/${script_filename}.console";
 touch "${network_extract__console}" || {
   warning "Failed to create console log file: ${network_extract__console}";
   network_extract__console="/dev/null";

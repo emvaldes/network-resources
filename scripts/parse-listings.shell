@@ -130,7 +130,7 @@ source ./scripts/configs-export.shell;
 ##   - Applies grouping/classification (if enabled) via matrix matching
 ##   - Executes `extract_configs()` to collect relevant config blocks
 ##   - Deduplicates and merges structured JSON objects per IP
-##   - Stores final output under `./reports/<ip>/<ip>.json`
+##   - Stores final output under `${reports_folder}/<ip-address>/<ip-address>.json`
 ##
 ## Input Parameters (as key=value args):
 ##   - ip-addr      : IP address to process (required)
@@ -144,7 +144,7 @@ source ./scripts/configs-export.shell;
 ##   - verbose/debug/dry-run/help/logs : Optional behavior toggles
 ##
 ## Output:
-##   - Structured per-IP JSON report at ./reports/<ip>/<ip>.json
+##   - Structured per-IP JSON report at ${reports_folder}/<ip-address>/<ip-address>.json
 ##   - Temp fragments, logs, and debug traces under ${TMP_DIR}
 ##
 ## Notes:
@@ -636,7 +636,7 @@ function main () {
 
     local network_configs__logger="${TMP_DIR}/${network_configs__script}--resources.console";
 
-    local network_configs__console="${logs_location}/console/${network_configs__script}.console";
+    local network_configs__console="${console_location}/${network_configs__script}.console";
     local network_configs__logfile="${logs_location}/${network_configs__script}.log";
 
     :> "${network_configs__logger}";
@@ -719,7 +719,7 @@ function main () {
     fi;
 
     #### -----------------------------------------------------------------------
-    ## Extracting per-IP reports into ./reports/<ip-address>/ using background jobs
+    ## Extracting per-IP reports into ${reports_folder}/<ip-address>/ using background jobs
 
     declare -ga configs_jobs_pid=();
     declare -gA configs_jobs2ips_mapping=();
@@ -783,11 +783,9 @@ function main () {
       } >> "${actions_logfile:-/dev/null}";
     fi;
 
-    #### Starting: Batch-Processing - Superset Loop --------------------------- ####
+#### Starting: Batch-Processing - Superset Loop --------------------------- ####
 
     #### -----------------------------------------------------------------------
-    ## Superset batching loop: Divide IPs into manageable chunks
-
     ip_batch_size=10;  ## Adjust as needed for system capacity
     total_ips="${#target_addresses[@]}";
 
@@ -829,62 +827,47 @@ function main () {
         } >> "${actions_logfile:-/dev/null}";
       fi;
 
-          #### -----------------------------------------------------------------
-          ## Advanced Background Jobs management workflow
-          matching_configs;
+      #### -----------------------------------------------------------------
+      local configs_matching__script="configs-matching";
+      export configs_matching__console="${console_location}/${configs_matching__script}.console";
+      : > "${configs_matching__console}";
 
-          #### -----------------------------------------------------------------
-          ## Launch and monitor parallel config parsing jobs for matched IPs
-          manage_configs;
+      #### -----------------------------------------------------------------
+      ## Advanced Background Jobs management workflow
+      configs_matching > "${logs_location}/${configs_matching__script}.log" 2>&1 ;
 
-exit 999;
-
-        # ## Exporting ./reports/reports.json data-sets into CSV output
-        # generate_csvoutput;
-
-    done;
-
-    #### Completed: Batch-Processing - Superset Loop -------------------------- ####
-
-    #### -----------------------------------------------------------------------
-    ## Post-processing: Normalize ./cache/targets/<ip>.json to grouped by site
-    if [[ "${verbose}" == true ]]; then
-      grouped_targets="${cache_location}/targets";
-      {
-        message "Post-processing: Normalizing JSON files";
-        message "---------------------------------------";
-        message "Grouped by site: ${grouped_targets}";
-        newline;
-        for fpath in "${grouped_targets}/"*.json; do
-          # ip="$(basename "${fpath}" .json)";
-          ip="$( basename "${fpath}" )";
-          message "  - ${ip}";
-        done;
-        newline;
-      } >> "${actions_logfile:-/dev/null}";
-    fi;
-
-    shopt -s nullglob;
-    for target_file in "${cache_location}/targets/"*.json; do
-      if [[ -s "${target_file}" ]]; then
-        grouped_objects="$(
-          jq '
-            .configs
-            | group_by(.config.site)
-            | map({
-                (.[0].config.site): map({
-                  device: .config.device,
-                  lines: .lines,
-                  count: .count
-                })
-              })
-            | add
-          ' "${target_file}"
-        )";
-        jq . <<< "${grouped_objects}" > "${target_file}";
+      #### -----------------------------------------------------------------------
+      if [[ "${verbose}" == true ]]; then
+        {
+          print_file "${configs_matching__console:-/dev/null}";
+          newline;
+        } >> "${actions_logfile:-/dev/null}";
       fi;
+
+      #### -----------------------------------------------------------------
+      local configs_manager__script="configs-manager";
+      export configs_manager__console="${console_location}/${configs_manager__script}.console";
+      : > "${configs_manager__console}";
+
+      #### -----------------------------------------------------------------
+      ## Launch and monitor parallel config parsing jobs for matched IPs
+      configs_manager > "${logs_location}/${configs_manager__script}.log" 2>&1 ;
+
+      #### -----------------------------------------------------------------------
+      if [[ "${verbose}" == true ]]; then
+        {
+          print_file "${configs_manager__console:-/dev/null}";
+          newline;
+        } >> "${actions_logfile:-/dev/null}";
+      fi;
+
+      #### -----------------------------------------------------------------------
+      # ## Exporting ${reports_folder}/reports.json data-sets into CSV output
+      # generate_csvoutput;
+
     done;
-    shopt -u nullglob;
+
+#### Completed: Batch-Processing - Superset ------------------------------- ####
 
     #### -----------------------------------------------------------------------
     if [[ "${verbose}" == true && -s "${output_csv}" ]]; then
@@ -938,7 +921,7 @@ rm -rf ${cache_location};
 mkdir -p ${cache_location}/{jobs,targets} 2>/dev/null || true;
 
 [[ ! -d ${logs_location} ]] && \
-  mkdir -p ${logs_location}/{console,jobs} 2>/dev/null || true;
+  mkdir -p ${logs_location}/jobs 2>/dev/null || true;
 find ${logs_location} -type f ! -name "${script_filename}.log" -delete 2>/dev/null;
 
 rm -rf ${targets_location} 2>/dev/null;

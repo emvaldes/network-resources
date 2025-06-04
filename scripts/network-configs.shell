@@ -110,7 +110,7 @@ function main () {
     [[ -z "${update_sources:-}" ]] && local update_sources=false;
 
     if [[ -z "${target_logfile:-}" ]]; then
-      local target_logfile="${logs_location}/console/${script_filename}.console";
+      local target_logfile="${console_location}/${script_filename}.console";
       touch "${target_logfile}";
     fi;
     # touchh "${target_logfile}";  ## Clear the log file if it exists
@@ -500,7 +500,7 @@ function main () {
       local network_extract__logger="${TMP_DIR}/${network_extract__script}--${logger_index}";
       : > "${network_extract__logger}";
 
-      declare -a execute=(
+      declare -a execute__network_extract=(
         ./scripts/${network_extract__script}.shell
         --search="${active_ips_file}"
         --config="${target_config}"
@@ -509,15 +509,15 @@ function main () {
         --logger="${network_extract__logger}.console"
       );
 
-      [[ "${export_objects}" == true ]] && execute+=( --export );
-      [[ "${verbose}" == true ]] && execute+=( --verbose );
+      [[ "${export_objects}" == true ]] && execute__network_extract+=( --export );
+      [[ "${verbose}" == true ]] && execute__network_extract+=( --verbose );
 
       #### -----------------------------------------------------------------------
       if [[ "${verbose}" == true ]]; then
         {
           message "Target Config: [ ${target_output} ]";
           newline;
-          for item in "${execute[@]}"; do
+          for item in "${execute__network_extract[@]}"; do
             message "\t${item}";
           done;
           newline;
@@ -525,15 +525,10 @@ function main () {
       fi;
 
       #### -----------------------------------------------------------------------
-
-      # ## Execute the extraction script with logging
-      # :> "${network_extract__console}";
-      # $( which bash ) -x "${execute[@]}" \
-      # >> ${logs_location}/${network_extract__script}.log 2>&1 ;
-
+      ## Execute the extraction script with logging
       (
-        # bash "${execute[@]}" > "${job_console_log}" 2>&1
-        $( which bash ) -x "${execute[@]}" \
+        # bash "${execute__network_extract[@]}" > "${job_console_log}" 2>&1
+        $( which bash ) -x "${execute__network_extract[@]}" \
         >> "${logs_location}/${network_extract__script}.log" 2>&1 ;
 
       ) &
@@ -547,11 +542,11 @@ function main () {
     #### -----------------------------------------------------------------------
     ## Wait for all background jobs to complete (non-blocking check loop)
     while (( ${#extract_jobs_pid[@]} > 0 )); do
-      valid_extract_jobs_pid=();
+      local valid_extract_jobs_pid=();
       for pid in "${extract_jobs_pid[@]}"; do
         if ! kill -0 "${pid}" 2>/dev/null; then
-                logger="${extract_jobs2cfg_mapping[$pid]}";
                 ## Job finished — no action here
+                logger="${extract_jobs2cfg_mapping[$pid]}";
           else  valid_extract_jobs_pid+=( "${pid}" );
         fi;
       done;
@@ -612,7 +607,7 @@ mkdir -p ${logs_location}/console 2>/dev/null || true;
 script_filename="${BASH_SOURCE[0]##*/}";
 script_filename="${script_filename%.*}";
 
-export network_configs__console="${logs_location}/console/${script_filename}.console";
+export network_configs__console="${console_location}/${script_filename}.console";
 touch "${network_configs__console}" || {
   warning "Failed to create console log file: ${network_configs__console}";
   network_configs__console="/dev/null";

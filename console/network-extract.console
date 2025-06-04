@@ -1,0 +1,2571 @@
+Search Pattern: [ .cache/ips.list ]
+Search Listing: [ 10.0.0.1, ... ,203.0.113.25 ] (17)
+
+Target Config: [ configs/cisco/access-sw1-west.cfg ] ( cisco )
+-rw-r--r--@ 1 emvaldes  staff  658 May 22 17:17 configs/cisco/access-sw1-west.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="10.0.0.1, ... ,203.0.113.25" \
+             -f ./scripts/extract/cisco-configs.awk \
+                configs/cisco/access-sw1-west.cfg
+
+Configuration File [ .cache/resources/cisco/access-sw1-west.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "12.4",
+     5	  "domain": "",
+     6	  "hostname": "access-sw1-west"
+     7	}
+     8	
+     9	version 12.4
+    10	hostname access-sw1-west
+    11	
+    12	interface Vlan1
+    13	 ip address 192.168.0.1 255.255.255.0
+    14	 description Management Interface
+    15	
+    16	interface Vlan100
+    17	 ip address 192.168.0.100 255.255.255.0
+    18	 description Guest VLAN Gateway
+    19	
+    20	object-group network MGMT-ACCESS
+    21	 description Management objects
+    22	 network-object host 192.168.0.1
+    23	 network-object host 192.168.0.100
+    24	 network-object host 10.10.10.10
+    25	
+    26	object-group network Mutant-WiFi
+    27	 description Controlled guest devices
+    28	 network-object host 10.10.10.10
+    29	
+
+Search Pattern: [ .cache/ips.list ]
+Search Listing: [ 10.0.0.1, ... ,203.0.113.25 ] (17)
+
+Target Config: [ configs/cisco/branch-isr-02.cfg ] ( cisco )
+-rw-r--r--@ 1 emvaldes  staff  1157 May 28 11:37 configs/cisco/branch-isr-02.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="10.0.0.1, ... ,203.0.113.25" \
+             -f ./scripts/extract/cisco-configs.awk \
+                configs/cisco/branch-isr-02.cfg
+
+Configuration File [ .cache/resources/cisco/branch-isr-02.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "16.9",
+     5	  "domain": "",
+     6	  "hostname": "branch-isr-02"
+     7	}
+     8	
+     9	version 16.9
+    10	hostname branch-isr-02
+    11	
+    12	interface GigabitEthernet0/0/0
+    13	 ip address 172.16.1.6 255.255.255.0
+    14	 description ISP uplink
+    15	
+    16	interface GigabitEthernet0/0/1
+    17	 ip address 192.168.2.12 255.255.255.0
+    18	 description Workstation LAN
+    19	
+    20	interface GigabitEthernet0/0/2
+    21	 ip address 10.0.2.3 255.255.255.0
+    22	 description Dev VLAN
+    23	
+    24	object network BlackWidow-Core
+    25	 host 172.16.1.6
+    26	 description Branch router uplink NAT
+    27	
+    28	object network Hydra-Link
+    29	 host 198.51.100.75
+    30	 description Branch NAT egress
+    31	
+    32	object-group network Hydra-Edge
+    33	 description Remote site uplink
+    34	 network-object host 192.168.2.12
+    35	 network-object host 198.51.100.75
+    36	
+    37	object network Panther-Gateway
+    38	 host 10.0.2.3
+    39	 description Secure outbound concentrator
+    40	
+    41	object-group network Lantern-DMZ
+    42	 description Protected but public-facing zone
+    43	 network-object host 172.18.1.20
+    44	 network-object host 192.168.1.11
+    45	
+
+Search Pattern: [ .cache/ips.list ]
+Search Listing: [ 10.0.0.1, ... ,203.0.113.25 ] (17)
+
+Target Config: [ configs/cisco/campus-sw-access01.cfg ] ( cisco )
+-rw-r--r--@ 1 emvaldes  staff  742 May 22 17:22 configs/cisco/campus-sw-access01.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="10.0.0.1, ... ,203.0.113.25" \
+             -f ./scripts/extract/cisco-configs.awk \
+                configs/cisco/campus-sw-access01.cfg
+
+Configuration File [ .cache/resources/cisco/campus-sw-access01.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "12.2",
+     5	  "domain": "",
+     6	  "hostname": "campus-sw-access01"
+     7	}
+     8	
+     9	version 12.2
+    10	hostname campus-sw-access01
+    11	
+    12	interface Vlan1
+    13	 ip address 192.168.0.1 255.255.255.0
+    14	 description Switch Mgmt
+    15	
+    16	object-group network Floor-Networks
+    17	 description End-user and service devices
+    18	 network-object host 192.168.0.1
+    19	 network-object host 192.168.0.100
+    20	 network-object host 10.10.10.10
+    21	
+
+Search Pattern: [ .cache/ips.list ]
+Search Listing: [ 10.0.0.1, ... ,203.0.113.25 ] (17)
+
+Target Config: [ configs/cisco/dmz-fw2-backup.cfg ] ( cisco )
+-rw-r--r--@ 1 emvaldes  staff  1175 May 22 17:15 configs/cisco/dmz-fw2-backup.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="10.0.0.1, ... ,203.0.113.25" \
+             -f ./scripts/extract/cisco-configs.awk \
+                configs/cisco/dmz-fw2-backup.cfg
+
+Configuration File [ .cache/resources/cisco/dmz-fw2-backup.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "ASA",
+     4	  "version": "9.12(4)",
+     5	  "domain": "global.dmz.example.net",
+     6	  "hostname": "dmz-fw2-backup"
+     7	}
+     8	
+     9	ASA Version 9.12(4)
+    10	hostname dmz-fw2-backup
+    11	domain-name global.dmz.example.net
+    12	
+    13	interface GigabitEthernet0/0
+    14	 nameif guest
+    15	 ip address 10.10.10.10 255.255.255.0
+    16	 description Guest access interface
+    17	
+    18	interface GigabitEthernet0/1
+    19	 nameif inside
+    20	 ip address 192.168.100.100 255.255.255.0
+    21	 description Inside LAN segment
+    22	
+    23	interface GigabitEthernet0/2
+    24	 nameif outside
+    25	 ip address 198.51.100.75 255.255.255.0
+    26	 description Outbound Internet NAT interface
+    27	
+    28	object network Titan-WLAN-Host
+    29	 host 192.168.100.100
+    30	 description Backup inside NAT IP
+    31	
+    32	object network Shield-WiFi-Alias
+    33	 host 10.10.10.10
+    34	 description Guest NAT
+    35	
+    36	object network Sentinel-NAT
+    37	 host 203.0.113.25
+    38	 description Corporate NAT edge
+    39	
+    40	object-group network Sector-Wireless
+    41	 description Staff WiFi clients
+    42	 network-object host 192.168.100.100
+    43	 network-object host 10.10.10.10
+    44	
+    45	object-group network Watchtower-DMZ
+    46	 description Global secure relay
+    47	 network-object host 192.0.2.50
+    48	
+
+Search Pattern: [ .cache/ips.list ]
+Search Listing: [ 10.0.0.1, ... ,203.0.113.25 ] (17)
+
+Target Config: [ configs/cisco/perimeter-fw1.cfg ] ( cisco )
+-rw-r--r--@ 1 emvaldes  staff  1432 May 23 02:21 configs/cisco/perimeter-fw1.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="10.0.0.1, ... ,203.0.113.25" \
+             -f ./scripts/extract/cisco-configs.awk \
+                configs/cisco/perimeter-fw1.cfg
+
+Configuration File [ .cache/resources/cisco/perimeter-fw1.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "ASA",
+     4	  "version": "9.14(3)",
+     5	  "domain": "edge.dc.example.com",
+     6	  "hostname": "perimeter-fw1"
+     7	}
+     8	
+     9	ASA Version 9.14(3)
+    10	hostname perimeter-fw1
+    11	domain-name edge.dc.example.com
+    12	
+    13	interface GigabitEthernet0/0
+    14	 nameif outside
+    15	 security-level 0
+    16	 ip address 203.0.113.25 255.255.255.0
+    17	 description External Internet-facing Interface
+    18	
+    19	interface GigabitEthernet0/1
+    20	 nameif inside
+    21	 security-level 100
+    22	 ip address 10.0.0.1 255.255.255.0
+    23	 description Internal Network Interface
+    24	
+    25	object network NAT-Edge
+    26	 host 203.0.113.25
+    27	 description Internet-bound IP NAT
+    28	
+    29	object network Stark-Tower
+    30	 host 10.0.0.1
+    31	 description Core services gateway
+    32	
+    33	object-group network Avengers-DMZ
+    34	 description Public access layer
+    35	 network-object host 192.0.2.50
+    36	 network-object host 203.0.113.25
+    37	 network-object 192.168.2.0 255.255.255.0
+    38	
+    39	object-group network Panther-Edge
+    40	 description Internet-facing proxy systems
+    41	 network-object host 203.0.113.25
+    42	 network-object host 172.16.0.5
+    43	
+    44	object network Magneto-Core
+    45	 host 172.16.0.5
+    46	 description WAN firewall entry point
+    47	
+
+Search Pattern: [ .cache/ips.list ]
+Search Listing: [ 10.0.0.1, ... ,203.0.113.25 ] (17)
+
+Target Config: [ configs/fortinet/fg-branch-vpn-01.cfg ] ( fortinet )
+-rw-r--r--@ 1 emvaldes  staff  3237 May 22 17:25 configs/fortinet/fg-branch-vpn-01.cfg
+
+Executing AWK script [ ./scripts/extract/fortinet-configs.awk ]
+/usr/bin/awk -v targets="10.0.0.1, ... ,203.0.113.25" \
+             -f ./scripts/extract/fortinet-configs.awk \
+                configs/fortinet/fg-branch-vpn-01.cfg
+
+Configuration File [ .cache/resources/fortinet/fg-branch-vpn-01.cfg ]
+
+     1	{
+     2	  "vendor": "fortinet",
+     3	  "model": "FortiGate-60F",
+     4	  "version": "v7.2.5.F",
+     5	  "domain": "",
+     6	  "hostname": "fg-branch-vpn-01"
+     7	}
+     8	
+     9	#hostname="fg-branch-vpn-01"
+    10	#model="FortiGate-60F"
+    11	#config-version=FGT_60F-v7.2.5.F-build1517-230421
+    12	
+    13	config system interface
+    14	 edit "wan1"
+    15	  set ip 198.51.100.75 255.255.255.0
+    16	  set alias "Branch ISP"
+    17	 next
+    18	 edit "internal"
+    19	  set ip 192.168.2.12 255.255.255.0
+    20	  set alias "User LAN"
+    21	 next
+    22	end
+    23	
+    24	config firewall address
+    25	 edit "Branch-Gateway"
+    26	  set subnet 192.168.2.12 255.255.255.255
+    27	  set comment "Primary LAN gateway"
+    28	 next
+    29	 edit "Branch-Public"
+    30	  set subnet 198.51.100.75 255.255.255.255
+    31	  set comment "Branch NAT"
+    32	 next
+    33	end
+    34	
+    35	config firewall address
+    36	 edit "IronMan-HQ"
+    37	  set subnet 10.0.0.1 255.255.255.255
+    38	  set comment "Main node at Stark Tower"
+    39	 next
+    40	 edit "Spidey-Sandbox"
+    41	  set subnet 10.0.1.2 255.255.255.255
+    42	  set comment "QA node in Peter's Lab"
+    43	 next
+    44	 edit "Panther-Vault"
+    45	  set subnet 192.168.1.10 255.255.255.255
+    46	  set comment "Wakandan data store"
+    47	 next
+    48	 edit "Public-Test"
+    49	  set subnet 203.0.113.25 255.255.255.255
+    50	  set comment "Public NAT exposure for Red Skull trap"
+    51	 next
+    52	 edit "Guardians-Relay"
+    53	  set subnet 192.168.0.1 255.255.255.255
+    54	  set comment "Backup uplink for Milano crew"
+    55	 next
+    56	end
+    57	
+
+Search Pattern: [ .cache/ips.list ]
+Search Listing: [ 10.0.0.1, ... ,203.0.113.25 ] (17)
+
+Target Config: [ configs/fortinet/fg-campus-core.cfg ] ( fortinet )
+-rw-r--r--@ 1 emvaldes  staff  2409 May 22 17:25 configs/fortinet/fg-campus-core.cfg
+
+Executing AWK script [ ./scripts/extract/fortinet-configs.awk ]
+/usr/bin/awk -v targets="10.0.0.1, ... ,203.0.113.25" \
+             -f ./scripts/extract/fortinet-configs.awk \
+                configs/fortinet/fg-campus-core.cfg
+
+Configuration File [ .cache/resources/fortinet/fg-campus-core.cfg ]
+
+     1	{
+     2	  "vendor": "fortinet",
+     3	  "model": "FortiGate-200F",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": "fg-campus-core"
+     7	}
+     8	
+     9	#hostname="fg-campus-core"
+    10	#model="FortiGate-200F"
+    11	
+    12	config system interface
+    13	 edit "core"
+    14	  set ip 10.10.10.10 255.255.255.0
+    15	  set alias "Campus Core Transit"
+    16	 next
+    17	 edit "wifi"
+    18	  set ip 192.168.100.100 255.255.255.0
+    19	  set alias "Wireless VLAN"
+    20	 next
+    21	end
+    22	
+    23	config firewall address
+    24	 edit "Shield-WiFi"
+    25	  set subnet 10.10.10.10 255.255.255.255
+    26	  set comment "Wireless AP Gateway"
+    27	 next
+    28	 edit "Titan-WLAN-Host"
+    29	  set subnet 192.168.100.100 255.255.255.255
+    30	  set comment "Guest WiFi node"
+    31	 next
+    32	end
+    33	
+    34	config firewall address
+    35	 edit "Cap-HQ"
+    36	  set subnet 192.168.1.11 255.255.255.255
+    37	  set comment "Captain America’s secure endpoint"
+    38	 next
+    39	 edit "Vision-Link"
+    40	  set subnet 192.168.2.12 255.255.255.255
+    41	  set comment "Vision’s quantum channel"
+    42	 next
+    43	 edit "Hawkeye-Nest"
+    44	  set subnet 172.16.1.6 255.255.255.255
+    45	  set comment "Remote sniper node"
+    46	 next
+    47	 edit "Wanda-Field"
+    48	  set subnet 192.168.100.100 255.255.255.255
+    49	  set comment "Wanda’s chaos relay"
+    50	 next
+    51	end
+    52	
+
+Search Pattern: [ .cache/ips.list ]
+Search Listing: [ 10.0.0.1, ... ,203.0.113.25 ] (17)
+
+Target Config: [ configs/fortinet/fg-testing-config.cfg ] ( fortinet )
+-rw-r--r--@ 1 emvaldes  staff  307 May 23 11:00 configs/fortinet/fg-testing-config.cfg
+
+Executing AWK script [ ./scripts/extract/fortinet-configs.awk ]
+/usr/bin/awk -v targets="10.0.0.1, ... ,203.0.113.25" \
+             -f ./scripts/extract/fortinet-configs.awk \
+                configs/fortinet/fg-testing-config.cfg
+
+Configuration File [ .cache/resources/fortinet/fg-testing-config.cfg ]
+
+     1	{
+     2	  "vendor": "fortinet",
+     3	  "model": "FortiGate-60F",
+     4	  "version": "v7.2.5.F",
+     5	  "domain": "",
+     6	  "hostname": "fg-branch-vpn-01"
+     7	}
+     8	
+     9	#hostname="fg-branch-vpn-01"
+    10	#model="FortiGate-60F"
+    11	#config-version=FGT_60F-v7.2.5.F-build1517-230421
+    12	
+    13	config firewall policy
+    14	 edit 13
+    15	  set name "Remote NAT"
+    16	  set srcintf "dmz"
+    17	  set dstintf "wan1"
+    18	  set srcaddr "10.10.10.10"
+    19	  set dstaddr "203.0.113.10"
+    20	  set action accept
+    21	  set logtraffic all
+    22	 next
+    23	end
+    24	
+
+Search Pattern: [ .cache/ips.list ]
+Search Listing: [ 10.0.0.1, ... ,203.0.113.25 ] (17)
+
+Target Config: [ configs/misc/fw1.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  1161 May 25 17:41 configs/misc/fw1.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="10.0.0.1, ... ,203.0.113.25" \
+             -f ./scripts/extract/cisco-configs.awk \
+                configs/misc/fw1.cfg
+
+Configuration File [ .cache/resources/misc/fw1.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": ""
+     7	}
+     8	
+     9	object-group network Metropolis-Internal
+    10	 description Core internal LAN for application clusters
+    11	 network-object host 10.0.2.3
+    12	 network-object 192.168.2.0 255.255.255.0
+    13	 network-object host 192.168.2.12
+    14	
+    15	object-group network Krypton-Cloud
+    16	 description Cloud-facing external nodes
+    17	 network-object host 198.51.100.75
+    18	 network-object host 203.0.113.25
+    19	
+    20	object-group network Fortress-Wireless
+    21	 description Secure wireless access layer
+    22	 network-object host 172.18.1.20
+    23	 network-object host 192.168.1.10
+    24	
+    25	object network Kent-Server
+    26	 host 10.0.2.3
+    27	 description Internal mail & identity services
+    28	
+    29	object network Krypton-Gateway
+    30	 host 203.0.113.25
+    31	 description Secure NAT boundary for cloud access
+    32	
+    33	object network External-Failover
+    34	 host 198.51.100.75
+    35	 description Secondary outbound route for edge
+    36	
+
+Search Pattern: [ .cache/ips.list ]
+Search Listing: [ 10.0.0.1, ... ,203.0.113.25 ] (17)
+
+Target Config: [ configs/misc/fw3.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  1423 May 20 21:38 configs/misc/fw3.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="10.0.0.1, ... ,203.0.113.25" \
+             -f ./scripts/extract/cisco-configs.awk \
+                configs/misc/fw3.cfg
+
+Configuration File [ .cache/resources/misc/fw3.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": ""
+     7	}
+     8	
+     9	object-group network Wakanda-Core
+    10	 description National Core Routing Zone
+    11	 network-object host 192.168.1.10
+    12	 network-object host 10.0.2.3
+    13	 network-object 10.0.0.0 255.255.255.0
+    14	
+    15	object-group network Panther-Edge
+    16	 description Internet-facing proxy systems
+    17	 network-object host 203.0.113.25
+    18	 network-object host 172.16.0.5
+    19	
+    20	object-group network Shield-WiFi
+    21	 description Shield-controlled wireless network
+    22	 network-object host 10.10.10.10
+    23	 network-object 192.168.100.0 255.255.255.0
+    24	
+    25	object-group network Shield-WiFi
+    26	 description Shield-controlled wireless network
+    27	 network-object host 10.10.10.10
+    28	 network-object 192.168.100.0 255.255.255.0
+    29	
+    30	object network Panther-Gateway
+    31	 host 10.0.2.3
+    32	 description Secure outbound concentrator
+    33	
+    34	object network Edge-Terminal
+    35	 host 172.16.0.5
+    36	 description Internet firewall handoff
+    37	
+    38	object-group network Shield-WiFi
+    39	 description Shield-controlled wireless network
+    40	 network-object host 10.10.10.10
+    41	 network-object 192.168.100.0 255.255.255.0
+    42	
+    43	object network Shield-WiFi-Alias
+    44	 host 10.10.10.10
+    45	 description Guest NAT
+    46	
+
+Search Pattern: [ .cache/ips.list ]
+Search Listing: [ 10.0.0.1, ... ,203.0.113.25 ] (17)
+
+Target Config: [ configs/misc/switch1.conf ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  311 May 20 21:38 configs/misc/switch1.conf
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="10.0.0.1, ... ,203.0.113.25" \
+             -f ./scripts/extract/cisco-configs.awk \
+                configs/misc/switch1.conf
+
+Configuration File [ .cache/resources/misc/switch1.conf ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": ""
+     7	}
+     8	
+     9	interface Vlan1
+    10	 ip address 172.31.255.254 255.255.255.0
+    11	
+    12	interface Vlan10
+    13	 ip address 10.0.1.2 255.255.255.0
+    14	
+    15	interface Vlan20
+    16	 ip address 192.168.1.10 255.255.255.0
+    17	
+    18	object-group network Avengers-Office
+    19	 description VLAN access layer
+    20	 network-object host 10.0.0.1
+    21	 network-object 192.168.12.0 255.255.255.0
+    22	
+
+Search Pattern: [ .cache/ips.list ]
+Search Listing: [ 10.0.0.1, ... ,203.0.113.25 ] (17)
+
+Target Config: [ configs/misc/switch3.conf ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  246 May 20 21:38 configs/misc/switch3.conf
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="10.0.0.1, ... ,203.0.113.25" \
+             -f ./scripts/extract/cisco-configs.awk \
+                configs/misc/switch3.conf
+
+Configuration File [ .cache/resources/misc/switch3.conf ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": ""
+     7	}
+     8	
+     9	interface Vlan1
+    10	 ip address 10.0.0.1 255.255.255.0
+    11	
+    12	interface Vlan2
+    13	 ip address 172.16.1.6 255.255.255.0
+    14	
+    15	object-group network Spider-Net
+    16	 description Web access switches
+    17	 network-object host 10.0.0.1
+    18	 network-object 192.168.12.0 255.255.255.0
+    19	
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lp26wDBpdF/network-configs--ips.list ]
+Search Listing: [ 10.0.1.2, ... ,10.0.1.2 ] (1)
+
+Target Config: [ .cache/resources/fortinet/fg-branch-vpn-01.cfg ] ( fortinet )
+-rw-r--r--  1 emvaldes  staff  1245 Jun  3 17:55 .cache/resources/fortinet/fg-branch-vpn-01.cfg
+
+Executing AWK script [ ./scripts/extract/fortinet-configs.awk ]
+/usr/bin/awk -v targets="10.0.1.2, ... ,10.0.1.2" \
+             -f ./scripts/extract/fortinet-configs.awk \
+                .cache/resources/fortinet/fg-branch-vpn-01.cfg
+
+Configuration File [ reports/10.0.1.2/fortinet/fg-branch-vpn-01.cfg ]
+
+     1	{
+     2	  "vendor": "fortinet",
+     3	  "model": "FortiGate-60F",
+     4	  "version": "v7.2.5.F",
+     5	  "domain": "",
+     6	  "hostname": "fg-branch-vpn-01"
+     7	}
+     8	
+     9	#hostname="fg-branch-vpn-01"
+    10	#model="FortiGate-60F"
+    11	#config-version=FGT_60F-v7.2.5.F-build1517-230421
+    12	
+    13	config firewall address
+    14	 edit "Spidey-Sandbox"
+    15	  set subnet 10.0.1.2 255.255.255.255
+    16	  set comment "QA node in Peter's Lab"
+    17	 next
+    18	end
+    19	
+
+Exported objects from: reports/10.0.1.2/fortinet/fg-branch-vpn-01.cfg
+Serialized objects to: reports/10.0.1.2/fortinet/.objects/fg-branch-vpn-01.list
+
+     1	config firewall address--MTc0ODk5ODUxNzUxNzE1MDAwMAo--  edit "Spidey-Sandbox"--MTc0ODk5ODUxNzUxNzE1MDAwMAo--   set subnet 10.0.1.2 255.255.255.255--MTc0ODk5ODUxNzUxNzE1MDAwMAo--   set comment "QA node in Peter's Lab"--MTc0ODk5ODUxNzUxNzE1MDAwMAo--  next--MTc0ODk5ODUxNzUxNzE1MDAwMAo-- end
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z3e0jlFAEz/network-configs--ips.list ]
+Search Listing: [ 10.0.0.1, ... ,10.0.0.1 ] (1)
+
+Target Config: [ .cache/resources/cisco/perimeter-fw1.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  1061 Jun  3 17:55 .cache/resources/cisco/perimeter-fw1.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="10.0.0.1, ... ,10.0.0.1" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/cisco/perimeter-fw1.cfg
+
+Configuration File [ reports/10.0.0.1/cisco/perimeter-fw1.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "ASA",
+     4	  "version": "9.14(3)",
+     5	  "domain": "edge.dc.example.com",
+     6	  "hostname": "perimeter-fw1"
+     7	}
+     8	
+     9	ASA Version 9.14(3)
+    10	hostname perimeter-fw1
+    11	domain-name edge.dc.example.com
+    12	
+    13	interface GigabitEthernet0/1
+    14	 nameif inside
+    15	 security-level 100
+    16	 ip address 10.0.0.1 255.255.255.0
+    17	 description Internal Network Interface
+    18	
+    19	object network Stark-Tower
+    20	 host 10.0.0.1
+    21	 description Core services gateway
+    22	
+
+Exported objects from: reports/10.0.0.1/cisco/perimeter-fw1.cfg
+Serialized objects to: reports/10.0.0.1/cisco/.objects/perimeter-fw1.list
+
+     1	interface GigabitEthernet0/1--MTc0ODk5ODUxNzUxOTE0NTAwMAo--  nameif inside--MTc0ODk5ODUxNzUxOTE0NTAwMAo--  security-level 100--MTc0ODk5ODUxNzUxOTE0NTAwMAo--  ip address 10.0.0.1 255.255.255.0--MTc0ODk5ODUxNzUxOTE0NTAwMAo--  description Internal Network Interface
+     2	object network Stark-Tower--MTc0ODk5ODUxNzUxOTE0NTAwMAo--  host 10.0.0.1--MTc0ODk5ODUxNzUxOTE0NTAwMAo--  description Core services gateway
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.nB02GPse4w/network-configs--ips.list ]
+Search Listing: [ 203.0.113.25, ... ,203.0.113.25 ] (1)
+
+Target Config: [ .cache/resources/cisco/dmz-fw2-backup.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  1070 Jun  3 17:55 .cache/resources/cisco/dmz-fw2-backup.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="203.0.113.25, ... ,203.0.113.25" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/cisco/dmz-fw2-backup.cfg
+
+Configuration File [ reports/203.0.113.25/cisco/dmz-fw2-backup.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "ASA",
+     4	  "version": "9.12(4)",
+     5	  "domain": "global.dmz.example.net",
+     6	  "hostname": "dmz-fw2-backup"
+     7	}
+     8	
+     9	ASA Version 9.12(4)
+    10	hostname dmz-fw2-backup
+    11	domain-name global.dmz.example.net
+    12	
+    13	object network Sentinel-NAT
+    14	 host 203.0.113.25
+    15	 description Corporate NAT edge
+    16	
+
+Exported objects from: reports/203.0.113.25/cisco/dmz-fw2-backup.cfg
+Serialized objects to: reports/203.0.113.25/cisco/.objects/dmz-fw2-backup.list
+
+     1	object network Sentinel-NAT--MTc0ODk5ODUxNzY0NjQ1NzAwMAo--  host 203.0.113.25--MTc0ODk5ODUxNzY0NjQ1NzAwMAo--  description Corporate NAT edge
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.dOB7fSjIB5/network-configs--ips.list ]
+Search Listing: [ 198.51.100.75, ... ,198.51.100.75 ] (1)
+
+Target Config: [ .cache/resources/cisco/branch-isr-02.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  962 Jun  3 17:55 .cache/resources/cisco/branch-isr-02.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="198.51.100.75, ... ,198.51.100.75" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/cisco/branch-isr-02.cfg
+
+Configuration File [ reports/198.51.100.75/cisco/branch-isr-02.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "16.9",
+     5	  "domain": "",
+     6	  "hostname": "branch-isr-02"
+     7	}
+     8	
+     9	version 16.9
+    10	hostname branch-isr-02
+    11	
+    12	object network Hydra-Link
+    13	 host 198.51.100.75
+    14	 description Branch NAT egress
+    15	
+    16	object-group network Hydra-Edge
+    17	 description Remote site uplink
+    18	 network-object host 192.168.2.12
+    19	 network-object host 198.51.100.75
+    20	
+
+Exported objects from: reports/198.51.100.75/cisco/branch-isr-02.cfg
+Serialized objects to: reports/198.51.100.75/cisco/.objects/branch-isr-02.list
+
+     1	object network Hydra-Link--MTc0ODk5ODUxNzY0OTM5MTAwMAo--  host 198.51.100.75--MTc0ODk5ODUxNzY0OTM5MTAwMAo--  description Branch NAT egress
+     2	object-group network Hydra-Edge--MTc0ODk5ODUxNzY0OTM5MTAwMAo--  description Remote site uplink--MTc0ODk5ODUxNzY0OTM5MTAwMAo--  network-object host 192.168.2.12--MTc0ODk5ODUxNzY0OTM5MTAwMAo--  network-object host 198.51.100.75
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.blnL7Hpozh/network-configs--ips.list ]
+Search Listing: [ 10.0.2.3, ... ,10.0.2.3 ] (1)
+
+Target Config: [ .cache/resources/cisco/branch-isr-02.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  962 Jun  3 17:55 .cache/resources/cisco/branch-isr-02.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="10.0.2.3, ... ,10.0.2.3" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/cisco/branch-isr-02.cfg
+
+Configuration File [ reports/10.0.2.3/cisco/branch-isr-02.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "16.9",
+     5	  "domain": "",
+     6	  "hostname": "branch-isr-02"
+     7	}
+     8	
+     9	version 16.9
+    10	hostname branch-isr-02
+    11	
+    12	interface GigabitEthernet0/0/2
+    13	 ip address 10.0.2.3 255.255.255.0
+    14	 description Dev VLAN
+    15	
+    16	object network Panther-Gateway
+    17	 host 10.0.2.3
+    18	 description Secure outbound concentrator
+    19	
+
+Exported objects from: reports/10.0.2.3/cisco/branch-isr-02.cfg
+Serialized objects to: reports/10.0.2.3/cisco/.objects/branch-isr-02.list
+
+     1	interface GigabitEthernet0/0/2--MTc0ODk5ODUxNzUzNDc5NDAwMAo--  ip address 10.0.2.3 255.255.255.0--MTc0ODk5ODUxNzUzNDc5NDAwMAo--  description Dev VLAN
+     2	object network Panther-Gateway--MTc0ODk5ODUxNzUzNDc5NDAwMAo--  host 10.0.2.3--MTc0ODk5ODUxNzUzNDc5NDAwMAo--  description Secure outbound concentrator
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.gVFIkTVW0O/network-configs--ips.list ]
+Search Listing: [ 10.10.10.10, ... ,10.10.10.10 ] (1)
+
+Target Config: [ .cache/resources/cisco/access-sw1-west.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  601 Jun  3 17:55 .cache/resources/cisco/access-sw1-west.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="10.10.10.10, ... ,10.10.10.10" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/cisco/access-sw1-west.cfg
+
+Configuration File [ reports/10.10.10.10/cisco/access-sw1-west.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "12.4",
+     5	  "domain": "",
+     6	  "hostname": "access-sw1-west"
+     7	}
+     8	
+     9	version 12.4
+    10	hostname access-sw1-west
+    11	
+    12	object-group network MGMT-ACCESS
+    13	 description Management objects
+    14	 network-object host 192.168.0.1
+    15	 network-object host 192.168.0.100
+    16	 network-object host 10.10.10.10
+    17	
+    18	object-group network Mutant-WiFi
+    19	 description Controlled guest devices
+    20	 network-object host 10.10.10.10
+    21	
+
+Exported objects from: reports/10.10.10.10/cisco/access-sw1-west.cfg
+Serialized objects to: reports/10.10.10.10/cisco/.objects/access-sw1-west.list
+
+     1	object-group network MGMT-ACCESS--MTc0ODk5ODUxNzU0NDA4ODAwMAo--  description Management objects--MTc0ODk5ODUxNzU0NDA4ODAwMAo--  network-object host 192.168.0.1--MTc0ODk5ODUxNzU0NDA4ODAwMAo--  network-object host 192.168.0.100--MTc0ODk5ODUxNzU0NDA4ODAwMAo--  network-object host 10.10.10.10
+     2	object-group network Mutant-WiFi--MTc0ODk5ODUxNzU0NDA4ODAwMAo--  description Controlled guest devices--MTc0ODk5ODUxNzU0NDA4ODAwMAo--  network-object host 10.10.10.10
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2AvjEeaBAp/network-configs--ips.list ]
+Search Listing: [ 172.16.0.5, ... ,172.16.0.5 ] (1)
+
+Target Config: [ .cache/resources/cisco/perimeter-fw1.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  1061 Jun  3 17:55 .cache/resources/cisco/perimeter-fw1.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="172.16.0.5, ... ,172.16.0.5" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/cisco/perimeter-fw1.cfg
+
+Configuration File [ reports/172.16.0.5/cisco/perimeter-fw1.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "ASA",
+     4	  "version": "9.14(3)",
+     5	  "domain": "edge.dc.example.com",
+     6	  "hostname": "perimeter-fw1"
+     7	}
+     8	
+     9	ASA Version 9.14(3)
+    10	hostname perimeter-fw1
+    11	domain-name edge.dc.example.com
+    12	
+    13	object-group network Panther-Edge
+    14	 description Internet-facing proxy systems
+    15	 network-object host 203.0.113.25
+    16	 network-object host 172.16.0.5
+    17	
+    18	object network Magneto-Core
+    19	 host 172.16.0.5
+    20	 description WAN firewall entry point
+    21	
+
+Exported objects from: reports/172.16.0.5/cisco/perimeter-fw1.cfg
+Serialized objects to: reports/172.16.0.5/cisco/.objects/perimeter-fw1.list
+
+     1	object-group network Panther-Edge--MTc0ODk5ODUxNzU3MDI4NDAwMAo--  description Internet-facing proxy systems--MTc0ODk5ODUxNzU3MDI4NDAwMAo--  network-object host 203.0.113.25--MTc0ODk5ODUxNzU3MDI4NDAwMAo--  network-object host 172.16.0.5
+     2	object network Magneto-Core--MTc0ODk5ODUxNzU3MDI4NDAwMAo--  host 172.16.0.5--MTc0ODk5ODUxNzU3MDI4NDAwMAo--  description WAN firewall entry point
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.blnL7Hpozh/network-configs--ips.list ]
+Search Listing: [ 10.0.2.3, ... ,10.0.2.3 ] (1)
+
+Target Config: [ .cache/resources/misc/fw1.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  882 Jun  3 17:55 .cache/resources/misc/fw1.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="10.0.2.3, ... ,10.0.2.3" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/misc/fw1.cfg
+
+Configuration File [ reports/10.0.2.3/misc/fw1.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": ""
+     7	}
+     8	
+     9	object-group network Metropolis-Internal
+    10	 description Core internal LAN for application clusters
+    11	 network-object host 10.0.2.3
+    12	 network-object 192.168.2.0 255.255.255.0
+    13	 network-object host 192.168.2.12
+    14	
+    15	object network Kent-Server
+    16	 host 10.0.2.3
+    17	 description Internal mail & identity services
+    18	
+
+Exported objects from: reports/10.0.2.3/misc/fw1.cfg
+Serialized objects to: reports/10.0.2.3/misc/.objects/fw1.list
+
+     1	object-group network Metropolis-Internal--MTc0ODk5ODUxNzYyMDI1MzAwMAo--  description Core internal LAN for application clusters--MTc0ODk5ODUxNzYyMDI1MzAwMAo--  network-object host 10.0.2.3--MTc0ODk5ODUxNzYyMDI1MzAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0ODk5ODUxNzYyMDI1MzAwMAo--  network-object host 192.168.2.12
+     2	object network Kent-Server--MTc0ODk5ODUxNzYyMDI1MzAwMAo--  host 10.0.2.3--MTc0ODk5ODUxNzYyMDI1MzAwMAo--  description Internal mail & identity services
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.sGvPTeLClJ/network-configs--ips.list ]
+Search Listing: [ 172.16.1.6, ... ,172.16.1.6 ] (1)
+
+Target Config: [ .cache/resources/cisco/branch-isr-02.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  962 Jun  3 17:55 .cache/resources/cisco/branch-isr-02.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="172.16.1.6, ... ,172.16.1.6" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/cisco/branch-isr-02.cfg
+
+Configuration File [ reports/172.16.1.6/cisco/branch-isr-02.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "16.9",
+     5	  "domain": "",
+     6	  "hostname": "branch-isr-02"
+     7	}
+     8	
+     9	version 16.9
+    10	hostname branch-isr-02
+    11	
+    12	interface GigabitEthernet0/0/0
+    13	 ip address 172.16.1.6 255.255.255.0
+    14	 description ISP uplink
+    15	
+    16	object network BlackWidow-Core
+    17	 host 172.16.1.6
+    18	 description Branch router uplink NAT
+    19	
+
+Exported objects from: reports/172.16.1.6/cisco/branch-isr-02.cfg
+Serialized objects to: reports/172.16.1.6/cisco/.objects/branch-isr-02.list
+
+     1	interface GigabitEthernet0/0/0--MTc0ODk5ODUxNzU4ODc1MDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0ODk5ODUxNzU4ODc1MDAwMAo--  description ISP uplink
+     2	object network BlackWidow-Core--MTc0ODk5ODUxNzU4ODc1MDAwMAo--  host 172.16.1.6--MTc0ODk5ODUxNzU4ODc1MDAwMAo--  description Branch router uplink NAT
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.nTfrwNKSjs/network-configs--ips.list ]
+Search Listing: [ 192.0.2.50, ... ,192.0.2.50 ] (1)
+
+Target Config: [ .cache/resources/cisco/dmz-fw2-backup.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  1070 Jun  3 17:55 .cache/resources/cisco/dmz-fw2-backup.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="192.0.2.50, ... ,192.0.2.50" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/cisco/dmz-fw2-backup.cfg
+
+Configuration File [ reports/192.0.2.50/cisco/dmz-fw2-backup.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "ASA",
+     4	  "version": "9.12(4)",
+     5	  "domain": "global.dmz.example.net",
+     6	  "hostname": "dmz-fw2-backup"
+     7	}
+     8	
+     9	ASA Version 9.12(4)
+    10	hostname dmz-fw2-backup
+    11	domain-name global.dmz.example.net
+    12	
+    13	object-group network Watchtower-DMZ
+    14	 description Global secure relay
+    15	 network-object host 192.0.2.50
+    16	
+
+Exported objects from: reports/192.0.2.50/cisco/dmz-fw2-backup.cfg
+Serialized objects to: reports/192.0.2.50/cisco/.objects/dmz-fw2-backup.list
+
+     1	object-group network Watchtower-DMZ--MTc0ODk5ODUxNzU5MjY5NjAwMAo--  description Global secure relay--MTc0ODk5ODUxNzU5MjY5NjAwMAo--  network-object host 192.0.2.50
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.bMeHoDvAbA/network-configs--ips.list ]
+Search Listing: [ 172.18.1.20, ... ,172.18.1.20 ] (1)
+
+Target Config: [ .cache/resources/cisco/branch-isr-02.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  962 Jun  3 17:55 .cache/resources/cisco/branch-isr-02.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="172.18.1.20, ... ,172.18.1.20" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/cisco/branch-isr-02.cfg
+
+Configuration File [ reports/172.18.1.20/cisco/branch-isr-02.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "16.9",
+     5	  "domain": "",
+     6	  "hostname": "branch-isr-02"
+     7	}
+     8	
+     9	version 16.9
+    10	hostname branch-isr-02
+    11	
+    12	object-group network Lantern-DMZ
+    13	 description Protected but public-facing zone
+    14	 network-object host 172.18.1.20
+    15	 network-object host 192.168.1.11
+    16	
+
+Exported objects from: reports/172.18.1.20/cisco/branch-isr-02.cfg
+Serialized objects to: reports/172.18.1.20/cisco/.objects/branch-isr-02.list
+
+     1	object-group network Lantern-DMZ--MTc0ODk5ODUxNzYyMjEzNTAwMAo--  description Protected but public-facing zone--MTc0ODk5ODUxNzYyMjEzNTAwMAo--  network-object host 172.18.1.20--MTc0ODk5ODUxNzYyMjEzNTAwMAo--  network-object host 192.168.1.11
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z3e0jlFAEz/network-configs--ips.list ]
+Search Listing: [ 10.0.0.1, ... ,10.0.0.1 ] (1)
+
+Target Config: [ .cache/resources/fortinet/fg-branch-vpn-01.cfg ] ( fortinet )
+-rw-r--r--  1 emvaldes  staff  1245 Jun  3 17:55 .cache/resources/fortinet/fg-branch-vpn-01.cfg
+
+Executing AWK script [ ./scripts/extract/fortinet-configs.awk ]
+/usr/bin/awk -v targets="10.0.0.1, ... ,10.0.0.1" \
+             -f ./scripts/extract/fortinet-configs.awk \
+                .cache/resources/fortinet/fg-branch-vpn-01.cfg
+
+Configuration File [ reports/10.0.0.1/fortinet/fg-branch-vpn-01.cfg ]
+
+     1	{
+     2	  "vendor": "fortinet",
+     3	  "model": "FortiGate-60F",
+     4	  "version": "v7.2.5.F",
+     5	  "domain": "",
+     6	  "hostname": "fg-branch-vpn-01"
+     7	}
+     8	
+     9	#hostname="fg-branch-vpn-01"
+    10	#model="FortiGate-60F"
+    11	#config-version=FGT_60F-v7.2.5.F-build1517-230421
+    12	
+    13	config firewall address
+    14	 edit "IronMan-HQ"
+    15	  set subnet 10.0.0.1 255.255.255.255
+    16	  set comment "Main node at Stark Tower"
+    17	 next
+    18	end
+    19	
+
+Exported objects from: reports/10.0.0.1/fortinet/fg-branch-vpn-01.cfg
+Serialized objects to: reports/10.0.0.1/fortinet/.objects/fg-branch-vpn-01.list
+
+     1	config firewall address--MTc0ODk5ODUxNzU3MzE2MzAwMAo--  edit "IronMan-HQ"--MTc0ODk5ODUxNzU3MzE2MzAwMAo--   set subnet 10.0.0.1 255.255.255.255--MTc0ODk5ODUxNzU3MzE2MzAwMAo--   set comment "Main node at Stark Tower"--MTc0ODk5ODUxNzU3MzE2MzAwMAo--  next--MTc0ODk5ODUxNzU3MzE2MzAwMAo-- end
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qlMhqaGC6t/network-configs--ips.list ]
+Search Listing: [ 192.168.0.1, ... ,192.168.0.1 ] (1)
+
+Target Config: [ .cache/resources/cisco/access-sw1-west.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  601 Jun  3 17:55 .cache/resources/cisco/access-sw1-west.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="192.168.0.1, ... ,192.168.0.1" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/cisco/access-sw1-west.cfg
+
+Configuration File [ reports/192.168.0.1/cisco/access-sw1-west.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "12.4",
+     5	  "domain": "",
+     6	  "hostname": "access-sw1-west"
+     7	}
+     8	
+     9	version 12.4
+    10	hostname access-sw1-west
+    11	
+    12	interface Vlan1
+    13	 ip address 192.168.0.1 255.255.255.0
+    14	 description Management Interface
+    15	
+    16	object-group network MGMT-ACCESS
+    17	 description Management objects
+    18	 network-object host 192.168.0.1
+    19	 network-object host 192.168.0.100
+    20	 network-object host 10.10.10.10
+    21	
+
+Exported objects from: reports/192.168.0.1/cisco/access-sw1-west.cfg
+Serialized objects to: reports/192.168.0.1/cisco/.objects/access-sw1-west.list
+
+     1	interface Vlan1--MTc0ODk5ODUxNzYwNzk0MjAwMAo--  ip address 192.168.0.1 255.255.255.0--MTc0ODk5ODUxNzYwNzk0MjAwMAo--  description Management Interface
+     2	object-group network MGMT-ACCESS--MTc0ODk5ODUxNzYwNzk0MjAwMAo--  description Management objects--MTc0ODk5ODUxNzYwNzk0MjAwMAo--  network-object host 192.168.0.1--MTc0ODk5ODUxNzYwNzk0MjAwMAo--  network-object host 192.168.0.100--MTc0ODk5ODUxNzYwNzk0MjAwMAo--  network-object host 10.10.10.10
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.gVFIkTVW0O/network-configs--ips.list ]
+Search Listing: [ 10.10.10.10, ... ,10.10.10.10 ] (1)
+
+Target Config: [ .cache/resources/cisco/campus-sw-access01.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  415 Jun  3 17:55 .cache/resources/cisco/campus-sw-access01.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="10.10.10.10, ... ,10.10.10.10" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/cisco/campus-sw-access01.cfg
+
+Configuration File [ reports/10.10.10.10/cisco/campus-sw-access01.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "12.2",
+     5	  "domain": "",
+     6	  "hostname": "campus-sw-access01"
+     7	}
+     8	
+     9	version 12.2
+    10	hostname campus-sw-access01
+    11	
+    12	object-group network Floor-Networks
+    13	 description End-user and service devices
+    14	 network-object host 192.168.0.1
+    15	 network-object host 192.168.0.100
+    16	 network-object host 10.10.10.10
+    17	
+
+Exported objects from: reports/10.10.10.10/cisco/campus-sw-access01.cfg
+Serialized objects to: reports/10.10.10.10/cisco/.objects/campus-sw-access01.list
+
+     1	object-group network Floor-Networks--MTc0ODk5ODUxNzYyOTQzNzAwMAo--  description End-user and service devices--MTc0ODk5ODUxNzYyOTQzNzAwMAo--  network-object host 192.168.0.1--MTc0ODk5ODUxNzYyOTQzNzAwMAo--  network-object host 192.168.0.100--MTc0ODk5ODUxNzYyOTQzNzAwMAo--  network-object host 10.10.10.10
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lp26wDBpdF/network-configs--ips.list ]
+Search Listing: [ 10.0.1.2, ... ,10.0.1.2 ] (1)
+
+Target Config: [ .cache/resources/misc/switch1.conf ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  401 Jun  3 17:55 .cache/resources/misc/switch1.conf
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="10.0.1.2, ... ,10.0.1.2" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/misc/switch1.conf
+
+Configuration File [ reports/10.0.1.2/misc/switch1.conf ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": ""
+     7	}
+     8	
+     9	interface Vlan10
+    10	 ip address 10.0.1.2 255.255.255.0
+    11	
+
+Exported objects from: reports/10.0.1.2/misc/switch1.conf
+Serialized objects to: reports/10.0.1.2/misc/.objects/switch1.list
+
+     1	interface Vlan10--MTc0ODk5ODUxNzU4NjExNjAwMAo--  ip address 10.0.1.2 255.255.255.0
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.bo2FvWYldp/network-configs--ips.list ]
+Search Listing: [ 172.31.255.254, ... ,172.31.255.254 ] (1)
+
+Target Config: [ .cache/resources/misc/switch1.conf ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  401 Jun  3 17:55 .cache/resources/misc/switch1.conf
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="172.31.255.254, ... ,172.31.255.254" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/misc/switch1.conf
+
+Configuration File [ reports/172.31.255.254/misc/switch1.conf ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": ""
+     7	}
+     8	
+     9	interface Vlan1
+    10	 ip address 172.31.255.254 255.255.255.0
+    11	
+
+Exported objects from: reports/172.31.255.254/misc/switch1.conf
+Serialized objects to: reports/172.31.255.254/misc/.objects/switch1.list
+
+     1	interface Vlan1--MTc0ODk5ODUxNzU4ODY2NDAwMAo--  ip address 172.31.255.254 255.255.255.0
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.HaNFIx0Tdd/network-configs--ips.list ]
+Search Listing: [ 192.168.1.11, ... ,192.168.1.11 ] (1)
+
+Target Config: [ .cache/resources/cisco/branch-isr-02.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  962 Jun  3 17:55 .cache/resources/cisco/branch-isr-02.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="192.168.1.11, ... ,192.168.1.11" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/cisco/branch-isr-02.cfg
+
+Configuration File [ reports/192.168.1.11/cisco/branch-isr-02.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "16.9",
+     5	  "domain": "",
+     6	  "hostname": "branch-isr-02"
+     7	}
+     8	
+     9	version 16.9
+    10	hostname branch-isr-02
+    11	
+    12	object-group network Lantern-DMZ
+    13	 description Protected but public-facing zone
+    14	 network-object host 172.18.1.20
+    15	 network-object host 192.168.1.11
+    16	
+
+Exported objects from: reports/192.168.1.11/cisco/branch-isr-02.cfg
+Serialized objects to: reports/192.168.1.11/cisco/.objects/branch-isr-02.list
+
+     1	object-group network Lantern-DMZ--MTc0ODk5ODUxNzYzMTM3NjAwMAo--  description Protected but public-facing zone--MTc0ODk5ODUxNzYzMTM3NjAwMAo--  network-object host 172.18.1.20--MTc0ODk5ODUxNzYzMTM3NjAwMAo--  network-object host 192.168.1.11
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.nTfrwNKSjs/network-configs--ips.list ]
+Search Listing: [ 192.0.2.50, ... ,192.0.2.50 ] (1)
+
+Target Config: [ .cache/resources/cisco/perimeter-fw1.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  1061 Jun  3 17:55 .cache/resources/cisco/perimeter-fw1.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="192.0.2.50, ... ,192.0.2.50" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/cisco/perimeter-fw1.cfg
+
+Configuration File [ reports/192.0.2.50/cisco/perimeter-fw1.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "ASA",
+     4	  "version": "9.14(3)",
+     5	  "domain": "edge.dc.example.com",
+     6	  "hostname": "perimeter-fw1"
+     7	}
+     8	
+     9	ASA Version 9.14(3)
+    10	hostname perimeter-fw1
+    11	domain-name edge.dc.example.com
+    12	
+    13	object-group network Avengers-DMZ
+    14	 description Public access layer
+    15	 network-object host 192.0.2.50
+    16	 network-object host 203.0.113.25
+    17	 network-object 192.168.2.0 255.255.255.0
+    18	
+
+Exported objects from: reports/192.0.2.50/cisco/perimeter-fw1.cfg
+Serialized objects to: reports/192.0.2.50/cisco/.objects/perimeter-fw1.list
+
+     1	object-group network Avengers-DMZ--MTc0ODk5ODUxNzY0MzYzNDAwMAo--  description Public access layer--MTc0ODk5ODUxNzY0MzYzNDAwMAo--  network-object host 192.0.2.50--MTc0ODk5ODUxNzY0MzYzNDAwMAo--  network-object host 203.0.113.25--MTc0ODk5ODUxNzY0MzYzNDAwMAo--  network-object 192.168.2.0 255.255.255.0
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Ieq23wRojb/network-configs--ips.list ]
+Search Listing: [ 192.168.2.12, ... ,192.168.2.12 ] (1)
+
+Target Config: [ .cache/resources/cisco/branch-isr-02.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  962 Jun  3 17:55 .cache/resources/cisco/branch-isr-02.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="192.168.2.12, ... ,192.168.2.12" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/cisco/branch-isr-02.cfg
+
+Configuration File [ reports/192.168.2.12/cisco/branch-isr-02.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "16.9",
+     5	  "domain": "",
+     6	  "hostname": "branch-isr-02"
+     7	}
+     8	
+     9	version 16.9
+    10	hostname branch-isr-02
+    11	
+    12	interface GigabitEthernet0/0/1
+    13	 ip address 192.168.2.12 255.255.255.0
+    14	 description Workstation LAN
+    15	
+    16	object-group network Hydra-Edge
+    17	 description Remote site uplink
+    18	 network-object host 192.168.2.12
+    19	 network-object host 198.51.100.75
+    20	
+
+Exported objects from: reports/192.168.2.12/cisco/branch-isr-02.cfg
+Serialized objects to: reports/192.168.2.12/cisco/.objects/branch-isr-02.list
+
+     1	interface GigabitEthernet0/0/1--MTc0ODk5ODUxNzYzMTcyNDAwMAo--  ip address 192.168.2.12 255.255.255.0--MTc0ODk5ODUxNzYzMTcyNDAwMAo--  description Workstation LAN
+     2	object-group network Hydra-Edge--MTc0ODk5ODUxNzYzMTcyNDAwMAo--  description Remote site uplink--MTc0ODk5ODUxNzYzMTcyNDAwMAo--  network-object host 192.168.2.12--MTc0ODk5ODUxNzYzMTcyNDAwMAo--  network-object host 198.51.100.75
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.HV7LcGM0Aj/network-configs--ips.list ]
+Search Listing: [ 192.168.0.100, ... ,192.168.0.100 ] (1)
+
+Target Config: [ .cache/resources/cisco/access-sw1-west.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  601 Jun  3 17:55 .cache/resources/cisco/access-sw1-west.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="192.168.0.100, ... ,192.168.0.100" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/cisco/access-sw1-west.cfg
+
+Configuration File [ reports/192.168.0.100/cisco/access-sw1-west.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "12.4",
+     5	  "domain": "",
+     6	  "hostname": "access-sw1-west"
+     7	}
+     8	
+     9	version 12.4
+    10	hostname access-sw1-west
+    11	
+    12	interface Vlan100
+    13	 ip address 192.168.0.100 255.255.255.0
+    14	 description Guest VLAN Gateway
+    15	
+    16	object-group network MGMT-ACCESS
+    17	 description Management objects
+    18	 network-object host 192.168.0.1
+    19	 network-object host 192.168.0.100
+    20	 network-object host 10.10.10.10
+    21	
+
+Exported objects from: reports/192.168.0.100/cisco/access-sw1-west.cfg
+Serialized objects to: reports/192.168.0.100/cisco/.objects/access-sw1-west.list
+
+     1	interface Vlan100--MTc0ODk5ODUxNzY3MDI4NjAwMAo--  ip address 192.168.0.100 255.255.255.0--MTc0ODk5ODUxNzY3MDI4NjAwMAo--  description Guest VLAN Gateway
+     2	object-group network MGMT-ACCESS--MTc0ODk5ODUxNzY3MDI4NjAwMAo--  description Management objects--MTc0ODk5ODUxNzY3MDI4NjAwMAo--  network-object host 192.168.0.1--MTc0ODk5ODUxNzY3MDI4NjAwMAo--  network-object host 192.168.0.100--MTc0ODk5ODUxNzY3MDI4NjAwMAo--  network-object host 10.10.10.10
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.bMeHoDvAbA/network-configs--ips.list ]
+Search Listing: [ 172.18.1.20, ... ,172.18.1.20 ] (1)
+
+Target Config: [ .cache/resources/misc/fw1.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  882 Jun  3 17:55 .cache/resources/misc/fw1.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="172.18.1.20, ... ,172.18.1.20" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/misc/fw1.cfg
+
+Configuration File [ reports/172.18.1.20/misc/fw1.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": ""
+     7	}
+     8	
+     9	object-group network Fortress-Wireless
+    10	 description Secure wireless access layer
+    11	 network-object host 172.18.1.20
+    12	 network-object host 192.168.1.10
+    13	
+
+Exported objects from: reports/172.18.1.20/misc/fw1.cfg
+Serialized objects to: reports/172.18.1.20/misc/.objects/fw1.list
+
+     1	object-group network Fortress-Wireless--MTc0ODk5ODUxNzcwNzgyNzAwMAo--  description Secure wireless access layer--MTc0ODk5ODUxNzcwNzgyNzAwMAo--  network-object host 172.18.1.20--MTc0ODk5ODUxNzcwNzgyNzAwMAo--  network-object host 192.168.1.10
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.HV7LcGM0Aj/network-configs--ips.list ]
+Search Listing: [ 192.168.0.100, ... ,192.168.0.100 ] (1)
+
+Target Config: [ .cache/resources/cisco/campus-sw-access01.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  415 Jun  3 17:55 .cache/resources/cisco/campus-sw-access01.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="192.168.0.100, ... ,192.168.0.100" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/cisco/campus-sw-access01.cfg
+
+Configuration File [ reports/192.168.0.100/cisco/campus-sw-access01.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "12.2",
+     5	  "domain": "",
+     6	  "hostname": "campus-sw-access01"
+     7	}
+     8	
+     9	version 12.2
+    10	hostname campus-sw-access01
+    11	
+    12	object-group network Floor-Networks
+    13	 description End-user and service devices
+    14	 network-object host 192.168.0.1
+    15	 network-object host 192.168.0.100
+    16	 network-object host 10.10.10.10
+    17	
+
+Exported objects from: reports/192.168.0.100/cisco/campus-sw-access01.cfg
+Serialized objects to: reports/192.168.0.100/cisco/.objects/campus-sw-access01.list
+
+     1	object-group network Floor-Networks--MTc0ODk5ODUxNzcxODY0NDAwMAo--  description End-user and service devices--MTc0ODk5ODUxNzcxODY0NDAwMAo--  network-object host 192.168.0.1--MTc0ODk5ODUxNzcxODY0NDAwMAo--  network-object host 192.168.0.100--MTc0ODk5ODUxNzcxODY0NDAwMAo--  network-object host 10.10.10.10
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Kh9knoVv8H/network-configs--ips.list ]
+Search Listing: [ 192.168.100.100, ... ,192.168.100.100 ] (1)
+
+Target Config: [ .cache/resources/cisco/dmz-fw2-backup.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  1070 Jun  3 17:55 .cache/resources/cisco/dmz-fw2-backup.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="192.168.100.100, ... ,192.168.100.100" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/cisco/dmz-fw2-backup.cfg
+
+Configuration File [ reports/192.168.100.100/cisco/dmz-fw2-backup.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "ASA",
+     4	  "version": "9.12(4)",
+     5	  "domain": "global.dmz.example.net",
+     6	  "hostname": "dmz-fw2-backup"
+     7	}
+     8	
+     9	ASA Version 9.12(4)
+    10	hostname dmz-fw2-backup
+    11	domain-name global.dmz.example.net
+    12	
+    13	interface GigabitEthernet0/1
+    14	 nameif inside
+    15	 ip address 192.168.100.100 255.255.255.0
+    16	 description Inside LAN segment
+    17	
+    18	object network Titan-WLAN-Host
+    19	 host 192.168.100.100
+    20	 description Backup inside NAT IP
+    21	
+    22	object-group network Sector-Wireless
+    23	 description Staff WiFi clients
+    24	 network-object host 192.168.100.100
+    25	 network-object host 10.10.10.10
+    26	
+
+Exported objects from: reports/192.168.100.100/cisco/dmz-fw2-backup.cfg
+Serialized objects to: reports/192.168.100.100/cisco/.objects/dmz-fw2-backup.list
+
+     1	interface GigabitEthernet0/1--MTc0ODk5ODUxNzc0MTk0MzAwMAo--  nameif inside--MTc0ODk5ODUxNzc0MTk0MzAwMAo--  ip address 192.168.100.100 255.255.255.0--MTc0ODk5ODUxNzc0MTk0MzAwMAo--  description Inside LAN segment
+     2	object network Titan-WLAN-Host--MTc0ODk5ODUxNzc0MTk0MzAwMAo--  host 192.168.100.100--MTc0ODk5ODUxNzc0MTk0MzAwMAo--  description Backup inside NAT IP
+     3	object-group network Sector-Wireless--MTc0ODk5ODUxNzc0MTk0MzAwMAo--  description Staff WiFi clients--MTc0ODk5ODUxNzc0MTk0MzAwMAo--  network-object host 192.168.100.100--MTc0ODk5ODUxNzc0MTk0MzAwMAo--  network-object host 10.10.10.10
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.TuqHJjPJSV/network-configs--ips.list ]
+Search Listing: [ 192.168.1.10, ... ,192.168.1.10 ] (1)
+
+Target Config: [ .cache/resources/misc/fw1.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  882 Jun  3 17:55 .cache/resources/misc/fw1.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="192.168.1.10, ... ,192.168.1.10" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/misc/fw1.cfg
+
+Configuration File [ reports/192.168.1.10/misc/fw1.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": ""
+     7	}
+     8	
+     9	object-group network Fortress-Wireless
+    10	 description Secure wireless access layer
+    11	 network-object host 172.18.1.20
+    12	 network-object host 192.168.1.10
+    13	
+
+Exported objects from: reports/192.168.1.10/misc/fw1.cfg
+Serialized objects to: reports/192.168.1.10/misc/.objects/fw1.list
+
+     1	object-group network Fortress-Wireless--MTc0ODk5ODUxNzc0MDI5NjAwMAo--  description Secure wireless access layer--MTc0ODk5ODUxNzc0MDI5NjAwMAo--  network-object host 172.18.1.20--MTc0ODk5ODUxNzc0MDI5NjAwMAo--  network-object host 192.168.1.10
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.TuqHJjPJSV/network-configs--ips.list ]
+Search Listing: [ 192.168.1.10, ... ,192.168.1.10 ] (1)
+
+Target Config: [ .cache/resources/fortinet/fg-branch-vpn-01.cfg ] ( fortinet )
+-rw-r--r--  1 emvaldes  staff  1245 Jun  3 17:55 .cache/resources/fortinet/fg-branch-vpn-01.cfg
+
+Executing AWK script [ ./scripts/extract/fortinet-configs.awk ]
+/usr/bin/awk -v targets="192.168.1.10, ... ,192.168.1.10" \
+             -f ./scripts/extract/fortinet-configs.awk \
+                .cache/resources/fortinet/fg-branch-vpn-01.cfg
+
+Configuration File [ reports/192.168.1.10/fortinet/fg-branch-vpn-01.cfg ]
+
+     1	{
+     2	  "vendor": "fortinet",
+     3	  "model": "FortiGate-60F",
+     4	  "version": "v7.2.5.F",
+     5	  "domain": "",
+     6	  "hostname": "fg-branch-vpn-01"
+     7	}
+     8	
+     9	#hostname="fg-branch-vpn-01"
+    10	#model="FortiGate-60F"
+    11	#config-version=FGT_60F-v7.2.5.F-build1517-230421
+    12	
+    13	config firewall address
+    14	 edit "Panther-Vault"
+    15	  set subnet 192.168.1.10 255.255.255.255
+    16	  set comment "Wakandan data store"
+    17	 next
+    18	end
+    19	
+
+Exported objects from: reports/192.168.1.10/fortinet/fg-branch-vpn-01.cfg
+Serialized objects to: reports/192.168.1.10/fortinet/.objects/fg-branch-vpn-01.list
+
+     1	config firewall address--MTc0ODk5ODUxNzY3MTc1MzAwMAo--  edit "Panther-Vault"--MTc0ODk5ODUxNzY3MTc1MzAwMAo--   set subnet 192.168.1.10 255.255.255.255--MTc0ODk5ODUxNzY3MTc1MzAwMAo--   set comment "Wakandan data store"--MTc0ODk5ODUxNzY3MTc1MzAwMAo--  next--MTc0ODk5ODUxNzY3MTc1MzAwMAo-- end
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.gVFIkTVW0O/network-configs--ips.list ]
+Search Listing: [ 10.10.10.10, ... ,10.10.10.10 ] (1)
+
+Target Config: [ .cache/resources/cisco/dmz-fw2-backup.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  1070 Jun  3 17:55 .cache/resources/cisco/dmz-fw2-backup.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="10.10.10.10, ... ,10.10.10.10" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/cisco/dmz-fw2-backup.cfg
+
+Configuration File [ reports/10.10.10.10/cisco/dmz-fw2-backup.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "ASA",
+     4	  "version": "9.12(4)",
+     5	  "domain": "global.dmz.example.net",
+     6	  "hostname": "dmz-fw2-backup"
+     7	}
+     8	
+     9	ASA Version 9.12(4)
+    10	hostname dmz-fw2-backup
+    11	domain-name global.dmz.example.net
+    12	
+    13	interface GigabitEthernet0/0
+    14	 nameif guest
+    15	 ip address 10.10.10.10 255.255.255.0
+    16	 description Guest access interface
+    17	
+    18	object network Shield-WiFi-Alias
+    19	 host 10.10.10.10
+    20	 description Guest NAT
+    21	
+    22	object-group network Sector-Wireless
+    23	 description Staff WiFi clients
+    24	 network-object host 192.168.100.100
+    25	 network-object host 10.10.10.10
+    26	
+
+Exported objects from: reports/10.10.10.10/cisco/dmz-fw2-backup.cfg
+Serialized objects to: reports/10.10.10.10/cisco/.objects/dmz-fw2-backup.list
+
+     1	interface GigabitEthernet0/0--MTc0ODk5ODUxNzgwNzE2MjAwMAo--  nameif guest--MTc0ODk5ODUxNzgwNzE2MjAwMAo--  ip address 10.10.10.10 255.255.255.0--MTc0ODk5ODUxNzgwNzE2MjAwMAo--  description Guest access interface
+     2	object network Shield-WiFi-Alias--MTc0ODk5ODUxNzgwNzE2MjAwMAo--  host 10.10.10.10--MTc0ODk5ODUxNzgwNzE2MjAwMAo--  description Guest NAT
+     3	object-group network Sector-Wireless--MTc0ODk5ODUxNzgwNzE2MjAwMAo--  description Staff WiFi clients--MTc0ODk5ODUxNzgwNzE2MjAwMAo--  network-object host 192.168.100.100--MTc0ODk5ODUxNzgwNzE2MjAwMAo--  network-object host 10.10.10.10
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qlMhqaGC6t/network-configs--ips.list ]
+Search Listing: [ 192.168.0.1, ... ,192.168.0.1 ] (1)
+
+Target Config: [ .cache/resources/cisco/campus-sw-access01.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  415 Jun  3 17:55 .cache/resources/cisco/campus-sw-access01.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="192.168.0.1, ... ,192.168.0.1" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/cisco/campus-sw-access01.cfg
+
+Configuration File [ reports/192.168.0.1/cisco/campus-sw-access01.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "12.2",
+     5	  "domain": "",
+     6	  "hostname": "campus-sw-access01"
+     7	}
+     8	
+     9	version 12.2
+    10	hostname campus-sw-access01
+    11	
+    12	interface Vlan1
+    13	 ip address 192.168.0.1 255.255.255.0
+    14	 description Switch Mgmt
+    15	
+    16	object-group network Floor-Networks
+    17	 description End-user and service devices
+    18	 network-object host 192.168.0.1
+    19	 network-object host 192.168.0.100
+    20	 network-object host 10.10.10.10
+    21	
+
+Exported objects from: reports/192.168.0.1/cisco/campus-sw-access01.cfg
+Serialized objects to: reports/192.168.0.1/cisco/.objects/campus-sw-access01.list
+
+     1	interface Vlan1--MTc0ODk5ODUxNzgwMjM4NjAwMAo--  ip address 192.168.0.1 255.255.255.0--MTc0ODk5ODUxNzgwMjM4NjAwMAo--  description Switch Mgmt
+     2	object-group network Floor-Networks--MTc0ODk5ODUxNzgwMjM4NjAwMAo--  description End-user and service devices--MTc0ODk5ODUxNzgwMjM4NjAwMAo--  network-object host 192.168.0.1--MTc0ODk5ODUxNzgwMjM4NjAwMAo--  network-object host 192.168.0.100--MTc0ODk5ODUxNzgwMjM4NjAwMAo--  network-object host 10.10.10.10
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Ieq23wRojb/network-configs--ips.list ]
+Search Listing: [ 192.168.2.12, ... ,192.168.2.12 ] (1)
+
+Target Config: [ .cache/resources/fortinet/fg-branch-vpn-01.cfg ] ( fortinet )
+-rw-r--r--  1 emvaldes  staff  1245 Jun  3 17:55 .cache/resources/fortinet/fg-branch-vpn-01.cfg
+
+Executing AWK script [ ./scripts/extract/fortinet-configs.awk ]
+/usr/bin/awk -v targets="192.168.2.12, ... ,192.168.2.12" \
+             -f ./scripts/extract/fortinet-configs.awk \
+                .cache/resources/fortinet/fg-branch-vpn-01.cfg
+
+Configuration File [ reports/192.168.2.12/fortinet/fg-branch-vpn-01.cfg ]
+
+     1	{
+     2	  "vendor": "fortinet",
+     3	  "model": "FortiGate-60F",
+     4	  "version": "v7.2.5.F",
+     5	  "domain": "",
+     6	  "hostname": "fg-branch-vpn-01"
+     7	}
+     8	
+     9	#hostname="fg-branch-vpn-01"
+    10	#model="FortiGate-60F"
+    11	#config-version=FGT_60F-v7.2.5.F-build1517-230421
+    12	
+    13	config system interface
+    14	 edit "internal"
+    15	  set ip 192.168.2.12 255.255.255.0
+    16	  set alias "User LAN"
+    17	 next
+    18	end
+    19	
+    20	config firewall address
+    21	 edit "Branch-Gateway"
+    22	  set subnet 192.168.2.12 255.255.255.255
+    23	  set comment "Primary LAN gateway"
+    24	 next
+    25	end
+    26	
+
+Exported objects from: reports/192.168.2.12/fortinet/fg-branch-vpn-01.cfg
+Serialized objects to: reports/192.168.2.12/fortinet/.objects/fg-branch-vpn-01.list
+
+     1	config system interface--MTc0ODk5ODUxNzgwNjkxOTAwMAo--  edit "internal"--MTc0ODk5ODUxNzgwNjkxOTAwMAo--   set ip 192.168.2.12 255.255.255.0--MTc0ODk5ODUxNzgwNjkxOTAwMAo--   set alias "User LAN"--MTc0ODk5ODUxNzgwNjkxOTAwMAo--  next--MTc0ODk5ODUxNzgwNjkxOTAwMAo-- end
+     2	config firewall address--MTc0ODk5ODUxNzgwNjkxOTAwMAo--  edit "Branch-Gateway"--MTc0ODk5ODUxNzgwNjkxOTAwMAo--   set subnet 192.168.2.12 255.255.255.255--MTc0ODk5ODUxNzgwNjkxOTAwMAo--   set comment "Primary LAN gateway"--MTc0ODk5ODUxNzgwNjkxOTAwMAo--  next--MTc0ODk5ODUxNzgwNjkxOTAwMAo-- end
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.HaNFIx0Tdd/network-configs--ips.list ]
+Search Listing: [ 192.168.1.11, ... ,192.168.1.11 ] (1)
+
+Target Config: [ .cache/resources/fortinet/fg-campus-core.cfg ] ( fortinet )
+-rw-r--r--  1 emvaldes  staff  1082 Jun  3 17:55 .cache/resources/fortinet/fg-campus-core.cfg
+
+Executing AWK script [ ./scripts/extract/fortinet-configs.awk ]
+/usr/bin/awk -v targets="192.168.1.11, ... ,192.168.1.11" \
+             -f ./scripts/extract/fortinet-configs.awk \
+                .cache/resources/fortinet/fg-campus-core.cfg
+
+Configuration File [ reports/192.168.1.11/fortinet/fg-campus-core.cfg ]
+
+     1	{
+     2	  "vendor": "fortinet",
+     3	  "model": "FortiGate-200F",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": "fg-campus-core"
+     7	}
+     8	
+     9	#hostname="fg-campus-core"
+    10	#model="FortiGate-200F"
+    11	
+    12	config firewall address
+    13	 edit "Cap-HQ"
+    14	  set subnet 192.168.1.11 255.255.255.255
+    15	  set comment "Captain America’s secure endpoint"
+    16	 next
+    17	end
+    18	
+
+Exported objects from: reports/192.168.1.11/fortinet/fg-campus-core.cfg
+Serialized objects to: reports/192.168.1.11/fortinet/.objects/fg-campus-core.list
+
+     1	config firewall address--MTc0ODk5ODUxNzgwNjM4OTAwMAo--  edit "Cap-HQ"--MTc0ODk5ODUxNzgwNjM4OTAwMAo--   set subnet 192.168.1.11 255.255.255.255--MTc0ODk5ODUxNzgwNjM4OTAwMAo--   set comment "Captain America’s secure endpoint"--MTc0ODk5ODUxNzgwNjM4OTAwMAo--  next--MTc0ODk5ODUxNzgwNjM4OTAwMAo-- end
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.blnL7Hpozh/network-configs--ips.list ]
+Search Listing: [ 10.0.2.3, ... ,10.0.2.3 ] (1)
+
+Target Config: [ .cache/resources/misc/fw3.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  1140 Jun  3 17:55 .cache/resources/misc/fw3.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="10.0.2.3, ... ,10.0.2.3" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/misc/fw3.cfg
+
+Configuration File [ reports/10.0.2.3/misc/fw3.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": ""
+     7	}
+     8	
+     9	object-group network Wakanda-Core
+    10	 description National Core Routing Zone
+    11	 network-object host 192.168.1.10
+    12	 network-object host 10.0.2.3
+    13	 network-object 10.0.0.0 255.255.255.0
+    14	
+    15	object network Panther-Gateway
+    16	 host 10.0.2.3
+    17	 description Secure outbound concentrator
+    18	
+
+Exported objects from: reports/10.0.2.3/misc/fw3.cfg
+Serialized objects to: reports/10.0.2.3/misc/.objects/fw3.list
+
+     1	object-group network Wakanda-Core--MTc0ODk5ODUxNzgxMDM4OTAwMAo--  description National Core Routing Zone--MTc0ODk5ODUxNzgxMDM4OTAwMAo--  network-object host 192.168.1.10--MTc0ODk5ODUxNzgxMDM4OTAwMAo--  network-object host 10.0.2.3--MTc0ODk5ODUxNzgxMDM4OTAwMAo--  network-object 10.0.0.0 255.255.255.0
+     2	object network Panther-Gateway--MTc0ODk5ODUxNzgxMDM4OTAwMAo--  host 10.0.2.3--MTc0ODk5ODUxNzgxMDM4OTAwMAo--  description Secure outbound concentrator
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2AvjEeaBAp/network-configs--ips.list ]
+Search Listing: [ 172.16.0.5, ... ,172.16.0.5 ] (1)
+
+Target Config: [ .cache/resources/misc/fw3.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  1140 Jun  3 17:55 .cache/resources/misc/fw3.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="172.16.0.5, ... ,172.16.0.5" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/misc/fw3.cfg
+
+Configuration File [ reports/172.16.0.5/misc/fw3.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": ""
+     7	}
+     8	
+     9	object-group network Panther-Edge
+    10	 description Internet-facing proxy systems
+    11	 network-object host 203.0.113.25
+    12	 network-object host 172.16.0.5
+    13	
+    14	object network Edge-Terminal
+    15	 host 172.16.0.5
+    16	 description Internet firewall handoff
+    17	
+
+Exported objects from: reports/172.16.0.5/misc/fw3.cfg
+Serialized objects to: reports/172.16.0.5/misc/.objects/fw3.list
+
+     1	object-group network Panther-Edge--MTc0ODk5ODUxNzc3Mjg4MjAwMAo--  description Internet-facing proxy systems--MTc0ODk5ODUxNzc3Mjg4MjAwMAo--  network-object host 203.0.113.25--MTc0ODk5ODUxNzc3Mjg4MjAwMAo--  network-object host 172.16.0.5
+     2	object network Edge-Terminal--MTc0ODk5ODUxNzc3Mjg4MjAwMAo--  host 172.16.0.5--MTc0ODk5ODUxNzc3Mjg4MjAwMAo--  description Internet firewall handoff
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.sGvPTeLClJ/network-configs--ips.list ]
+Search Listing: [ 172.16.1.6, ... ,172.16.1.6 ] (1)
+
+Target Config: [ .cache/resources/misc/switch3.conf ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  336 Jun  3 17:55 .cache/resources/misc/switch3.conf
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="172.16.1.6, ... ,172.16.1.6" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/misc/switch3.conf
+
+Configuration File [ reports/172.16.1.6/misc/switch3.conf ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": ""
+     7	}
+     8	
+     9	interface Vlan2
+    10	 ip address 172.16.1.6 255.255.255.0
+    11	
+
+Exported objects from: reports/172.16.1.6/misc/switch3.conf
+Serialized objects to: reports/172.16.1.6/misc/.objects/switch3.list
+
+     1	interface Vlan2--MTc0ODk5ODUxNzg3NDUyNDAwMAo--  ip address 172.16.1.6 255.255.255.0
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.sGvPTeLClJ/network-configs--ips.list ]
+Search Listing: [ 172.16.1.6, ... ,172.16.1.6 ] (1)
+
+Target Config: [ .cache/resources/fortinet/fg-campus-core.cfg ] ( fortinet )
+-rw-r--r--  1 emvaldes  staff  1082 Jun  3 17:55 .cache/resources/fortinet/fg-campus-core.cfg
+
+Executing AWK script [ ./scripts/extract/fortinet-configs.awk ]
+/usr/bin/awk -v targets="172.16.1.6, ... ,172.16.1.6" \
+             -f ./scripts/extract/fortinet-configs.awk \
+                .cache/resources/fortinet/fg-campus-core.cfg
+
+Configuration File [ reports/172.16.1.6/fortinet/fg-campus-core.cfg ]
+
+     1	{
+     2	  "vendor": "fortinet",
+     3	  "model": "FortiGate-200F",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": "fg-campus-core"
+     7	}
+     8	
+     9	#hostname="fg-campus-core"
+    10	#model="FortiGate-200F"
+    11	
+    12	config firewall address
+    13	 edit "Hawkeye-Nest"
+    14	  set subnet 172.16.1.6 255.255.255.255
+    15	  set comment "Remote sniper node"
+    16	 next
+    17	end
+    18	
+
+Exported objects from: reports/172.16.1.6/fortinet/fg-campus-core.cfg
+Serialized objects to: reports/172.16.1.6/fortinet/.objects/fg-campus-core.list
+
+     1	config firewall address--MTc0ODk5ODUxNzc4MTMyODAwMAo--  edit "Hawkeye-Nest"--MTc0ODk5ODUxNzc4MTMyODAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0ODk5ODUxNzc4MTMyODAwMAo--   set comment "Remote sniper node"--MTc0ODk5ODUxNzc4MTMyODAwMAo--  next--MTc0ODk5ODUxNzc4MTMyODAwMAo-- end
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.nB02GPse4w/network-configs--ips.list ]
+Search Listing: [ 203.0.113.25, ... ,203.0.113.25 ] (1)
+
+Target Config: [ .cache/resources/cisco/perimeter-fw1.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  1061 Jun  3 17:55 .cache/resources/cisco/perimeter-fw1.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="203.0.113.25, ... ,203.0.113.25" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/cisco/perimeter-fw1.cfg
+
+Configuration File [ reports/203.0.113.25/cisco/perimeter-fw1.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "ASA",
+     4	  "version": "9.14(3)",
+     5	  "domain": "edge.dc.example.com",
+     6	  "hostname": "perimeter-fw1"
+     7	}
+     8	
+     9	ASA Version 9.14(3)
+    10	hostname perimeter-fw1
+    11	domain-name edge.dc.example.com
+    12	
+    13	interface GigabitEthernet0/0
+    14	 nameif outside
+    15	 security-level 0
+    16	 ip address 203.0.113.25 255.255.255.0
+    17	 description External Internet-facing Interface
+    18	
+    19	object network NAT-Edge
+    20	 host 203.0.113.25
+    21	 description Internet-bound IP NAT
+    22	
+    23	object-group network Avengers-DMZ
+    24	 description Public access layer
+    25	 network-object host 192.0.2.50
+    26	 network-object host 203.0.113.25
+    27	 network-object 192.168.2.0 255.255.255.0
+    28	
+    29	object-group network Panther-Edge
+    30	 description Internet-facing proxy systems
+    31	 network-object host 203.0.113.25
+    32	 network-object host 172.16.0.5
+    33	
+
+Exported objects from: reports/203.0.113.25/cisco/perimeter-fw1.cfg
+Serialized objects to: reports/203.0.113.25/cisco/.objects/perimeter-fw1.list
+
+     1	interface GigabitEthernet0/0--MTc0ODk5ODUxNzg0NTE0NjAwMAo--  nameif outside--MTc0ODk5ODUxNzg0NTE0NjAwMAo--  security-level 0--MTc0ODk5ODUxNzg0NTE0NjAwMAo--  ip address 203.0.113.25 255.255.255.0--MTc0ODk5ODUxNzg0NTE0NjAwMAo--  description External Internet-facing Interface
+     2	object network NAT-Edge--MTc0ODk5ODUxNzg0NTE0NjAwMAo--  host 203.0.113.25--MTc0ODk5ODUxNzg0NTE0NjAwMAo--  description Internet-bound IP NAT
+     3	object-group network Avengers-DMZ--MTc0ODk5ODUxNzg0NTE0NjAwMAo--  description Public access layer--MTc0ODk5ODUxNzg0NTE0NjAwMAo--  network-object host 192.0.2.50--MTc0ODk5ODUxNzg0NTE0NjAwMAo--  network-object host 203.0.113.25--MTc0ODk5ODUxNzg0NTE0NjAwMAo--  network-object 192.168.2.0 255.255.255.0
+     4	object-group network Panther-Edge--MTc0ODk5ODUxNzg0NTE0NjAwMAo--  description Internet-facing proxy systems--MTc0ODk5ODUxNzg0NTE0NjAwMAo--  network-object host 203.0.113.25--MTc0ODk5ODUxNzg0NTE0NjAwMAo--  network-object host 172.16.0.5
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.dOB7fSjIB5/network-configs--ips.list ]
+Search Listing: [ 198.51.100.75, ... ,198.51.100.75 ] (1)
+
+Target Config: [ .cache/resources/cisco/dmz-fw2-backup.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  1070 Jun  3 17:55 .cache/resources/cisco/dmz-fw2-backup.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="198.51.100.75, ... ,198.51.100.75" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/cisco/dmz-fw2-backup.cfg
+
+Configuration File [ reports/198.51.100.75/cisco/dmz-fw2-backup.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "ASA",
+     4	  "version": "9.12(4)",
+     5	  "domain": "global.dmz.example.net",
+     6	  "hostname": "dmz-fw2-backup"
+     7	}
+     8	
+     9	ASA Version 9.12(4)
+    10	hostname dmz-fw2-backup
+    11	domain-name global.dmz.example.net
+    12	
+    13	interface GigabitEthernet0/2
+    14	 nameif outside
+    15	 ip address 198.51.100.75 255.255.255.0
+    16	 description Outbound Internet NAT interface
+    17	
+
+Exported objects from: reports/198.51.100.75/cisco/dmz-fw2-backup.cfg
+Serialized objects to: reports/198.51.100.75/cisco/.objects/dmz-fw2-backup.list
+
+     1	interface GigabitEthernet0/2--MTc0ODk5ODUxNzg0NDMyMjAwMAo--  nameif outside--MTc0ODk5ODUxNzg0NDMyMjAwMAo--  ip address 198.51.100.75 255.255.255.0--MTc0ODk5ODUxNzg0NDMyMjAwMAo--  description Outbound Internet NAT interface
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Kh9knoVv8H/network-configs--ips.list ]
+Search Listing: [ 192.168.100.100, ... ,192.168.100.100 ] (1)
+
+Target Config: [ .cache/resources/fortinet/fg-campus-core.cfg ] ( fortinet )
+-rw-r--r--  1 emvaldes  staff  1082 Jun  3 17:55 .cache/resources/fortinet/fg-campus-core.cfg
+
+Executing AWK script [ ./scripts/extract/fortinet-configs.awk ]
+/usr/bin/awk -v targets="192.168.100.100, ... ,192.168.100.100" \
+             -f ./scripts/extract/fortinet-configs.awk \
+                .cache/resources/fortinet/fg-campus-core.cfg
+
+Configuration File [ reports/192.168.100.100/fortinet/fg-campus-core.cfg ]
+
+     1	{
+     2	  "vendor": "fortinet",
+     3	  "model": "FortiGate-200F",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": "fg-campus-core"
+     7	}
+     8	
+     9	#hostname="fg-campus-core"
+    10	#model="FortiGate-200F"
+    11	
+    12	config system interface
+    13	 edit "wifi"
+    14	  set ip 192.168.100.100 255.255.255.0
+    15	  set alias "Wireless VLAN"
+    16	 next
+    17	end
+    18	
+    19	config firewall address
+    20	 edit "Titan-WLAN-Host"
+    21	  set subnet 192.168.100.100 255.255.255.255
+    22	  set comment "Guest WiFi node"
+    23	 next
+    24	end
+    25	
+    26	config firewall address
+    27	 edit "Wanda-Field"
+    28	  set subnet 192.168.100.100 255.255.255.255
+    29	  set comment "Wanda’s chaos relay"
+    30	 next
+    31	end
+    32	
+
+Exported objects from: reports/192.168.100.100/fortinet/fg-campus-core.cfg
+Serialized objects to: reports/192.168.100.100/fortinet/.objects/fg-campus-core.list
+
+     1	config system interface--MTc0ODk5ODUxNzgzMDMwMDAwMAo--  edit "wifi"--MTc0ODk5ODUxNzgzMDMwMDAwMAo--   set ip 192.168.100.100 255.255.255.0--MTc0ODk5ODUxNzgzMDMwMDAwMAo--   set alias "Wireless VLAN"--MTc0ODk5ODUxNzgzMDMwMDAwMAo--  next--MTc0ODk5ODUxNzgzMDMwMDAwMAo-- end
+     2	config firewall address--MTc0ODk5ODUxNzgzMDMwMDAwMAo--  edit "Titan-WLAN-Host"--MTc0ODk5ODUxNzgzMDMwMDAwMAo--   set subnet 192.168.100.100 255.255.255.255--MTc0ODk5ODUxNzgzMDMwMDAwMAo--   set comment "Guest WiFi node"--MTc0ODk5ODUxNzgzMDMwMDAwMAo--  next--MTc0ODk5ODUxNzgzMDMwMDAwMAo-- end
+     3	config firewall address--MTc0ODk5ODUxNzgzMDMwMDAwMAo--  edit "Wanda-Field"--MTc0ODk5ODUxNzgzMDMwMDAwMAo--   set subnet 192.168.100.100 255.255.255.255--MTc0ODk5ODUxNzgzMDMwMDAwMAo--   set comment "Wanda’s chaos relay"--MTc0ODk5ODUxNzgzMDMwMDAwMAo--  next--MTc0ODk5ODUxNzgzMDMwMDAwMAo-- end
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Ieq23wRojb/network-configs--ips.list ]
+Search Listing: [ 192.168.2.12, ... ,192.168.2.12 ] (1)
+
+Target Config: [ .cache/resources/fortinet/fg-campus-core.cfg ] ( fortinet )
+-rw-r--r--  1 emvaldes  staff  1082 Jun  3 17:55 .cache/resources/fortinet/fg-campus-core.cfg
+
+Executing AWK script [ ./scripts/extract/fortinet-configs.awk ]
+/usr/bin/awk -v targets="192.168.2.12, ... ,192.168.2.12" \
+             -f ./scripts/extract/fortinet-configs.awk \
+                .cache/resources/fortinet/fg-campus-core.cfg
+
+Configuration File [ reports/192.168.2.12/fortinet/fg-campus-core.cfg ]
+
+     1	{
+     2	  "vendor": "fortinet",
+     3	  "model": "FortiGate-200F",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": "fg-campus-core"
+     7	}
+     8	
+     9	#hostname="fg-campus-core"
+    10	#model="FortiGate-200F"
+    11	
+    12	config firewall address
+    13	 edit "Vision-Link"
+    14	  set subnet 192.168.2.12 255.255.255.255
+    15	  set comment "Vision’s quantum channel"
+    16	 next
+    17	end
+    18	
+
+Exported objects from: reports/192.168.2.12/fortinet/fg-campus-core.cfg
+Serialized objects to: reports/192.168.2.12/fortinet/.objects/fg-campus-core.list
+
+     1	config firewall address--MTc0ODk5ODUxNzg4NDA4NDAwMAo--  edit "Vision-Link"--MTc0ODk5ODUxNzg4NDA4NDAwMAo--   set subnet 192.168.2.12 255.255.255.255--MTc0ODk5ODUxNzg4NDA4NDAwMAo--   set comment "Vision’s quantum channel"--MTc0ODk5ODUxNzg4NDA4NDAwMAo--  next--MTc0ODk5ODUxNzg4NDA4NDAwMAo-- end
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z3e0jlFAEz/network-configs--ips.list ]
+Search Listing: [ 10.0.0.1, ... ,10.0.0.1 ] (1)
+
+Target Config: [ .cache/resources/misc/switch1.conf ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  401 Jun  3 17:55 .cache/resources/misc/switch1.conf
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="10.0.0.1, ... ,10.0.0.1" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/misc/switch1.conf
+
+Configuration File [ reports/10.0.0.1/misc/switch1.conf ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": ""
+     7	}
+     8	
+     9	object-group network Avengers-Office
+    10	 description VLAN access layer
+    11	 network-object host 10.0.0.1
+    12	 network-object 192.168.12.0 255.255.255.0
+    13	
+
+Exported objects from: reports/10.0.0.1/misc/switch1.conf
+Serialized objects to: reports/10.0.0.1/misc/.objects/switch1.list
+
+     1	object-group network Avengers-Office--MTc0ODk5ODUxNzgyODM2NTAwMAo--  description VLAN access layer--MTc0ODk5ODUxNzgyODM2NTAwMAo--  network-object host 10.0.0.1--MTc0ODk5ODUxNzgyODM2NTAwMAo--  network-object 192.168.12.0 255.255.255.0
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z3e0jlFAEz/network-configs--ips.list ]
+Search Listing: [ 10.0.0.1, ... ,10.0.0.1 ] (1)
+
+Target Config: [ .cache/resources/misc/switch3.conf ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  336 Jun  3 17:55 .cache/resources/misc/switch3.conf
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="10.0.0.1, ... ,10.0.0.1" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/misc/switch3.conf
+
+Configuration File [ reports/10.0.0.1/misc/switch3.conf ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": ""
+     7	}
+     8	
+     9	interface Vlan1
+    10	 ip address 10.0.0.1 255.255.255.0
+    11	
+    12	object-group network Spider-Net
+    13	 description Web access switches
+    14	 network-object host 10.0.0.1
+    15	 network-object 192.168.12.0 255.255.255.0
+    16	
+
+Exported objects from: reports/10.0.0.1/misc/switch3.conf
+Serialized objects to: reports/10.0.0.1/misc/.objects/switch3.list
+
+     1	interface Vlan1--MTc0ODk5ODUxNzg0NzIxNjAwMAo--  ip address 10.0.0.1 255.255.255.0
+     2	object-group network Spider-Net--MTc0ODk5ODUxNzg0NzIxNjAwMAo--  description Web access switches--MTc0ODk5ODUxNzg0NzIxNjAwMAo--  network-object host 10.0.0.1--MTc0ODk5ODUxNzg0NzIxNjAwMAo--  network-object 192.168.12.0 255.255.255.0
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.gVFIkTVW0O/network-configs--ips.list ]
+Search Listing: [ 10.10.10.10, ... ,10.10.10.10 ] (1)
+
+Target Config: [ .cache/resources/fortinet/fg-campus-core.cfg ] ( fortinet )
+-rw-r--r--  1 emvaldes  staff  1082 Jun  3 17:55 .cache/resources/fortinet/fg-campus-core.cfg
+
+Executing AWK script [ ./scripts/extract/fortinet-configs.awk ]
+/usr/bin/awk -v targets="10.10.10.10, ... ,10.10.10.10" \
+             -f ./scripts/extract/fortinet-configs.awk \
+                .cache/resources/fortinet/fg-campus-core.cfg
+
+Configuration File [ reports/10.10.10.10/fortinet/fg-campus-core.cfg ]
+
+     1	{
+     2	  "vendor": "fortinet",
+     3	  "model": "FortiGate-200F",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": "fg-campus-core"
+     7	}
+     8	
+     9	#hostname="fg-campus-core"
+    10	#model="FortiGate-200F"
+    11	
+    12	config system interface
+    13	 edit "core"
+    14	  set ip 10.10.10.10 255.255.255.0
+    15	  set alias "Campus Core Transit"
+    16	 next
+    17	end
+    18	
+    19	config firewall address
+    20	 edit "Shield-WiFi"
+    21	  set subnet 10.10.10.10 255.255.255.255
+    22	  set comment "Wireless AP Gateway"
+    23	 next
+    24	end
+    25	
+
+Exported objects from: reports/10.10.10.10/fortinet/fg-campus-core.cfg
+Serialized objects to: reports/10.10.10.10/fortinet/.objects/fg-campus-core.list
+
+     1	config system interface--MTc0ODk5ODUxNzg4NDUzMjAwMAo--  edit "core"--MTc0ODk5ODUxNzg4NDUzMjAwMAo--   set ip 10.10.10.10 255.255.255.0--MTc0ODk5ODUxNzg4NDUzMjAwMAo--   set alias "Campus Core Transit"--MTc0ODk5ODUxNzg4NDUzMjAwMAo--  next--MTc0ODk5ODUxNzg4NDUzMjAwMAo-- end
+     2	config firewall address--MTc0ODk5ODUxNzg4NDUzMjAwMAo--  edit "Shield-WiFi"--MTc0ODk5ODUxNzg4NDUzMjAwMAo--   set subnet 10.10.10.10 255.255.255.255--MTc0ODk5ODUxNzg4NDUzMjAwMAo--   set comment "Wireless AP Gateway"--MTc0ODk5ODUxNzg4NDUzMjAwMAo--  next--MTc0ODk5ODUxNzg4NDUzMjAwMAo-- end
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qlMhqaGC6t/network-configs--ips.list ]
+Search Listing: [ 192.168.0.1, ... ,192.168.0.1 ] (1)
+
+Target Config: [ .cache/resources/fortinet/fg-branch-vpn-01.cfg ] ( fortinet )
+-rw-r--r--  1 emvaldes  staff  1245 Jun  3 17:55 .cache/resources/fortinet/fg-branch-vpn-01.cfg
+
+Executing AWK script [ ./scripts/extract/fortinet-configs.awk ]
+/usr/bin/awk -v targets="192.168.0.1, ... ,192.168.0.1" \
+             -f ./scripts/extract/fortinet-configs.awk \
+                .cache/resources/fortinet/fg-branch-vpn-01.cfg
+
+Configuration File [ reports/192.168.0.1/fortinet/fg-branch-vpn-01.cfg ]
+
+     1	{
+     2	  "vendor": "fortinet",
+     3	  "model": "FortiGate-60F",
+     4	  "version": "v7.2.5.F",
+     5	  "domain": "",
+     6	  "hostname": "fg-branch-vpn-01"
+     7	}
+     8	
+     9	#hostname="fg-branch-vpn-01"
+    10	#model="FortiGate-60F"
+    11	#config-version=FGT_60F-v7.2.5.F-build1517-230421
+    12	
+    13	config firewall address
+    14	 edit "Guardians-Relay"
+    15	  set subnet 192.168.0.1 255.255.255.255
+    16	  set comment "Backup uplink for Milano crew"
+    17	 next
+    18	end
+    19	
+
+Exported objects from: reports/192.168.0.1/fortinet/fg-branch-vpn-01.cfg
+Serialized objects to: reports/192.168.0.1/fortinet/.objects/fg-branch-vpn-01.list
+
+     1	config firewall address--MTc0ODk5ODUxNzg4MTk0MTAwMAo--  edit "Guardians-Relay"--MTc0ODk5ODUxNzg4MTk0MTAwMAo--   set subnet 192.168.0.1 255.255.255.255--MTc0ODk5ODUxNzg4MTk0MTAwMAo--   set comment "Backup uplink for Milano crew"--MTc0ODk5ODUxNzg4MTk0MTAwMAo--  next--MTc0ODk5ODUxNzg4MTk0MTAwMAo-- end
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.TuqHJjPJSV/network-configs--ips.list ]
+Search Listing: [ 192.168.1.10, ... ,192.168.1.10 ] (1)
+
+Target Config: [ .cache/resources/misc/fw3.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  1140 Jun  3 17:55 .cache/resources/misc/fw3.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="192.168.1.10, ... ,192.168.1.10" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/misc/fw3.cfg
+
+Configuration File [ reports/192.168.1.10/misc/fw3.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": ""
+     7	}
+     8	
+     9	object-group network Wakanda-Core
+    10	 description National Core Routing Zone
+    11	 network-object host 192.168.1.10
+    12	 network-object host 10.0.2.3
+    13	 network-object 10.0.0.0 255.255.255.0
+    14	
+
+Exported objects from: reports/192.168.1.10/misc/fw3.cfg
+Serialized objects to: reports/192.168.1.10/misc/.objects/fw3.list
+
+     1	object-group network Wakanda-Core--MTc0ODk5ODUxODAzOTI2MTAwMAo--  description National Core Routing Zone--MTc0ODk5ODUxODAzOTI2MTAwMAo--  network-object host 192.168.1.10--MTc0ODk5ODUxODAzOTI2MTAwMAo--  network-object host 10.0.2.3--MTc0ODk5ODUxODAzOTI2MTAwMAo--  network-object 10.0.0.0 255.255.255.0
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.dOB7fSjIB5/network-configs--ips.list ]
+Search Listing: [ 198.51.100.75, ... ,198.51.100.75 ] (1)
+
+Target Config: [ .cache/resources/fortinet/fg-branch-vpn-01.cfg ] ( fortinet )
+-rw-r--r--  1 emvaldes  staff  1245 Jun  3 17:55 .cache/resources/fortinet/fg-branch-vpn-01.cfg
+
+Executing AWK script [ ./scripts/extract/fortinet-configs.awk ]
+/usr/bin/awk -v targets="198.51.100.75, ... ,198.51.100.75" \
+             -f ./scripts/extract/fortinet-configs.awk \
+                .cache/resources/fortinet/fg-branch-vpn-01.cfg
+
+Configuration File [ reports/198.51.100.75/fortinet/fg-branch-vpn-01.cfg ]
+
+     1	{
+     2	  "vendor": "fortinet",
+     3	  "model": "FortiGate-60F",
+     4	  "version": "v7.2.5.F",
+     5	  "domain": "",
+     6	  "hostname": "fg-branch-vpn-01"
+     7	}
+     8	
+     9	#hostname="fg-branch-vpn-01"
+    10	#model="FortiGate-60F"
+    11	#config-version=FGT_60F-v7.2.5.F-build1517-230421
+    12	
+    13	config system interface
+    14	 edit "wan1"
+    15	  set ip 198.51.100.75 255.255.255.0
+    16	  set alias "Branch ISP"
+    17	 next
+    18	end
+    19	
+    20	config firewall address
+    21	 edit "Branch-Public"
+    22	  set subnet 198.51.100.75 255.255.255.255
+    23	  set comment "Branch NAT"
+    24	 next
+    25	end
+    26	
+
+Exported objects from: reports/198.51.100.75/fortinet/fg-branch-vpn-01.cfg
+Serialized objects to: reports/198.51.100.75/fortinet/.objects/fg-branch-vpn-01.list
+
+     1	config system interface--MTc0ODk5ODUxNzkyOTAxNTAwMAo--  edit "wan1"--MTc0ODk5ODUxNzkyOTAxNTAwMAo--   set ip 198.51.100.75 255.255.255.0--MTc0ODk5ODUxNzkyOTAxNTAwMAo--   set alias "Branch ISP"--MTc0ODk5ODUxNzkyOTAxNTAwMAo--  next--MTc0ODk5ODUxNzkyOTAxNTAwMAo-- end
+     2	config firewall address--MTc0ODk5ODUxNzkyOTAxNTAwMAo--  edit "Branch-Public"--MTc0ODk5ODUxNzkyOTAxNTAwMAo--   set subnet 198.51.100.75 255.255.255.255--MTc0ODk5ODUxNzkyOTAxNTAwMAo--   set comment "Branch NAT"--MTc0ODk5ODUxNzkyOTAxNTAwMAo--  next--MTc0ODk5ODUxNzkyOTAxNTAwMAo-- end
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.dOB7fSjIB5/network-configs--ips.list ]
+Search Listing: [ 198.51.100.75, ... ,198.51.100.75 ] (1)
+
+Target Config: [ .cache/resources/misc/fw1.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  882 Jun  3 17:55 .cache/resources/misc/fw1.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="198.51.100.75, ... ,198.51.100.75" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/misc/fw1.cfg
+
+Configuration File [ reports/198.51.100.75/misc/fw1.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": ""
+     7	}
+     8	
+     9	object-group network Krypton-Cloud
+    10	 description Cloud-facing external nodes
+    11	 network-object host 198.51.100.75
+    12	 network-object host 203.0.113.25
+    13	
+    14	object network External-Failover
+    15	 host 198.51.100.75
+    16	 description Secondary outbound route for edge
+    17	
+
+Exported objects from: reports/198.51.100.75/misc/fw1.cfg
+Serialized objects to: reports/198.51.100.75/misc/.objects/fw1.list
+
+     1	object-group network Krypton-Cloud--MTc0ODk5ODUxODEyNDU4NTAwMAo--  description Cloud-facing external nodes--MTc0ODk5ODUxODEyNDU4NTAwMAo--  network-object host 198.51.100.75--MTc0ODk5ODUxODEyNDU4NTAwMAo--  network-object host 203.0.113.25
+     2	object network External-Failover--MTc0ODk5ODUxODEyNDU4NTAwMAo--  host 198.51.100.75--MTc0ODk5ODUxODEyNDU4NTAwMAo--  description Secondary outbound route for edge
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.nB02GPse4w/network-configs--ips.list ]
+Search Listing: [ 203.0.113.25, ... ,203.0.113.25 ] (1)
+
+Target Config: [ .cache/resources/fortinet/fg-branch-vpn-01.cfg ] ( fortinet )
+-rw-r--r--  1 emvaldes  staff  1245 Jun  3 17:55 .cache/resources/fortinet/fg-branch-vpn-01.cfg
+
+Executing AWK script [ ./scripts/extract/fortinet-configs.awk ]
+/usr/bin/awk -v targets="203.0.113.25, ... ,203.0.113.25" \
+             -f ./scripts/extract/fortinet-configs.awk \
+                .cache/resources/fortinet/fg-branch-vpn-01.cfg
+
+Configuration File [ reports/203.0.113.25/fortinet/fg-branch-vpn-01.cfg ]
+
+     1	{
+     2	  "vendor": "fortinet",
+     3	  "model": "FortiGate-60F",
+     4	  "version": "v7.2.5.F",
+     5	  "domain": "",
+     6	  "hostname": "fg-branch-vpn-01"
+     7	}
+     8	
+     9	#hostname="fg-branch-vpn-01"
+    10	#model="FortiGate-60F"
+    11	#config-version=FGT_60F-v7.2.5.F-build1517-230421
+    12	
+    13	config firewall address
+    14	 edit "Public-Test"
+    15	  set subnet 203.0.113.25 255.255.255.255
+    16	  set comment "Public NAT exposure for Red Skull trap"
+    17	 next
+    18	end
+    19	
+
+Exported objects from: reports/203.0.113.25/fortinet/fg-branch-vpn-01.cfg
+Serialized objects to: reports/203.0.113.25/fortinet/.objects/fg-branch-vpn-01.list
+
+     1	config firewall address--MTc0ODk5ODUxODA3NDc0NTAwMAo--  edit "Public-Test"--MTc0ODk5ODUxODA3NDc0NTAwMAo--   set subnet 203.0.113.25 255.255.255.255--MTc0ODk5ODUxODA3NDc0NTAwMAo--   set comment "Public NAT exposure for Red Skull trap"--MTc0ODk5ODUxODA3NDc0NTAwMAo--  next--MTc0ODk5ODUxODA3NDc0NTAwMAo-- end
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.nB02GPse4w/network-configs--ips.list ]
+Search Listing: [ 203.0.113.25, ... ,203.0.113.25 ] (1)
+
+Target Config: [ .cache/resources/misc/fw1.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  882 Jun  3 17:55 .cache/resources/misc/fw1.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="203.0.113.25, ... ,203.0.113.25" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/misc/fw1.cfg
+
+Configuration File [ reports/203.0.113.25/misc/fw1.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": ""
+     7	}
+     8	
+     9	object-group network Krypton-Cloud
+    10	 description Cloud-facing external nodes
+    11	 network-object host 198.51.100.75
+    12	 network-object host 203.0.113.25
+    13	
+    14	object network Krypton-Gateway
+    15	 host 203.0.113.25
+    16	 description Secure NAT boundary for cloud access
+    17	
+
+Exported objects from: reports/203.0.113.25/misc/fw1.cfg
+Serialized objects to: reports/203.0.113.25/misc/.objects/fw1.list
+
+     1	object-group network Krypton-Cloud--MTc0ODk5ODUxODEzMTgzOTAwMAo--  description Cloud-facing external nodes--MTc0ODk5ODUxODEzMTgzOTAwMAo--  network-object host 198.51.100.75--MTc0ODk5ODUxODEzMTgzOTAwMAo--  network-object host 203.0.113.25
+     2	object network Krypton-Gateway--MTc0ODk5ODUxODEzMTgzOTAwMAo--  host 203.0.113.25--MTc0ODk5ODUxODEzMTgzOTAwMAo--  description Secure NAT boundary for cloud access
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.gVFIkTVW0O/network-configs--ips.list ]
+Search Listing: [ 10.10.10.10, ... ,10.10.10.10 ] (1)
+
+Target Config: [ .cache/resources/misc/fw3.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  1140 Jun  3 17:55 .cache/resources/misc/fw3.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="10.10.10.10, ... ,10.10.10.10" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/misc/fw3.cfg
+
+Configuration File [ reports/10.10.10.10/misc/fw3.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": ""
+     7	}
+     8	
+     9	object-group network Shield-WiFi
+    10	 description Shield-controlled wireless network
+    11	 network-object host 10.10.10.10
+    12	 network-object 192.168.100.0 255.255.255.0
+    13	
+    14	object-group network Shield-WiFi
+    15	 description Shield-controlled wireless network
+    16	 network-object host 10.10.10.10
+    17	 network-object 192.168.100.0 255.255.255.0
+    18	
+    19	object-group network Shield-WiFi
+    20	 description Shield-controlled wireless network
+    21	 network-object host 10.10.10.10
+    22	 network-object 192.168.100.0 255.255.255.0
+    23	
+    24	object network Shield-WiFi-Alias
+    25	 host 10.10.10.10
+    26	 description Guest NAT
+    27	
+
+Exported objects from: reports/10.10.10.10/misc/fw3.cfg
+Serialized objects to: reports/10.10.10.10/misc/.objects/fw3.list
+
+     1	object-group network Shield-WiFi--MTc0ODk5ODUxODEzNTQ0OTAwMAo--  description Shield-controlled wireless network--MTc0ODk5ODUxODEzNTQ0OTAwMAo--  network-object host 10.10.10.10--MTc0ODk5ODUxODEzNTQ0OTAwMAo--  network-object 192.168.100.0 255.255.255.0
+     2	object network Shield-WiFi-Alias--MTc0ODk5ODUxODEzNTQ0OTAwMAo--  host 10.10.10.10--MTc0ODk5ODUxODEzNTQ0OTAwMAo--  description Guest NAT
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.TuqHJjPJSV/network-configs--ips.list ]
+Search Listing: [ 192.168.1.10, ... ,192.168.1.10 ] (1)
+
+Target Config: [ .cache/resources/misc/switch1.conf ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  401 Jun  3 17:55 .cache/resources/misc/switch1.conf
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="192.168.1.10, ... ,192.168.1.10" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/misc/switch1.conf
+
+Configuration File [ reports/192.168.1.10/misc/switch1.conf ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": ""
+     7	}
+     8	
+     9	interface Vlan20
+    10	 ip address 192.168.1.10 255.255.255.0
+    11	
+
+Exported objects from: reports/192.168.1.10/misc/switch1.conf
+Serialized objects to: reports/192.168.1.10/misc/.objects/switch1.list
+
+     1	interface Vlan20--MTc0ODk5ODUxODA2MjY2MTAwMAo--  ip address 192.168.1.10 255.255.255.0
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Ieq23wRojb/network-configs--ips.list ]
+Search Listing: [ 192.168.2.12, ... ,192.168.2.12 ] (1)
+
+Target Config: [ .cache/resources/misc/fw1.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  882 Jun  3 17:55 .cache/resources/misc/fw1.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="192.168.2.12, ... ,192.168.2.12" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/misc/fw1.cfg
+
+Configuration File [ reports/192.168.2.12/misc/fw1.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": ""
+     7	}
+     8	
+     9	object-group network Metropolis-Internal
+    10	 description Core internal LAN for application clusters
+    11	 network-object host 10.0.2.3
+    12	 network-object 192.168.2.0 255.255.255.0
+    13	 network-object host 192.168.2.12
+    14	
+
+Exported objects from: reports/192.168.2.12/misc/fw1.cfg
+Serialized objects to: reports/192.168.2.12/misc/.objects/fw1.list
+
+     1	object-group network Metropolis-Internal--MTc0ODk5ODUxODExOTE1NTAwMAo--  description Core internal LAN for application clusters--MTc0ODk5ODUxODExOTE1NTAwMAo--  network-object host 10.0.2.3--MTc0ODk5ODUxODExOTE1NTAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0ODk5ODUxODExOTE1NTAwMAo--  network-object host 192.168.2.12
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.gVFIkTVW0O/network-configs--ips.list ]
+Search Listing: [ 10.10.10.10, ... ,10.10.10.10 ] (1)
+
+Target Config: [ .cache/resources/fortinet/fg-testing-config.cfg ] ( fortinet )
+-rw-r--r--  1 emvaldes  staff  440 Jun  3 17:55 .cache/resources/fortinet/fg-testing-config.cfg
+
+Executing AWK script [ ./scripts/extract/fortinet-configs.awk ]
+/usr/bin/awk -v targets="10.10.10.10, ... ,10.10.10.10" \
+             -f ./scripts/extract/fortinet-configs.awk \
+                .cache/resources/fortinet/fg-testing-config.cfg
+
+Configuration File [ reports/10.10.10.10/fortinet/fg-testing-config.cfg ]
+
+     1	{
+     2	  "vendor": "fortinet",
+     3	  "model": "FortiGate-60F",
+     4	  "version": "v7.2.5.F",
+     5	  "domain": "",
+     6	  "hostname": "fg-branch-vpn-01"
+     7	}
+     8	
+     9	#hostname="fg-branch-vpn-01"
+    10	#model="FortiGate-60F"
+    11	#config-version=FGT_60F-v7.2.5.F-build1517-230421
+    12	
+    13	config firewall policy
+    14	 edit 13
+    15	  set name "Remote NAT"
+    16	  set srcintf "dmz"
+    17	  set dstintf "wan1"
+    18	  set srcaddr "10.10.10.10"
+    19	  set dstaddr "203.0.113.10"
+    20	  set action accept
+    21	  set logtraffic all
+    22	 next
+    23	end
+    24	
+
+Exported objects from: reports/10.10.10.10/fortinet/fg-testing-config.cfg
+Serialized objects to: reports/10.10.10.10/fortinet/.objects/fg-testing-config.list
+
+     1	config firewall policy--MTc0ODk5ODUxODA2MzA0NDAwMAo--  edit 13--MTc0ODk5ODUxODA2MzA0NDAwMAo--   set name "Remote NAT"--MTc0ODk5ODUxODA2MzA0NDAwMAo--   set srcintf "dmz"--MTc0ODk5ODUxODA2MzA0NDAwMAo--   set dstintf "wan1"--MTc0ODk5ODUxODA2MzA0NDAwMAo--   set srcaddr "10.10.10.10"--MTc0ODk5ODUxODA2MzA0NDAwMAo--   set dstaddr "203.0.113.10"--MTc0ODk5ODUxODA2MzA0NDAwMAo--   set action accept--MTc0ODk5ODUxODA2MzA0NDAwMAo--   set logtraffic all--MTc0ODk5ODUxODA2MzA0NDAwMAo--  next--MTc0ODk5ODUxODA2MzA0NDAwMAo-- end
+
+Search Pattern: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.nB02GPse4w/network-configs--ips.list ]
+Search Listing: [ 203.0.113.25, ... ,203.0.113.25 ] (1)
+
+Target Config: [ .cache/resources/misc/fw3.cfg ] ( cisco )
+-rw-r--r--  1 emvaldes  staff  1140 Jun  3 17:55 .cache/resources/misc/fw3.cfg
+
+Executing AWK script [ ./scripts/extract/cisco-configs.awk ]
+/usr/bin/awk -v targets="203.0.113.25, ... ,203.0.113.25" \
+             -f ./scripts/extract/cisco-configs.awk \
+                .cache/resources/misc/fw3.cfg
+
+Configuration File [ reports/203.0.113.25/misc/fw3.cfg ]
+
+     1	{
+     2	  "vendor": "cisco",
+     3	  "model": "",
+     4	  "version": "",
+     5	  "domain": "",
+     6	  "hostname": ""
+     7	}
+     8	
+     9	object-group network Panther-Edge
+    10	 description Internet-facing proxy systems
+    11	 network-object host 203.0.113.25
+    12	 network-object host 172.16.0.5
+    13	
+
+Exported objects from: reports/203.0.113.25/misc/fw3.cfg
+Serialized objects to: reports/203.0.113.25/misc/.objects/fw3.list
+
+     1	object-group network Panther-Edge--MTc0ODk5ODUxODQ2NjY0ODAwMAo--  description Internet-facing proxy systems--MTc0ODk5ODUxODQ2NjY0ODAwMAo--  network-object host 203.0.113.25--MTc0ODk5ODUxODQ2NjY0ODAwMAo--  network-object host 172.16.0.5
+

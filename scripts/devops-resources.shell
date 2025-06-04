@@ -448,13 +448,16 @@ export nl="\n";
 export cache_location=".cache";
 
 export logs_location="logs";
-mkdir -p ${logs_location}/{console,jobs} 2>/dev/null || true;
+mkdir -p ${logs_location}/jobs 2>/dev/null || true;
 
-export actions_logfile="./logs/console/run.console";
+export console_location="console";
+mkdir -p ${console_location} 2>/dev/null || true;
+
+export actions_logfile="${console_location}/run.console";
 touch "${actions_logfile}" 2>/dev/null || true;
 
 export targets_location="targets";
-export targets_logfile="${logs_location}/jobs/targets.jobs";
+export targets_logfile="${cache_location}/targets.jobs";
 
 export divisor="--$(
   date +%s%N | base64 | tr -dc 'a-zA-Z0-9'

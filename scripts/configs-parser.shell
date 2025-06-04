@@ -9,7 +9,7 @@ if [[ -n "${__CONFIGS_PARSER_SOURCED:-}" ]]; then return 0; fi;
 readonly __CONFIGS_PARSER_SOURCED=1;
 
 ## -------------------------------------------------------------------------- ##
-## Function: configs-parser :: configs_parser ()
+## Function: configs-parser :: configs_pipeline ()
 ##
 ## Purpose:
 ##   Main entrypoint for per-IP parsing pipeline. Replaces `parse-configs.shell`.
@@ -22,7 +22,7 @@ readonly __CONFIGS_PARSER_SOURCED=1;
 ##   - Applies grouping/classification (if enabled) via matrix matching
 ##   - Executes `extract_configs()` to collect relevant config blocks
 ##   - Deduplicates and merges structured JSON objects per IP
-##   - Stores final output under `./reports/<ip>/<ip>.json`
+##   - Stores final output under `${reports_folder}/<ip>/<ip>.json`
 ##
 ## Input Parameters (as key=value args):
 ##   - ip-addr      : IP address to process (required)
@@ -36,7 +36,7 @@ readonly __CONFIGS_PARSER_SOURCED=1;
 ##   - verbose/debug/dry-run/help/logs : Optional behavior toggles
 ##
 ## Output:
-##   - Structured per-IP JSON report at ./reports/<ip>/<ip>.json
+##   - Structured per-IP JSON report at ${reports_folder}/<ip>/<ip>.json
 ##   - Temp fragments, logs, and debug traces under ${TMP_DIR}
 ##
 ## Notes:
@@ -44,7 +44,7 @@ readonly __CONFIGS_PARSER_SOURCED=1;
 ##   - Compatible with batch systems that expect this function to be run in parallel
 ## -------------------------------------------------------------------------- ##
 
-function configs_parser () {
+function configs_pipeline () {
 
     ## tracking_process ${FUNCNAME} "${@}";
     declare -a file_extensions=();
@@ -116,58 +116,49 @@ function configs_parser () {
     fi;
 
     #### -----------------------------------------------------------------------
-    ## Processing Target Configurations (from JSON input only)
+    ## Load all source configs from target JSON
     export configs_dirpath="${configs_dirpath:-configs}";
     declare -ga source_configs=();
 
-    local target_configlist_json="targets/${target_address%%/*}.json";
+    local target_configlist_json="targets/${target_address}.json";
     if [[ ! -f "${target_configlist_json}" ]]; then
       [[ "${verbose}" == true ]] && \
         warning "Required config list not found: ${target_configlist_json}";
       return 3;
     fi;
 
-    mapfile -t vendors < <(jq -r 'keys[]' "${target_configlist_json}")
+    message "Loading target config list from: ${target_configlist_json}";
 
-    for site in "${vendors[@]}"; do
+    # mapfile -t source_configs < <(
+    #   jq -r '
+    #     .locations | to_entries[] |
+    #     .key as $site |
+    #     .value.devices[] |
+    #     "\($site)/\(.config.file)"
+    #   ' "${target_configlist_json}"
+    # )
+    mapfile -t source_configs < <(
+      jq -r '
+        .locations | to_entries[] |
+        .key as $site |
+        .value.devices[] |
+        "\($site)/.objects/\(.config.file | split(".")[0]).list"
+      ' "${target_configlist_json}"
+    )
 
-      ## Extracting config paths from JSON file to be parsed
-      # mapfile -t source_configs < <(
-      #   jq -r '.configs[] | "\( .config.site )/\( .config.device )"' "${target_configlist_json}"
-      # );
-      mapfile -t source_configs < <(
-        jq -r --arg site "${site}" '.[$site][] | "\($site)/\(.device)"' "${target_configlist_json}"
-      );
-
-      ## Extracting config paths from new JSON format: { "<site>": [ { device: ... }, ... ] }
-      # mapfile -t source_configs < <(
-      #   jq -r '
-      #     to_entries[]
-      #     | .key as $site
-      #     | .value[]
-      #     | "\($site)/\(.device)"
-      #   ' "${target_configlist_json}"
-      # );
-
-      ## Patch: Prepend configs_dirpath if not already absolute
-      for i in "${!source_configs[@]}"; do
-
-        # [[ "${source_configs[$i]}" != "${configs_dirpath}/"* ]] && \
-        # source_configs[$i]="${configs_dirpath}/${source_configs[$i]}";
-        # # message "Source Config file-path: ${source_configs[$i]}" >> "${parse_configs__logfile:-/dev/null}";
-
-        # Ensure the path is absolute or relative to configs_dirpath
-        {
-          if [[ "${source_configs[$i]}" != /* && "${source_configs[$i]}" != "${configs_dirpath}/"* ]]; then
-            source_configs[$i]="${configs_dirpath}/${source_configs[$i]}"
-          fi
-          print "Source Config file-path: ${source_configs[$i]}";
-          newline;
-        } >> "${parse_configs__logfile:-/dev/null}";
-
+    [[ "${verbose}" == true ]] && {
+      message "Found ${#source_configs[@]} config files:";
+      for item in "${source_configs[@]}"; do
+        message "  - ${item}";
       done;
+    }
 
-exit 999;
+    #### -----------------------------------------------------------------------
+    ## Normalize paths (prepend configs_dirpath if relative)
+    for i in "${!source_configs[@]}"; do
+      if [[ "${source_configs[$i]}" != "${reports_folder}/${target_address}/"* ]]; then
+        source_configs[$i]="${source_configs[$i]}"
+      fi;
 
       #### -----------------------------------------------------------------------
       ## Processing Custom/Default the Translation-Matrix (source):
@@ -346,7 +337,7 @@ exit 999;
     fi;
 
     return 0;
-}; alias configs-parser='configs_parser';
+}; alias configs-pipeline='configs_pipeline';
 
 ## -------------------------------------------------------------------------- ##
 ## Function: configs-parser :: extract_configs ()
@@ -366,14 +357,14 @@ exit 999;
 ##   - Splits config into logical blocks (using `${divisor}` as the delimiter)
 ##   - Restores the blocks into newline-separated format
 ##   - Filters blocks containing the target IP
-##   - Writes matched config blocks to `./reports/<ip>/<site>/<device>.<ext>`
+##   - Writes matched config blocks to `${reports_folder}/<ip>/<site>/<device>.<ext>`
 ##   - Processes each matched block with `process_configs` to extract metadata
 ##   - Wraps extracted objects under `{ site, device, objects[] }` structure
 ##   - Appends each structured result to the final JSON fragment output file
 ##
 ## Output:
 ##   - Structured per-config JSON entries written to $3
-##   - Raw matched blocks written to `./reports/<ip>/<site>/<device>.<ext>`
+##   - Raw matched blocks written to `${reports_folder}/<ip>/<site>/<device>.<ext>`
 ##
 ## Notes:
 ##   - Duplicate blocks are skipped via flat-string comparison.
@@ -381,7 +372,7 @@ exit 999;
 ##   - Designed to run synchronously per config file, called from `parse-configs`.
 ## -------------------------------------------------------------------------- ##
 
-function extract_configs () {
+function legacy__extract_configs () {
 
     local config_file="${1}";
     local target_pattern="${2}";
@@ -444,7 +435,7 @@ function extract_configs () {
     # fi;
 
     # #### -----------------------------------------------------------------------
-    # ## Derive site/device/ext from config path
+    # ## Derive location/device/ext from config path
     # local cfg_path="${config_file}";
     # message "[extract_configs] Config Path: ${cfg_path}";
     # local rel_path="${cfg_path#${configs_dirpath}/}";  ## e.g., cisco/fw1.cfg
@@ -456,7 +447,7 @@ function extract_configs () {
     # local extension="${device_filename##*.}";          ## -> cfg
     # message "[extract_configs] Extension: ${extension}";
 
-    # ## Construct output path: ./reports/<ip>/<site>/<device>.<ext>
+    # ## Construct output path: ${reports_folder}/<ip-address>/<location>/<device>.<ext>
     # local objects_dir="${reports_folder}/${target_address}/${site}";
     # local objects_file="${objects_dir}/${device_filename}";
 
@@ -498,19 +489,19 @@ function extract_configs () {
     # #   } >> "${target_logfile:-/dev/null}";
     # # fi;
 
-    #### -----------------------------------------------------------------------
-    ## [INSERT HERE] Check if config is readable and has content
-    message "[DEBUG] Checking if config file exists and is readable: ${config_file}";
-    if [[ ! -s "${config_file}" ]]; then
-            warning "File '${config_file}' is missing or empty";
-      else  message "[OK] File '${config_file}' is readable and size is $(
-              stat -f "%m" "${config_file}"
-            ) bytes";
-    fi;
+    # #### -----------------------------------------------------------------------
+    # ## [INSERT HERE] Check if config is readable and has content
+    # message "[DEBUG] Checking if config file exists and is readable: ${config_file}";
+    # if [[ ! -s "${config_file}" ]]; then
+    #         warning "File '${config_file}' is missing or empty";
+    #   else  message "[OK] File '${config_file}' is readable and size is $(
+    #           stat -f "%m" "${config_file}"
+    #         ) bytes";
+    # fi;
 
     #### -----------------------------------------------------------------------
     ## Full file ingestion and normalization
-    local imported_content="$( < "${config_file}" )";
+    local imported_content="$( < "${reports_folder}/${target_pattern}/${config_file}" )";
     if [[ "${verbose}" == true ]]; then
       message "Imported Content: ${imported_content[@]}";
     fi;
@@ -601,7 +592,7 @@ function extract_configs () {
       local device_filename="${rel_path#*/}";            ## -> fw1.cfg
       local extension="${device_filename##*.}";          ## -> cfg
 
-      ## Construct output path: ./reports/<ip>/<site>/<device>.<ext>
+      ## Construct output path: ${reports_folder}/<ip-address>/<location>/<device>.<ext>
       local objects_dir="${reports_folder}/${target_address}/${site}";
       local objects_file="${objects_dir}/${device_filename}";
 
@@ -676,6 +667,56 @@ function extract_configs () {
     done;
 
     return 0;
+}; alias legacy--extract-configs='legacy__extract_configs';
+
+function extract_configs () {
+
+    local relative_list_path="${1}"       # e.g., fortinet/.objects/fw1.list
+    local target_pattern="${2}"           # e.g., 10.0.0.1
+    local target_configlist_json="${3}"   # e.g., targets/10.0.0.1.json
+    local json_output="${4}"              # e.g., TMP_DIR/fragments.json
+    local target_logfile="${5:-${TMP_DIR}/tools-configs--extract-configs--${target_pattern}.log}"
+
+    local full_list_path="${reports_folder}/${target_pattern}/${relative_list_path}"
+
+    [[ ! -f "${full_list_path}" ]] && {
+      warning "Missing serialized file: ${full_list_path}"
+      return 1
+    }
+
+    local site="${relative_list_path%%/*}"
+    local filename="${relative_list_path##*/}"
+    local device="${filename%.list}"
+
+    declare -a objects_json=()
+
+    while IFS= read -r serialized_line || [[ -n "${serialized_line}" ]]; do
+      [[ -z "${serialized_line}" ]] && continue
+
+      # Deserialize block
+      local restored_block
+      restored_block="$( sed "s/${divisor}/\n/g" <<< "${serialized_line}" )"
+
+      [[ "${verbose}" == true ]] && message "[restored] →\n${restored_block}"
+
+      process_configs "${target_pattern}" \
+                      "${relative_list_path}" \
+                      "${restored_block}" \
+                      "${target_logfile}"
+
+      [[ -n "${target_object}" ]] && objects_json+=( "${target_object}" )
+    done < "${full_list_path}"
+
+    if (( ${#objects_json[@]} > 0 )); then
+      printf '%s\n' "${objects_json[@]}" | \
+        jq --slurp \
+           --arg site "${site}" \
+           --arg device "${device}" \
+           '{ site: $site, device: $device, objects: . }' \
+        >> "${json_output}"
+    fi
+
+    return 0
 }; alias extract-configs='extract_configs';
 
 ## -------------------------------------------------------------------------- ##
