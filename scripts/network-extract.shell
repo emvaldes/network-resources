@@ -79,7 +79,7 @@ source ./scripts/devops-helpers.shell;
 ##
 ## Output:
 ##   - Writes serialized content to:
-##       ${reports_folder}/<ip-address>/<location>/.objects/<device>.list
+##       ${reports_location}/<ip-address>/<location>/.objects/<device>.list
 ##   - If `--verbose` is enabled, prints the serialized file to the current log stream.
 ##
 ## Key Behavior:
@@ -96,8 +96,8 @@ source ./scripts/devops-helpers.shell;
 ##     for grep, explode, and transform workflows.
 ##
 ## Example:
-##   Input:  ${reports_folder}/203.0.113.25/misc/fw3.cfg
-##   Output: ${reports_folder}/203.0.113.25/misc/.objects/fw3.list
+##   Input:  ${reports_location}/203.0.113.25/misc/fw3.cfg
+##   Output: ${reports_location}/203.0.113.25/misc/.objects/fw3.list
 ##
 ## Dependencies:
 ##   - Relies on AWK for efficient platform-aware collapsing.
@@ -532,7 +532,7 @@ function main () {
 [[ -z "${script_name+x}" ]] && export script_name="${0}";
 
 export logs_location="logs";
-mkdir -p ${logs_location}/console 2>/dev/null || true;
+mkdir -p ${logs_location} 2>/dev/null || true;
 
 script_filename="${BASH_SOURCE[0]##*/}";
 script_filename="${script_filename%.*}";

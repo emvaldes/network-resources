@@ -17,7 +17,7 @@ readonly __CONFIGS_MATCHING_SOURCED=1;
 ##   $1 = optional path to the config list file (defaults to ${configs_list_cache})
 ##
 ## Behavior:
-##   - Scans per-IP `${reports_folder}/<ip-address>/` folders for presence of reduced config files.
+##   - Scans per-IP `${reports_location}/<ip-address>/` folders for presence of reduced config files.
 ##   - Filters out IPs without any matching config files.
 ##   - Builds a temporary per-IP list of reduced config files.
 ##   - Spawns background jobs (one per IP) to call `configs_targets()`,
@@ -45,7 +45,7 @@ function configs_matching () {
     ## Iterate over IPs in target_listing
     for ip_address in "${target_listing[@]}"; do
 
-      local report_path="${reports_folder}/${ip_address}";
+      local report_path="${reports_location}/${ip_address}";
       local configs_objects="${TMP_DIR}/configs-targets--${ip_address}.list";
       : > "${configs_objects}";
 
@@ -152,7 +152,7 @@ function configs_matching () {
 ##
 ## Inputs:
 ##   $1 = target IP address (e.g. 10.0.0.1)
-##   $2 = output JSON file (e.g. ${reports_folder}/10.0.0.1/10.0.0.1.json)
+##   $2 = output JSON file (e.g. ${reports_location}/10.0.0.1/10.0.0.1.json)
 ##   $3 = optional: list of extracted config files (default: ${configs_list_cache})
 ##   $4 = optional: log file to write malformed header errors (default: TMP_DIR)
 ##
@@ -211,7 +211,7 @@ function configs_targets () {
     while IFS= read -r config_file; do
       [[ ! -f "${config_file}" ]] && continue;
 
-      rel_path="${config_file#./${reports_folder}/${search_pattern}/}";
+      rel_path="${config_file#./${reports_location}/${search_pattern}/}";
       site="${rel_path%%/*}";
       device="${rel_path##*/}";
 

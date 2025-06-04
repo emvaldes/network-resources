@@ -22,7 +22,7 @@ readonly __CONFIGS_PARSER_SOURCED=1;
 ##   - Applies grouping/classification (if enabled) via matrix matching
 ##   - Executes `extract_configs()` to collect relevant config blocks
 ##   - Deduplicates and merges structured JSON objects per IP
-##   - Stores final output under `${reports_folder}/<ip>/<ip>.json`
+##   - Stores final output under `${reports_location}/<ip>/<ip>.json`
 ##
 ## Input Parameters (as key=value args):
 ##   - ip-addr      : IP address to process (required)
@@ -36,7 +36,7 @@ readonly __CONFIGS_PARSER_SOURCED=1;
 ##   - verbose/debug/dry-run/help/logs : Optional behavior toggles
 ##
 ## Output:
-##   - Structured per-IP JSON report at ${reports_folder}/<ip>/<ip>.json
+##   - Structured per-IP JSON report at ${reports_location}/<ip>/<ip>.json
 ##   - Temp fragments, logs, and debug traces under ${TMP_DIR}
 ##
 ## Notes:
@@ -68,7 +68,7 @@ function configs_pipeline () {
       [[ $key =~ ^(ip-addr|i)$ ]] && local target_address="${value}";
       [[ $key =~ ^(logs|o)$ ]] && export enable_logging=true;
       [[ $key =~ ^(matrix|m)$ ]] && local matrix_filename="${value}";
-      [[ $key =~ ^(reports|r)$ ]] && local reports_folder="${value}";
+      [[ $key =~ ^(reports|r)$ ]] && local reports_location="${value}";
       [[ $key =~ ^(validate|v)$ ]] && local validate_address=true;
 
       #### ---------------------------------------------------------------------
@@ -156,7 +156,7 @@ function configs_pipeline () {
     #### -----------------------------------------------------------------------
     ## Normalize paths (prepend configs_dirpath if relative)
     for i in "${!source_configs[@]}"; do
-      if [[ "${source_configs[$i]}" != "${reports_folder}/${target_address}/"* ]]; then
+      if [[ "${source_configs[$i]}" != "${reports_location}/${target_address}/"* ]]; then
         source_configs[$i]="${source_configs[$i]}"
       fi;
 
@@ -179,7 +179,7 @@ function configs_pipeline () {
 
       #### -----------------------------------------------------------------------
       ## Custom/Default reports folder:
-      export reports_folder="${reports_folder:-reports}";
+      export reports_location="${reports_location:-reports}";
       
       #### -----------------------------------------------------------------------
       ## Presetting Target-Index Marker
@@ -279,7 +279,7 @@ function configs_pipeline () {
       #### ---------------------------------------------------------------------
       ## Merge batch result into persistent output for this IP
       tmp_merged="$( mktemp )";
-      local final_outfile="${reports_folder}/${target_address}/${target_address}.json";
+      local final_outfile="${reports_location}/${target_address}/${target_address}.json";
       mkdir -p "$(
         dirname "${final_outfile}"
       )";
@@ -357,14 +357,14 @@ function configs_pipeline () {
 ##   - Splits config into logical blocks (using `${divisor}` as the delimiter)
 ##   - Restores the blocks into newline-separated format
 ##   - Filters blocks containing the target IP
-##   - Writes matched config blocks to `${reports_folder}/<ip>/<site>/<device>.<ext>`
+##   - Writes matched config blocks to `${reports_location}/<ip>/<site>/<device>.<ext>`
 ##   - Processes each matched block with `process_configs` to extract metadata
 ##   - Wraps extracted objects under `{ site, device, objects[] }` structure
 ##   - Appends each structured result to the final JSON fragment output file
 ##
 ## Output:
 ##   - Structured per-config JSON entries written to $3
-##   - Raw matched blocks written to `${reports_folder}/<ip>/<site>/<device>.<ext>`
+##   - Raw matched blocks written to `${reports_location}/<ip>/<site>/<device>.<ext>`
 ##
 ## Notes:
 ##   - Duplicate blocks are skipped via flat-string comparison.
@@ -447,8 +447,8 @@ function legacy__extract_configs () {
     # local extension="${device_filename##*.}";          ## -> cfg
     # message "[extract_configs] Extension: ${extension}";
 
-    # ## Construct output path: ${reports_folder}/<ip-address>/<location>/<device>.<ext>
-    # local objects_dir="${reports_folder}/${target_address}/${site}";
+    # ## Construct output path: ${reports_location}/<ip-address>/<location>/<device>.<ext>
+    # local objects_dir="${reports_location}/${target_address}/${site}";
     # local objects_file="${objects_dir}/${device_filename}";
 
     # #### -----------------------------------------------------------------------
@@ -501,7 +501,7 @@ function legacy__extract_configs () {
 
     #### -----------------------------------------------------------------------
     ## Full file ingestion and normalization
-    local imported_content="$( < "${reports_folder}/${target_pattern}/${config_file}" )";
+    local imported_content="$( < "${reports_location}/${target_pattern}/${config_file}" )";
     if [[ "${verbose}" == true ]]; then
       message "Imported Content: ${imported_content[@]}";
     fi;
@@ -592,8 +592,8 @@ function legacy__extract_configs () {
       local device_filename="${rel_path#*/}";            ## -> fw1.cfg
       local extension="${device_filename##*.}";          ## -> cfg
 
-      ## Construct output path: ${reports_folder}/<ip-address>/<location>/<device>.<ext>
-      local objects_dir="${reports_folder}/${target_address}/${site}";
+      ## Construct output path: ${reports_location}/<ip-address>/<location>/<device>.<ext>
+      local objects_dir="${reports_location}/${target_address}/${site}";
       local objects_file="${objects_dir}/${device_filename}";
 
       ## Skip if this block already exists in the output file (match as single line)
@@ -677,7 +677,7 @@ function extract_configs () {
     local json_output="${4}"              # e.g., TMP_DIR/fragments.json
     local target_logfile="${5:-${TMP_DIR}/tools-configs--extract-configs--${target_pattern}.log}"
 
-    local full_list_path="${reports_folder}/${target_pattern}/${relative_list_path}"
+    local full_list_path="${reports_location}/${target_pattern}/${relative_list_path}"
 
     [[ ! -f "${full_list_path}" ]] && {
       warning "Missing serialized file: ${full_list_path}"

@@ -2,8 +2,8 @@
 + export LC_ALL=C
 + LC_ALL=C
 ++ mktemp -d
-+ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW
-+ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW
++ export TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap
++ TMP_DIR=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap
 + trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT
 + export 'nl=\n'
 + nl='\n'
@@ -34,7 +34,10 @@
 ++ cache_location=.cache
 ++ export logs_location=logs
 ++ logs_location=logs
-++ mkdir -p logs/jobs
+++ mkdir -p logs
+++ export jobs_location=jobs
+++ jobs_location=jobs
+++ mkdir -p jobs
 ++ export console_location=console
 ++ console_location=console
 ++ mkdir -p console
@@ -48,8 +51,8 @@
 +++ date +%s%N
 +++ base64
 +++ tr -dc a-zA-Z0-9
-++ export divisor=--MTc0ODk5ODUxNTY3MDI3MjAwMAo--
-++ divisor=--MTc0ODk5ODUxNTY3MDI3MjAwMAo--
+++ export divisor=--MTc0OTAwNDc1NDI5NzM5NTAwMAo--
+++ divisor=--MTc0OTAwNDc1NDI5NzM5NTAwMAo--
 + source ./scripts/devops-helpers.shell
 ++ [[ -n '' ]]
 ++ readonly __DEVOPS_HELPERS_SOURCED=1
@@ -64,7 +67,7 @@
 + script_name=./scripts/network-configs.shell
 + export logs_location=logs
 + logs_location=logs
-+ mkdir -p logs/console
++ mkdir -p logs
 + script_filename=network-configs.shell
 + script_filename=network-configs
 + export network_configs__console=console/network-configs.console
@@ -80,7 +83,7 @@
 
 + (( i++ ))
 + (( i < count ))
-+ main --search=ips.list --configs=devices.list --location=configs --extract=.cache/resources --update=true --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.zY1l0QN0QS/network-configs--resources.console --verbose
++ main --search=ips.list --configs=devices.list --location=configs --extract=.cache/resources --update=true --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UBKcg8jWc4/network-configs--resources.console --verbose
 + oIFS=' 	
 '
 + for xitem in "${@}"
@@ -176,7 +179,7 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.zY1l0QN0QS/network-configs--resources.console
+++ echo -e --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UBKcg8jWc4/network-configs--resources.console
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ logger =~ ^(cache|e)$ ]]
 + [[ logger =~ ^(configs|c)$ ]]
@@ -186,7 +189,7 @@
 + [[ logger =~ ^(search|s)$ ]]
 + [[ logger =~ ^(update|u)$ ]]
 + [[ logger =~ ^(logger|o)$ ]]
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.zY1l0QN0QS/network-configs--resources.console
++ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UBKcg8jWc4/network-configs--resources.console
 + [[ logger == \h\e\l\p ]]
 + [[ logger == \d\e\b\u\g ]]
 + [[ logger == \d\r\y\-\r\u\n ]]
@@ -224,7 +227,7 @@
 + [[ -z devices.list ]]
 + [[ -z configs ]]
 + [[ -z true ]]
-+ [[ -z /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.zY1l0QN0QS/network-configs--resources.console ]]
++ [[ -z /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.UBKcg8jWc4/network-configs--resources.console ]]
 + [[ -z '' ]]
 + local script_helper=false
 + [[ false == true ]]
@@ -290,10 +293,10 @@
 + [[ -n   - 10.0.0.1 ]]
 + local 'message=  - 10.0.0.1'
 + echo -e '  - 10.0.0.1'
-+ cat -n
 + (( i++ ))
 + (( i < count && i < 25 ))
 + message '  - 10.0.1.2'
++ cat -n
 + [[ -n   - 10.0.1.2 ]]
 + local 'message=  - 10.0.1.2'
 + echo -e '  - 10.0.1.2'
@@ -518,11 +521,11 @@
 + mapfile -t configs_listing
 ++ find configs -type f
 ++ sed 's|^\./||'
-++ sort -u
 +++ IFS='|'
+++ sort -u
 +++ echo 'access-sw1-west|branch-isr-02|campus-sw-access01|dmz-fw2-backup|fg-branch-vpn-01|fg-campus-core|fg-testing-config|fw1|fw3|perimeter-fw1|switch1|switch3'
 ++ egrep 'access-sw1-west|branch-isr-02|campus-sw-access01|dmz-fw2-backup|fg-branch-vpn-01|fg-campus-core|fg-testing-config|fw1|fw3|perimeter-fw1|switch1|switch3'
-+ search_configs=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/configs.list
++ search_configs=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/configs.list
 + printf '%s\n' configs/cisco/access-sw1-west.cfg configs/cisco/branch-isr-02.cfg configs/cisco/campus-sw-access01.cfg configs/cisco/dmz-fw2-backup.cfg configs/cisco/perimeter-fw1.cfg configs/fortinet/fg-branch-vpn-01.cfg configs/fortinet/fg-campus-core.cfg configs/fortinet/fg-testing-config.cfg configs/misc/fw1.cfg configs/misc/fw3.cfg configs/misc/switch1.conf configs/misc/switch3.conf
 + matched_ips=()
 + declare -a matched_ips
@@ -1211,9 +1214,9 @@
 + :
 ++ basename configs/cisco/access-sw1-west.cfg
 + local logger_index=access-sw1-west.cfg
-+ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--access-sw1-west.cfg
++ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--access-sw1-west.cfg
 + :
-+ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/cisco/access-sw1-west.cfg' '--extract=.cache/resources/cisco/access-sw1-west.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--access-sw1-west.cfg.console')
++ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/cisco/access-sw1-west.cfg' '--extract=.cache/resources/cisco/access-sw1-west.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--access-sw1-west.cfg.console')
 + declare -a execute__network_extract
 + [[ false == true ]]
 + [[ true == true ]]
@@ -1256,10 +1259,10 @@
 + local 'message=\t--platform=cisco'
 + echo -e '\t--platform=cisco'
 + for item in "${execute__network_extract[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--access-sw1-west.cfg.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--access-sw1-west.cfg.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--access-sw1-west.cfg.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--access-sw1-west.cfg.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--access-sw1-west.cfg.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--access-sw1-west.cfg.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--access-sw1-west.cfg.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--access-sw1-west.cfg.console'
 + for item in "${execute__network_extract[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -1272,7 +1275,7 @@
 + echo
 + (( i++ ))
 + (( i < count ))
-+ local job_pid=67111
++ local job_pid=60952
 + extract_jobs_pid+=("${job_pid}")
 + extract_jobs2cfg_mapping["$!"]=access-sw1-west.cfg
 + for target_config in "${configs_listing[@]}"
@@ -1284,7 +1287,7 @@
 + local 'cisco_pattern=\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b'
 + grep -qiE 'fortinet|fortigate' configs/cisco/branch-isr-02.cfg
 ++ which bash
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/cisco/access-sw1-west.cfg --extract=.cache/resources/cisco/access-sw1-west.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--access-sw1-west.cfg.console --verbose
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/cisco/access-sw1-west.cfg --extract=.cache/resources/cisco/access-sw1-west.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--access-sw1-west.cfg.console --verbose
 + grep -qiE '\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b' configs/cisco/branch-isr-02.cfg
 + return 2
 + local vendor_code=2
@@ -1307,9 +1310,9 @@
 + :
 ++ basename configs/cisco/branch-isr-02.cfg
 + local logger_index=branch-isr-02.cfg
-+ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--branch-isr-02.cfg
++ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--branch-isr-02.cfg
 + :
-+ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/cisco/branch-isr-02.cfg' '--extract=.cache/resources/cisco/branch-isr-02.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--branch-isr-02.cfg.console')
++ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/cisco/branch-isr-02.cfg' '--extract=.cache/resources/cisco/branch-isr-02.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--branch-isr-02.cfg.console')
 + declare -a execute__network_extract
 + [[ false == true ]]
 + [[ true == true ]]
@@ -1352,10 +1355,10 @@
 + local 'message=\t--platform=cisco'
 + echo -e '\t--platform=cisco'
 + for item in "${execute__network_extract[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--branch-isr-02.cfg.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--branch-isr-02.cfg.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--branch-isr-02.cfg.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--branch-isr-02.cfg.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--branch-isr-02.cfg.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--branch-isr-02.cfg.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--branch-isr-02.cfg.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--branch-isr-02.cfg.console'
 + for item in "${execute__network_extract[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -1368,7 +1371,7 @@
 + echo
 + (( i++ ))
 + (( i < count ))
-+ local job_pid=67119
++ local job_pid=60960
 + extract_jobs_pid+=("${job_pid}")
 + extract_jobs2cfg_mapping["$!"]=branch-isr-02.cfg
 + for target_config in "${configs_listing[@]}"
@@ -1380,7 +1383,7 @@
 + local 'cisco_pattern=\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b'
 + grep -qiE 'fortinet|fortigate' configs/cisco/campus-sw-access01.cfg
 ++ which bash
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/cisco/branch-isr-02.cfg --extract=.cache/resources/cisco/branch-isr-02.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--branch-isr-02.cfg.console --verbose
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/cisco/branch-isr-02.cfg --extract=.cache/resources/cisco/branch-isr-02.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--branch-isr-02.cfg.console --verbose
 + grep -qiE '\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b' configs/cisco/campus-sw-access01.cfg
 + return 2
 + local vendor_code=2
@@ -1403,9 +1406,9 @@
 + :
 ++ basename configs/cisco/campus-sw-access01.cfg
 + local logger_index=campus-sw-access01.cfg
-+ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--campus-sw-access01.cfg
++ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--campus-sw-access01.cfg
 + :
-+ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/cisco/campus-sw-access01.cfg' '--extract=.cache/resources/cisco/campus-sw-access01.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--campus-sw-access01.cfg.console')
++ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/cisco/campus-sw-access01.cfg' '--extract=.cache/resources/cisco/campus-sw-access01.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--campus-sw-access01.cfg.console')
 + declare -a execute__network_extract
 + [[ false == true ]]
 + [[ true == true ]]
@@ -1448,10 +1451,10 @@
 + local 'message=\t--platform=cisco'
 + echo -e '\t--platform=cisco'
 + for item in "${execute__network_extract[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--campus-sw-access01.cfg.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--campus-sw-access01.cfg.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--campus-sw-access01.cfg.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--campus-sw-access01.cfg.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--campus-sw-access01.cfg.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--campus-sw-access01.cfg.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--campus-sw-access01.cfg.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--campus-sw-access01.cfg.console'
 + for item in "${execute__network_extract[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -1464,7 +1467,7 @@
 + echo
 + (( i++ ))
 + (( i < count ))
-+ local job_pid=67135
++ local job_pid=60976
 + extract_jobs_pid+=("${job_pid}")
 + extract_jobs2cfg_mapping["$!"]=campus-sw-access01.cfg
 + for target_config in "${configs_listing[@]}"
@@ -1476,7 +1479,7 @@
 + local 'cisco_pattern=\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b'
 + grep -qiE 'fortinet|fortigate' configs/cisco/dmz-fw2-backup.cfg
 ++ which bash
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/cisco/campus-sw-access01.cfg --extract=.cache/resources/cisco/campus-sw-access01.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--campus-sw-access01.cfg.console --verbose
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/cisco/campus-sw-access01.cfg --extract=.cache/resources/cisco/campus-sw-access01.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--campus-sw-access01.cfg.console --verbose
 + grep -qiE '\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b' configs/cisco/dmz-fw2-backup.cfg
 + return 2
 + local vendor_code=2
@@ -1499,9 +1502,9 @@
 + :
 ++ basename configs/cisco/dmz-fw2-backup.cfg
 + local logger_index=dmz-fw2-backup.cfg
-+ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--dmz-fw2-backup.cfg
++ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--dmz-fw2-backup.cfg
 + :
-+ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/cisco/dmz-fw2-backup.cfg' '--extract=.cache/resources/cisco/dmz-fw2-backup.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--dmz-fw2-backup.cfg.console')
++ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/cisco/dmz-fw2-backup.cfg' '--extract=.cache/resources/cisco/dmz-fw2-backup.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--dmz-fw2-backup.cfg.console')
 + declare -a execute__network_extract
 + [[ false == true ]]
 + [[ true == true ]]
@@ -1544,10 +1547,10 @@
 + local 'message=\t--platform=cisco'
 + echo -e '\t--platform=cisco'
 + for item in "${execute__network_extract[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--dmz-fw2-backup.cfg.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--dmz-fw2-backup.cfg.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--dmz-fw2-backup.cfg.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--dmz-fw2-backup.cfg.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--dmz-fw2-backup.cfg.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--dmz-fw2-backup.cfg.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--dmz-fw2-backup.cfg.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--dmz-fw2-backup.cfg.console'
 + for item in "${execute__network_extract[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -1560,7 +1563,7 @@
 + echo
 + (( i++ ))
 + (( i < count ))
-+ local job_pid=67164
++ local job_pid=61003
 + extract_jobs_pid+=("${job_pid}")
 + extract_jobs2cfg_mapping["$!"]=dmz-fw2-backup.cfg
 + for target_config in "${configs_listing[@]}"
@@ -1572,8 +1575,8 @@
 + local 'cisco_pattern=\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b'
 + grep -qiE 'fortinet|fortigate' configs/cisco/perimeter-fw1.cfg
 ++ which bash
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/cisco/dmz-fw2-backup.cfg --extract=.cache/resources/cisco/dmz-fw2-backup.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--dmz-fw2-backup.cfg.console --verbose
 + grep -qiE '\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b' configs/cisco/perimeter-fw1.cfg
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/cisco/dmz-fw2-backup.cfg --extract=.cache/resources/cisco/dmz-fw2-backup.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--dmz-fw2-backup.cfg.console --verbose
 + return 2
 + local vendor_code=2
 + set -e
@@ -1595,9 +1598,9 @@
 + :
 ++ basename configs/cisco/perimeter-fw1.cfg
 + local logger_index=perimeter-fw1.cfg
-+ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--perimeter-fw1.cfg
++ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--perimeter-fw1.cfg
 + :
-+ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/cisco/perimeter-fw1.cfg' '--extract=.cache/resources/cisco/perimeter-fw1.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--perimeter-fw1.cfg.console')
++ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/cisco/perimeter-fw1.cfg' '--extract=.cache/resources/cisco/perimeter-fw1.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--perimeter-fw1.cfg.console')
 + declare -a execute__network_extract
 + [[ false == true ]]
 + [[ true == true ]]
@@ -1640,10 +1643,10 @@
 + local 'message=\t--platform=cisco'
 + echo -e '\t--platform=cisco'
 + for item in "${execute__network_extract[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--perimeter-fw1.cfg.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--perimeter-fw1.cfg.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--perimeter-fw1.cfg.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--perimeter-fw1.cfg.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--perimeter-fw1.cfg.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--perimeter-fw1.cfg.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--perimeter-fw1.cfg.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--perimeter-fw1.cfg.console'
 + for item in "${execute__network_extract[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -1656,7 +1659,7 @@
 + echo
 + (( i++ ))
 + (( i < count ))
-+ local job_pid=67203
++ local job_pid=61040
 + extract_jobs_pid+=("${job_pid}")
 + extract_jobs2cfg_mapping["$!"]=perimeter-fw1.cfg
 + for target_config in "${configs_listing[@]}"
@@ -1668,9 +1671,9 @@
 + local 'cisco_pattern=\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b'
 + grep -qiE 'fortinet|fortigate' configs/fortinet/fg-branch-vpn-01.cfg
 ++ which bash
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/cisco/perimeter-fw1.cfg --extract=.cache/resources/cisco/perimeter-fw1.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--perimeter-fw1.cfg.console --verbose
 + return 1
 + local vendor_code=1
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/cisco/perimeter-fw1.cfg --extract=.cache/resources/cisco/perimeter-fw1.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--perimeter-fw1.cfg.console --verbose
 + set -e
 + case "${vendor_code}" in
 + target_platform=fortinet
@@ -1690,9 +1693,9 @@
 + :
 ++ basename configs/fortinet/fg-branch-vpn-01.cfg
 + local logger_index=fg-branch-vpn-01.cfg
-+ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fg-branch-vpn-01.cfg
++ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fg-branch-vpn-01.cfg
 + :
-+ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/fortinet/fg-branch-vpn-01.cfg' '--extract=.cache/resources/fortinet/fg-branch-vpn-01.cfg' '--platform=fortinet' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fg-branch-vpn-01.cfg.console')
++ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/fortinet/fg-branch-vpn-01.cfg' '--extract=.cache/resources/fortinet/fg-branch-vpn-01.cfg' '--platform=fortinet' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fg-branch-vpn-01.cfg.console')
 + declare -a execute__network_extract
 + [[ false == true ]]
 + [[ true == true ]]
@@ -1735,10 +1738,10 @@
 + local 'message=\t--platform=fortinet'
 + echo -e '\t--platform=fortinet'
 + for item in "${execute__network_extract[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fg-branch-vpn-01.cfg.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fg-branch-vpn-01.cfg.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fg-branch-vpn-01.cfg.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fg-branch-vpn-01.cfg.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fg-branch-vpn-01.cfg.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fg-branch-vpn-01.cfg.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fg-branch-vpn-01.cfg.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fg-branch-vpn-01.cfg.console'
 + for item in "${execute__network_extract[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -1751,7 +1754,7 @@
 + echo
 + (( i++ ))
 + (( i < count ))
-+ local job_pid=67240
++ local job_pid=61079
 + extract_jobs_pid+=("${job_pid}")
 + extract_jobs2cfg_mapping["$!"]=fg-branch-vpn-01.cfg
 + for target_config in "${configs_listing[@]}"
@@ -1763,6 +1766,7 @@
 + local 'cisco_pattern=\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b'
 + grep -qiE 'fortinet|fortigate' configs/fortinet/fg-campus-core.cfg
 ++ which bash
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/fortinet/fg-branch-vpn-01.cfg --extract=.cache/resources/fortinet/fg-branch-vpn-01.cfg --platform=fortinet --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fg-branch-vpn-01.cfg.console --verbose
 + return 1
 + local vendor_code=1
 + set -e
@@ -1770,7 +1774,6 @@
 + target_platform=fortinet
 + [[ true == true ]]
 + message 'Source Config: [ configs/fortinet/fg-campus-core.cfg ] ( fortinet )'
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/fortinet/fg-branch-vpn-01.cfg --extract=.cache/resources/fortinet/fg-branch-vpn-01.cfg --platform=fortinet --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fg-branch-vpn-01.cfg.console --verbose
 + [[ -n Source Config: [ configs/fortinet/fg-campus-core.cfg ] ( fortinet ) ]]
 + local 'message=Source Config: [ configs/fortinet/fg-campus-core.cfg ] ( fortinet )'
 + echo -e 'Source Config: [ configs/fortinet/fg-campus-core.cfg ] ( fortinet )'
@@ -1785,9 +1788,9 @@
 + :
 ++ basename configs/fortinet/fg-campus-core.cfg
 + local logger_index=fg-campus-core.cfg
-+ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fg-campus-core.cfg
++ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fg-campus-core.cfg
 + :
-+ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/fortinet/fg-campus-core.cfg' '--extract=.cache/resources/fortinet/fg-campus-core.cfg' '--platform=fortinet' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fg-campus-core.cfg.console')
++ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/fortinet/fg-campus-core.cfg' '--extract=.cache/resources/fortinet/fg-campus-core.cfg' '--platform=fortinet' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fg-campus-core.cfg.console')
 + declare -a execute__network_extract
 + [[ false == true ]]
 + [[ true == true ]]
@@ -1830,10 +1833,10 @@
 + local 'message=\t--platform=fortinet'
 + echo -e '\t--platform=fortinet'
 + for item in "${execute__network_extract[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fg-campus-core.cfg.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fg-campus-core.cfg.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fg-campus-core.cfg.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fg-campus-core.cfg.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fg-campus-core.cfg.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fg-campus-core.cfg.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fg-campus-core.cfg.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fg-campus-core.cfg.console'
 + for item in "${execute__network_extract[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -1846,7 +1849,7 @@
 + echo
 + (( i++ ))
 + (( i < count ))
-+ local job_pid=67284
++ local job_pid=61123
 + extract_jobs_pid+=("${job_pid}")
 + extract_jobs2cfg_mapping["$!"]=fg-campus-core.cfg
 + for target_config in "${configs_listing[@]}"
@@ -1858,9 +1861,9 @@
 + local 'cisco_pattern=\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b'
 + grep -qiE 'fortinet|fortigate' configs/fortinet/fg-testing-config.cfg
 ++ which bash
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/fortinet/fg-campus-core.cfg --extract=.cache/resources/fortinet/fg-campus-core.cfg --platform=fortinet --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fg-campus-core.cfg.console --verbose
 + return 1
 + local vendor_code=1
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/fortinet/fg-campus-core.cfg --extract=.cache/resources/fortinet/fg-campus-core.cfg --platform=fortinet --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fg-campus-core.cfg.console --verbose
 + set -e
 + case "${vendor_code}" in
 + target_platform=fortinet
@@ -1880,9 +1883,9 @@
 + :
 ++ basename configs/fortinet/fg-testing-config.cfg
 + local logger_index=fg-testing-config.cfg
-+ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fg-testing-config.cfg
++ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fg-testing-config.cfg
 + :
-+ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/fortinet/fg-testing-config.cfg' '--extract=.cache/resources/fortinet/fg-testing-config.cfg' '--platform=fortinet' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fg-testing-config.cfg.console')
++ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/fortinet/fg-testing-config.cfg' '--extract=.cache/resources/fortinet/fg-testing-config.cfg' '--platform=fortinet' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fg-testing-config.cfg.console')
 + declare -a execute__network_extract
 + [[ false == true ]]
 + [[ true == true ]]
@@ -1925,10 +1928,10 @@
 + local 'message=\t--platform=fortinet'
 + echo -e '\t--platform=fortinet'
 + for item in "${execute__network_extract[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fg-testing-config.cfg.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fg-testing-config.cfg.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fg-testing-config.cfg.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fg-testing-config.cfg.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fg-testing-config.cfg.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fg-testing-config.cfg.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fg-testing-config.cfg.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fg-testing-config.cfg.console'
 + for item in "${execute__network_extract[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -1941,7 +1944,7 @@
 + echo
 + (( i++ ))
 + (( i < count ))
-+ local job_pid=67332
++ local job_pid=61170
 + extract_jobs_pid+=("${job_pid}")
 + extract_jobs2cfg_mapping["$!"]=fg-testing-config.cfg
 + for target_config in "${configs_listing[@]}"
@@ -1954,7 +1957,7 @@
 + grep -qiE 'fortinet|fortigate' configs/misc/fw1.cfg
 ++ which bash
 + grep -qiE '\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b' configs/misc/fw1.cfg
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/fortinet/fg-testing-config.cfg --extract=.cache/resources/fortinet/fg-testing-config.cfg --platform=fortinet --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fg-testing-config.cfg.console --verbose
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/fortinet/fg-testing-config.cfg --extract=.cache/resources/fortinet/fg-testing-config.cfg --platform=fortinet --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fg-testing-config.cfg.console --verbose
 + return 2
 + local vendor_code=2
 + set -e
@@ -1976,9 +1979,9 @@
 + :
 ++ basename configs/misc/fw1.cfg
 + local logger_index=fw1.cfg
-+ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fw1.cfg
++ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fw1.cfg
 + :
-+ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/misc/fw1.cfg' '--extract=.cache/resources/misc/fw1.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fw1.cfg.console')
++ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/misc/fw1.cfg' '--extract=.cache/resources/misc/fw1.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fw1.cfg.console')
 + declare -a execute__network_extract
 + [[ false == true ]]
 + [[ true == true ]]
@@ -2021,10 +2024,10 @@
 + local 'message=\t--platform=cisco'
 + echo -e '\t--platform=cisco'
 + for item in "${execute__network_extract[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fw1.cfg.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fw1.cfg.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fw1.cfg.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fw1.cfg.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fw1.cfg.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fw1.cfg.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fw1.cfg.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fw1.cfg.console'
 + for item in "${execute__network_extract[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -2037,7 +2040,7 @@
 + echo
 + (( i++ ))
 + (( i < count ))
-+ local job_pid=67387
++ local job_pid=61232
 + extract_jobs_pid+=("${job_pid}")
 + extract_jobs2cfg_mapping["$!"]=fw1.cfg
 + for target_config in "${configs_listing[@]}"
@@ -2049,8 +2052,8 @@
 + local 'cisco_pattern=\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b'
 + grep -qiE 'fortinet|fortigate' configs/misc/fw3.cfg
 ++ which bash
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/misc/fw1.cfg --extract=.cache/resources/misc/fw1.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fw1.cfg.console --verbose
 + grep -qiE '\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b' configs/misc/fw3.cfg
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/misc/fw1.cfg --extract=.cache/resources/misc/fw1.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fw1.cfg.console --verbose
 + return 2
 + local vendor_code=2
 + set -e
@@ -2072,9 +2075,9 @@
 + :
 ++ basename configs/misc/fw3.cfg
 + local logger_index=fw3.cfg
-+ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fw3.cfg
++ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fw3.cfg
 + :
-+ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/misc/fw3.cfg' '--extract=.cache/resources/misc/fw3.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fw3.cfg.console')
++ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/misc/fw3.cfg' '--extract=.cache/resources/misc/fw3.cfg' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fw3.cfg.console')
 + declare -a execute__network_extract
 + [[ false == true ]]
 + [[ true == true ]]
@@ -2117,10 +2120,10 @@
 + local 'message=\t--platform=cisco'
 + echo -e '\t--platform=cisco'
 + for item in "${execute__network_extract[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fw3.cfg.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fw3.cfg.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fw3.cfg.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fw3.cfg.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fw3.cfg.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fw3.cfg.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fw3.cfg.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fw3.cfg.console'
 + for item in "${execute__network_extract[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -2133,7 +2136,7 @@
 + echo
 + (( i++ ))
 + (( i < count ))
-+ local job_pid=67448
++ local job_pid=61287
 + extract_jobs_pid+=("${job_pid}")
 + extract_jobs2cfg_mapping["$!"]=fw3.cfg
 + for target_config in "${configs_listing[@]}"
@@ -2145,8 +2148,8 @@
 + local 'cisco_pattern=\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b'
 + grep -qiE 'fortinet|fortigate' configs/misc/switch1.conf
 ++ which bash
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/misc/fw3.cfg --extract=.cache/resources/misc/fw3.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--fw3.cfg.console --verbose
 + grep -qiE '\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b' configs/misc/switch1.conf
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/misc/fw3.cfg --extract=.cache/resources/misc/fw3.cfg --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--fw3.cfg.console --verbose
 + return 2
 + local vendor_code=2
 + set -e
@@ -2168,9 +2171,9 @@
 + :
 ++ basename configs/misc/switch1.conf
 + local logger_index=switch1.conf
-+ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--switch1.conf
++ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--switch1.conf
 + :
-+ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/misc/switch1.conf' '--extract=.cache/resources/misc/switch1.conf' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--switch1.conf.console')
++ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/misc/switch1.conf' '--extract=.cache/resources/misc/switch1.conf' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--switch1.conf.console')
 + declare -a execute__network_extract
 + [[ false == true ]]
 + [[ true == true ]]
@@ -2213,10 +2216,10 @@
 + local 'message=\t--platform=cisco'
 + echo -e '\t--platform=cisco'
 + for item in "${execute__network_extract[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--switch1.conf.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--switch1.conf.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--switch1.conf.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--switch1.conf.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--switch1.conf.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--switch1.conf.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--switch1.conf.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--switch1.conf.console'
 + for item in "${execute__network_extract[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -2229,7 +2232,7 @@
 + echo
 + (( i++ ))
 + (( i < count ))
-+ local job_pid=67511
++ local job_pid=61346
 + extract_jobs_pid+=("${job_pid}")
 + extract_jobs2cfg_mapping["$!"]=switch1.conf
 + for target_config in "${configs_listing[@]}"
@@ -2241,7 +2244,7 @@
 + local 'cisco_pattern=\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b'
 + grep -qiE 'fortinet|fortigate' configs/misc/switch3.conf
 ++ which bash
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/misc/switch1.conf --extract=.cache/resources/misc/switch1.conf --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--switch1.conf.console --verbose
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/misc/switch1.conf --extract=.cache/resources/misc/switch1.conf --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--switch1.conf.console --verbose
 + grep -qiE '\basa\b|cisco ios|cisco adaptive|^interface\b|^object\b' configs/misc/switch3.conf
 + return 2
 + local vendor_code=2
@@ -2264,9 +2267,9 @@
 + :
 ++ basename configs/misc/switch3.conf
 + local logger_index=switch3.conf
-+ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--switch3.conf
++ local network_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--switch3.conf
 + :
-+ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/misc/switch3.conf' '--extract=.cache/resources/misc/switch3.conf' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--switch3.conf.console')
++ execute__network_extract=('./scripts/network-extract.shell' '--search=.cache/ips.list' '--config=configs/misc/switch3.conf' '--extract=.cache/resources/misc/switch3.conf' '--platform=cisco' '--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--switch3.conf.console')
 + declare -a execute__network_extract
 + [[ false == true ]]
 + [[ true == true ]]
@@ -2309,10 +2312,10 @@
 + local 'message=\t--platform=cisco'
 + echo -e '\t--platform=cisco'
 + for item in "${execute__network_extract[@]}"
-+ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--switch3.conf.console'
-+ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--switch3.conf.console ]]
-+ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--switch3.conf.console'
-+ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--switch3.conf.console'
++ message '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--switch3.conf.console'
++ [[ -n \t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--switch3.conf.console ]]
++ local 'message=\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--switch3.conf.console'
++ echo -e '\t--logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--switch3.conf.console'
 + for item in "${execute__network_extract[@]}"
 + message '\t--verbose'
 + [[ -n \t--verbose ]]
@@ -2325,138 +2328,141 @@
 + echo
 + (( i++ ))
 + (( i < count ))
-+ local job_pid=67565
++ local job_pid=61406
 + extract_jobs_pid+=("${job_pid}")
 + extract_jobs2cfg_mapping["$!"]=switch3.conf
 + ((  12 > 0  ))
 + valid_extract_jobs_pid=()
 + local valid_extract_jobs_pid
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 67111
++ kill -0 60952
 + logger=access-sw1-west.cfg
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 67119
++ kill -0 60960
 + logger=branch-isr-02.cfg
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 67135
++ kill -0 60976
 + logger=campus-sw-access01.cfg
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 67164
++ kill -0 61003
 + logger=dmz-fw2-backup.cfg
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 67203
++ kill -0 61040
++ valid_extract_jobs_pid+=("${pid}")
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 61079
++ valid_extract_jobs_pid+=("${pid}")
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 61123
++ valid_extract_jobs_pid+=("${pid}")
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 61170
 ++ which bash
 + valid_extract_jobs_pid+=("${pid}")
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 67240
++ kill -0 61232
 + valid_extract_jobs_pid+=("${pid}")
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 67284
++ kill -0 61287
 + valid_extract_jobs_pid+=("${pid}")
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 67332
++ kill -0 61346
 + valid_extract_jobs_pid+=("${pid}")
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 67387
-+ valid_extract_jobs_pid+=("${pid}")
-+ for pid in "${extract_jobs_pid[@]}"
-+ kill -0 67448
-+ valid_extract_jobs_pid+=("${pid}")
-+ for pid in "${extract_jobs_pid[@]}"
-+ kill -0 67511
-+ valid_extract_jobs_pid+=("${pid}")
-+ for pid in "${extract_jobs_pid[@]}"
-+ kill -0 67565
++ kill -0 61406
 + valid_extract_jobs_pid+=("${pid}")
 + extract_jobs_pid=("${valid_extract_jobs_pid[@]}")
 + sleep 0.1
-+ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/misc/switch3.conf --extract=.cache/resources/misc/switch3.conf --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/network-extract--switch3.conf.console --verbose
++ /usr/local/bin/bash -x ./scripts/network-extract.shell --search=.cache/ips.list --config=configs/misc/switch3.conf --extract=.cache/resources/misc/switch3.conf --platform=cisco --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/network-extract--switch3.conf.console --verbose
 + ((  8 > 0  ))
 + valid_extract_jobs_pid=()
 + local valid_extract_jobs_pid
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 67203
++ kill -0 61040
 + logger=perimeter-fw1.cfg
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 67240
++ kill -0 61079
 + logger=fg-branch-vpn-01.cfg
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 67284
++ kill -0 61123
 + logger=fg-campus-core.cfg
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 67332
++ kill -0 61170
 + logger=fg-testing-config.cfg
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 67387
++ kill -0 61232
 + logger=fw1.cfg
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 67448
++ kill -0 61287
 + logger=fw3.cfg
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 67511
-+ logger=switch1.conf
++ kill -0 61346
++ valid_extract_jobs_pid+=("${pid}")
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 67565
++ kill -0 61406
 + valid_extract_jobs_pid+=("${pid}")
 + extract_jobs_pid=("${valid_extract_jobs_pid[@]}")
 + sleep 0.1
-+ ((  1 > 0  ))
++ ((  2 > 0  ))
 + valid_extract_jobs_pid=()
 + local valid_extract_jobs_pid
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 67565
++ kill -0 61346
++ logger=switch1.conf
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 61406
 + logger=switch3.conf
 + extract_jobs_pid=("${valid_extract_jobs_pid[@]}")
 + sleep 0.1
 + ((  0 > 0  ))
 + for pid in "${!extract_jobs2cfg_mapping[@]}"
-+ logger=fw3.cfg
-+ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/fw3.cfg.console
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/fw3.cfg.console ]]
-+ for pid in "${!extract_jobs2cfg_mapping[@]}"
-+ logger=fg-testing-config.cfg
-+ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/fg-testing-config.cfg.console
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/fg-testing-config.cfg.console ]]
++ logger=branch-isr-02.cfg
++ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/branch-isr-02.cfg.console
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/branch-isr-02.cfg.console ]]
 + for pid in "${!extract_jobs2cfg_mapping[@]}"
 + logger=switch1.conf
-+ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/switch1.conf.console
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/switch1.conf.console ]]
-+ for pid in "${!extract_jobs2cfg_mapping[@]}"
-+ logger=switch3.conf
-+ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/switch3.conf.console
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/switch3.conf.console ]]
++ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/switch1.conf.console
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/switch1.conf.console ]]
 + for pid in "${!extract_jobs2cfg_mapping[@]}"
 + logger=perimeter-fw1.cfg
-+ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/perimeter-fw1.cfg.console
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/perimeter-fw1.cfg.console ]]
++ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/perimeter-fw1.cfg.console
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/perimeter-fw1.cfg.console ]]
 + for pid in "${!extract_jobs2cfg_mapping[@]}"
-+ logger=fg-campus-core.cfg
-+ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/fg-campus-core.cfg.console
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/fg-campus-core.cfg.console ]]
-+ for pid in "${!extract_jobs2cfg_mapping[@]}"
-+ logger=branch-isr-02.cfg
-+ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/branch-isr-02.cfg.console
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/branch-isr-02.cfg.console ]]
-+ for pid in "${!extract_jobs2cfg_mapping[@]}"
-+ logger=access-sw1-west.cfg
-+ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/access-sw1-west.cfg.console
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/access-sw1-west.cfg.console ]]
-+ for pid in "${!extract_jobs2cfg_mapping[@]}"
-+ logger=dmz-fw2-backup.cfg
-+ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/dmz-fw2-backup.cfg.console
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/dmz-fw2-backup.cfg.console ]]
++ logger=fw3.cfg
++ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/fw3.cfg.console
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/fw3.cfg.console ]]
 + for pid in "${!extract_jobs2cfg_mapping[@]}"
 + logger=campus-sw-access01.cfg
-+ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/campus-sw-access01.cfg.console
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/campus-sw-access01.cfg.console ]]
++ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/campus-sw-access01.cfg.console
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/campus-sw-access01.cfg.console ]]
 + for pid in "${!extract_jobs2cfg_mapping[@]}"
-+ logger=fg-branch-vpn-01.cfg
-+ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/fg-branch-vpn-01.cfg.console
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/fg-branch-vpn-01.cfg.console ]]
++ logger=fg-testing-config.cfg
++ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/fg-testing-config.cfg.console
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/fg-testing-config.cfg.console ]]
 + for pid in "${!extract_jobs2cfg_mapping[@]}"
 + logger=fw1.cfg
-+ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/fw1.cfg.console
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW/fw1.cfg.console ]]
++ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/fw1.cfg.console
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/fw1.cfg.console ]]
++ for pid in "${!extract_jobs2cfg_mapping[@]}"
++ logger=fg-campus-core.cfg
++ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/fg-campus-core.cfg.console
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/fg-campus-core.cfg.console ]]
++ for pid in "${!extract_jobs2cfg_mapping[@]}"
++ logger=dmz-fw2-backup.cfg
++ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/dmz-fw2-backup.cfg.console
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/dmz-fw2-backup.cfg.console ]]
++ for pid in "${!extract_jobs2cfg_mapping[@]}"
++ logger=access-sw1-west.cfg
++ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/access-sw1-west.cfg.console
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/access-sw1-west.cfg.console ]]
++ for pid in "${!extract_jobs2cfg_mapping[@]}"
++ logger=switch3.conf
++ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/switch3.conf.console
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/switch3.conf.console ]]
++ for pid in "${!extract_jobs2cfg_mapping[@]}"
++ logger=fg-branch-vpn-01.cfg
++ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/fg-branch-vpn-01.cfg.console
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap/fg-branch-vpn-01.cfg.console ]]
 + [[ true == true ]]
 + print_file console/network-configs.console
 + [[ -n console/network-configs.console ]]
@@ -2485,5 +2491,5 @@
 + return 0
 + result=0
 + exit 0
-+ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW ]]
-+ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.QlNf3oCeaW
++ [[ -d /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap ]]
++ rm -rf /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.84IUA4Lrap

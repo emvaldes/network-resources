@@ -14,7 +14,7 @@ readonly __CONFIGS_EXPORT_SOURCED=1;
 ##   Extracts relevant fields from each matching config object using `jq`.
 ##
 ## Input:
-##   None (operates on all *.json files under ${reports_folder}/<ip>/<ip>.json)
+##   None (operates on all *.json files under ${reports_location}/<ip>/<ip>.json)
 ##
 ## Output:
 ##   Generates sorted CSV at ${output_csv}, with columns:
@@ -36,12 +36,12 @@ function generate_csvoutput () {
     local tmp_csv="$( mktemp )";  ## Temporary file for accumulating unsorted CSV rows
 
     ## Ensure JSON directory exists and contains files
-    if [[ ! -d "${reports_folder}" ]]; then
-      warning "Missing ${reports_folder}, cannot generate CSV.";
+    if [[ ! -d "${reports_location}" ]]; then
+      warning "Missing ${reports_location}, cannot generate CSV.";
       return 10;
     fi;
 
-    find "${reports_folder}" \
+    find "${reports_location}" \
          -type f \
          -name '*.json' \
          -mindepth 2 \

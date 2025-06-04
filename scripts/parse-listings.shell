@@ -102,7 +102,7 @@ source ./scripts/configs-manager.shell;
 ##
 ## Responsibilities:
 ##   - `generate_csvoutput()`:
-##       - Traverses `${reports_folder}` to locate all `<ip>/<ip>.json` files.
+##       - Traverses `${reports_location}` to locate all `<ip>/<ip>.json` files.
 ##       - Extracts relevant fields (`target`, `site`, `device`, `object`, etc.)
 ##         from each config entry using a `jq` transformation.
 ##       - Builds a CSV with consistent column headers and sorted content.
@@ -110,7 +110,7 @@ source ./scripts/configs-manager.shell;
 ## Integration:
 ##   - Assumes all JSON input files conform to the output structure of
 ##     `parse-configs.shell` / `extract_configs()` pipeline.
-##   - Depends on `${reports_folder}` being populated and `${output_csv}` defined.
+##   - Depends on `${reports_location}` being populated and `${output_csv}` defined.
 ##   - Called near the end of the parsing pipeline for reporting/export.
 ## -------------------------------------------------------------------------- ##
 
@@ -130,7 +130,7 @@ source ./scripts/configs-export.shell;
 ##   - Applies grouping/classification (if enabled) via matrix matching
 ##   - Executes `extract_configs()` to collect relevant config blocks
 ##   - Deduplicates and merges structured JSON objects per IP
-##   - Stores final output under `${reports_folder}/<ip-address>/<ip-address>.json`
+##   - Stores final output under `${reports_location}/<ip-address>/<ip-address>.json`
 ##
 ## Input Parameters (as key=value args):
 ##   - ip-addr      : IP address to process (required)
@@ -144,7 +144,7 @@ source ./scripts/configs-export.shell;
 ##   - verbose/debug/dry-run/help/logs : Optional behavior toggles
 ##
 ## Output:
-##   - Structured per-IP JSON report at ${reports_folder}/<ip-address>/<ip-address>.json
+##   - Structured per-IP JSON report at ${reports_location}/<ip-address>/<ip-address>.json
 ##   - Temp fragments, logs, and debug traces under ${TMP_DIR}
 ##
 ## Notes:
@@ -196,7 +196,7 @@ function main () {
       [[ $key =~ ^(matrix|m)$ ]] && export matrix_filename="${value}";
       [[ $key =~ ^(purge-jobs|u)$ ]] && export remove_jobsfile=true;
       [[ $key =~ ^(purge-logs|w)$ ]] && export remove_logsfile=true;
-      [[ $key =~ ^(reports|r)$ ]] && export reports_folder="${value}";
+      [[ $key =~ ^(reports|r)$ ]] && export reports_location="${value}";
       [[ $key =~ ^(sites|s)$ ]] && export target_sites="${value}";
       [[ $key =~ ^(validate|v)$ ]] && export validate_address=true;
 
@@ -296,12 +296,12 @@ function main () {
 
     #### -----------------------------------------------------------------------
     ## Custom/Default reports folder:
-    export reports_folder="${reports_folder:-reports}";
+    export reports_location="${reports_location:-reports}";
     ## Ensure reports folder is clean before starting
-    rm -rf "${reports_folder}" && mkdir -p "${reports_folder}";
+    rm -rf "${reports_location}" && mkdir -p "${reports_location}";
 
     #### -----------------------------------------------------------------------
-    export output_csv="${reports_folder}/reports.csv";
+    export output_csv="${reports_location}/reports.csv";
 
     #### -----------------------------------------------------------------------
     ## Validating IP Addresses (Skipping?)
@@ -350,7 +350,7 @@ function main () {
         message "Enable logging:                       ${enable_logging:-unset}";
         message "Parallel threads:                     ${parallel_threads:-unset}";
         message "Translation matrix file:              ${matrix_filename:-unset}";
-        message "Reports output directory:             ${reports_folder:-unset}";
+        message "Reports output directory:             ${reports_location:-unset}";
         message "Target site folders:                  ${target_sites:-unset}";
         message "Enable IP format validation:          ${validate_address:-unset}";
         newline;
@@ -719,7 +719,7 @@ function main () {
     fi;
 
     #### -----------------------------------------------------------------------
-    ## Extracting per-IP reports into ${reports_folder}/<ip-address>/ using background jobs
+    ## Extracting per-IP reports into ${reports_location}/<ip-address>/ using background jobs
 
     declare -ga configs_jobs_pid=();
     declare -gA configs_jobs2ips_mapping=();
@@ -729,14 +729,14 @@ function main () {
 
     for address in "${target_addresses[@]}"; do
 
-      mkdir -p "${reports_folder}/${address}" 2>/dev/null || true;
+      mkdir -p "${reports_location}/${address}" 2>/dev/null || true;
 
       (
         $(which bash )  -x ./scripts/${network_configs__script}.shell \
                         --search="${address}" \
                         --configs="${configs_list_cache}" \
                         --location="${configs_dirpath}" \
-                        --extract="${reports_folder}/${address}" \
+                        --extract="${reports_location}/${address}" \
                         --update=false \
                         --logger="${network_configs__logfile}--${address}.console" \
                         --export \
@@ -845,7 +845,7 @@ function main () {
       fi;
 
       #### -----------------------------------------------------------------
-      local configs_manager__script="configs-manager";
+       local configs_manager__script="configs-manager";
       export configs_manager__console="${console_location}/${configs_manager__script}.console";
       : > "${configs_manager__console}";
 
@@ -862,7 +862,7 @@ function main () {
       fi;
 
       #### -----------------------------------------------------------------------
-      # ## Exporting ${reports_folder}/reports.json data-sets into CSV output
+      # ## Exporting ${reports_location}/reports.json data-sets into CSV output
       # generate_csvoutput;
 
     done;
@@ -918,11 +918,14 @@ if [[ "${actions_logfile:-}" != "$(readlink -f /proc/$$/fd/1)" ]]; then
 fi;
 
 rm -rf ${cache_location};
-mkdir -p ${cache_location}/{jobs,targets} 2>/dev/null || true;
+mkdir -p ${cache_location} 2>/dev/null || true;
 
 [[ ! -d ${logs_location} ]] && \
-  mkdir -p ${logs_location}/jobs 2>/dev/null || true;
+  mkdir -p ${logs_location} 2>/dev/null || true;
 find ${logs_location} -type f ! -name "${script_filename}.log" -delete 2>/dev/null;
+
+rm -rf ${jobs_location};
+mkdir -p ${jobs_location} 2>/dev/null || true;
 
 rm -rf ${targets_location} 2>/dev/null;
 mkdir -p ${targets_location} 2>/dev/null || true;

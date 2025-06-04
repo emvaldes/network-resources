@@ -33,7 +33,7 @@ readonly __CONFIGS_MANAGE_SOURCED=1;
 function configs_manager () {
 
     #### -----------------------------------------------------------------------
-    local configs_manager__script="configs-manager";
+    local configs_parser__script="configs-parser";
 
     declare -a parser_jobs_pid=();          ## Array to hold the PIDs of background jobs
     declare -A parser_jobs2ips_mapping=();  ## Associative array to map PIDs to IPs
@@ -45,6 +45,8 @@ function configs_manager () {
     local configs_parser__logfile="${TMP_DIR}/configs-parser.logs";
     :> "${configs_parser__logfile}";
 
+    mkdir -p "${jobs_location}" 2>/dev/null || true;
+
     while (( ip_index < total_ips )); do
 
       ip_address="${target_listing[ip_index++]}";
@@ -52,13 +54,57 @@ function configs_manager () {
         printf "%0${#total_ips}d" "${ip_index}"
       )";
 
-      local configs_parser__console="${TMP_DIR}/configs-parser--${ip_address}";
+      local configs_parser__logger="${TMP_DIR}/${configs_parser__script}--${ip_address}";
+      : > "${configs_parser__logger}";
+
+      declare -a execute__configs_parser=(
+        configs_parser
+        --configs="${reports_location}/${ip_address}"
+        --ip-addr="${ip_address}"
+        --index="${padded_index}"
+        --matrix="${matrix_filename}"
+        --reports="${reports_location}"
+        --file-ext="$(
+          IFS=,; print "${file_extensions[*]}"
+        )"
+        --logger="${configs_parser__logger}.console"
+      );
+
+      [[ "${classify_targets}" == true ]] && execute__configs_parser+=( --classify );
+      [[ "${validate_address}" == true ]] && execute__configs_parser+=( --validate );
+      [[ "${verbose}" == true ]] && execute__configs_parser+=( --verbose );
+      [[ "${verbose}" == true ]] && execute__configs_parser+=( --debug );
+
+      #### -----------------------------------------------------------------------
+      ## Execute and propagate exit status
+      if [[ "${verbose}" == true ]]; then
+        {
+          message "Parsing Configs: [ ${ip_address} ]";
+          for parameter in "${execute__configs_parser[@]}"; do
+            message "\t\t${parameter}";
+          done;
+          newline;
+        } >> "${configs_manager__console:-/dev/null}";
+      fi;
 
       (
-        configs_parser --search="${ip_address}" \
-                       --index="${padded_index}" \
-                       --logger="${configs_parser__console}.console" \
-        >> "${logs_location}/${configs_manager__script:-/dev/null}.log" 2>&1;
+
+        local status=0;
+        local module_logfile="${jobs_location}/${configs_parser__script}/${ip_address}.job";
+
+        mkdir -p $( dirname "${module_logfile}" ) 2>/dev/null || true;
+        :> "${module_logfile}";  ## Clear the log file if it exists
+        # "${execute__configs_parser[@]}" >> "${jobs_location:-/dev/null}.log" 2>&1;
+
+        # if (( status != 0 )); then
+        #         {
+        #           warning "Failed to process IP [ ${search_pattern} ] configs :: exit ${status}";
+        #         } >> "${target_logfile:-/dev/null}";
+        #   else  {
+        #           message "Parsed IP Address: [ ${search_pattern} ] configs :: exit ${status}";
+        #         } >> "${target_logfile:-/dev/null}";
+        # fi;
+
       ) &
 
       local job_pid=$!;
@@ -100,7 +146,7 @@ function configs_manager () {
     {
       for pid in "${!parser_jobs2ips_mapping[@]}"; do
         ip_address="${parser_jobs2ips_mapping[${pid}]}";
-        parser_config="${reports_folder}/${ip_address}.json";
+        parser_config="${reports_location}/${ip_address}.json";
         if [[ -s "${parser_config}" && -f "${parser_config}" ]]; then
           message "Completed Background Jobs (Managed Configs): ${parser_config}";
           jq -r . "${parser_config}" || warning "Invalid JSON: ${parser_config}";
@@ -111,116 +157,5 @@ function configs_manager () {
 
     return 0;
 }; alias configs-manager='configs_manager';
-
-## -------------------------------------------------------------------------- ##
-## Function: configs-manager :: parse-configs ()
-##
-## Purpose:
-##   Executes the `parse-configs.shell` script to process a single IP address.
-##   Dynamically assembles CLI arguments based on current environment settings.
-##
-## Inputs:
-##   $1 = IP address to parse
-##   $2 = Padded index used for output identification and job tracking
-##
-## Behavior:
-##   - Constructs the execution command for `parse-configs.shell` with flags:
-##     --configs, --ip-addr, --index, --matrix, --reports, --file-ext
-##   - Conditionally appends --classify, --validate, --verbose, --debug
-##   - Redirects all output to a log file if logging is enabled.
-##   - Executes the command synchronously (no nested backgrounding).
-##
-## Output:
-##   - Log output written to: ${cache_location}/jobs/${ip_address}.job
-##   - On failure, error is logged to: ${logs_location}/errors/errors.log
-##
-## Notes:
-##   - Designed to run as a background task from `manage_configs()`.
-##   - Must remain synchronous to preserve PID tracking integrity.
-## -------------------------------------------------------------------------- ##
-
-function configs_parser () {
-
-    ## tracking_process ${FUNCNAME} "${@}";
-    oIFS="${IFS}";
-
-    ## Process command-line arguments and map them to local variables
-    for xitem in "${@}"; do
-      IFS='=' read -r key value <<< "$(
-        echo -e "${xitem}" | sed -e '1s|^\(-\)\{1,\}||'
-      )"; #echo -e "\nxitem: '${xitem}'\nkey: '${key}'\t->\tvalue: '${value}'";
-
-      #### ---------------------------------------------------------------------
-      ## Match accepted arguments
-      [[ $key =~ ^(search|p)$ ]] && local search_pattern="${value}";
-      [[ $key =~ ^(index|t)$ ]] && local padded_index="${value}";
-      [[ $key =~ ^(logger|l)$ ]] && local target_logfile="${value}";
-
-      #### ---------------------------------------------------------------------
-      ## Special options
-      [[ $key == "debug" ]] && local debug=true;
-      [[ $key == "dry-run" ]] && local dry_run=true;
-      [[ $key == "verbose" ]] && local verbose=true;
-
-    done; IFS="${oIFS}";
-
-    #### -----------------------------------------------------------------------
-    ## Set default values if not supplied
-    [[ -z ${debug:-} ]] && debug=false;
-    [[ -z ${dry_run:-} ]] && dry_run=false;
-    [[ -z ${verbose:-} ]] && verbose=false;
-
-    #### -----------------------------------------------------------------------
-    if [[ -z "${target_logfile:-}" ]]; then
-      local target_logfile="${console_location}/configs-parser.console";
-      touch "${target_logfile}";
-    fi;
-    # touch "${target_logfile}";  ## Clear the log file if it exists
-
-    declare -a execute__configs_pipeline=(
-      configs_pipeline
-      --configs="${configs_dirpath}"
-      --ip-addr="${search_pattern}"
-      --index="${padded_index}"
-      --matrix="${matrix_filename}"
-      --reports="${reports_folder}"
-      --file-ext="$(
-        IFS=,; print "${file_extensions[*]}"
-      )"
-    );
-
-    [[ "${classify_targets}" == true ]] && execute__configs_pipeline+=( --classify );
-    [[ "${validate_address}" == true ]] && execute__configs_pipeline+=( --validate );
-    [[ "${verbose}" == true ]] && execute__configs_pipeline+=( --verbose );
-    [[ "${verbose}" == true ]] && execute__configs_pipeline+=( --debug );
-
-    #### -----------------------------------------------------------------------
-    ## Execute and propagate exit status
-    if [[ "${verbose}" == true ]]; then
-      {
-        message "Parsing Configs: [ ${search_pattern} ]";
-        for item in "${execute__configs_pipeline[@]}"; do
-          message "\t\t${item}";
-        done;
-        newline;
-      } >> "${target_logfile:-/dev/null}";
-    fi;
-
-    # local status=0;
-    # mkdir -p "${logs_location}/jobs" 2>/dev/null || true;
-    # jobs_logfile="${cache_location}/jobs/${search_pattern}.job";
-    # "${execute__configs_pipeline[@]}" 2>&1 > "${jobs_logfile}";
-
-    # if (( status != 0 )); then
-    #         {
-    #           warning "Failed to process IP [ ${search_pattern} ] configs :: exit ${status}";
-    #         } >> "${target_logfile:-/dev/null}";
-    #   else  {
-    #           message "Parsed IP Address: [ ${search_pattern} ] configs :: exit ${status}";
-    #         } >> "${target_logfile:-/dev/null}";
-    # fi;
-
-    return 0;
-}; alias parse-configs='configs_parser';
 
 #------------------------------------------------------------------------------#
