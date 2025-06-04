@@ -462,8 +462,15 @@ touch "${actions_logfile}" 2>/dev/null || true;
 export targets_location="targets";
 export targets_logfile="${cache_location}/targets.jobs";
 
+# export divisor="--$(
+#   date +%s%N | base64 | tr -dc 'a-zA-Z0-9'
+# )--";  ## message "DEBUG: divisor = '${divisor}'";
+
+script_basename="$(
+  basename "${BASH_SOURCE[0]}"
+)";
 export divisor="--$(
-  date +%s%N | base64 | tr -dc 'a-zA-Z0-9'
-)--";  ## message "DEBUG: divisor = '${divisor}'";
+  echo -n "${script_basename}" | base64 | tr -dc 'a-zA-Z0-9'
+)--";
 
 #------------------------------------------------------------------------------#

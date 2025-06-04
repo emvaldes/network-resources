@@ -560,7 +560,9 @@ function main () {
       for pid in "${!extract_jobs2cfg_mapping[@]}"; do
         logger="${extract_jobs2cfg_mapping[${pid}]}";
         console="${TMP_DIR}/${logger}.console";
-        [[ -s "${console}" ]] && cat "${console}";
+        if [[ -s "${console}" && -f "${console}" ]]; then
+          cat "${console}";
+        fi;
       done;
     } >> "${network_configs__console}";
 

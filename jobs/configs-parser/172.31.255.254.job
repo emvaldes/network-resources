@@ -1,5 +1,3 @@
-+ file_extensions=()
-+ declare -a file_extensions
 + oIFS=' 	
 '
 + for xitem in "${@}"
@@ -11,7 +9,6 @@
 + [[ configs =~ ^(configs|c)$ ]]
 + export configs_dirpath=reports/172.31.255.254
 + configs_dirpath=reports/172.31.255.254
-+ [[ configs =~ ^(file-ext|x)$ ]]
 + [[ configs =~ ^(index|n)$ ]]
 + [[ configs =~ ^(ip-addr|i)$ ]]
 + [[ configs =~ ^(logger|l)$ ]]
@@ -24,29 +21,10 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --ip-addr=172.31.255.254
-++ sed -e '1s|^\(-\)\{1,\}||'
-+ [[ ip-addr =~ ^(classify|g)$ ]]
-+ [[ ip-addr =~ ^(configs|c)$ ]]
-+ [[ ip-addr =~ ^(file-ext|x)$ ]]
-+ [[ ip-addr =~ ^(index|n)$ ]]
-+ [[ ip-addr =~ ^(ip-addr|i)$ ]]
-+ local target_address=172.31.255.254
-+ [[ ip-addr =~ ^(logger|l)$ ]]
-+ [[ ip-addr =~ ^(matrix|m)$ ]]
-+ [[ ip-addr =~ ^(reports|r)$ ]]
-+ [[ ip-addr =~ ^(validate|v)$ ]]
-+ [[ ip-addr == \d\e\b\u\g ]]
-+ [[ ip-addr == \d\r\y\-\r\u\n ]]
-+ [[ ip-addr == \v\e\r\b\o\s\e ]]
-+ for xitem in "${@}"
-+ IFS==
-+ read -r key value
 ++ echo -e --index=08
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ index =~ ^(classify|g)$ ]]
 + [[ index =~ ^(configs|c)$ ]]
-+ [[ index =~ ^(file-ext|x)$ ]]
 + [[ index =~ ^(index|n)$ ]]
 + local target_index=08
 + [[ index =~ ^(ip-addr|i)$ ]]
@@ -60,11 +38,44 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
+++ echo -e --ip-addr=172.31.255.254
+++ sed -e '1s|^\(-\)\{1,\}||'
++ [[ ip-addr =~ ^(classify|g)$ ]]
++ [[ ip-addr =~ ^(configs|c)$ ]]
++ [[ ip-addr =~ ^(index|n)$ ]]
++ [[ ip-addr =~ ^(ip-addr|i)$ ]]
++ local target_address=172.31.255.254
++ [[ ip-addr =~ ^(logger|l)$ ]]
++ [[ ip-addr =~ ^(matrix|m)$ ]]
++ [[ ip-addr =~ ^(reports|r)$ ]]
++ [[ ip-addr =~ ^(validate|v)$ ]]
++ [[ ip-addr == \d\e\b\u\g ]]
++ [[ ip-addr == \d\r\y\-\r\u\n ]]
++ [[ ip-addr == \v\e\r\b\o\s\e ]]
++ for xitem in "${@}"
++ IFS==
++ read -r key value
+++ echo -e --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--172.31.255.254.console
+++ sed -e '1s|^\(-\)\{1,\}||'
++ [[ logger =~ ^(classify|g)$ ]]
++ [[ logger =~ ^(configs|c)$ ]]
++ [[ logger =~ ^(index|n)$ ]]
++ [[ logger =~ ^(ip-addr|i)$ ]]
++ [[ logger =~ ^(logger|l)$ ]]
++ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--172.31.255.254.console
++ [[ logger =~ ^(matrix|m)$ ]]
++ [[ logger =~ ^(reports|r)$ ]]
++ [[ logger =~ ^(validate|v)$ ]]
++ [[ logger == \d\e\b\u\g ]]
++ [[ logger == \d\r\y\-\r\u\n ]]
++ [[ logger == \v\e\r\b\o\s\e ]]
++ for xitem in "${@}"
++ IFS==
++ read -r key value
 ++ echo -e --matrix=matrix.json
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ matrix =~ ^(classify|g)$ ]]
 + [[ matrix =~ ^(configs|c)$ ]]
-+ [[ matrix =~ ^(file-ext|x)$ ]]
 + [[ matrix =~ ^(index|n)$ ]]
 + [[ matrix =~ ^(ip-addr|i)$ ]]
 + [[ matrix =~ ^(logger|l)$ ]]
@@ -82,7 +93,6 @@
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ reports =~ ^(classify|g)$ ]]
 + [[ reports =~ ^(configs|c)$ ]]
-+ [[ reports =~ ^(file-ext|x)$ ]]
 + [[ reports =~ ^(index|n)$ ]]
 + [[ reports =~ ^(ip-addr|i)$ ]]
 + [[ reports =~ ^(logger|l)$ ]]
@@ -96,53 +106,12 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --file-ext=cfg,conf
-++ sed -e '1s|^\(-\)\{1,\}||'
-+ [[ file-ext =~ ^(classify|g)$ ]]
-+ [[ file-ext =~ ^(configs|c)$ ]]
-+ [[ file-ext =~ ^(file-ext|x)$ ]]
-+ file_extensions+=($(print "${value}" | tr ':,;\n ' '\n'))
-++ print cfg,conf
-++ [[ -n cfg,conf ]]
-++ echo -en cfg,conf
-++ tr ':,;\n ' '\n'
-+ [[ file-ext =~ ^(index|n)$ ]]
-+ [[ file-ext =~ ^(ip-addr|i)$ ]]
-+ [[ file-ext =~ ^(logger|l)$ ]]
-+ [[ file-ext =~ ^(matrix|m)$ ]]
-+ [[ file-ext =~ ^(reports|r)$ ]]
-+ [[ file-ext =~ ^(validate|v)$ ]]
-+ [[ file-ext == \d\e\b\u\g ]]
-+ [[ file-ext == \d\r\y\-\r\u\n ]]
-+ [[ file-ext == \v\e\r\b\o\s\e ]]
-+ for xitem in "${@}"
-+ IFS==
-+ read -r key value
-++ echo -e --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--172.31.255.254.console
-++ sed -e '1s|^\(-\)\{1,\}||'
-+ [[ logger =~ ^(classify|g)$ ]]
-+ [[ logger =~ ^(configs|c)$ ]]
-+ [[ logger =~ ^(file-ext|x)$ ]]
-+ [[ logger =~ ^(index|n)$ ]]
-+ [[ logger =~ ^(ip-addr|i)$ ]]
-+ [[ logger =~ ^(logger|l)$ ]]
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--172.31.255.254.console
-+ [[ logger =~ ^(matrix|m)$ ]]
-+ [[ logger =~ ^(reports|r)$ ]]
-+ [[ logger =~ ^(validate|v)$ ]]
-+ [[ logger == \d\e\b\u\g ]]
-+ [[ logger == \d\r\y\-\r\u\n ]]
-+ [[ logger == \v\e\r\b\o\s\e ]]
-+ for xitem in "${@}"
-+ IFS==
-+ read -r key value
 ++ echo -e --classify
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ classify =~ ^(classify|g)$ ]]
 + export classify_targets=true
 + classify_targets=true
 + [[ classify =~ ^(configs|c)$ ]]
-+ [[ classify =~ ^(file-ext|x)$ ]]
 + [[ classify =~ ^(index|n)$ ]]
 + [[ classify =~ ^(ip-addr|i)$ ]]
 + [[ classify =~ ^(logger|l)$ ]]
@@ -159,7 +128,6 @@
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ verbose =~ ^(classify|g)$ ]]
 + [[ verbose =~ ^(configs|c)$ ]]
-+ [[ verbose =~ ^(file-ext|x)$ ]]
 + [[ verbose =~ ^(index|n)$ ]]
 + [[ verbose =~ ^(ip-addr|i)$ ]]
 + [[ verbose =~ ^(logger|l)$ ]]
@@ -178,7 +146,6 @@
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ debug =~ ^(classify|g)$ ]]
 + [[ debug =~ ^(configs|c)$ ]]
-+ [[ debug =~ ^(file-ext|x)$ ]]
 + [[ debug =~ ^(index|n)$ ]]
 + [[ debug =~ ^(ip-addr|i)$ ]]
 + [[ debug =~ ^(logger|l)$ ]]
@@ -195,45 +162,12 @@
 + [[ -z true ]]
 + [[ -z false ]]
 + [[ -z true ]]
-+ [[ -z /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--172.31.255.254.console ]]
-+ local extract_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
++ [[ -z /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--172.31.255.254.console ]]
++ local configs_extract__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract.log
 + :
 + [[ -z matrix.json ]]
 + [[ ! -f matrix.json ]]
 + [[ -z true ]]
-+ [[ -z x ]]
-+ [[ 2 -eq 0 ]]
-+ export configs_dirpath=reports/172.31.255.254
-+ configs_dirpath=reports/172.31.255.254
-+ source_configs=()
-+ declare -ga source_configs
-+ local target_configlist_json=targets/172.31.255.254.json
-+ [[ ! -f targets/172.31.255.254.json ]]
-+ [[ true == true ]]
-+ message 'Loading target config list from: targets/172.31.255.254.json'
-+ [[ -n Loading target config list from: targets/172.31.255.254.json ]]
-+ local 'message=Loading target config list from: targets/172.31.255.254.json'
-+ echo -e 'Loading target config list from: targets/172.31.255.254.json'
-+ mapfile -t source_configs
-++ jq -r '
-        .locations | to_entries[] |
-        .key as $site |
-        .value.devices[] |
-        "\($site)/.objects/\(.config.file | split(".")[0]).list"
-      ' targets/172.31.255.254.json
-+ [[ true == true ]]
-+ message 'Found 1 configurations:'
-+ [[ -n Found 1 configurations: ]]
-+ local 'message=Found 1 configurations:'
-+ echo -e 'Found 1 configurations:'
-+ for config in "${source_configs[@]}"
-+ message '  - misc/.objects/switch1.list'
-+ [[ -n   - misc/.objects/switch1.list ]]
-+ local 'message=  - misc/.objects/switch1.list'
-+ echo -e '  - misc/.objects/switch1.list'
-+ for i in "${!source_configs[@]}"
-+ [[ misc/.objects/switch1.list != \r\e\p\o\r\t\s\/\1\7\2\.\3\1\.\2\5\5\.\2\5\4\/* ]]
-+ source_configs[$i]=misc/.objects/switch1.list
 + [[ true == true ]]
 + [[ ! -f matrix.json ]]
 + jq -e 'length > 0' matrix.json
@@ -314,10 +248,46 @@
     "group": "Business-Unit-Orphan"
   }
 ]'
++ export configs_dirpath=reports/172.31.255.254
++ configs_dirpath=reports/172.31.255.254
 + export reports_location=reports
 + reports_location=reports
 + [[ -z 08 ]]
 + [[ -z false ]]
++ local target_configlist_json=targets/172.31.255.254.json
++ [[ ! -f targets/172.31.255.254.json ]]
++ [[ true == true ]]
++ message 'Loading target config list from: targets/172.31.255.254.json'
++ [[ -n Loading target config list from: targets/172.31.255.254.json ]]
++ local 'message=Loading target config list from: targets/172.31.255.254.json'
++ echo -e 'Loading target config list from: targets/172.31.255.254.json'
++ source_configs=()
++ declare -ga source_configs
++ mapfile -t source_configs
+++ jq -r '
+        .locations | to_entries[] |
+        .key as $site |
+        .value.devices[] |
+        "\($site)/.objects/\(.config.file | split(".")[0]).list"
+      ' targets/172.31.255.254.json
++ [[ true == true ]]
++ message 'Found 1 configurations:'
++ [[ -n Found 1 configurations: ]]
++ local 'message=Found 1 configurations:'
++ echo -e 'Found 1 configurations:'
++ for config in "${source_configs[@]}"
++ message '  - misc/.objects/switch1.list'
++ [[ -n   - misc/.objects/switch1.list ]]
++ local 'message=  - misc/.objects/switch1.list'
++ echo -e '  - misc/.objects/switch1.list'
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
++ (( i++ ))
++ (( i < count ))
++ for i in "${!source_configs[@]}"
 + [[ -z 172.31.255.254 ]]
 ++ print 172.31.255.254
 ++ [[ -n 172.31.255.254 ]]
@@ -326,123 +296,56 @@
 ++ tr -d '\r'
 + target_address=172.31.255.254
 + [[ false == true ]]
-+ export tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
-+ tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
++ extract_jobs_pid=()
++ declare -ga extract_jobs_pid
++ extract_jobs2files_mapping=()
++ declare -gA extract_jobs2files_mapping
++ local configs_extract__script=configs-extract
++ export object_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--fragments.json
++ object_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--fragments.json
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs misc/.objects/switch1.list 172.31.255.254 targets/172.31.255.254.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local config_file=misc/.objects/switch1.list
-+ local target_pattern=172.31.255.254
-+ local target_listing=targets/172.31.255.254.json
-+ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local 'imported_content=interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0'
+++ basename misc/.objects/switch1.list
++ cfg_basename=switch1.list
++ object_fragments_per_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.31.255.254/fragments-switch1.list--2050.json
++ local configs_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--172.31.255.254-switch1.list
++ job_pid=71083
++ extract_jobs_pid+=("${job_pid}")
++ extract_jobs2files_mapping["${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.31.255.254/fragments-switch1.list--2050.json
++ ((  1 > 0  ))
++ valid_extract_jobs_pid=()
++ local valid_extract_jobs_pid
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 71083
++ valid_extract_jobs_pid+=("${pid}")
++ extract_jobs_pid=("${valid_extract_jobs_pid[@]}")
++ sleep 0.1
++ ((  1 > 0  ))
++ valid_extract_jobs_pid=()
++ local valid_extract_jobs_pid
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 71083
++ logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.31.255.254/fragments-switch1.list--2050.json
++ extract_jobs_pid=("${valid_extract_jobs_pid[@]}")
++ sleep 0.1
++ ((  0 > 0  ))
++ for path in "${extract_jobs2files_mapping[@]}"
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.31.255.254/fragments-switch1.list--2050.json ]]
++ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.31.255.254/fragments-switch1.list--2050.json
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--fragments.json ]]
 + [[ true == true ]]
-+ message 'Imported Content: interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0'
-+ [[ -n Imported Content: interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0 ]]
-+ local 'message=Imported Content: interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0'
-+ echo -e 'Imported Content: interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0'
-Imported Content: interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0
-++ sed '/^\s*$/d;/^\s*!.*$/d'
-+ local 'sanitized_content=interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0'
++ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--172.31.255.254-switch1.list
++ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--172.31.255.254-switch1.list ]]
++ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--172.31.255.254-switch1.list
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--172.31.255.254-switch1.list ]]
++ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.31.255.254
++ export json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.31.255.254/172.31.255.254.json
++ json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.31.255.254/172.31.255.254.json
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--fragments.json ]]
 + [[ true == true ]]
-+ message 'Sanitized Content: interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0'
-+ [[ -n Sanitized Content: interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0 ]]
-+ local 'message=Sanitized Content: interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0'
-+ echo -e 'Sanitized Content: interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0'
-Sanitized Content: interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0
-++ perl -pe 's/\n/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/g'
-+ local 'serialized_objects=interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ true == true ]]
-+ message 'Serialized Objects: interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Objects: interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Objects: interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Objects: interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Objects: interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ sed -E 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--([^[:space:]])/\n\1/g'
-+ local 'restored_lines=interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ restored_lines+='
-'
-+ IFS='
-'
-+ read -r -d '' -a config_objects
-++ printf '%s\0' 'interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-'
-+ [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ echo -e 'Loaded 1 config blocks'
-Loaded 1 config blocks
-+ oIFS=' 	
-'
-+ IFS='
-'
-+ matched_objects=()
-+ declare -a matched_objects
-+ for block in "${config_objects[@]}"
-+ grep -qE '(^|[^0-9.])172\.31\.255\.254([^0-9.]|$)'
-+ matched_objects+=("${block}")
-+ IFS=' 	
-'
-+ [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ echo -e 'Loaded 1 config blocks'
-Loaded 1 config blocks
-+ local process_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/process_configs.logs
-+ :
-+ for serialized_line in "${matched_objects[@]}"
-+ [[ true == true ]]
-+ message 'Serialized Line: interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Line: interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Line: interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Line: interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Line: interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ perl -pe 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/\n/g'
-+ restored_block='interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0'
-+ local cfg_path=misc/.objects/switch1.list
-+ local rel_path=misc/.objects/switch1.list
-+ local site=misc
-+ local device_filename=.objects/switch1.list
-+ local extension=list
-+ local objects_dir=reports/172.31.255.254/misc
-+ local objects_file=reports/172.31.255.254/misc/.objects/switch1.list
-+ [[ -s reports/172.31.255.254/misc/.objects/switch1.list ]]
-++ echo 'interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0'
-++ tr '\n' '\r'
-+ local 'restored_flat=interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0'
-++ tr '\n' '\r'
-+ local 'objects_flat=interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0'
-+ grep -Fq -- 'interface Vlan1--MTc0OTAzMjEyOTA0MzQ3OTAwMAo--  ip address 172.31.255.254 255.255.255.0'
-+ [[ true == true ]]
-+ message 'Skipping duplicate block in reports/172.31.255.254/misc/.objects/switch1.list'
-+ [[ -n Skipping duplicate block in reports/172.31.255.254/misc/.objects/switch1.list ]]
-+ local 'message=Skipping duplicate block in reports/172.31.255.254/misc/.objects/switch1.list'
-+ echo -e 'Skipping duplicate block in reports/172.31.255.254/misc/.objects/switch1.list'
-Skipping duplicate block in reports/172.31.255.254/misc/.objects/switch1.list
-+ continue
-+ return 0
-+ [[ true == true ]]
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json ]]
-+ [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log ]]
++ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--172.31.255.254.console
++ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--172.31.255.254.console ]]
++ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--172.31.255.254.console
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--172.31.255.254.console ]]
 + case "${target_file}" in
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/172.31.255.254
-+ export json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/172.31.255.254/172.31.255.254.json
-+ json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/172.31.255.254/172.31.255.254.json
-+ [[ true == true ]]
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json ]]
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json ]]
-+ [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--172.31.255.254.console
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--172.31.255.254.console ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--172.31.255.254.console
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--172.31.255.254.console ]]
-+ case "${target_file}" in
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--172.31.255.254.console
++ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--172.31.255.254.console
 + return 0

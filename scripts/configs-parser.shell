@@ -9,7 +9,7 @@ if [[ -n "${__CONFIGS_PARSER_SOURCED:-}" ]]; then return 0; fi;
 readonly __CONFIGS_PARSER_SOURCED=1;
 
 ## -------------------------------------------------------------------------- ##
-## Function: configs-parser :: extract_configs ()
+## Function: configs-parser :: configs_extract ()
 ##
 ## Purpose:
 ##   Parses a given configuration file, extracts all objects containing a target IP,
@@ -41,7 +41,7 @@ readonly __CONFIGS_PARSER_SOURCED=1;
 ##   - Designed to run synchronously per config file, called from `parse-configs`.
 ## -------------------------------------------------------------------------- ##
 
-function extract_configs () {
+function configs_extract () {
 
     local config_file="${1}";
     local target_pattern="${2}";
@@ -49,256 +49,86 @@ function extract_configs () {
     local json_output="${4}";
 
     ## Recording the generated_configslist actions
-    local target_logfile="${5:-${TMP_DIR:-/tmp}/extract_configs--${ip_addr}.log}";
+    local target_logfile="${5:-${TMP_DIR:-/tmp}/configs_extract--${ip_addr}.log}";
 
-    # local target_object="${TMP_DIR}/$(basename "${config_file}").objects"
+    #### -----------------------------------------------------------------------
+    ## Validate inputs
+    {
+      [[ -z "${config_file}" ]] && \
+        warning "[configs_extract] Missing configuration file path.";
+      [[ -z "${target_pattern}" ]] && \
+        warning "[configs_extract] Missing target IP pattern.";
+      [[ -z "${target_listing}" ]] && \
+        warning "[configs_extract] Missing target listings.";
+      [[ -z "${json_output}" ]] && \
+        warning "[configs_extract] Missing JSON output file path.";
+    } >> "${target_logfile:-/dev/null}";
 
-    # #### -----------------------------------------------------------------------
-    # ## Validate file exists
-    # if [[ ! -f "${config_file}" ]]; then
-    #   warning "[extract_configs] Config file not found: ${config_file}";
-    #   return 1;
-    # fi;
+return 0;
 
-    # #### -----------------------------------------------------------------------
-    # ## Check if config file exists or is empty
-    # if [[ "${verbose}" == true ]]; then
-    #   {
-    #     # message "[extract_configs] Processing file:  ${config_file:-/dev/null}";
-    #     # message "[extract_configs] Target Listing:   ${target_listing:-/dev/null}";
-    #     if [[ ! -s "${config_file}" ]]; then
-    #       message "Warning: Configuration file '${config_file}' is missing or empty!";
-    #     fi;
-    #     # newline;
-    #   } >> "${target_logfile:-/dev/null}";
-    # fi;
-
-    # #### -----------------------------------------------------------------------
-    # ## Read and sanitize config file into array
-    # mapfile -t config_rawdata < <(
-    #   sed '/^\s*$/d;/^\s*!.*$/d' < "${config_file}"
-    # );
-
-    # #### -----------------------------------------------------------------------
-    # ## Extract first 6 lines as metadata
-    # local metadata_header="$(
-    #   printf '%s\n' "${config_rawdata[@]:0:7}"
-    # )";
-
-    # #### -----------------------------------------------------------------------
-    # ## Remove metadata from config
-    # sanitized_content=( "${config_rawdata[@]:7}" );
-
-    # #### -----------------------------------------------------------------------
-    # if [[ "${verbose}" == true ]]; then
-    #   {
-    #     message "[extract_configs] Metadata Header:";
-    #     message "${metadata_header}";
-    #     newline;
-    #     message "Sanitized Content [${config_file}]:";
-    #     for line in "${sanitized_content[@]}"; do
-    #       message "${line}";
-    #     done;
-    #     newline;
-    #   } >> "${target_logfile:-/dev/null}";
-    # fi;
-
-    # #### -----------------------------------------------------------------------
-    # ## Derive location/device/ext from config path
-    # local cfg_path="${config_file}";
-    # message "[extract_configs] Config Path: ${cfg_path}";
-    # local rel_path="${cfg_path#${configs_dirpath}/}";  ## e.g., cisco/fw1.cfg
-    # message "[extract_configs] Relative Path: ${rel_path}";
-    # local site="${rel_path%%/*}";                      ## -> cisco
-    # message "[extract_configs] Site: ${site}";
-    # local device_filename="${rel_path#*/}";            ## -> fw1.cfg
-    # message "[extract_configs] Device Filename: ${device_filename}";
-    # local extension="${device_filename##*.}";          ## -> cfg
-    # message "[extract_configs] Extension: ${extension}";
-
-    # ## Construct output path: ${reports_location}/<ip-address>/<location>/<device>.<ext>
-    # local objects_dir="${reports_location}/${target_address}/${site}";
-    # local objects_file="${objects_dir}/${device_filename}";
-
-    # #### -----------------------------------------------------------------------
-    # mkdir -p "${objects_dir}" 2>/dev/null || true;
-
-    # $( which bash ) -x ./scripts/network-configs.shell \
-    #                 --ips-list="${target_pattern}" \
-    #                 --config="${config_file}" \
-    #                 --output="${objects_file}" \
-    # ;
-
-    # #### -----------------------------------------------------------------------
-    # if [[ "${verbose}" == true ]]; then
-    #   {
-    #     message "[extract_configs] Extracted config into: ${objects_file}";
-    #     ls -al "${objects_file}" || true;
-    #   } >> "${target_logfile:-/dev/null}";
-    # fi;
-
-    # # #### -----------------------------------------------------------------------
-    # # ## Load extracted config from disk into matched_objects
-    # # mapfile -t __matched_objects__ < "${objects_file}";
-
-    # # if [[ "${#__matched_objects__[@]}" -eq 0 ]]; then
-    # #   if [[ "${verbose}" == true ]]; then
-    # #     {
-    # #       message "[extract_configs] No configuration lines loaded from: ${objects_file}";
-    # #     } >> "${target_logfile:-/dev/null}";
-    # #   fi;
-    # # fi;
-
-    # # if [[ "${verbose}" == true ]]; then
-    # #   {
-    # #     message "[extract_configs] Loaded ${#__matched_objects__[@]} lines from: ${objects_file}";
-    # #     for i in "${!__matched_objects__[@]}"; do
-    # #       message "|---> Line [${i}]: ${__matched_objects__[$i]}";
-    # #     done; newline;
-    # #   } >> "${target_logfile:-/dev/null}";
-    # # fi;
-
-    # #### -----------------------------------------------------------------------
-    # ## [INSERT HERE] Check if config is readable and has content
-    # message "[DEBUG] Checking if config file exists and is readable: ${config_file}";
-    # if [[ ! -s "${config_file}" ]]; then
-    #         warning "File '${config_file}' is missing or empty";
-    #   else  message "[OK] File '${config_file}' is readable and size is $(
-    #           stat -f "%m" "${config_file}"
-    #         ) bytes";
-    # fi;
+    local target_object="${TMP_DIR}/$( basename "${config_file}" ).objects";
 
     #### -----------------------------------------------------------------------
     ## Full file ingestion and normalization
     local imported_content="$( < "${reports_location}/${target_pattern}/${config_file}" )";
     if [[ "${verbose}" == true ]]; then
       message "Imported Content: ${imported_content[@]}";
+      for object in "${imported_content[@]}"; do
+        message "  - ${object}";
+      done;
     fi;
 
     #### -----------------------------------------------------------------------
-    ## Remove multiple and/or empty blank lines plus "!"
-    local sanitized_content="$(
-      sed '/^\s*$/d;/^\s*!.*$/d' <<< "${imported_content}"
-    )";
-    if [[ "${verbose}" == true ]]; then
-      message "Sanitized Content: ${sanitized_content[@]}";
-    fi;
-
-    #### -----------------------------------------------------------------------
-    ## Replace newlines with date-base64 string (divisor)
-    local serialized_objects="$(
-      perl -pe 's/\n/'"${divisor}"'/g' <<< "${sanitized_content}"
-    )";
-    if [[ "${verbose}" == true ]]; then
-      message "Serialized Objects: ${serialized_objects[@]}";
-    fi;
-
-    #### -----------------------------------------------------------------------
-    ## Restoring configuration objects: inject real newlines after each object
-    local restored_lines="$(
-      sed -E "s/${divisor}([^[:space:]])/\n\1/g" <<< "${serialized_objects}"
-    )";
-    # Ensure each line ends with a literal newline (required for proper splitting)
-    restored_lines+=$'\n';
-    # Convert to array by splitting on real newlines between objects
-    IFS=$'\n' read -r -d '' -a config_objects < <(
-      printf '%s\0' "${restored_lines}"
-    );
-
-    if [[ "${verbose}" == true ]]; then
-      message "Loaded ${#config_objects[@]} config blocks";
-      # for i in "${!config_objects[@]}"; do
-      #   message "|---> Block [${i}]\n${config_objects[$i]}";
-      # done; newline;
-    fi;
-
-    #### -----------------------------------------------------------------------
-    ## Match config-objects (blocks) containing search-pattern (e.g.: IP Address)
-    oIFS="${IFS}"; IFS=$'\n';
-
-    # declare -a matched_objects=($(
-    #   printf "%s\n" "${config_objects[@]}" | \
-    #   grep -E "(^|[^0-9.])${target_pattern//./\\.}([^0-9.]|$)"
-    # ));
-
-    declare -a matched_objects=();
-    for block in "${config_objects[@]}"; do
-      if grep -qE "(^|[^0-9.])${target_pattern//./\\.}([^0-9.]|$)" <<< "${block}"; then
-        matched_objects+=( "${block}" );
-      fi;
-    done;
-
-    IFS="${oIFS}";
-
-    if [[ "${verbose}" == true ]]; then
-      message "Loaded ${#matched_objects[@]} config blocks";
-      # for i in "${!matched_objects[@]}"; do
-      #   message "|---> Block [$i]\n${matched_objects[$i]}"
-      # done; newline;
-    fi;
-
-  #### Marked for removal (end-block)
-
-    #### -----------------------------------------------------------------------
-    local process_configs__logfile="${TMP_DIR}/process_configs.logs";
+    local process_configs__logfile="${TMP_DIR}/process-configs.logs";
     :> "${process_configs__logfile}";
 
+    # print "Divisor: [${divisor}]" | cat -vet;
+
     #### -----------------------------------------------------------------------
-    ## Deserializing matched_objects:
-    for serialized_line in "${matched_objects[@]}"; do
+    ## Deserializing imported_content:
+    for serialized_line in "${imported_content[@]}"; do
       [[ "${verbose}" == true ]] && \
          message "Serialized Line: ${serialized_line[@]}";
 
       restored_block="$(
         perl -pe 's/'"${divisor}"'/\n/g' <<< "${serialized_line}"
-      )"
+      )";
       # restored_block="${restored_block}"$'\n';
 
       ## Derive site/device/ext from config path
       local cfg_path="${config_file}";
-      local rel_path="${cfg_path#${configs_dirpath}/}";  ## e.g., cisco/fw1.cfg
-      local site="${rel_path%%/*}";                      ## -> cisco
-      local device_filename="${rel_path#*/}";            ## -> fw1.cfg
-      local extension="${device_filename##*.}";          ## -> cfg
+
+      # local rel_path="${cfg_path#${configs_dirpath}/}";  ## e.g., cisco/fw1.cfg
+      # local site="${rel_path%%/*}";                      ## -> cisco
+      # local device_filename="${rel_path#*/}";            ## -> fw1.cfg
+
+      local rel_path="${config_file#${reports_location}/${target_address}/}";  ## e.g., cisco/perimeter-fw1.cfg
+      local site="${rel_path%%/*}";                                            ## -> cisco
+      local device_filename="${rel_path##*/}";                                 ## -> perimeter-fw1.cfg
+
+      local extension="${device_filename##*.}";            ## -> cfg
 
       ## Construct output path: ${reports_location}/<ip-address>/<location>/<device>.<ext>
       local objects_dir="${reports_location}/${target_address}/${site}";
       local objects_file="${objects_dir}/${device_filename}";
 
-      ## Skip if this block already exists in the output file (match as single line)
-      if [[ -s "${objects_file}" ]]; then
-        local restored_flat="$( echo "${restored_block}" | tr '\n' '\r' )";
-        local objects_flat="$( tr '\n' '\r' < "${objects_file}" )";
-
-        if grep -Fq -- "${restored_flat}" <<< "${objects_flat}"; then
-          [[ "${debug}" == true ]] && \
-            message "Skipping duplicate block in ${objects_file}";
-          continue;
-        fi;
-      fi;
-
-      mkdir -p "${objects_dir}" 2>/dev/null || true;
-      {
-        message "${restored_block}";
-        message "!";
-        newline;
-      } >> "${objects_file}";
-
       if [[ "${verbose}" == true ]]; then
         message "Restored Configuration:\n${restored_block[@]}";
+        for object in "${restored_block[@]}"; do
+          message "  - ${object}";
+        done;
       fi;
 
       process_configs "${target_pattern}" \
-                      "${config_file}" \
                       "${restored_block}" \
                       "${process_configs__logfile}" \
       ;
 
-      if [[ -n "${target_object:-}" ]]; then
-        if [[ "${verbose}" == true ]]; then
-          message "|-----> Target Objects: ${target_object}";
-        fi;
-      fi;
+      # if [[ -n "${target_object:-}" ]]; then
+      #   if [[ "${verbose}" == true ]]; then
+      #     message "|-----> Target Objects: ${target_object}";
+      #   fi;
+      # fi;
 
       #### -----------------------------------------------------------------------
       if [[ "${verbose}" == true ]]; then
@@ -322,9 +152,15 @@ function extract_configs () {
             }'
         )";
 
-        # Optionally inspect it
-        [[ "${debug}" == true ]] && \
-           message "|-----> Config Objects:\n${wrapped_block}";
+        # # Optionally inspect it
+        # [[ "${debug}" == true ]] && \
+        #    message "|-----> Config Objects:\n${wrapped_block}";
+
+        if ! jq -e . <<< "${wrapped_block}" >/dev/null 2>&1; then
+          warning "[configs_extract] Invalid JSON block — skipping:";
+          print "${wrapped_block}" | jq . 2>&1 | head -n 10;
+          continue;
+        fi;
 
         # Append to collector file
         print "${wrapped_block}" >> "${json_output}";
@@ -336,7 +172,7 @@ function extract_configs () {
     done;
 
     return 0;
-}; alias extract-configs='extract_configs';
+}; alias extract-configs='configs_extract';
 
 ## -------------------------------------------------------------------------- ##
 ## Function: configs-parser :: process_configs ()
@@ -353,7 +189,7 @@ function extract_configs () {
 ##
 ## Output:
 ##   - Exports `target_object` as a JSON-formatted Bash variable for upstream collection
-##     (usually by `extract_configs()`).
+##     (usually by `configs_extract()`).
 ##
 ## Structure of output JSON:
 ##   {
@@ -382,11 +218,10 @@ function extract_configs () {
 function process_configs () {
 
     local target_pattern="$1";
-    local config_path="$2";
-    local restored_block="$3";
+    local restored_block="$2";
 
     ## Recording the generated_configslist actions
-    local target_logfile="${4:-${TMP_DIR:-/tmp}/process_configs--${ip_addr}.log}";
+    local target_logfile="${3:-${TMP_DIR:-/tmp}/process_configs--${ip_addr}.log}";
 
     #### -----------------------------------------------------------------------
     ## Sanitize and validate non-empty block
@@ -593,15 +428,15 @@ function process_configs () {
     ##
     ## Notes:
     ## - It contains all extracted metadata: object type, description, items, sets, data, group.
-    ## - It is intended to be collected by `extract_configs()`, NOT written here.
+    ## - It is intended to be collected by `configs_extract()`, NOT written here.
     ## - This variable must be exported only after it's been properly constructed.
-    ## - Centralizing the output logic in `extract_configs()` enables proper
+    ## - Centralizing the output logic in `configs_extract()` enables proper
     ##   grouping per config file, preserves structure, and prevents flattening.
     ##
     ## Why this matters:
     ## - Writing here would prematurely dump output without associating it to
     ##   a config file — breaking the required `{ config, objects[] }` structure.
-    ## - We need `extract_configs()` to be the only function writing grouped output.
+    ## - We need `configs_extract()` to be the only function writing grouped output.
     ## -------------------------------------------------------------------------- ##
 
     export target_object;

@@ -1,5 +1,3 @@
-+ file_extensions=()
-+ declare -a file_extensions
 + oIFS=' 	
 '
 + for xitem in "${@}"
@@ -11,7 +9,6 @@
 + [[ configs =~ ^(configs|c)$ ]]
 + export configs_dirpath=reports/192.0.2.50
 + configs_dirpath=reports/192.0.2.50
-+ [[ configs =~ ^(file-ext|x)$ ]]
 + [[ configs =~ ^(index|n)$ ]]
 + [[ configs =~ ^(ip-addr|i)$ ]]
 + [[ configs =~ ^(logger|l)$ ]]
@@ -24,29 +21,10 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --ip-addr=192.0.2.50
-++ sed -e '1s|^\(-\)\{1,\}||'
-+ [[ ip-addr =~ ^(classify|g)$ ]]
-+ [[ ip-addr =~ ^(configs|c)$ ]]
-+ [[ ip-addr =~ ^(file-ext|x)$ ]]
-+ [[ ip-addr =~ ^(index|n)$ ]]
-+ [[ ip-addr =~ ^(ip-addr|i)$ ]]
-+ local target_address=192.0.2.50
-+ [[ ip-addr =~ ^(logger|l)$ ]]
-+ [[ ip-addr =~ ^(matrix|m)$ ]]
-+ [[ ip-addr =~ ^(reports|r)$ ]]
-+ [[ ip-addr =~ ^(validate|v)$ ]]
-+ [[ ip-addr == \d\e\b\u\g ]]
-+ [[ ip-addr == \d\r\y\-\r\u\n ]]
-+ [[ ip-addr == \v\e\r\b\o\s\e ]]
-+ for xitem in "${@}"
-+ IFS==
-+ read -r key value
 ++ echo -e --index=09
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ index =~ ^(classify|g)$ ]]
 + [[ index =~ ^(configs|c)$ ]]
-+ [[ index =~ ^(file-ext|x)$ ]]
 + [[ index =~ ^(index|n)$ ]]
 + local target_index=09
 + [[ index =~ ^(ip-addr|i)$ ]]
@@ -60,11 +38,44 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
+++ echo -e --ip-addr=192.0.2.50
+++ sed -e '1s|^\(-\)\{1,\}||'
++ [[ ip-addr =~ ^(classify|g)$ ]]
++ [[ ip-addr =~ ^(configs|c)$ ]]
++ [[ ip-addr =~ ^(index|n)$ ]]
++ [[ ip-addr =~ ^(ip-addr|i)$ ]]
++ local target_address=192.0.2.50
++ [[ ip-addr =~ ^(logger|l)$ ]]
++ [[ ip-addr =~ ^(matrix|m)$ ]]
++ [[ ip-addr =~ ^(reports|r)$ ]]
++ [[ ip-addr =~ ^(validate|v)$ ]]
++ [[ ip-addr == \d\e\b\u\g ]]
++ [[ ip-addr == \d\r\y\-\r\u\n ]]
++ [[ ip-addr == \v\e\r\b\o\s\e ]]
++ for xitem in "${@}"
++ IFS==
++ read -r key value
+++ echo -e --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--192.0.2.50.console
+++ sed -e '1s|^\(-\)\{1,\}||'
++ [[ logger =~ ^(classify|g)$ ]]
++ [[ logger =~ ^(configs|c)$ ]]
++ [[ logger =~ ^(index|n)$ ]]
++ [[ logger =~ ^(ip-addr|i)$ ]]
++ [[ logger =~ ^(logger|l)$ ]]
++ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--192.0.2.50.console
++ [[ logger =~ ^(matrix|m)$ ]]
++ [[ logger =~ ^(reports|r)$ ]]
++ [[ logger =~ ^(validate|v)$ ]]
++ [[ logger == \d\e\b\u\g ]]
++ [[ logger == \d\r\y\-\r\u\n ]]
++ [[ logger == \v\e\r\b\o\s\e ]]
++ for xitem in "${@}"
++ IFS==
++ read -r key value
 ++ echo -e --matrix=matrix.json
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ matrix =~ ^(classify|g)$ ]]
 + [[ matrix =~ ^(configs|c)$ ]]
-+ [[ matrix =~ ^(file-ext|x)$ ]]
 + [[ matrix =~ ^(index|n)$ ]]
 + [[ matrix =~ ^(ip-addr|i)$ ]]
 + [[ matrix =~ ^(logger|l)$ ]]
@@ -82,7 +93,6 @@
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ reports =~ ^(classify|g)$ ]]
 + [[ reports =~ ^(configs|c)$ ]]
-+ [[ reports =~ ^(file-ext|x)$ ]]
 + [[ reports =~ ^(index|n)$ ]]
 + [[ reports =~ ^(ip-addr|i)$ ]]
 + [[ reports =~ ^(logger|l)$ ]]
@@ -96,53 +106,12 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --file-ext=cfg,conf
-++ sed -e '1s|^\(-\)\{1,\}||'
-+ [[ file-ext =~ ^(classify|g)$ ]]
-+ [[ file-ext =~ ^(configs|c)$ ]]
-+ [[ file-ext =~ ^(file-ext|x)$ ]]
-+ file_extensions+=($(print "${value}" | tr ':,;\n ' '\n'))
-++ print cfg,conf
-++ tr ':,;\n ' '\n'
-++ [[ -n cfg,conf ]]
-++ echo -en cfg,conf
-+ [[ file-ext =~ ^(index|n)$ ]]
-+ [[ file-ext =~ ^(ip-addr|i)$ ]]
-+ [[ file-ext =~ ^(logger|l)$ ]]
-+ [[ file-ext =~ ^(matrix|m)$ ]]
-+ [[ file-ext =~ ^(reports|r)$ ]]
-+ [[ file-ext =~ ^(validate|v)$ ]]
-+ [[ file-ext == \d\e\b\u\g ]]
-+ [[ file-ext == \d\r\y\-\r\u\n ]]
-+ [[ file-ext == \v\e\r\b\o\s\e ]]
-+ for xitem in "${@}"
-+ IFS==
-+ read -r key value
-++ echo -e --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--192.0.2.50.console
-++ sed -e '1s|^\(-\)\{1,\}||'
-+ [[ logger =~ ^(classify|g)$ ]]
-+ [[ logger =~ ^(configs|c)$ ]]
-+ [[ logger =~ ^(file-ext|x)$ ]]
-+ [[ logger =~ ^(index|n)$ ]]
-+ [[ logger =~ ^(ip-addr|i)$ ]]
-+ [[ logger =~ ^(logger|l)$ ]]
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--192.0.2.50.console
-+ [[ logger =~ ^(matrix|m)$ ]]
-+ [[ logger =~ ^(reports|r)$ ]]
-+ [[ logger =~ ^(validate|v)$ ]]
-+ [[ logger == \d\e\b\u\g ]]
-+ [[ logger == \d\r\y\-\r\u\n ]]
-+ [[ logger == \v\e\r\b\o\s\e ]]
-+ for xitem in "${@}"
-+ IFS==
-+ read -r key value
 ++ echo -e --classify
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ classify =~ ^(classify|g)$ ]]
 + export classify_targets=true
 + classify_targets=true
 + [[ classify =~ ^(configs|c)$ ]]
-+ [[ classify =~ ^(file-ext|x)$ ]]
 + [[ classify =~ ^(index|n)$ ]]
 + [[ classify =~ ^(ip-addr|i)$ ]]
 + [[ classify =~ ^(logger|l)$ ]]
@@ -159,7 +128,6 @@
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ verbose =~ ^(classify|g)$ ]]
 + [[ verbose =~ ^(configs|c)$ ]]
-+ [[ verbose =~ ^(file-ext|x)$ ]]
 + [[ verbose =~ ^(index|n)$ ]]
 + [[ verbose =~ ^(ip-addr|i)$ ]]
 + [[ verbose =~ ^(logger|l)$ ]]
@@ -178,7 +146,6 @@
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ debug =~ ^(classify|g)$ ]]
 + [[ debug =~ ^(configs|c)$ ]]
-+ [[ debug =~ ^(file-ext|x)$ ]]
 + [[ debug =~ ^(index|n)$ ]]
 + [[ debug =~ ^(ip-addr|i)$ ]]
 + [[ debug =~ ^(logger|l)$ ]]
@@ -195,18 +162,98 @@
 + [[ -z true ]]
 + [[ -z false ]]
 + [[ -z true ]]
-+ [[ -z /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--192.0.2.50.console ]]
-+ local extract_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
++ [[ -z /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--192.0.2.50.console ]]
++ local configs_extract__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract.log
 + :
 + [[ -z matrix.json ]]
 + [[ ! -f matrix.json ]]
 + [[ -z true ]]
-+ [[ -z x ]]
-+ [[ 2 -eq 0 ]]
++ [[ true == true ]]
++ [[ ! -f matrix.json ]]
++ jq -e 'length > 0' matrix.json
+++ cat matrix.json
++ export 'matrix_configs=[
+  {
+    "match": ["BU1-NETWORK", "SOME-THING"],
+    "group": "Identified Matching Entries"
+  },
+  {
+    "match": ["Corporate HQ Subnets", "Server-192-168-1-10"],
+    "group": "Business-Unit-HQ"
+  },
+  {
+    "match": ["Remote-Site-Office", "All-Offices", "Branch-Office"],
+    "group": "Business-Unit-Remote"
+  },
+  {
+    "match": ["HQ-Server", "Production-Servers"],
+    "group": "Business-Unit-Production"
+  },
+  {
+    "match": ["Web-Server", "Data-Backup"],
+    "group": "Business-Unit-Backup"
+  },
+  {
+    "match": ["web_pool", "db_pool"],
+    "group": "Business-Unit-Apps"
+  },
+  {
+    "match": ["Vlan1", "Vlan2"],
+    "group": "Business-Unit-Networks"
+  },
+  {
+    "match": ["External-203-0-113-25"],
+    "group": "Business-Unit-External"
+  },
+  {
+    "match": ["Unused-Host"],
+    "group": "Business-Unit-Orphan"
+  }
+]'
++ matrix_configs='[
+  {
+    "match": ["BU1-NETWORK", "SOME-THING"],
+    "group": "Identified Matching Entries"
+  },
+  {
+    "match": ["Corporate HQ Subnets", "Server-192-168-1-10"],
+    "group": "Business-Unit-HQ"
+  },
+  {
+    "match": ["Remote-Site-Office", "All-Offices", "Branch-Office"],
+    "group": "Business-Unit-Remote"
+  },
+  {
+    "match": ["HQ-Server", "Production-Servers"],
+    "group": "Business-Unit-Production"
+  },
+  {
+    "match": ["Web-Server", "Data-Backup"],
+    "group": "Business-Unit-Backup"
+  },
+  {
+    "match": ["web_pool", "db_pool"],
+    "group": "Business-Unit-Apps"
+  },
+  {
+    "match": ["Vlan1", "Vlan2"],
+    "group": "Business-Unit-Networks"
+  },
+  {
+    "match": ["External-203-0-113-25"],
+    "group": "Business-Unit-External"
+  },
+  {
+    "match": ["Unused-Host"],
+    "group": "Business-Unit-Orphan"
+  }
+]'
 + export configs_dirpath=reports/192.0.2.50
 + configs_dirpath=reports/192.0.2.50
-+ source_configs=()
-+ declare -ga source_configs
++ export reports_location=reports
++ reports_location=reports
++ [[ -z 09 ]]
++ [[ -z false ]]
 + local target_configlist_json=targets/192.0.2.50.json
 + [[ ! -f targets/192.0.2.50.json ]]
 + [[ true == true ]]
@@ -214,6 +261,8 @@
 + [[ -n Loading target config list from: targets/192.0.2.50.json ]]
 + local 'message=Loading target config list from: targets/192.0.2.50.json'
 + echo -e 'Loading target config list from: targets/192.0.2.50.json'
++ source_configs=()
++ declare -ga source_configs
 + mapfile -t source_configs
 ++ jq -r '
         .locations | to_entries[] |
@@ -236,602 +285,145 @@
 + [[ -n   - cisco/.objects/dmz-fw2-backup.list ]]
 + local 'message=  - cisco/.objects/dmz-fw2-backup.list'
 + echo -e '  - cisco/.objects/dmz-fw2-backup.list'
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
++ (( i++ ))
++ (( i < count ))
 + for i in "${!source_configs[@]}"
-+ [[ cisco/.objects/perimeter-fw1.list != \r\e\p\o\r\t\s\/\1\9\2\.\0\.\2\.\5\0\/* ]]
-+ source_configs[$i]=cisco/.objects/perimeter-fw1.list
-+ [[ true == true ]]
-+ [[ ! -f matrix.json ]]
-+ jq -e 'length > 0' matrix.json
-++ cat matrix.json
-+ export 'matrix_configs=[
-  {
-    "match": ["BU1-NETWORK", "SOME-THING"],
-    "group": "Identified Matching Entries"
-  },
-  {
-    "match": ["Corporate HQ Subnets", "Server-192-168-1-10"],
-    "group": "Business-Unit-HQ"
-  },
-  {
-    "match": ["Remote-Site-Office", "All-Offices", "Branch-Office"],
-    "group": "Business-Unit-Remote"
-  },
-  {
-    "match": ["HQ-Server", "Production-Servers"],
-    "group": "Business-Unit-Production"
-  },
-  {
-    "match": ["Web-Server", "Data-Backup"],
-    "group": "Business-Unit-Backup"
-  },
-  {
-    "match": ["web_pool", "db_pool"],
-    "group": "Business-Unit-Apps"
-  },
-  {
-    "match": ["Vlan1", "Vlan2"],
-    "group": "Business-Unit-Networks"
-  },
-  {
-    "match": ["External-203-0-113-25"],
-    "group": "Business-Unit-External"
-  },
-  {
-    "match": ["Unused-Host"],
-    "group": "Business-Unit-Orphan"
-  }
-]'
-+ matrix_configs='[
-  {
-    "match": ["BU1-NETWORK", "SOME-THING"],
-    "group": "Identified Matching Entries"
-  },
-  {
-    "match": ["Corporate HQ Subnets", "Server-192-168-1-10"],
-    "group": "Business-Unit-HQ"
-  },
-  {
-    "match": ["Remote-Site-Office", "All-Offices", "Branch-Office"],
-    "group": "Business-Unit-Remote"
-  },
-  {
-    "match": ["HQ-Server", "Production-Servers"],
-    "group": "Business-Unit-Production"
-  },
-  {
-    "match": ["Web-Server", "Data-Backup"],
-    "group": "Business-Unit-Backup"
-  },
-  {
-    "match": ["web_pool", "db_pool"],
-    "group": "Business-Unit-Apps"
-  },
-  {
-    "match": ["Vlan1", "Vlan2"],
-    "group": "Business-Unit-Networks"
-  },
-  {
-    "match": ["External-203-0-113-25"],
-    "group": "Business-Unit-External"
-  },
-  {
-    "match": ["Unused-Host"],
-    "group": "Business-Unit-Orphan"
-  }
-]'
-+ export reports_location=reports
-+ reports_location=reports
-+ [[ -z 09 ]]
-+ [[ -z false ]]
 + [[ -z 192.0.2.50 ]]
 ++ print 192.0.2.50
 ++ [[ -n 192.0.2.50 ]]
-++ echo -en 192.0.2.50
 ++ sed -E 's/[[:space:]]+//g'
+++ echo -en 192.0.2.50
 ++ tr -d '\r'
 + target_address=192.0.2.50
 + [[ false == true ]]
-+ export tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
-+ tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
++ extract_jobs_pid=()
++ declare -ga extract_jobs_pid
++ extract_jobs2files_mapping=()
++ declare -gA extract_jobs2files_mapping
++ local configs_extract__script=configs-extract
++ export object_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--fragments.json
++ object_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--fragments.json
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs cisco/.objects/perimeter-fw1.list 192.0.2.50 targets/192.0.2.50.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local config_file=cisco/.objects/perimeter-fw1.list
-+ local target_pattern=192.0.2.50
-+ local target_listing=targets/192.0.2.50.json
-+ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local 'imported_content=object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-+ [[ true == true ]]
-+ message 'Imported Content: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-+ [[ -n Imported Content: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0 ]]
-+ local 'message=Imported Content: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-+ echo -e 'Imported Content: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-Imported Content: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0
-++ sed '/^\s*$/d;/^\s*!.*$/d'
-+ local 'sanitized_content=object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-+ [[ true == true ]]
-+ message 'Sanitized Content: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-+ [[ -n Sanitized Content: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0 ]]
-+ local 'message=Sanitized Content: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-+ echo -e 'Sanitized Content: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-Sanitized Content: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0
-++ perl -pe 's/\n/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/g'
-+ local 'serialized_objects=object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ true == true ]]
-+ message 'Serialized Objects: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Objects: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Objects: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Objects: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Objects: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ sed -E 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--([^[:space:]])/\n\1/g'
-+ local 'restored_lines=object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ restored_lines+='
-'
-+ IFS='
-'
-+ read -r -d '' -a config_objects
-++ printf '%s\0' 'object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-'
-+ [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ echo -e 'Loaded 1 config blocks'
-Loaded 1 config blocks
-+ oIFS=' 	
-'
-+ IFS='
-'
-+ matched_objects=()
-+ declare -a matched_objects
-+ for block in "${config_objects[@]}"
-+ grep -qE '(^|[^0-9.])192\.0\.2\.50([^0-9.]|$)'
-+ matched_objects+=("${block}")
-+ IFS=' 	
-'
-+ [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ echo -e 'Loaded 1 config blocks'
-Loaded 1 config blocks
-+ local process_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/process_configs.logs
-+ :
-+ for serialized_line in "${matched_objects[@]}"
-+ [[ true == true ]]
-+ message 'Serialized Line: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Line: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Line: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Line: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Line: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ perl -pe 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/\n/g'
-+ restored_block='object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-+ local cfg_path=cisco/.objects/perimeter-fw1.list
-+ local rel_path=cisco/.objects/perimeter-fw1.list
-+ local site=cisco
-+ local device_filename=.objects/perimeter-fw1.list
-+ local extension=list
-+ local objects_dir=reports/192.0.2.50/cisco
-+ local objects_file=reports/192.0.2.50/cisco/.objects/perimeter-fw1.list
-+ [[ -s reports/192.0.2.50/cisco/.objects/perimeter-fw1.list ]]
-++ echo 'object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-++ tr '\n' '\r'
-+ local 'restored_flat=object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-++ tr '\n' '\r'
-+ local 'objects_flat=object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-+ grep -Fq -- 'object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-+ [[ true == true ]]
-+ message 'Skipping duplicate block in reports/192.0.2.50/cisco/.objects/perimeter-fw1.list'
-+ [[ -n Skipping duplicate block in reports/192.0.2.50/cisco/.objects/perimeter-fw1.list ]]
-+ local 'message=Skipping duplicate block in reports/192.0.2.50/cisco/.objects/perimeter-fw1.list'
-+ echo -e 'Skipping duplicate block in reports/192.0.2.50/cisco/.objects/perimeter-fw1.list'
-Skipping duplicate block in reports/192.0.2.50/cisco/.objects/perimeter-fw1.list
-+ continue
-+ return 0
+++ basename cisco/.objects/perimeter-fw1.list
++ cfg_basename=perimeter-fw1.list
++ object_fragments_per_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50/fragments-perimeter-fw1.list--28622.json
++ local configs_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--192.0.2.50-perimeter-fw1.list
++ job_pid=71094
++ extract_jobs_pid+=("${job_pid}")
++ extract_jobs2files_mapping["${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50/fragments-perimeter-fw1.list--28622.json
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs cisco/.objects/dmz-fw2-backup.list 192.0.2.50 targets/192.0.2.50.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local config_file=cisco/.objects/dmz-fw2-backup.list
-+ local target_pattern=192.0.2.50
-+ local target_listing=targets/192.0.2.50.json
-+ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local 'imported_content=object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-+ [[ true == true ]]
-+ message 'Imported Content: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-+ [[ -n Imported Content: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50 ]]
-+ local 'message=Imported Content: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-+ echo -e 'Imported Content: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-Imported Content: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50
-++ sed '/^\s*$/d;/^\s*!.*$/d'
-+ local 'sanitized_content=object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-+ [[ true == true ]]
-+ message 'Sanitized Content: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-+ [[ -n Sanitized Content: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50 ]]
-+ local 'message=Sanitized Content: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-+ echo -e 'Sanitized Content: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-Sanitized Content: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50
-++ perl -pe 's/\n/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/g'
-+ local 'serialized_objects=object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ true == true ]]
-+ message 'Serialized Objects: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Objects: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Objects: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Objects: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Objects: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ sed -E 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--([^[:space:]])/\n\1/g'
-+ local 'restored_lines=object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ restored_lines+='
-'
-+ IFS='
-'
-+ read -r -d '' -a config_objects
-++ printf '%s\0' 'object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-'
-+ [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ echo -e 'Loaded 1 config blocks'
-Loaded 1 config blocks
-+ oIFS=' 	
-'
-+ IFS='
-'
-+ matched_objects=()
-+ declare -a matched_objects
-+ for block in "${config_objects[@]}"
-+ grep -qE '(^|[^0-9.])192\.0\.2\.50([^0-9.]|$)'
-+ matched_objects+=("${block}")
-+ IFS=' 	
-'
-+ [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ echo -e 'Loaded 1 config blocks'
-Loaded 1 config blocks
-+ local process_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/process_configs.logs
-+ :
-+ for serialized_line in "${matched_objects[@]}"
-+ [[ true == true ]]
-+ message 'Serialized Line: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Line: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Line: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Line: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Line: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ perl -pe 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/\n/g'
-+ restored_block='object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-+ local cfg_path=cisco/.objects/dmz-fw2-backup.list
-+ local rel_path=cisco/.objects/dmz-fw2-backup.list
-+ local site=cisco
-+ local device_filename=.objects/dmz-fw2-backup.list
-+ local extension=list
-+ local objects_dir=reports/192.0.2.50/cisco
-+ local objects_file=reports/192.0.2.50/cisco/.objects/dmz-fw2-backup.list
-+ [[ -s reports/192.0.2.50/cisco/.objects/dmz-fw2-backup.list ]]
-++ echo 'object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-++ tr '\n' '\r'
-+ local 'restored_flat=object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-++ tr '\n' '\r'
-+ local 'objects_flat=object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-+ grep -Fq -- 'object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-+ [[ true == true ]]
-+ message 'Skipping duplicate block in reports/192.0.2.50/cisco/.objects/dmz-fw2-backup.list'
-+ [[ -n Skipping duplicate block in reports/192.0.2.50/cisco/.objects/dmz-fw2-backup.list ]]
-+ local 'message=Skipping duplicate block in reports/192.0.2.50/cisco/.objects/dmz-fw2-backup.list'
-+ echo -e 'Skipping duplicate block in reports/192.0.2.50/cisco/.objects/dmz-fw2-backup.list'
-Skipping duplicate block in reports/192.0.2.50/cisco/.objects/dmz-fw2-backup.list
-+ continue
-+ return 0
-+ [[ true == true ]]
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json ]]
+++ basename cisco/.objects/dmz-fw2-backup.list
++ cfg_basename=dmz-fw2-backup.list
++ object_fragments_per_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50/fragments-dmz-fw2-backup.list--3789.json
++ local configs_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--192.0.2.50-dmz-fw2-backup.list
++ job_pid=71098
++ extract_jobs_pid+=("${job_pid}")
++ extract_jobs2files_mapping["${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50/fragments-dmz-fw2-backup.list--3789.json
++ ((  2 > 0  ))
++ valid_extract_jobs_pid=()
++ local valid_extract_jobs_pid
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 71094
++ logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50/fragments-perimeter-fw1.list--28622.json
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 71098
++ valid_extract_jobs_pid+=("${pid}")
++ extract_jobs_pid=("${valid_extract_jobs_pid[@]}")
++ sleep 0.1
++ ((  1 > 0  ))
++ valid_extract_jobs_pid=()
++ local valid_extract_jobs_pid
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 71098
++ logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50/fragments-dmz-fw2-backup.list--3789.json
++ extract_jobs_pid=("${valid_extract_jobs_pid[@]}")
++ sleep 0.1
++ ((  0 > 0  ))
++ for path in "${extract_jobs2files_mapping[@]}"
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50/fragments-dmz-fw2-backup.list--3789.json ]]
++ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50/fragments-dmz-fw2-backup.list--3789.json
++ for path in "${extract_jobs2files_mapping[@]}"
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50/fragments-perimeter-fw1.list--28622.json ]]
++ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50/fragments-perimeter-fw1.list--28622.json
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--fragments.json ]]
 + for i in "${!source_configs[@]}"
-+ [[ cisco/.objects/dmz-fw2-backup.list != \r\e\p\o\r\t\s\/\1\9\2\.\0\.\2\.\5\0\/* ]]
-+ source_configs[$i]=cisco/.objects/dmz-fw2-backup.list
-+ [[ true == true ]]
-+ [[ ! -f matrix.json ]]
-+ jq -e 'length > 0' matrix.json
-++ cat matrix.json
-+ export 'matrix_configs=[
-  {
-    "match": ["BU1-NETWORK", "SOME-THING"],
-    "group": "Identified Matching Entries"
-  },
-  {
-    "match": ["Corporate HQ Subnets", "Server-192-168-1-10"],
-    "group": "Business-Unit-HQ"
-  },
-  {
-    "match": ["Remote-Site-Office", "All-Offices", "Branch-Office"],
-    "group": "Business-Unit-Remote"
-  },
-  {
-    "match": ["HQ-Server", "Production-Servers"],
-    "group": "Business-Unit-Production"
-  },
-  {
-    "match": ["Web-Server", "Data-Backup"],
-    "group": "Business-Unit-Backup"
-  },
-  {
-    "match": ["web_pool", "db_pool"],
-    "group": "Business-Unit-Apps"
-  },
-  {
-    "match": ["Vlan1", "Vlan2"],
-    "group": "Business-Unit-Networks"
-  },
-  {
-    "match": ["External-203-0-113-25"],
-    "group": "Business-Unit-External"
-  },
-  {
-    "match": ["Unused-Host"],
-    "group": "Business-Unit-Orphan"
-  }
-]'
-+ matrix_configs='[
-  {
-    "match": ["BU1-NETWORK", "SOME-THING"],
-    "group": "Identified Matching Entries"
-  },
-  {
-    "match": ["Corporate HQ Subnets", "Server-192-168-1-10"],
-    "group": "Business-Unit-HQ"
-  },
-  {
-    "match": ["Remote-Site-Office", "All-Offices", "Branch-Office"],
-    "group": "Business-Unit-Remote"
-  },
-  {
-    "match": ["HQ-Server", "Production-Servers"],
-    "group": "Business-Unit-Production"
-  },
-  {
-    "match": ["Web-Server", "Data-Backup"],
-    "group": "Business-Unit-Backup"
-  },
-  {
-    "match": ["web_pool", "db_pool"],
-    "group": "Business-Unit-Apps"
-  },
-  {
-    "match": ["Vlan1", "Vlan2"],
-    "group": "Business-Unit-Networks"
-  },
-  {
-    "match": ["External-203-0-113-25"],
-    "group": "Business-Unit-External"
-  },
-  {
-    "match": ["Unused-Host"],
-    "group": "Business-Unit-Orphan"
-  }
-]'
-+ export reports_location=reports
-+ reports_location=reports
-+ [[ -z 09 ]]
-+ [[ -z false ]]
 + [[ -z 192.0.2.50 ]]
 ++ print 192.0.2.50
+++ sed -E 's/[[:space:]]+//g'
 ++ [[ -n 192.0.2.50 ]]
 ++ echo -en 192.0.2.50
-++ sed -E 's/[[:space:]]+//g'
 ++ tr -d '\r'
 + target_address=192.0.2.50
 + [[ false == true ]]
-+ export tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
-+ tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
++ extract_jobs_pid=()
++ declare -ga extract_jobs_pid
++ extract_jobs2files_mapping=()
++ declare -gA extract_jobs2files_mapping
++ local configs_extract__script=configs-extract
++ export object_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--fragments.json
++ object_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--fragments.json
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs cisco/.objects/perimeter-fw1.list 192.0.2.50 targets/192.0.2.50.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local config_file=cisco/.objects/perimeter-fw1.list
-+ local target_pattern=192.0.2.50
-+ local target_listing=targets/192.0.2.50.json
-+ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local 'imported_content=object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-+ [[ true == true ]]
-+ message 'Imported Content: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-+ [[ -n Imported Content: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0 ]]
-+ local 'message=Imported Content: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-+ echo -e 'Imported Content: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-Imported Content: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0
-++ sed '/^\s*$/d;/^\s*!.*$/d'
-+ local 'sanitized_content=object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-+ [[ true == true ]]
-+ message 'Sanitized Content: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-+ [[ -n Sanitized Content: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0 ]]
-+ local 'message=Sanitized Content: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-+ echo -e 'Sanitized Content: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-Sanitized Content: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0
-++ perl -pe 's/\n/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/g'
-+ local 'serialized_objects=object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ true == true ]]
-+ message 'Serialized Objects: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Objects: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Objects: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Objects: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Objects: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ sed -E 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--([^[:space:]])/\n\1/g'
-+ local 'restored_lines=object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ restored_lines+='
-'
-+ IFS='
-'
-+ read -r -d '' -a config_objects
-++ printf '%s\0' 'object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-'
-+ [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ echo -e 'Loaded 1 config blocks'
-Loaded 1 config blocks
-+ oIFS=' 	
-'
-+ IFS='
-'
-+ matched_objects=()
-+ declare -a matched_objects
-+ for block in "${config_objects[@]}"
-+ grep -qE '(^|[^0-9.])192\.0\.2\.50([^0-9.]|$)'
-+ matched_objects+=("${block}")
-+ IFS=' 	
-'
-+ [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ echo -e 'Loaded 1 config blocks'
-Loaded 1 config blocks
-+ local process_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/process_configs.logs
-+ :
-+ for serialized_line in "${matched_objects[@]}"
-+ [[ true == true ]]
-+ message 'Serialized Line: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Line: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Line: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Line: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Line: object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ perl -pe 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/\n/g'
-+ restored_block='object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-+ local cfg_path=cisco/.objects/perimeter-fw1.list
-+ local rel_path=cisco/.objects/perimeter-fw1.list
-+ local site=cisco
-+ local device_filename=.objects/perimeter-fw1.list
-+ local extension=list
-+ local objects_dir=reports/192.0.2.50/cisco
-+ local objects_file=reports/192.0.2.50/cisco/.objects/perimeter-fw1.list
-+ [[ -s reports/192.0.2.50/cisco/.objects/perimeter-fw1.list ]]
-++ echo 'object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-++ tr '\n' '\r'
-+ local 'restored_flat=object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-++ tr '\n' '\r'
-+ local 'objects_flat=object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-+ grep -Fq -- 'object-group network Avengers-DMZ--MTc0OTAzMjEyOTIxNTMyODAwMAo--  description Public access layer--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object host 203.0.113.25--MTc0OTAzMjEyOTIxNTMyODAwMAo--  network-object 192.168.2.0 255.255.255.0'
-+ [[ true == true ]]
-+ message 'Skipping duplicate block in reports/192.0.2.50/cisco/.objects/perimeter-fw1.list'
-+ [[ -n Skipping duplicate block in reports/192.0.2.50/cisco/.objects/perimeter-fw1.list ]]
-+ local 'message=Skipping duplicate block in reports/192.0.2.50/cisco/.objects/perimeter-fw1.list'
-+ echo -e 'Skipping duplicate block in reports/192.0.2.50/cisco/.objects/perimeter-fw1.list'
-Skipping duplicate block in reports/192.0.2.50/cisco/.objects/perimeter-fw1.list
-+ continue
-+ return 0
+++ basename cisco/.objects/perimeter-fw1.list
++ cfg_basename=perimeter-fw1.list
++ object_fragments_per_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50/fragments-perimeter-fw1.list--30992.json
++ local configs_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--192.0.2.50-perimeter-fw1.list
++ job_pid=71207
++ extract_jobs_pid+=("${job_pid}")
++ extract_jobs2files_mapping["${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50/fragments-perimeter-fw1.list--30992.json
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs cisco/.objects/dmz-fw2-backup.list 192.0.2.50 targets/192.0.2.50.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local config_file=cisco/.objects/dmz-fw2-backup.list
-+ local target_pattern=192.0.2.50
-+ local target_listing=targets/192.0.2.50.json
-+ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local 'imported_content=object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
+++ basename cisco/.objects/dmz-fw2-backup.list
++ cfg_basename=dmz-fw2-backup.list
++ object_fragments_per_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50/fragments-dmz-fw2-backup.list--16746.json
++ local configs_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--192.0.2.50-dmz-fw2-backup.list
++ job_pid=71221
++ extract_jobs_pid+=("${job_pid}")
++ extract_jobs2files_mapping["${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50/fragments-dmz-fw2-backup.list--16746.json
++ ((  2 > 0  ))
++ valid_extract_jobs_pid=()
++ local valid_extract_jobs_pid
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 71207
++ logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50/fragments-perimeter-fw1.list--30992.json
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 71221
++ valid_extract_jobs_pid+=("${pid}")
++ extract_jobs_pid=("${valid_extract_jobs_pid[@]}")
++ sleep 0.1
++ ((  1 > 0  ))
++ valid_extract_jobs_pid=()
++ local valid_extract_jobs_pid
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 71221
++ logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50/fragments-dmz-fw2-backup.list--16746.json
++ extract_jobs_pid=("${valid_extract_jobs_pid[@]}")
++ sleep 0.1
++ ((  0 > 0  ))
++ for path in "${extract_jobs2files_mapping[@]}"
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50/fragments-perimeter-fw1.list--30992.json ]]
++ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50/fragments-perimeter-fw1.list--30992.json
++ for path in "${extract_jobs2files_mapping[@]}"
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50/fragments-dmz-fw2-backup.list--16746.json ]]
++ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50/fragments-dmz-fw2-backup.list--16746.json
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--fragments.json ]]
 + [[ true == true ]]
-+ message 'Imported Content: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-+ [[ -n Imported Content: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50 ]]
-+ local 'message=Imported Content: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-+ echo -e 'Imported Content: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-Imported Content: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50
-++ sed '/^\s*$/d;/^\s*!.*$/d'
-+ local 'sanitized_content=object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
++ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--192.0.2.50-dmz-fw2-backup.list
++ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--192.0.2.50-dmz-fw2-backup.list ]]
++ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--192.0.2.50-dmz-fw2-backup.list
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--192.0.2.50-dmz-fw2-backup.list ]]
++ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50
++ export json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50/192.0.2.50.json
++ json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/192.0.2.50/192.0.2.50.json
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--fragments.json ]]
 + [[ true == true ]]
-+ message 'Sanitized Content: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-+ [[ -n Sanitized Content: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50 ]]
-+ local 'message=Sanitized Content: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-+ echo -e 'Sanitized Content: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-Sanitized Content: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50
-++ perl -pe 's/\n/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/g'
-+ local 'serialized_objects=object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ true == true ]]
-+ message 'Serialized Objects: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Objects: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Objects: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Objects: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Objects: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ sed -E 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--([^[:space:]])/\n\1/g'
-+ local 'restored_lines=object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ restored_lines+='
-'
-+ IFS='
-'
-+ read -r -d '' -a config_objects
-++ printf '%s\0' 'object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-'
-+ [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ echo -e 'Loaded 1 config blocks'
-Loaded 1 config blocks
-+ oIFS=' 	
-'
-+ IFS='
-'
-+ matched_objects=()
-+ declare -a matched_objects
-+ for block in "${config_objects[@]}"
-+ grep -qE '(^|[^0-9.])192\.0\.2\.50([^0-9.]|$)'
-+ matched_objects+=("${block}")
-+ IFS=' 	
-'
-+ [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ echo -e 'Loaded 1 config blocks'
-Loaded 1 config blocks
-+ local process_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/process_configs.logs
-+ :
-+ for serialized_line in "${matched_objects[@]}"
-+ [[ true == true ]]
-+ message 'Serialized Line: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Line: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Line: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Line: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Line: object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ perl -pe 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/\n/g'
-+ restored_block='object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-+ local cfg_path=cisco/.objects/dmz-fw2-backup.list
-+ local rel_path=cisco/.objects/dmz-fw2-backup.list
-+ local site=cisco
-+ local device_filename=.objects/dmz-fw2-backup.list
-+ local extension=list
-+ local objects_dir=reports/192.0.2.50/cisco
-+ local objects_file=reports/192.0.2.50/cisco/.objects/dmz-fw2-backup.list
-+ [[ -s reports/192.0.2.50/cisco/.objects/dmz-fw2-backup.list ]]
-++ echo 'object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-++ tr '\n' '\r'
-+ local 'restored_flat=object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-++ tr '\n' '\r'
-+ local 'objects_flat=object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-+ grep -Fq -- 'object-group network Watchtower-DMZ--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  description Global secure relay--MTc0OTAzMjEyOTA2Mzg2MDAwMAo--  network-object host 192.0.2.50'
-+ [[ true == true ]]
-+ message 'Skipping duplicate block in reports/192.0.2.50/cisco/.objects/dmz-fw2-backup.list'
-+ [[ -n Skipping duplicate block in reports/192.0.2.50/cisco/.objects/dmz-fw2-backup.list ]]
-+ local 'message=Skipping duplicate block in reports/192.0.2.50/cisco/.objects/dmz-fw2-backup.list'
-+ echo -e 'Skipping duplicate block in reports/192.0.2.50/cisco/.objects/dmz-fw2-backup.list'
-Skipping duplicate block in reports/192.0.2.50/cisco/.objects/dmz-fw2-backup.list
-+ continue
-+ return 0
-+ [[ true == true ]]
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json ]]
-+ [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log ]]
++ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--192.0.2.50.console
++ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--192.0.2.50.console ]]
++ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--192.0.2.50.console
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--192.0.2.50.console ]]
 + case "${target_file}" in
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/192.0.2.50
-+ export json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/192.0.2.50/192.0.2.50.json
-+ json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/192.0.2.50/192.0.2.50.json
-+ [[ true == true ]]
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json ]]
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json ]]
-+ [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--192.0.2.50.console
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--192.0.2.50.console ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--192.0.2.50.console
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--192.0.2.50.console ]]
-+ case "${target_file}" in
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--192.0.2.50.console
++ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--192.0.2.50.console
 + return 0

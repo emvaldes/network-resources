@@ -1,5 +1,3 @@
-+ file_extensions=()
-+ declare -a file_extensions
 + oIFS=' 	
 '
 + for xitem in "${@}"
@@ -11,7 +9,6 @@
 + [[ configs =~ ^(configs|c)$ ]]
 + export configs_dirpath=reports/172.16.1.6
 + configs_dirpath=reports/172.16.1.6
-+ [[ configs =~ ^(file-ext|x)$ ]]
 + [[ configs =~ ^(index|n)$ ]]
 + [[ configs =~ ^(ip-addr|i)$ ]]
 + [[ configs =~ ^(logger|l)$ ]]
@@ -24,29 +21,10 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --ip-addr=172.16.1.6
-++ sed -e '1s|^\(-\)\{1,\}||'
-+ [[ ip-addr =~ ^(classify|g)$ ]]
-+ [[ ip-addr =~ ^(configs|c)$ ]]
-+ [[ ip-addr =~ ^(file-ext|x)$ ]]
-+ [[ ip-addr =~ ^(index|n)$ ]]
-+ [[ ip-addr =~ ^(ip-addr|i)$ ]]
-+ local target_address=172.16.1.6
-+ [[ ip-addr =~ ^(logger|l)$ ]]
-+ [[ ip-addr =~ ^(matrix|m)$ ]]
-+ [[ ip-addr =~ ^(reports|r)$ ]]
-+ [[ ip-addr =~ ^(validate|v)$ ]]
-+ [[ ip-addr == \d\e\b\u\g ]]
-+ [[ ip-addr == \d\r\y\-\r\u\n ]]
-+ [[ ip-addr == \v\e\r\b\o\s\e ]]
-+ for xitem in "${@}"
-+ IFS==
-+ read -r key value
 ++ echo -e --index=06
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ index =~ ^(classify|g)$ ]]
 + [[ index =~ ^(configs|c)$ ]]
-+ [[ index =~ ^(file-ext|x)$ ]]
 + [[ index =~ ^(index|n)$ ]]
 + local target_index=06
 + [[ index =~ ^(ip-addr|i)$ ]]
@@ -60,11 +38,44 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
+++ echo -e --ip-addr=172.16.1.6
+++ sed -e '1s|^\(-\)\{1,\}||'
++ [[ ip-addr =~ ^(classify|g)$ ]]
++ [[ ip-addr =~ ^(configs|c)$ ]]
++ [[ ip-addr =~ ^(index|n)$ ]]
++ [[ ip-addr =~ ^(ip-addr|i)$ ]]
++ local target_address=172.16.1.6
++ [[ ip-addr =~ ^(logger|l)$ ]]
++ [[ ip-addr =~ ^(matrix|m)$ ]]
++ [[ ip-addr =~ ^(reports|r)$ ]]
++ [[ ip-addr =~ ^(validate|v)$ ]]
++ [[ ip-addr == \d\e\b\u\g ]]
++ [[ ip-addr == \d\r\y\-\r\u\n ]]
++ [[ ip-addr == \v\e\r\b\o\s\e ]]
++ for xitem in "${@}"
++ IFS==
++ read -r key value
+++ echo -e --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--172.16.1.6.console
+++ sed -e '1s|^\(-\)\{1,\}||'
++ [[ logger =~ ^(classify|g)$ ]]
++ [[ logger =~ ^(configs|c)$ ]]
++ [[ logger =~ ^(index|n)$ ]]
++ [[ logger =~ ^(ip-addr|i)$ ]]
++ [[ logger =~ ^(logger|l)$ ]]
++ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--172.16.1.6.console
++ [[ logger =~ ^(matrix|m)$ ]]
++ [[ logger =~ ^(reports|r)$ ]]
++ [[ logger =~ ^(validate|v)$ ]]
++ [[ logger == \d\e\b\u\g ]]
++ [[ logger == \d\r\y\-\r\u\n ]]
++ [[ logger == \v\e\r\b\o\s\e ]]
++ for xitem in "${@}"
++ IFS==
++ read -r key value
 ++ echo -e --matrix=matrix.json
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ matrix =~ ^(classify|g)$ ]]
 + [[ matrix =~ ^(configs|c)$ ]]
-+ [[ matrix =~ ^(file-ext|x)$ ]]
 + [[ matrix =~ ^(index|n)$ ]]
 + [[ matrix =~ ^(ip-addr|i)$ ]]
 + [[ matrix =~ ^(logger|l)$ ]]
@@ -82,7 +93,6 @@
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ reports =~ ^(classify|g)$ ]]
 + [[ reports =~ ^(configs|c)$ ]]
-+ [[ reports =~ ^(file-ext|x)$ ]]
 + [[ reports =~ ^(index|n)$ ]]
 + [[ reports =~ ^(ip-addr|i)$ ]]
 + [[ reports =~ ^(logger|l)$ ]]
@@ -96,53 +106,12 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --file-ext=cfg,conf
-++ sed -e '1s|^\(-\)\{1,\}||'
-+ [[ file-ext =~ ^(classify|g)$ ]]
-+ [[ file-ext =~ ^(configs|c)$ ]]
-+ [[ file-ext =~ ^(file-ext|x)$ ]]
-+ file_extensions+=($(print "${value}" | tr ':,;\n ' '\n'))
-++ print cfg,conf
-++ [[ -n cfg,conf ]]
-++ tr ':,;\n ' '\n'
-++ echo -en cfg,conf
-+ [[ file-ext =~ ^(index|n)$ ]]
-+ [[ file-ext =~ ^(ip-addr|i)$ ]]
-+ [[ file-ext =~ ^(logger|l)$ ]]
-+ [[ file-ext =~ ^(matrix|m)$ ]]
-+ [[ file-ext =~ ^(reports|r)$ ]]
-+ [[ file-ext =~ ^(validate|v)$ ]]
-+ [[ file-ext == \d\e\b\u\g ]]
-+ [[ file-ext == \d\r\y\-\r\u\n ]]
-+ [[ file-ext == \v\e\r\b\o\s\e ]]
-+ for xitem in "${@}"
-+ IFS==
-+ read -r key value
-++ echo -e --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--172.16.1.6.console
-++ sed -e '1s|^\(-\)\{1,\}||'
-+ [[ logger =~ ^(classify|g)$ ]]
-+ [[ logger =~ ^(configs|c)$ ]]
-+ [[ logger =~ ^(file-ext|x)$ ]]
-+ [[ logger =~ ^(index|n)$ ]]
-+ [[ logger =~ ^(ip-addr|i)$ ]]
-+ [[ logger =~ ^(logger|l)$ ]]
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--172.16.1.6.console
-+ [[ logger =~ ^(matrix|m)$ ]]
-+ [[ logger =~ ^(reports|r)$ ]]
-+ [[ logger =~ ^(validate|v)$ ]]
-+ [[ logger == \d\e\b\u\g ]]
-+ [[ logger == \d\r\y\-\r\u\n ]]
-+ [[ logger == \v\e\r\b\o\s\e ]]
-+ for xitem in "${@}"
-+ IFS==
-+ read -r key value
 ++ echo -e --classify
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ classify =~ ^(classify|g)$ ]]
 + export classify_targets=true
 + classify_targets=true
 + [[ classify =~ ^(configs|c)$ ]]
-+ [[ classify =~ ^(file-ext|x)$ ]]
 + [[ classify =~ ^(index|n)$ ]]
 + [[ classify =~ ^(ip-addr|i)$ ]]
 + [[ classify =~ ^(logger|l)$ ]]
@@ -159,7 +128,6 @@
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ verbose =~ ^(classify|g)$ ]]
 + [[ verbose =~ ^(configs|c)$ ]]
-+ [[ verbose =~ ^(file-ext|x)$ ]]
 + [[ verbose =~ ^(index|n)$ ]]
 + [[ verbose =~ ^(ip-addr|i)$ ]]
 + [[ verbose =~ ^(logger|l)$ ]]
@@ -178,7 +146,6 @@
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ debug =~ ^(classify|g)$ ]]
 + [[ debug =~ ^(configs|c)$ ]]
-+ [[ debug =~ ^(file-ext|x)$ ]]
 + [[ debug =~ ^(index|n)$ ]]
 + [[ debug =~ ^(ip-addr|i)$ ]]
 + [[ debug =~ ^(logger|l)$ ]]
@@ -195,18 +162,98 @@
 + [[ -z true ]]
 + [[ -z false ]]
 + [[ -z true ]]
-+ [[ -z /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--172.16.1.6.console ]]
-+ local extract_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
++ [[ -z /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--172.16.1.6.console ]]
++ local configs_extract__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract.log
 + :
 + [[ -z matrix.json ]]
 + [[ ! -f matrix.json ]]
 + [[ -z true ]]
-+ [[ -z x ]]
-+ [[ 2 -eq 0 ]]
++ [[ true == true ]]
++ [[ ! -f matrix.json ]]
++ jq -e 'length > 0' matrix.json
+++ cat matrix.json
++ export 'matrix_configs=[
+  {
+    "match": ["BU1-NETWORK", "SOME-THING"],
+    "group": "Identified Matching Entries"
+  },
+  {
+    "match": ["Corporate HQ Subnets", "Server-192-168-1-10"],
+    "group": "Business-Unit-HQ"
+  },
+  {
+    "match": ["Remote-Site-Office", "All-Offices", "Branch-Office"],
+    "group": "Business-Unit-Remote"
+  },
+  {
+    "match": ["HQ-Server", "Production-Servers"],
+    "group": "Business-Unit-Production"
+  },
+  {
+    "match": ["Web-Server", "Data-Backup"],
+    "group": "Business-Unit-Backup"
+  },
+  {
+    "match": ["web_pool", "db_pool"],
+    "group": "Business-Unit-Apps"
+  },
+  {
+    "match": ["Vlan1", "Vlan2"],
+    "group": "Business-Unit-Networks"
+  },
+  {
+    "match": ["External-203-0-113-25"],
+    "group": "Business-Unit-External"
+  },
+  {
+    "match": ["Unused-Host"],
+    "group": "Business-Unit-Orphan"
+  }
+]'
++ matrix_configs='[
+  {
+    "match": ["BU1-NETWORK", "SOME-THING"],
+    "group": "Identified Matching Entries"
+  },
+  {
+    "match": ["Corporate HQ Subnets", "Server-192-168-1-10"],
+    "group": "Business-Unit-HQ"
+  },
+  {
+    "match": ["Remote-Site-Office", "All-Offices", "Branch-Office"],
+    "group": "Business-Unit-Remote"
+  },
+  {
+    "match": ["HQ-Server", "Production-Servers"],
+    "group": "Business-Unit-Production"
+  },
+  {
+    "match": ["Web-Server", "Data-Backup"],
+    "group": "Business-Unit-Backup"
+  },
+  {
+    "match": ["web_pool", "db_pool"],
+    "group": "Business-Unit-Apps"
+  },
+  {
+    "match": ["Vlan1", "Vlan2"],
+    "group": "Business-Unit-Networks"
+  },
+  {
+    "match": ["External-203-0-113-25"],
+    "group": "Business-Unit-External"
+  },
+  {
+    "match": ["Unused-Host"],
+    "group": "Business-Unit-Orphan"
+  }
+]'
 + export configs_dirpath=reports/172.16.1.6
 + configs_dirpath=reports/172.16.1.6
-+ source_configs=()
-+ declare -ga source_configs
++ export reports_location=reports
++ reports_location=reports
++ [[ -z 06 ]]
++ [[ -z false ]]
 + local target_configlist_json=targets/172.16.1.6.json
 + [[ ! -f targets/172.16.1.6.json ]]
 + [[ true == true ]]
@@ -214,6 +261,8 @@
 + [[ -n Loading target config list from: targets/172.16.1.6.json ]]
 + local 'message=Loading target config list from: targets/172.16.1.6.json'
 + echo -e 'Loading target config list from: targets/172.16.1.6.json'
++ source_configs=()
++ declare -ga source_configs
 + mapfile -t source_configs
 ++ jq -r '
         .locations | to_entries[] |
@@ -241,93 +290,14 @@
 + [[ -n   - misc/.objects/switch3.list ]]
 + local 'message=  - misc/.objects/switch3.list'
 + echo -e '  - misc/.objects/switch3.list'
++ newline
++ local count=1
++ (( i = 0 ))
++ (( i < count ))
++ echo
++ (( i++ ))
++ (( i < count ))
 + for i in "${!source_configs[@]}"
-+ [[ cisco/.objects/branch-isr-02.list != \r\e\p\o\r\t\s\/\1\7\2\.\1\6\.\1\.\6\/* ]]
-+ source_configs[$i]=cisco/.objects/branch-isr-02.list
-+ [[ true == true ]]
-+ [[ ! -f matrix.json ]]
-+ jq -e 'length > 0' matrix.json
-++ cat matrix.json
-+ export 'matrix_configs=[
-  {
-    "match": ["BU1-NETWORK", "SOME-THING"],
-    "group": "Identified Matching Entries"
-  },
-  {
-    "match": ["Corporate HQ Subnets", "Server-192-168-1-10"],
-    "group": "Business-Unit-HQ"
-  },
-  {
-    "match": ["Remote-Site-Office", "All-Offices", "Branch-Office"],
-    "group": "Business-Unit-Remote"
-  },
-  {
-    "match": ["HQ-Server", "Production-Servers"],
-    "group": "Business-Unit-Production"
-  },
-  {
-    "match": ["Web-Server", "Data-Backup"],
-    "group": "Business-Unit-Backup"
-  },
-  {
-    "match": ["web_pool", "db_pool"],
-    "group": "Business-Unit-Apps"
-  },
-  {
-    "match": ["Vlan1", "Vlan2"],
-    "group": "Business-Unit-Networks"
-  },
-  {
-    "match": ["External-203-0-113-25"],
-    "group": "Business-Unit-External"
-  },
-  {
-    "match": ["Unused-Host"],
-    "group": "Business-Unit-Orphan"
-  }
-]'
-+ matrix_configs='[
-  {
-    "match": ["BU1-NETWORK", "SOME-THING"],
-    "group": "Identified Matching Entries"
-  },
-  {
-    "match": ["Corporate HQ Subnets", "Server-192-168-1-10"],
-    "group": "Business-Unit-HQ"
-  },
-  {
-    "match": ["Remote-Site-Office", "All-Offices", "Branch-Office"],
-    "group": "Business-Unit-Remote"
-  },
-  {
-    "match": ["HQ-Server", "Production-Servers"],
-    "group": "Business-Unit-Production"
-  },
-  {
-    "match": ["Web-Server", "Data-Backup"],
-    "group": "Business-Unit-Backup"
-  },
-  {
-    "match": ["web_pool", "db_pool"],
-    "group": "Business-Unit-Apps"
-  },
-  {
-    "match": ["Vlan1", "Vlan2"],
-    "group": "Business-Unit-Networks"
-  },
-  {
-    "match": ["External-203-0-113-25"],
-    "group": "Business-Unit-External"
-  },
-  {
-    "match": ["Unused-Host"],
-    "group": "Business-Unit-Orphan"
-  }
-]'
-+ export reports_location=reports
-+ reports_location=reports
-+ [[ -z 06 ]]
-+ [[ -z false ]]
 + [[ -z 172.16.1.6 ]]
 ++ print 172.16.1.6
 ++ [[ -n 172.16.1.6 ]]
@@ -336,429 +306,71 @@
 ++ tr -d '\r'
 + target_address=172.16.1.6
 + [[ false == true ]]
-+ export tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
-+ tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
++ extract_jobs_pid=()
++ declare -ga extract_jobs_pid
++ extract_jobs2files_mapping=()
++ declare -gA extract_jobs2files_mapping
++ local configs_extract__script=configs-extract
++ export object_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--fragments.json
++ object_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--fragments.json
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs cisco/.objects/branch-isr-02.list 172.16.1.6 targets/172.16.1.6.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local config_file=cisco/.objects/branch-isr-02.list
-+ local target_pattern=172.16.1.6
-+ local target_listing=targets/172.16.1.6.json
-+ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local 'imported_content=interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ [[ true == true ]]
-+ message 'Imported Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ [[ -n Imported Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT ]]
-+ local 'message=Imported Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ echo -e 'Imported Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-Imported Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT
-++ sed '/^\s*$/d;/^\s*!.*$/d'
-+ local 'sanitized_content=interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ [[ true == true ]]
-+ message 'Sanitized Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ [[ -n Sanitized Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT ]]
-+ local 'message=Sanitized Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ echo -e 'Sanitized Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-Sanitized Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT
-++ perl -pe 's/\n/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/g'
-+ local 'serialized_objects=interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ true == true ]]
-+ message 'Serialized Objects: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Objects: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Objects: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Objects: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Objects: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ sed -E 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--([^[:space:]])/\n\1/g'
-+ local 'restored_lines=interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ restored_lines+='
-'
-+ IFS='
-'
-+ read -r -d '' -a config_objects
-++ printf '%s\0' 'interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-'
-+ [[ true == true ]]
-+ message 'Loaded 2 config blocks'
-+ [[ -n Loaded 2 config blocks ]]
-+ local 'message=Loaded 2 config blocks'
-+ echo -e 'Loaded 2 config blocks'
-Loaded 2 config blocks
-+ oIFS=' 	
-'
-+ IFS='
-'
-+ matched_objects=()
-+ declare -a matched_objects
-+ for block in "${config_objects[@]}"
-+ grep -qE '(^|[^0-9.])172\.16\.1\.6([^0-9.]|$)'
-+ matched_objects+=("${block}")
-+ for block in "${config_objects[@]}"
-+ grep -qE '(^|[^0-9.])172\.16\.1\.6([^0-9.]|$)'
-+ matched_objects+=("${block}")
-+ IFS=' 	
-'
-+ [[ true == true ]]
-+ message 'Loaded 2 config blocks'
-+ [[ -n Loaded 2 config blocks ]]
-+ local 'message=Loaded 2 config blocks'
-+ echo -e 'Loaded 2 config blocks'
-Loaded 2 config blocks
-+ local process_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/process_configs.logs
-+ :
-+ for serialized_line in "${matched_objects[@]}"
-+ [[ true == true ]]
-+ message 'Serialized Line: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink'
-+ [[ -n Serialized Line: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink ]]
-+ local 'message=Serialized Line: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink'
-+ echo -e 'Serialized Line: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink'
-Serialized Line: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-++ perl -pe 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/\n/g'
-+ restored_block='interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink'
-+ local cfg_path=cisco/.objects/branch-isr-02.list
-+ local rel_path=cisco/.objects/branch-isr-02.list
-+ local site=cisco
-+ local device_filename=.objects/branch-isr-02.list
-+ local extension=list
-+ local objects_dir=reports/172.16.1.6/cisco
-+ local objects_file=reports/172.16.1.6/cisco/.objects/branch-isr-02.list
-+ [[ -s reports/172.16.1.6/cisco/.objects/branch-isr-02.list ]]
-++ echo 'interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink'
-++ tr '\n' '\r'
-+ local 'restored_flat=interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink'
-++ tr '\n' '\r'
-+ local 'objects_flat=interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplinkobject network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ grep -Fq -- 'interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink'
-+ [[ true == true ]]
-+ message 'Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list'
-+ [[ -n Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list ]]
-+ local 'message=Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list'
-+ echo -e 'Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list'
-Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list
-+ continue
-+ for serialized_line in "${matched_objects[@]}"
-+ [[ true == true ]]
-+ message 'Serialized Line: object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Line: object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Line: object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Line: object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Line: object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ perl -pe 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/\n/g'
-+ restored_block='object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ local cfg_path=cisco/.objects/branch-isr-02.list
-+ local rel_path=cisco/.objects/branch-isr-02.list
-+ local site=cisco
-+ local device_filename=.objects/branch-isr-02.list
-+ local extension=list
-+ local objects_dir=reports/172.16.1.6/cisco
-+ local objects_file=reports/172.16.1.6/cisco/.objects/branch-isr-02.list
-+ [[ -s reports/172.16.1.6/cisco/.objects/branch-isr-02.list ]]
-++ echo 'object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-++ tr '\n' '\r'
-+ local 'restored_flat=object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-++ tr '\n' '\r'
-+ local 'objects_flat=interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplinkobject network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ grep -Fq -- 'object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ [[ true == true ]]
-+ message 'Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list'
-+ [[ -n Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list ]]
-+ local 'message=Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list'
-+ echo -e 'Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list'
-Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list
-+ continue
-+ return 0
+++ basename cisco/.objects/branch-isr-02.list
++ cfg_basename=branch-isr-02.list
++ object_fragments_per_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-branch-isr-02.list--30835.json
++ local configs_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--172.16.1.6-branch-isr-02.list
++ job_pid=71061
++ extract_jobs_pid+=("${job_pid}")
++ extract_jobs2files_mapping["${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-branch-isr-02.list--30835.json
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs fortinet/.objects/fg-campus-core.list 172.16.1.6 targets/172.16.1.6.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local config_file=fortinet/.objects/fg-campus-core.list
-+ local target_pattern=172.16.1.6
-+ local target_listing=targets/172.16.1.6.json
-+ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local 'imported_content=config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ [[ true == true ]]
-+ message 'Imported Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ [[ -n Imported Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end ]]
-+ local 'message=Imported Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ echo -e 'Imported Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-Imported Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end
-++ sed '/^\s*$/d;/^\s*!.*$/d'
-+ local 'sanitized_content=config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ [[ true == true ]]
-+ message 'Sanitized Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ [[ -n Sanitized Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end ]]
-+ local 'message=Sanitized Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ echo -e 'Sanitized Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-Sanitized Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end
-++ perl -pe 's/\n/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/g'
-+ local 'serialized_objects=config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ true == true ]]
-+ message 'Serialized Objects: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Objects: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Objects: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Objects: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Objects: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ sed -E 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--([^[:space:]])/\n\1/g'
-+ local 'restored_lines=config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ restored_lines+='
-'
-+ IFS='
-'
-+ read -r -d '' -a config_objects
-++ printf '%s\0' 'config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-'
-+ [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ echo -e 'Loaded 1 config blocks'
-Loaded 1 config blocks
-+ oIFS=' 	
-'
-+ IFS='
-'
-+ matched_objects=()
-+ declare -a matched_objects
-+ for block in "${config_objects[@]}"
-+ grep -qE '(^|[^0-9.])172\.16\.1\.6([^0-9.]|$)'
-+ matched_objects+=("${block}")
-+ IFS=' 	
-'
-+ [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ echo -e 'Loaded 1 config blocks'
-Loaded 1 config blocks
-+ local process_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/process_configs.logs
-+ :
-+ for serialized_line in "${matched_objects[@]}"
-+ [[ true == true ]]
-+ message 'Serialized Line: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Line: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Line: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Line: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Line: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ perl -pe 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/\n/g'
-+ restored_block='config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ local cfg_path=fortinet/.objects/fg-campus-core.list
-+ local rel_path=fortinet/.objects/fg-campus-core.list
-+ local site=fortinet
-+ local device_filename=.objects/fg-campus-core.list
-+ local extension=list
-+ local objects_dir=reports/172.16.1.6/fortinet
-+ local objects_file=reports/172.16.1.6/fortinet/.objects/fg-campus-core.list
-+ [[ -s reports/172.16.1.6/fortinet/.objects/fg-campus-core.list ]]
-++ echo 'config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-++ tr '\n' '\r'
-+ local 'restored_flat=config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-++ tr '\n' '\r'
-+ local 'objects_flat=config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ grep -Fq -- 'config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ [[ true == true ]]
-+ message 'Skipping duplicate block in reports/172.16.1.6/fortinet/.objects/fg-campus-core.list'
-+ [[ -n Skipping duplicate block in reports/172.16.1.6/fortinet/.objects/fg-campus-core.list ]]
-+ local 'message=Skipping duplicate block in reports/172.16.1.6/fortinet/.objects/fg-campus-core.list'
-+ echo -e 'Skipping duplicate block in reports/172.16.1.6/fortinet/.objects/fg-campus-core.list'
-Skipping duplicate block in reports/172.16.1.6/fortinet/.objects/fg-campus-core.list
-+ continue
-+ return 0
+++ basename fortinet/.objects/fg-campus-core.list
++ cfg_basename=fg-campus-core.list
++ object_fragments_per_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-fg-campus-core.list--10786.json
++ local configs_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--172.16.1.6-fg-campus-core.list
++ job_pid=71070
++ extract_jobs_pid+=("${job_pid}")
++ extract_jobs2files_mapping["${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-fg-campus-core.list--10786.json
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs misc/.objects/switch3.list 172.16.1.6 targets/172.16.1.6.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local config_file=misc/.objects/switch3.list
-+ local target_pattern=172.16.1.6
-+ local target_listing=targets/172.16.1.6.json
-+ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local 'imported_content=interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ [[ true == true ]]
-+ message 'Imported Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ [[ -n Imported Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0 ]]
-+ local 'message=Imported Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ echo -e 'Imported Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-Imported Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0
-++ sed '/^\s*$/d;/^\s*!.*$/d'
-+ local 'sanitized_content=interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ [[ true == true ]]
-+ message 'Sanitized Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ [[ -n Sanitized Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0 ]]
-+ local 'message=Sanitized Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ echo -e 'Sanitized Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-Sanitized Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0
-++ perl -pe 's/\n/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/g'
-+ local 'serialized_objects=interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ true == true ]]
-+ message 'Serialized Objects: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Objects: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Objects: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Objects: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Objects: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ sed -E 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--([^[:space:]])/\n\1/g'
-+ local 'restored_lines=interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ restored_lines+='
-'
-+ IFS='
-'
-+ read -r -d '' -a config_objects
-++ printf '%s\0' 'interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-'
-+ [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ echo -e 'Loaded 1 config blocks'
-Loaded 1 config blocks
-+ oIFS=' 	
-'
-+ IFS='
-'
-+ matched_objects=()
-+ declare -a matched_objects
-+ for block in "${config_objects[@]}"
-+ grep -qE '(^|[^0-9.])172\.16\.1\.6([^0-9.]|$)'
-+ matched_objects+=("${block}")
-+ IFS=' 	
-'
-+ [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ echo -e 'Loaded 1 config blocks'
-Loaded 1 config blocks
-+ local process_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/process_configs.logs
-+ :
-+ for serialized_line in "${matched_objects[@]}"
-+ [[ true == true ]]
-+ message 'Serialized Line: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Line: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Line: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Line: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Line: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ perl -pe 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/\n/g'
-+ restored_block='interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ local cfg_path=misc/.objects/switch3.list
-+ local rel_path=misc/.objects/switch3.list
-+ local site=misc
-+ local device_filename=.objects/switch3.list
-+ local extension=list
-+ local objects_dir=reports/172.16.1.6/misc
-+ local objects_file=reports/172.16.1.6/misc/.objects/switch3.list
-+ [[ -s reports/172.16.1.6/misc/.objects/switch3.list ]]
-++ echo 'interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-++ tr '\n' '\r'
-+ local 'restored_flat=interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-++ tr '\n' '\r'
-+ local 'objects_flat=interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ grep -Fq -- 'interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ [[ true == true ]]
-+ message 'Skipping duplicate block in reports/172.16.1.6/misc/.objects/switch3.list'
-+ [[ -n Skipping duplicate block in reports/172.16.1.6/misc/.objects/switch3.list ]]
-+ local 'message=Skipping duplicate block in reports/172.16.1.6/misc/.objects/switch3.list'
-+ echo -e 'Skipping duplicate block in reports/172.16.1.6/misc/.objects/switch3.list'
-Skipping duplicate block in reports/172.16.1.6/misc/.objects/switch3.list
-+ continue
-+ return 0
-+ [[ true == true ]]
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json ]]
+++ basename misc/.objects/switch3.list
++ cfg_basename=switch3.list
++ object_fragments_per_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-switch3.list--10232.json
++ local configs_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--172.16.1.6-switch3.list
++ job_pid=71081
++ extract_jobs_pid+=("${job_pid}")
++ extract_jobs2files_mapping["${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-switch3.list--10232.json
++ ((  3 > 0  ))
++ valid_extract_jobs_pid=()
++ local valid_extract_jobs_pid
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 71061
++ logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-branch-isr-02.list--30835.json
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 71070
++ logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-fg-campus-core.list--10786.json
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 71081
++ valid_extract_jobs_pid+=("${pid}")
++ extract_jobs_pid=("${valid_extract_jobs_pid[@]}")
++ sleep 0.1
++ ((  1 > 0  ))
++ valid_extract_jobs_pid=()
++ local valid_extract_jobs_pid
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 71081
++ logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-switch3.list--10232.json
++ extract_jobs_pid=("${valid_extract_jobs_pid[@]}")
++ sleep 0.1
++ ((  0 > 0  ))
++ for path in "${extract_jobs2files_mapping[@]}"
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-fg-campus-core.list--10786.json ]]
++ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-fg-campus-core.list--10786.json
++ for path in "${extract_jobs2files_mapping[@]}"
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-switch3.list--10232.json ]]
++ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-switch3.list--10232.json
++ for path in "${extract_jobs2files_mapping[@]}"
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-branch-isr-02.list--30835.json ]]
++ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-branch-isr-02.list--30835.json
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--fragments.json ]]
 + for i in "${!source_configs[@]}"
-+ [[ fortinet/.objects/fg-campus-core.list != \r\e\p\o\r\t\s\/\1\7\2\.\1\6\.\1\.\6\/* ]]
-+ source_configs[$i]=fortinet/.objects/fg-campus-core.list
-+ [[ true == true ]]
-+ [[ ! -f matrix.json ]]
-+ jq -e 'length > 0' matrix.json
-++ cat matrix.json
-+ export 'matrix_configs=[
-  {
-    "match": ["BU1-NETWORK", "SOME-THING"],
-    "group": "Identified Matching Entries"
-  },
-  {
-    "match": ["Corporate HQ Subnets", "Server-192-168-1-10"],
-    "group": "Business-Unit-HQ"
-  },
-  {
-    "match": ["Remote-Site-Office", "All-Offices", "Branch-Office"],
-    "group": "Business-Unit-Remote"
-  },
-  {
-    "match": ["HQ-Server", "Production-Servers"],
-    "group": "Business-Unit-Production"
-  },
-  {
-    "match": ["Web-Server", "Data-Backup"],
-    "group": "Business-Unit-Backup"
-  },
-  {
-    "match": ["web_pool", "db_pool"],
-    "group": "Business-Unit-Apps"
-  },
-  {
-    "match": ["Vlan1", "Vlan2"],
-    "group": "Business-Unit-Networks"
-  },
-  {
-    "match": ["External-203-0-113-25"],
-    "group": "Business-Unit-External"
-  },
-  {
-    "match": ["Unused-Host"],
-    "group": "Business-Unit-Orphan"
-  }
-]'
-+ matrix_configs='[
-  {
-    "match": ["BU1-NETWORK", "SOME-THING"],
-    "group": "Identified Matching Entries"
-  },
-  {
-    "match": ["Corporate HQ Subnets", "Server-192-168-1-10"],
-    "group": "Business-Unit-HQ"
-  },
-  {
-    "match": ["Remote-Site-Office", "All-Offices", "Branch-Office"],
-    "group": "Business-Unit-Remote"
-  },
-  {
-    "match": ["HQ-Server", "Production-Servers"],
-    "group": "Business-Unit-Production"
-  },
-  {
-    "match": ["Web-Server", "Data-Backup"],
-    "group": "Business-Unit-Backup"
-  },
-  {
-    "match": ["web_pool", "db_pool"],
-    "group": "Business-Unit-Apps"
-  },
-  {
-    "match": ["Vlan1", "Vlan2"],
-    "group": "Business-Unit-Networks"
-  },
-  {
-    "match": ["External-203-0-113-25"],
-    "group": "Business-Unit-External"
-  },
-  {
-    "match": ["Unused-Host"],
-    "group": "Business-Unit-Orphan"
-  }
-]'
-+ export reports_location=reports
-+ reports_location=reports
-+ [[ -z 06 ]]
-+ [[ -z false ]]
 + [[ -z 172.16.1.6 ]]
 ++ print 172.16.1.6
 ++ [[ -n 172.16.1.6 ]]
@@ -767,429 +379,71 @@ Skipping duplicate block in reports/172.16.1.6/misc/.objects/switch3.list
 ++ tr -d '\r'
 + target_address=172.16.1.6
 + [[ false == true ]]
-+ export tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
-+ tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
++ extract_jobs_pid=()
++ declare -ga extract_jobs_pid
++ extract_jobs2files_mapping=()
++ declare -gA extract_jobs2files_mapping
++ local configs_extract__script=configs-extract
++ export object_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--fragments.json
++ object_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--fragments.json
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs cisco/.objects/branch-isr-02.list 172.16.1.6 targets/172.16.1.6.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local config_file=cisco/.objects/branch-isr-02.list
-+ local target_pattern=172.16.1.6
-+ local target_listing=targets/172.16.1.6.json
-+ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local 'imported_content=interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ [[ true == true ]]
-+ message 'Imported Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ [[ -n Imported Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT ]]
-+ local 'message=Imported Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ echo -e 'Imported Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-Imported Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT
-++ sed '/^\s*$/d;/^\s*!.*$/d'
-+ local 'sanitized_content=interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ [[ true == true ]]
-+ message 'Sanitized Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ [[ -n Sanitized Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT ]]
-+ local 'message=Sanitized Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ echo -e 'Sanitized Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-Sanitized Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT
-++ perl -pe 's/\n/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/g'
-+ local 'serialized_objects=interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ true == true ]]
-+ message 'Serialized Objects: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Objects: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Objects: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Objects: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Objects: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ sed -E 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--([^[:space:]])/\n\1/g'
-+ local 'restored_lines=interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ restored_lines+='
-'
-+ IFS='
-'
-+ read -r -d '' -a config_objects
-++ printf '%s\0' 'interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-'
-+ [[ true == true ]]
-+ message 'Loaded 2 config blocks'
-+ [[ -n Loaded 2 config blocks ]]
-+ local 'message=Loaded 2 config blocks'
-+ echo -e 'Loaded 2 config blocks'
-Loaded 2 config blocks
-+ oIFS=' 	
-'
-+ IFS='
-'
-+ matched_objects=()
-+ declare -a matched_objects
-+ for block in "${config_objects[@]}"
-+ grep -qE '(^|[^0-9.])172\.16\.1\.6([^0-9.]|$)'
-+ matched_objects+=("${block}")
-+ for block in "${config_objects[@]}"
-+ grep -qE '(^|[^0-9.])172\.16\.1\.6([^0-9.]|$)'
-+ matched_objects+=("${block}")
-+ IFS=' 	
-'
-+ [[ true == true ]]
-+ message 'Loaded 2 config blocks'
-+ [[ -n Loaded 2 config blocks ]]
-+ local 'message=Loaded 2 config blocks'
-+ echo -e 'Loaded 2 config blocks'
-Loaded 2 config blocks
-+ local process_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/process_configs.logs
-+ :
-+ for serialized_line in "${matched_objects[@]}"
-+ [[ true == true ]]
-+ message 'Serialized Line: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink'
-+ [[ -n Serialized Line: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink ]]
-+ local 'message=Serialized Line: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink'
-+ echo -e 'Serialized Line: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink'
-Serialized Line: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-++ perl -pe 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/\n/g'
-+ restored_block='interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink'
-+ local cfg_path=cisco/.objects/branch-isr-02.list
-+ local rel_path=cisco/.objects/branch-isr-02.list
-+ local site=cisco
-+ local device_filename=.objects/branch-isr-02.list
-+ local extension=list
-+ local objects_dir=reports/172.16.1.6/cisco
-+ local objects_file=reports/172.16.1.6/cisco/.objects/branch-isr-02.list
-+ [[ -s reports/172.16.1.6/cisco/.objects/branch-isr-02.list ]]
-++ echo 'interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink'
-++ tr '\n' '\r'
-+ local 'restored_flat=interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink'
-++ tr '\n' '\r'
-+ local 'objects_flat=interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplinkobject network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ grep -Fq -- 'interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink'
-+ [[ true == true ]]
-+ message 'Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list'
-+ [[ -n Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list ]]
-+ local 'message=Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list'
-+ echo -e 'Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list'
-Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list
-+ continue
-+ for serialized_line in "${matched_objects[@]}"
-+ [[ true == true ]]
-+ message 'Serialized Line: object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Line: object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Line: object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Line: object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Line: object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ perl -pe 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/\n/g'
-+ restored_block='object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ local cfg_path=cisco/.objects/branch-isr-02.list
-+ local rel_path=cisco/.objects/branch-isr-02.list
-+ local site=cisco
-+ local device_filename=.objects/branch-isr-02.list
-+ local extension=list
-+ local objects_dir=reports/172.16.1.6/cisco
-+ local objects_file=reports/172.16.1.6/cisco/.objects/branch-isr-02.list
-+ [[ -s reports/172.16.1.6/cisco/.objects/branch-isr-02.list ]]
-++ echo 'object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-++ tr '\n' '\r'
-+ local 'restored_flat=object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-++ tr '\n' '\r'
-+ local 'objects_flat=interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplinkobject network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ grep -Fq -- 'object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ [[ true == true ]]
-+ message 'Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list'
-+ [[ -n Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list ]]
-+ local 'message=Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list'
-+ echo -e 'Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list'
-Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list
-+ continue
-+ return 0
+++ basename cisco/.objects/branch-isr-02.list
++ cfg_basename=branch-isr-02.list
++ object_fragments_per_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-branch-isr-02.list--17399.json
++ local configs_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--172.16.1.6-branch-isr-02.list
++ job_pid=71208
++ extract_jobs_pid+=("${job_pid}")
++ extract_jobs2files_mapping["${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-branch-isr-02.list--17399.json
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs fortinet/.objects/fg-campus-core.list 172.16.1.6 targets/172.16.1.6.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local config_file=fortinet/.objects/fg-campus-core.list
-+ local target_pattern=172.16.1.6
-+ local target_listing=targets/172.16.1.6.json
-+ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local 'imported_content=config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ [[ true == true ]]
-+ message 'Imported Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ [[ -n Imported Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end ]]
-+ local 'message=Imported Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ echo -e 'Imported Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-Imported Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end
-++ sed '/^\s*$/d;/^\s*!.*$/d'
-+ local 'sanitized_content=config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ [[ true == true ]]
-+ message 'Sanitized Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ [[ -n Sanitized Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end ]]
-+ local 'message=Sanitized Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ echo -e 'Sanitized Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-Sanitized Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end
-++ perl -pe 's/\n/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/g'
-+ local 'serialized_objects=config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ true == true ]]
-+ message 'Serialized Objects: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Objects: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Objects: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Objects: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Objects: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ sed -E 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--([^[:space:]])/\n\1/g'
-+ local 'restored_lines=config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ restored_lines+='
-'
-+ IFS='
-'
-+ read -r -d '' -a config_objects
-++ printf '%s\0' 'config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-'
-+ [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ echo -e 'Loaded 1 config blocks'
-Loaded 1 config blocks
-+ oIFS=' 	
-'
-+ IFS='
-'
-+ matched_objects=()
-+ declare -a matched_objects
-+ for block in "${config_objects[@]}"
-+ grep -qE '(^|[^0-9.])172\.16\.1\.6([^0-9.]|$)'
-+ matched_objects+=("${block}")
-+ IFS=' 	
-'
-+ [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ echo -e 'Loaded 1 config blocks'
-Loaded 1 config blocks
-+ local process_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/process_configs.logs
-+ :
-+ for serialized_line in "${matched_objects[@]}"
-+ [[ true == true ]]
-+ message 'Serialized Line: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Line: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Line: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Line: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Line: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ perl -pe 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/\n/g'
-+ restored_block='config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ local cfg_path=fortinet/.objects/fg-campus-core.list
-+ local rel_path=fortinet/.objects/fg-campus-core.list
-+ local site=fortinet
-+ local device_filename=.objects/fg-campus-core.list
-+ local extension=list
-+ local objects_dir=reports/172.16.1.6/fortinet
-+ local objects_file=reports/172.16.1.6/fortinet/.objects/fg-campus-core.list
-+ [[ -s reports/172.16.1.6/fortinet/.objects/fg-campus-core.list ]]
-++ echo 'config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-++ tr '\n' '\r'
-+ local 'restored_flat=config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-++ tr '\n' '\r'
-+ local 'objects_flat=config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ grep -Fq -- 'config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ [[ true == true ]]
-+ message 'Skipping duplicate block in reports/172.16.1.6/fortinet/.objects/fg-campus-core.list'
-+ [[ -n Skipping duplicate block in reports/172.16.1.6/fortinet/.objects/fg-campus-core.list ]]
-+ local 'message=Skipping duplicate block in reports/172.16.1.6/fortinet/.objects/fg-campus-core.list'
-+ echo -e 'Skipping duplicate block in reports/172.16.1.6/fortinet/.objects/fg-campus-core.list'
-Skipping duplicate block in reports/172.16.1.6/fortinet/.objects/fg-campus-core.list
-+ continue
-+ return 0
+++ basename fortinet/.objects/fg-campus-core.list
++ cfg_basename=fg-campus-core.list
++ object_fragments_per_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-fg-campus-core.list--16437.json
++ local configs_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--172.16.1.6-fg-campus-core.list
++ job_pid=71222
++ extract_jobs_pid+=("${job_pid}")
++ extract_jobs2files_mapping["${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-fg-campus-core.list--16437.json
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs misc/.objects/switch3.list 172.16.1.6 targets/172.16.1.6.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local config_file=misc/.objects/switch3.list
-+ local target_pattern=172.16.1.6
-+ local target_listing=targets/172.16.1.6.json
-+ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local 'imported_content=interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ [[ true == true ]]
-+ message 'Imported Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ [[ -n Imported Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0 ]]
-+ local 'message=Imported Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ echo -e 'Imported Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-Imported Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0
-++ sed '/^\s*$/d;/^\s*!.*$/d'
-+ local 'sanitized_content=interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ [[ true == true ]]
-+ message 'Sanitized Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ [[ -n Sanitized Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0 ]]
-+ local 'message=Sanitized Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ echo -e 'Sanitized Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-Sanitized Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0
-++ perl -pe 's/\n/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/g'
-+ local 'serialized_objects=interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ true == true ]]
-+ message 'Serialized Objects: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Objects: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Objects: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Objects: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Objects: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ sed -E 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--([^[:space:]])/\n\1/g'
-+ local 'restored_lines=interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ restored_lines+='
-'
-+ IFS='
-'
-+ read -r -d '' -a config_objects
-++ printf '%s\0' 'interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-'
-+ [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ echo -e 'Loaded 1 config blocks'
-Loaded 1 config blocks
-+ oIFS=' 	
-'
-+ IFS='
-'
-+ matched_objects=()
-+ declare -a matched_objects
-+ for block in "${config_objects[@]}"
-+ grep -qE '(^|[^0-9.])172\.16\.1\.6([^0-9.]|$)'
-+ matched_objects+=("${block}")
-+ IFS=' 	
-'
-+ [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ echo -e 'Loaded 1 config blocks'
-Loaded 1 config blocks
-+ local process_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/process_configs.logs
-+ :
-+ for serialized_line in "${matched_objects[@]}"
-+ [[ true == true ]]
-+ message 'Serialized Line: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Line: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Line: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Line: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Line: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ perl -pe 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/\n/g'
-+ restored_block='interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ local cfg_path=misc/.objects/switch3.list
-+ local rel_path=misc/.objects/switch3.list
-+ local site=misc
-+ local device_filename=.objects/switch3.list
-+ local extension=list
-+ local objects_dir=reports/172.16.1.6/misc
-+ local objects_file=reports/172.16.1.6/misc/.objects/switch3.list
-+ [[ -s reports/172.16.1.6/misc/.objects/switch3.list ]]
-++ echo 'interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-++ tr '\n' '\r'
-+ local 'restored_flat=interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-++ tr '\n' '\r'
-+ local 'objects_flat=interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ grep -Fq -- 'interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ [[ true == true ]]
-+ message 'Skipping duplicate block in reports/172.16.1.6/misc/.objects/switch3.list'
-+ [[ -n Skipping duplicate block in reports/172.16.1.6/misc/.objects/switch3.list ]]
-+ local 'message=Skipping duplicate block in reports/172.16.1.6/misc/.objects/switch3.list'
-+ echo -e 'Skipping duplicate block in reports/172.16.1.6/misc/.objects/switch3.list'
-Skipping duplicate block in reports/172.16.1.6/misc/.objects/switch3.list
-+ continue
-+ return 0
-+ [[ true == true ]]
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json ]]
+++ basename misc/.objects/switch3.list
++ cfg_basename=switch3.list
++ object_fragments_per_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-switch3.list--22149.json
++ local configs_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--172.16.1.6-switch3.list
++ job_pid=71227
++ extract_jobs_pid+=("${job_pid}")
++ extract_jobs2files_mapping["${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-switch3.list--22149.json
++ ((  3 > 0  ))
++ valid_extract_jobs_pid=()
++ local valid_extract_jobs_pid
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 71208
++ logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-branch-isr-02.list--17399.json
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 71222
++ logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-fg-campus-core.list--16437.json
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 71227
++ valid_extract_jobs_pid+=("${pid}")
++ extract_jobs_pid=("${valid_extract_jobs_pid[@]}")
++ sleep 0.1
++ ((  1 > 0  ))
++ valid_extract_jobs_pid=()
++ local valid_extract_jobs_pid
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 71227
++ logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-switch3.list--22149.json
++ extract_jobs_pid=("${valid_extract_jobs_pid[@]}")
++ sleep 0.1
++ ((  0 > 0  ))
++ for path in "${extract_jobs2files_mapping[@]}"
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-branch-isr-02.list--17399.json ]]
++ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-branch-isr-02.list--17399.json
++ for path in "${extract_jobs2files_mapping[@]}"
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-fg-campus-core.list--16437.json ]]
++ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-fg-campus-core.list--16437.json
++ for path in "${extract_jobs2files_mapping[@]}"
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-switch3.list--22149.json ]]
++ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-switch3.list--22149.json
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--fragments.json ]]
 + for i in "${!source_configs[@]}"
-+ [[ misc/.objects/switch3.list != \r\e\p\o\r\t\s\/\1\7\2\.\1\6\.\1\.\6\/* ]]
-+ source_configs[$i]=misc/.objects/switch3.list
-+ [[ true == true ]]
-+ [[ ! -f matrix.json ]]
-+ jq -e 'length > 0' matrix.json
-++ cat matrix.json
-+ export 'matrix_configs=[
-  {
-    "match": ["BU1-NETWORK", "SOME-THING"],
-    "group": "Identified Matching Entries"
-  },
-  {
-    "match": ["Corporate HQ Subnets", "Server-192-168-1-10"],
-    "group": "Business-Unit-HQ"
-  },
-  {
-    "match": ["Remote-Site-Office", "All-Offices", "Branch-Office"],
-    "group": "Business-Unit-Remote"
-  },
-  {
-    "match": ["HQ-Server", "Production-Servers"],
-    "group": "Business-Unit-Production"
-  },
-  {
-    "match": ["Web-Server", "Data-Backup"],
-    "group": "Business-Unit-Backup"
-  },
-  {
-    "match": ["web_pool", "db_pool"],
-    "group": "Business-Unit-Apps"
-  },
-  {
-    "match": ["Vlan1", "Vlan2"],
-    "group": "Business-Unit-Networks"
-  },
-  {
-    "match": ["External-203-0-113-25"],
-    "group": "Business-Unit-External"
-  },
-  {
-    "match": ["Unused-Host"],
-    "group": "Business-Unit-Orphan"
-  }
-]'
-+ matrix_configs='[
-  {
-    "match": ["BU1-NETWORK", "SOME-THING"],
-    "group": "Identified Matching Entries"
-  },
-  {
-    "match": ["Corporate HQ Subnets", "Server-192-168-1-10"],
-    "group": "Business-Unit-HQ"
-  },
-  {
-    "match": ["Remote-Site-Office", "All-Offices", "Branch-Office"],
-    "group": "Business-Unit-Remote"
-  },
-  {
-    "match": ["HQ-Server", "Production-Servers"],
-    "group": "Business-Unit-Production"
-  },
-  {
-    "match": ["Web-Server", "Data-Backup"],
-    "group": "Business-Unit-Backup"
-  },
-  {
-    "match": ["web_pool", "db_pool"],
-    "group": "Business-Unit-Apps"
-  },
-  {
-    "match": ["Vlan1", "Vlan2"],
-    "group": "Business-Unit-Networks"
-  },
-  {
-    "match": ["External-203-0-113-25"],
-    "group": "Business-Unit-External"
-  },
-  {
-    "match": ["Unused-Host"],
-    "group": "Business-Unit-Orphan"
-  }
-]'
-+ export reports_location=reports
-+ reports_location=reports
-+ [[ -z 06 ]]
-+ [[ -z false ]]
 + [[ -z 172.16.1.6 ]]
 ++ print 172.16.1.6
 ++ [[ -n 172.16.1.6 ]]
@@ -1198,360 +452,84 @@ Skipping duplicate block in reports/172.16.1.6/misc/.objects/switch3.list
 ++ tr -d '\r'
 + target_address=172.16.1.6
 + [[ false == true ]]
-+ export tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
-+ tmp_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
++ extract_jobs_pid=()
++ declare -ga extract_jobs_pid
++ extract_jobs2files_mapping=()
++ declare -gA extract_jobs2files_mapping
++ local configs_extract__script=configs-extract
++ export object_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--fragments.json
++ object_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--fragments.json
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs cisco/.objects/branch-isr-02.list 172.16.1.6 targets/172.16.1.6.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local config_file=cisco/.objects/branch-isr-02.list
-+ local target_pattern=172.16.1.6
-+ local target_listing=targets/172.16.1.6.json
-+ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local 'imported_content=interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ [[ true == true ]]
-+ message 'Imported Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ [[ -n Imported Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT ]]
-+ local 'message=Imported Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ echo -e 'Imported Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-Imported Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT
-++ sed '/^\s*$/d;/^\s*!.*$/d'
-+ local 'sanitized_content=interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ [[ true == true ]]
-+ message 'Sanitized Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ [[ -n Sanitized Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT ]]
-+ local 'message=Sanitized Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ echo -e 'Sanitized Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-Sanitized Content: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT
-++ perl -pe 's/\n/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/g'
-+ local 'serialized_objects=interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ true == true ]]
-+ message 'Serialized Objects: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Objects: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Objects: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Objects: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Objects: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ sed -E 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--([^[:space:]])/\n\1/g'
-+ local 'restored_lines=interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ restored_lines+='
-'
-+ IFS='
-'
-+ read -r -d '' -a config_objects
-++ printf '%s\0' 'interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-'
-+ [[ true == true ]]
-+ message 'Loaded 2 config blocks'
-+ [[ -n Loaded 2 config blocks ]]
-+ local 'message=Loaded 2 config blocks'
-+ echo -e 'Loaded 2 config blocks'
-Loaded 2 config blocks
-+ oIFS=' 	
-'
-+ IFS='
-'
-+ matched_objects=()
-+ declare -a matched_objects
-+ for block in "${config_objects[@]}"
-+ grep -qE '(^|[^0-9.])172\.16\.1\.6([^0-9.]|$)'
-+ matched_objects+=("${block}")
-+ for block in "${config_objects[@]}"
-+ grep -qE '(^|[^0-9.])172\.16\.1\.6([^0-9.]|$)'
-+ matched_objects+=("${block}")
-+ IFS=' 	
-'
-+ [[ true == true ]]
-+ message 'Loaded 2 config blocks'
-+ [[ -n Loaded 2 config blocks ]]
-+ local 'message=Loaded 2 config blocks'
-+ echo -e 'Loaded 2 config blocks'
-Loaded 2 config blocks
-+ local process_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/process_configs.logs
-+ :
-+ for serialized_line in "${matched_objects[@]}"
-+ [[ true == true ]]
-+ message 'Serialized Line: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink'
-+ [[ -n Serialized Line: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink ]]
-+ local 'message=Serialized Line: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink'
-+ echo -e 'Serialized Line: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink'
-Serialized Line: interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink
-++ perl -pe 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/\n/g'
-+ restored_block='interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink'
-+ local cfg_path=cisco/.objects/branch-isr-02.list
-+ local rel_path=cisco/.objects/branch-isr-02.list
-+ local site=cisco
-+ local device_filename=.objects/branch-isr-02.list
-+ local extension=list
-+ local objects_dir=reports/172.16.1.6/cisco
-+ local objects_file=reports/172.16.1.6/cisco/.objects/branch-isr-02.list
-+ [[ -s reports/172.16.1.6/cisco/.objects/branch-isr-02.list ]]
-++ echo 'interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink'
-++ tr '\n' '\r'
-+ local 'restored_flat=interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink'
-++ tr '\n' '\r'
-+ local 'objects_flat=interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplinkobject network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ grep -Fq -- 'interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplink'
-+ [[ true == true ]]
-+ message 'Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list'
-+ [[ -n Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list ]]
-+ local 'message=Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list'
-+ echo -e 'Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list'
-Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list
-+ continue
-+ for serialized_line in "${matched_objects[@]}"
-+ [[ true == true ]]
-+ message 'Serialized Line: object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Line: object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Line: object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Line: object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Line: object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ perl -pe 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/\n/g'
-+ restored_block='object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ local cfg_path=cisco/.objects/branch-isr-02.list
-+ local rel_path=cisco/.objects/branch-isr-02.list
-+ local site=cisco
-+ local device_filename=.objects/branch-isr-02.list
-+ local extension=list
-+ local objects_dir=reports/172.16.1.6/cisco
-+ local objects_file=reports/172.16.1.6/cisco/.objects/branch-isr-02.list
-+ [[ -s reports/172.16.1.6/cisco/.objects/branch-isr-02.list ]]
-++ echo 'object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-++ tr '\n' '\r'
-+ local 'restored_flat=object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-++ tr '\n' '\r'
-+ local 'objects_flat=interface GigabitEthernet0/0/0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description ISP uplinkobject network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ grep -Fq -- 'object network BlackWidow-Core--MTc0OTAzMjEyOTAzODcwMDAwMAo--  host 172.16.1.6--MTc0OTAzMjEyOTAzODcwMDAwMAo--  description Branch router uplink NAT'
-+ [[ true == true ]]
-+ message 'Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list'
-+ [[ -n Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list ]]
-+ local 'message=Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list'
-+ echo -e 'Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list'
-Skipping duplicate block in reports/172.16.1.6/cisco/.objects/branch-isr-02.list
-+ continue
-+ return 0
+++ basename cisco/.objects/branch-isr-02.list
++ cfg_basename=branch-isr-02.list
++ object_fragments_per_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-branch-isr-02.list--3148.json
++ local configs_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--172.16.1.6-branch-isr-02.list
++ job_pid=71315
++ extract_jobs_pid+=("${job_pid}")
++ extract_jobs2files_mapping["${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-branch-isr-02.list--3148.json
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs fortinet/.objects/fg-campus-core.list 172.16.1.6 targets/172.16.1.6.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local config_file=fortinet/.objects/fg-campus-core.list
-+ local target_pattern=172.16.1.6
-+ local target_listing=targets/172.16.1.6.json
-+ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local 'imported_content=config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ [[ true == true ]]
-+ message 'Imported Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ [[ -n Imported Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end ]]
-+ local 'message=Imported Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ echo -e 'Imported Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-Imported Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end
-++ sed '/^\s*$/d;/^\s*!.*$/d'
-+ local 'sanitized_content=config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ [[ true == true ]]
-+ message 'Sanitized Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ [[ -n Sanitized Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end ]]
-+ local 'message=Sanitized Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ echo -e 'Sanitized Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-Sanitized Content: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end
-++ perl -pe 's/\n/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/g'
-+ local 'serialized_objects=config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ true == true ]]
-+ message 'Serialized Objects: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Objects: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Objects: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Objects: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Objects: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ sed -E 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--([^[:space:]])/\n\1/g'
-+ local 'restored_lines=config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ restored_lines+='
-'
-+ IFS='
-'
-+ read -r -d '' -a config_objects
-++ printf '%s\0' 'config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-'
-+ [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ echo -e 'Loaded 1 config blocks'
-Loaded 1 config blocks
-+ oIFS=' 	
-'
-+ IFS='
-'
-+ matched_objects=()
-+ declare -a matched_objects
-+ for block in "${config_objects[@]}"
-+ grep -qE '(^|[^0-9.])172\.16\.1\.6([^0-9.]|$)'
-+ matched_objects+=("${block}")
-+ IFS=' 	
-'
-+ [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ echo -e 'Loaded 1 config blocks'
-Loaded 1 config blocks
-+ local process_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/process_configs.logs
-+ :
-+ for serialized_line in "${matched_objects[@]}"
-+ [[ true == true ]]
-+ message 'Serialized Line: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Line: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Line: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Line: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Line: config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ perl -pe 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/\n/g'
-+ restored_block='config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ local cfg_path=fortinet/.objects/fg-campus-core.list
-+ local rel_path=fortinet/.objects/fg-campus-core.list
-+ local site=fortinet
-+ local device_filename=.objects/fg-campus-core.list
-+ local extension=list
-+ local objects_dir=reports/172.16.1.6/fortinet
-+ local objects_file=reports/172.16.1.6/fortinet/.objects/fg-campus-core.list
-+ [[ -s reports/172.16.1.6/fortinet/.objects/fg-campus-core.list ]]
-++ echo 'config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-++ tr '\n' '\r'
-+ local 'restored_flat=config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-++ tr '\n' '\r'
-+ local 'objects_flat=config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ grep -Fq -- 'config firewall address--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  edit "Hawkeye-Nest"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set subnet 172.16.1.6 255.255.255.255--MTc0OTAzMjEyOTEyMDk5NDAwMAo--   set comment "Remote sniper node"--MTc0OTAzMjEyOTEyMDk5NDAwMAo--  next--MTc0OTAzMjEyOTEyMDk5NDAwMAo-- end'
-+ [[ true == true ]]
-+ message 'Skipping duplicate block in reports/172.16.1.6/fortinet/.objects/fg-campus-core.list'
-+ [[ -n Skipping duplicate block in reports/172.16.1.6/fortinet/.objects/fg-campus-core.list ]]
-+ local 'message=Skipping duplicate block in reports/172.16.1.6/fortinet/.objects/fg-campus-core.list'
-+ echo -e 'Skipping duplicate block in reports/172.16.1.6/fortinet/.objects/fg-campus-core.list'
-Skipping duplicate block in reports/172.16.1.6/fortinet/.objects/fg-campus-core.list
-+ continue
-+ return 0
+++ basename fortinet/.objects/fg-campus-core.list
++ cfg_basename=fg-campus-core.list
++ object_fragments_per_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-fg-campus-core.list--3615.json
++ local configs_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--172.16.1.6-fg-campus-core.list
++ job_pid=71319
++ extract_jobs_pid+=("${job_pid}")
++ extract_jobs2files_mapping["${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-fg-campus-core.list--3615.json
 + for cfg_file in "${source_configs[@]}"
-+ extract_configs misc/.objects/switch3.list 172.16.1.6 targets/172.16.1.6.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local config_file=misc/.objects/switch3.list
-+ local target_pattern=172.16.1.6
-+ local target_listing=targets/172.16.1.6.json
-+ local json_output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ local 'imported_content=interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
+++ basename misc/.objects/switch3.list
++ cfg_basename=switch3.list
++ object_fragments_per_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-switch3.list--22568.json
++ local configs_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--172.16.1.6-switch3.list
++ job_pid=71327
++ extract_jobs_pid+=("${job_pid}")
++ extract_jobs2files_mapping["${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-switch3.list--22568.json
++ ((  3 > 0  ))
++ valid_extract_jobs_pid=()
++ local valid_extract_jobs_pid
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 71315
++ logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-branch-isr-02.list--3148.json
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 71319
++ logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-fg-campus-core.list--3615.json
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 71327
++ valid_extract_jobs_pid+=("${pid}")
++ extract_jobs_pid=("${valid_extract_jobs_pid[@]}")
++ sleep 0.1
++ ((  1 > 0  ))
++ valid_extract_jobs_pid=()
++ local valid_extract_jobs_pid
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 71327
++ logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-switch3.list--22568.json
++ extract_jobs_pid=("${valid_extract_jobs_pid[@]}")
++ sleep 0.1
++ ((  0 > 0  ))
++ for path in "${extract_jobs2files_mapping[@]}"
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-fg-campus-core.list--3615.json ]]
++ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-fg-campus-core.list--3615.json
++ for path in "${extract_jobs2files_mapping[@]}"
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-branch-isr-02.list--3148.json ]]
++ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-branch-isr-02.list--3148.json
++ for path in "${extract_jobs2files_mapping[@]}"
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-switch3.list--22568.json ]]
++ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/fragments-switch3.list--22568.json
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--fragments.json ]]
 + [[ true == true ]]
-+ message 'Imported Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ [[ -n Imported Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0 ]]
-+ local 'message=Imported Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ echo -e 'Imported Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-Imported Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0
-++ sed '/^\s*$/d;/^\s*!.*$/d'
-+ local 'sanitized_content=interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
++ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--172.16.1.6-switch3.list
++ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--172.16.1.6-switch3.list ]]
++ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--172.16.1.6-switch3.list
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--172.16.1.6-switch3.list ]]
++ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6
++ export json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/172.16.1.6.json
++ json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/172.16.1.6/172.16.1.6.json
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-extract--fragments.json ]]
 + [[ true == true ]]
-+ message 'Sanitized Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ [[ -n Sanitized Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0 ]]
-+ local 'message=Sanitized Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ echo -e 'Sanitized Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-Sanitized Content: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0
-++ perl -pe 's/\n/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/g'
-+ local 'serialized_objects=interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ true == true ]]
-+ message 'Serialized Objects: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Objects: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Objects: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Objects: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Objects: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ sed -E 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--([^[:space:]])/\n\1/g'
-+ local 'restored_lines=interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ restored_lines+='
-'
-+ IFS='
-'
-+ read -r -d '' -a config_objects
-++ printf '%s\0' 'interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-'
-+ [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ echo -e 'Loaded 1 config blocks'
-Loaded 1 config blocks
-+ oIFS=' 	
-'
-+ IFS='
-'
-+ matched_objects=()
-+ declare -a matched_objects
-+ for block in "${config_objects[@]}"
-+ grep -qE '(^|[^0-9.])172\.16\.1\.6([^0-9.]|$)'
-+ matched_objects+=("${block}")
-+ IFS=' 	
-'
-+ [[ true == true ]]
-+ message 'Loaded 1 config blocks'
-+ [[ -n Loaded 1 config blocks ]]
-+ local 'message=Loaded 1 config blocks'
-+ echo -e 'Loaded 1 config blocks'
-Loaded 1 config blocks
-+ local process_configs__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/process_configs.logs
-+ :
-+ for serialized_line in "${matched_objects[@]}"
-+ [[ true == true ]]
-+ message 'Serialized Line: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ [[ -n Serialized Line: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo-- ]]
-+ local 'message=Serialized Line: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-+ echo -e 'Serialized Line: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--'
-Serialized Line: interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--
-++ perl -pe 's/--MTc0OTAzMjEyNjQ1NDk3OTAwMAo--/\n/g'
-+ restored_block='interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ local cfg_path=misc/.objects/switch3.list
-+ local rel_path=misc/.objects/switch3.list
-+ local site=misc
-+ local device_filename=.objects/switch3.list
-+ local extension=list
-+ local objects_dir=reports/172.16.1.6/misc
-+ local objects_file=reports/172.16.1.6/misc/.objects/switch3.list
-+ [[ -s reports/172.16.1.6/misc/.objects/switch3.list ]]
-++ echo 'interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-++ tr '\n' '\r'
-+ local 'restored_flat=interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-++ tr '\n' '\r'
-+ local 'objects_flat=interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ grep -Fq -- 'interface Vlan2--MTc0OTAzMjEyOTQwODA5NDAwMAo--  ip address 172.16.1.6 255.255.255.0'
-+ [[ true == true ]]
-+ message 'Skipping duplicate block in reports/172.16.1.6/misc/.objects/switch3.list'
-+ [[ -n Skipping duplicate block in reports/172.16.1.6/misc/.objects/switch3.list ]]
-+ local 'message=Skipping duplicate block in reports/172.16.1.6/misc/.objects/switch3.list'
-+ echo -e 'Skipping duplicate block in reports/172.16.1.6/misc/.objects/switch3.list'
-Skipping duplicate block in reports/172.16.1.6/misc/.objects/switch3.list
-+ continue
-+ return 0
-+ [[ true == true ]]
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json ]]
-+ [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log ]]
++ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--172.16.1.6.console
++ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--172.16.1.6.console ]]
++ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--172.16.1.6.console
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--172.16.1.6.console ]]
 + case "${target_file}" in
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/extract-configs.log
-+ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/172.16.1.6
-+ export json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/172.16.1.6/172.16.1.6.json
-+ json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/172.16.1.6/172.16.1.6.json
-+ [[ true == true ]]
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json ]]
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/fragments.json ]]
-+ [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--172.16.1.6.console
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--172.16.1.6.console ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--172.16.1.6.console
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--172.16.1.6.console ]]
-+ case "${target_file}" in
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.2kOFHYGkMy/configs-parser--172.16.1.6.console
++ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.lcw5XUuP6F/configs-parser--172.16.1.6.console
 + return 0

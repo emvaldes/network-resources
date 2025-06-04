@@ -57,14 +57,11 @@ function configs_manager () {
       declare -a execute__configs_parser=(
         configs_parser
         --configs="${reports_location}/${ip_address}"
-        --ip-addr="${ip_address}"
         --index="${padded_index}"
+        --ip-addr="${ip_address}"
+        --logger="${configs_parser__logger}.console"
         --matrix="${matrix_filename}"
         --reports="${reports_location}"
-        --file-ext="$(
-          IFS=,; print "${file_extensions[*]}"
-        )"
-        --logger="${configs_parser__logger}.console"
       );
 
       [[ "${classify_targets}" == true ]] && execute__configs_parser+=( --classify );
@@ -167,7 +164,7 @@ function configs_manager () {
 ##   - Extracts relevant config paths for a given target IP
 ##   - Validates input files and structures
 ##   - Applies grouping/classification (if enabled) via matrix matching
-##   - Executes `extract_configs()` to collect relevant config blocks
+##   - Executes `configs_extract()` to collect relevant config blocks
 ##   - Deduplicates and merges structured JSON objects per IP
 ##   - Stores final output under `${reports_location}/<ip>/<ip>.json`
 ##
@@ -194,7 +191,6 @@ function configs_manager () {
 function configs_parser () {
 
     ## tracking_process ${FUNCNAME} "${@}";
-    declare -a file_extensions=();
     oIFS="${IFS}";
 
     ## Process command-line arguments and map them to local variables
@@ -208,9 +204,6 @@ function configs_parser () {
       ## Match accepted arguments
       [[ $key =~ ^(classify|g)$ ]] && export classify_targets=true;
       [[ $key =~ ^(configs|c)$ ]] && export configs_dirpath="${value}";
-      [[ $key =~ ^(file-ext|x)$ ]] && file_extensions+=(
-        $( print "${value}" | tr ':,;\n ' '\n' )
-      );
       [[ $key =~ ^(index|n)$ ]] && local target_index="${value}";
       [[ $key =~ ^(ip-addr|i)$ ]] && local target_address="${value}";
       [[ $key =~ ^(logger|l)$ ]] && local target_logfile="${value}";
@@ -240,11 +233,11 @@ function configs_parser () {
     # touch "${target_logfile}";  ## Clear the log file if it exists
 
     #### -----------------------------------------------------------------------
-    local extract_configs__logfile="${TMP_DIR}/extract-configs.log";
-    :> "${extract_configs__logfile}";
+    local configs_extract__logfile="${TMP_DIR}/configs-extract.log";
+    :> "${configs_extract__logfile}";
 
     #### -----------------------------------------------------------------------
-    [[ -z ${matrix_filename:-} ]] && export classify_targets="matrix.json";
+    [[ -z ${matrix_filename:-} ]] && export matrix_filename="matrix.json";
     if [[ ! -f "${matrix_filename}" ]]; then
       if [[ "${verbose}" == true ]]; then
         {
@@ -259,25 +252,55 @@ function configs_parser () {
     [[ -z ${classify_targets:-} ]] && export classify_targets=false;
 
     #### -----------------------------------------------------------------------
-    ## Target Configurations (file-extensions):
-    ## Set default file extensions if none provided
-    if [[ -z ${file_extensions+x} || ${#file_extensions[@]} -eq 0 ]]; then
-      declare -a file_extensions=( cfg conf cnf );
+    ## Processing Custom/Default the Translation-Matrix (source):
+    ## Load and validate translation matrix (used for grouping logic)
+
+    if [[ "${classify_targets}" == true ]]; then
+      if [[ ! -f "${matrix_filename}" ]]; then
+              if [[ "${verbose}" == true ]]; then
+                {
+                  warning "Project Source Matrix-Configs file not found: ${matrix_filename}";
+                  newline;
+                } >> "${target_logfile:-/dev/null}";
+              fi;
+              return 7;
+        elif  ! jq -e 'length > 0' "${matrix_filename}" &>/dev/null; then
+              if [[ "${verbose}" == true ]]; then
+                warning "Matrix file is missing, invalid, or empty: ${matrix_filename}";
+                newline;
+              fi;
+              return 8;
+        else  export matrix_configs="$(
+                cat "${matrix_filename}"
+              )";
+      fi;
     fi;
 
     #### -----------------------------------------------------------------------
     ## Load all source configs from target JSON
     export configs_dirpath="${configs_dirpath:-configs}";
-    declare -ga source_configs=();
 
-    local target_configlist_json="targets/${target_address}.json";
+    #### -----------------------------------------------------------------------
+    ## Custom/Default reports folder:
+    export reports_location="${reports_location:-reports}";
+    
+    #### -----------------------------------------------------------------------
+    ## Presetting Target-Index Marker
+    [[ -z ${target_index:-} ]] && target_index='';
+
+    #### -----------------------------------------------------------------------
+    ## Validating IP Addresses (Skipping?)
+    [[ -z ${validate_address:-} ]] && export validate_address=false;
+
+    local target_configlist_json="${targets_location}/${target_address}.json";
+
     if [[ ! -f "${target_configlist_json}" ]]; then
       if [[ "${verbose}" == true ]]; then
         {
           warning "Required config list not found: ${target_configlist_json}";
-          return 3;
         } >> "${target_logfile:-/dev/null}";
       fi;
+      return 3;
     fi;
 
     if [[ "${verbose}" == true ]]; then
@@ -286,6 +309,7 @@ function configs_parser () {
       } >> "${target_logfile:-/dev/null}";
     fi;
 
+    declare -ga source_configs=();
     mapfile -t source_configs < <(
       jq -r '
         .locations | to_entries[] |
@@ -301,44 +325,13 @@ function configs_parser () {
         for config in "${source_configs[@]}"; do
           message "  - ${config}";
         done;
+        newline;
       } >> "${target_logfile:-/dev/null}";
     fi;
 
     #### -----------------------------------------------------------------------
-    ## Normalize paths (prepend configs_dirpath if relative)
+    ## Normalize paths (prepend reporting-location if relative)
     for i in "${!source_configs[@]}"; do
-      if [[ "${source_configs[$i]}" != "${reports_location}/${target_address}/"* ]]; then
-        source_configs[$i]="${source_configs[$i]}"
-      fi;
-
-      #### -----------------------------------------------------------------------
-      ## Processing Custom/Default the Translation-Matrix (source):
-      ## Load and validate translation matrix (used for grouping logic)
-
-      if [[ "${classify_targets}" == true ]]; then
-        if [[ ! -f "${matrix_filename}" ]]; then
-                [[ "${verbose}" == true ]] && \
-                  warning "Project Source Matrix-Configs file not found: ${matrix_filename}";
-                return 7;
-          elif  ! jq -e 'length > 0' "${matrix_filename}" &>/dev/null; then
-                [[ "${verbose}" == true ]] && \
-                  warning "Matrix file is missing, invalid, or empty: ${matrix_filename}";
-                return 8;
-          else  export matrix_configs="$( cat "${matrix_filename}" )";
-        fi;
-      fi;
-
-      #### -----------------------------------------------------------------------
-      ## Custom/Default reports folder:
-      export reports_location="${reports_location:-reports}";
-      
-      #### -----------------------------------------------------------------------
-      ## Presetting Target-Index Marker
-      [[ -z ${target_index:-} ]] && target_index='';
-
-      #### -----------------------------------------------------------------------
-      ## Validating IP Addresses (Skipping?)
-      [[ -z ${validate_address:-} ]] && export validate_address=false;
 
       ## Target IP Address (required):
       if [[ -z "${target_address:-}" ]]; then
@@ -346,7 +339,9 @@ function configs_parser () {
                 warning "No IP address provided.";
               return 2;
         else  target_address="$(
-                print "${target_address}" | sed -E 's/[[:space:]]+//g' | tr -d '\r'
+                print "${target_address}" | \
+                sed -E 's/[[:space:]]+//g' | \
+                tr -d '\r'
               )";
               ## Validating Target-Address (IP/CIDR):
               if [[ ${validate_address} == true ]]; then
@@ -355,25 +350,72 @@ function configs_parser () {
       fi;
 
       #### -----------------------------------------------------------------------
-      # export tmp_json="${TMP_DIR}/partial.json";
-      export tmp_fragments="${TMP_DIR}/fragments.json";
+      ## Parallel extraction using background jobs per .list config file
+
+      declare -ga extract_jobs_pid=();
+      declare -gA extract_jobs2files_mapping=();
+
+      local configs_extract__script="configs-extract";
+      export object_fragments="${TMP_DIR}/${configs_extract__script}--fragments.json";
+
+      for cfg_file in "${source_configs[@]}"; do
+
+        cfg_basename="$( basename "${cfg_file}" )";
+        object_fragments_per_file="${TMP_DIR}/${target_address}/fragments-${cfg_basename}--${RANDOM}.json";
+        local configs_extract__logger="${TMP_DIR}/${configs_extract__script}--${target_address}-${cfg_basename}";
+
+        (
+
+          configs_extract "${cfg_file}" \
+                          "${target_address}" \
+                          "${target_configlist_json}" \
+                          "${object_fragments_per_file}" \
+                          "${configs_extract__logger}.console"
+
+        ) >> "${logs_location}/${configs_extract__script}.log" 2>&1 &
+
+        job_pid=$!;
+        extract_jobs_pid+=( "${job_pid}" );
+        extract_jobs2files_mapping["${job_pid}"]="${object_fragments_per_file}";
+
+      done
 
       #### -----------------------------------------------------------------------
-      for cfg_file in "${source_configs[@]}"; do
-        extract_configs "${cfg_file}" \
-                        "${target_address}" \
-                        "${target_configlist_json}" \
-                        "${tmp_fragments}" \
-                        "${extract_configs__logfile}" \
-        ;
+    ## Wait for all jobs to finish
+      while (( ${#extract_jobs_pid[@]} > 0 )); do
+        local valid_extract_jobs_pid=();
+        for pid in "${extract_jobs_pid[@]}"; do
+          if ! kill -0 "${pid}" 2>/dev/null; then
+                  ## Job finished — no action here
+                  logger="${extract_jobs2files_mapping[$pid]}";
+            else  valid_extract_jobs_pid+=( "${pid}" )
+          fi;
+        done;
+        extract_jobs_pid=( "${valid_extract_jobs_pid[@]}" );
+        sleep "${delaying_factor:-0.3}";
       done;
 
+      #### -----------------------------------------------------------------------
+      ## Merge all per-job fragments into unified ${object_fragments}
+      for path in "${extract_jobs2files_mapping[@]}"; do
+        [[ -s "${path}" ]] && cat "${path}" >> "${object_fragments}"
+        rm -f "${path}" 2>/dev/null
+      done
+
+      #### -----------------------------------------------------------------------
       ## Insert diagnostic check here
-      if [[ "${verbose}" == true && -s "${tmp_fragments}" ]]; then
-        {
-          jq -r '.[] | "\(.site)/\(.device) → \( .objects | length ) objects"' "${tmp_fragments}"
-          newline
-        } >> "${target_logfile:-/dev/null}";
+      if [[ -s "${object_fragments}" ]]; then
+        if [[ "${verbose}" == true ]]; then
+          {
+            newline;
+            message "Fragment Configuration file: [ ${object_fragments} ]";
+            print_file "${object_fragments}";
+            jq -r '
+                  .[] | "\(.site)/\(.device) → \( .objects | length ) objects"
+                  ' "${object_fragments}";
+            newline;
+          } >> "${target_logfile:-/dev/null}";
+        fi;
       fi;
 
     done;
@@ -381,7 +423,7 @@ function configs_parser () {
     #### -----------------------------------------------------------------------
     if [[ "${verbose}" == true ]]; then
       {
-        print_file "${extract_configs__logfile:-/dev/null}";
+        print_file "${configs_extract__logger:-/dev/null}";
       } >> "${target_logfile:-/dev/null}";
     fi;
 
@@ -392,34 +434,32 @@ function configs_parser () {
     ## Create a temporary batch-specific output file for this IP
     export json_outfile="${TMP_DIR}/${target_address}/${target_address}.json";
 
-    if [[ "${verbose}" == true ]]; then
-      if [[ -s "${tmp_fragments}" ]]; then
-        {
-          jq  --raw-output \
-              --slurp \
-              --arg ipref "targets/${target_address}.json" \
-                          '
-                          sort_by( .site, .device ) |
-                          group_by( .site + "/" + .device )[] as $group |
-                          "- " + ( $group[0].site + "/" + $group[0].device ) + 
-                          " ( " + ( $group | length | tostring ) + " fragments ) -> " + $ipref,
-                          (
-                            $group[].objects[]? |
-                            "  • object: " + ( .object // "unknown" ) + 
-                            " ( type: " + ( .type // "n/a" ) + " )"
-                          )
-                          ' "${tmp_fragments}";
-          newline;
-        } >> "${target_logfile:-/dev/null}";
-      fi;
-    fi;
+    if [[ -s "${object_fragments}" ]]; then
+      {
+        jq  --raw-output \
+            --slurp \
+            --arg ipref "targets/${target_address}.json" \
+                        '
+                        sort_by( .site, .device ) | 
+                        group_by( .site + "/" + .device )[] as $group | 
+                        "- " + ( $group[0].site + "/" + $group[0].device ) + 
+                        " ( " + ( $group | length | tostring ) + " fragments ) -> " + $ipref, 
+                        ( 
+                          $group[].objects[]? | 
+                          "  • object: " + ( .object // "unknown" ) + 
+                          " ( type: " + ( .type // "n/a" ) + " )" 
+                        ) 
+                        ' "${object_fragments}";
+        newline;
+      } >> "${target_logfile:-/dev/null}";
 
-    if [[ -s "${tmp_fragments}" ]]; then
-
-      jq --slurp --arg target "${target_address}" \
-                              '{ target: $target, configs: . }' \
-                              "${tmp_fragments}" \
+      jq  --slurp \
+          --arg target  "${target_address}" \
+                        '{ target: $target, configs: . }' \
+                        "${object_fragments}" \
       > "${json_outfile}";
+
+      #### ---------------------------------------------------------------------
       if [[ "${verbose}" == true ]]; then
         {
           print_file "${json_outfile}";
