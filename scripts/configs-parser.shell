@@ -9,7 +9,7 @@ if [[ -n "${__CONFIGS_PARSER_SOURCED:-}" ]]; then return 0; fi;
 readonly __CONFIGS_PARSER_SOURCED=1;
 
 ## -------------------------------------------------------------------------- ##
-## Function: configs-parser :: configs_pipeline ()
+## Function: configs-parser :: configs_parser ()
 ##
 ## Purpose:
 ##   Main entrypoint for per-IP parsing pipeline. Replaces `parse-configs.shell`.
@@ -44,7 +44,7 @@ readonly __CONFIGS_PARSER_SOURCED=1;
 ##   - Compatible with batch systems that expect this function to be run in parallel
 ## -------------------------------------------------------------------------- ##
 
-function configs_pipeline () {
+function configs_parser () {
 
     ## tracking_process ${FUNCNAME} "${@}";
     declare -a file_extensions=();
@@ -337,7 +337,7 @@ function configs_pipeline () {
     fi;
 
     return 0;
-}; alias configs-pipeline='configs_pipeline';
+}; alias configs-parser='configs_parser';
 
 ## -------------------------------------------------------------------------- ##
 ## Function: configs-parser :: extract_configs ()
