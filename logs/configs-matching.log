@@ -4,192 +4,51 @@
 + targets_jobs2ips_mapping=()
 + declare -gA targets_jobs2ips_mapping
 + for ip_address in "${target_listing[@]}"
-+ local report_path=reports/192.168.0.100
-+ local configs_objects=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.0.100.list
++ local report_path=reports/10.0.0.1
++ local configs_objects=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-targets--10.0.0.1.list
 + :
-+ [[ -d reports/192.168.0.100 ]]
++ [[ -d reports/10.0.0.1 ]]
 + for ext in "${file_extensions[@]}"
-+ find reports/192.168.0.100 -type f -name '*.cfg'
++ find reports/10.0.0.1 -type f -name '*.cfg'
 + for ext in "${file_extensions[@]}"
-+ find reports/192.168.0.100 -type f -name '*.conf'
-+ [[ ! -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.0.100.list ]]
-+ local target_config=targets/192.168.0.100.json
-+ local configs_targets__console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.0.100
-+ local job_pid=82687
++ find reports/10.0.0.1 -type f -name '*.conf'
++ [[ ! -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-targets--10.0.0.1.list ]]
++ local target_config=targets/10.0.0.1.json
++ local configs_targets__console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-targets--10.0.0.1
++ local job_pid=1651
 + targets_jobs_pid+=("${job_pid}")
-+ targets_jobs2ips_mapping["${job_pid}"]=192.168.0.100
-+ for ip_address in "${target_listing[@]}"
-+ local report_path=reports/192.168.1.10
-+ local configs_objects=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.1.10.list
-+ :
-+ [[ -d reports/192.168.1.10 ]]
-+ for ext in "${file_extensions[@]}"
-+ find reports/192.168.1.10 -type f -name '*.cfg'
-+ configs_targets --search=192.168.0.100 --source=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.0.100.list --target=targets/192.168.0.100.json --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.0.100.console --verbose
-+ for ext in "${file_extensions[@]}"
-+ find reports/192.168.1.10 -type f -name '*.conf'
-+ [[ ! -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.1.10.list ]]
-+ local target_config=targets/192.168.1.10.json
-+ local configs_targets__console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.1.10
-+ local job_pid=82696
-+ targets_jobs_pid+=("${job_pid}")
-+ targets_jobs2ips_mapping["${job_pid}"]=192.168.1.10
-+ for ip_address in "${target_listing[@]}"
-+ local report_path=reports/192.168.1.11
-+ local configs_objects=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.1.11.list
-+ :
-+ [[ -d reports/192.168.1.11 ]]
-+ for ext in "${file_extensions[@]}"
-+ find reports/192.168.1.11 -type f -name '*.cfg'
-+ configs_targets --search=192.168.1.10 --source=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.1.10.list --target=targets/192.168.1.10.json --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.1.10.console --verbose
-+ for ext in "${file_extensions[@]}"
-+ find reports/192.168.1.11 -type f -name '*.conf'
-+ [[ ! -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.1.11.list ]]
-+ local target_config=targets/192.168.1.11.json
-+ local configs_targets__console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.1.11
-+ local job_pid=82709
-+ targets_jobs_pid+=("${job_pid}")
-+ targets_jobs2ips_mapping["${job_pid}"]=192.168.1.11
-+ for ip_address in "${target_listing[@]}"
-+ local report_path=reports/192.168.2.12
-+ local configs_objects=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.2.12.list
-+ :
-+ [[ -d reports/192.168.2.12 ]]
-+ for ext in "${file_extensions[@]}"
-+ find reports/192.168.2.12 -type f -name '*.cfg'
-+ configs_targets --search=192.168.1.11 --source=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.1.11.list --target=targets/192.168.1.11.json --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.1.11.console --verbose
-+ for ext in "${file_extensions[@]}"
-+ find reports/192.168.2.12 -type f -name '*.conf'
-+ [[ ! -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.2.12.list ]]
-+ local target_config=targets/192.168.2.12.json
-+ local configs_targets__console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.2.12
-+ local job_pid=82727
-+ targets_jobs_pid+=("${job_pid}")
-+ targets_jobs2ips_mapping["${job_pid}"]=192.168.2.12
-+ for ip_address in "${target_listing[@]}"
-+ local report_path=reports/192.168.100.100
-+ local configs_objects=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.100.100.list
-+ :
-+ [[ -d reports/192.168.100.100 ]]
-+ for ext in "${file_extensions[@]}"
-+ find reports/192.168.100.100 -type f -name '*.cfg'
-+ configs_targets --search=192.168.2.12 --source=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.2.12.list --target=targets/192.168.2.12.json --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.2.12.console --verbose
-+ for ext in "${file_extensions[@]}"
-+ find reports/192.168.100.100 -type f -name '*.conf'
-+ [[ ! -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.100.100.list ]]
-+ local target_config=targets/192.168.100.100.json
-+ local configs_targets__console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.100.100
-+ local job_pid=82750
-+ targets_jobs_pid+=("${job_pid}")
-+ targets_jobs2ips_mapping["${job_pid}"]=192.168.100.100
-+ for ip_address in "${target_listing[@]}"
-+ local report_path=reports/198.51.100.75
-+ local configs_objects=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--198.51.100.75.list
-+ :
-+ [[ -d reports/198.51.100.75 ]]
-+ for ext in "${file_extensions[@]}"
-+ find reports/198.51.100.75 -type f -name '*.cfg'
-+ configs_targets --search=192.168.100.100 --source=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.100.100.list --target=targets/192.168.100.100.json --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.100.100.console --verbose
-+ for ext in "${file_extensions[@]}"
-+ find reports/198.51.100.75 -type f -name '*.conf'
-+ [[ ! -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--198.51.100.75.list ]]
-+ local target_config=targets/198.51.100.75.json
-+ local configs_targets__console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--198.51.100.75
-+ local job_pid=82776
-+ targets_jobs_pid+=("${job_pid}")
-+ targets_jobs2ips_mapping["${job_pid}"]=198.51.100.75
-+ for ip_address in "${target_listing[@]}"
-+ local report_path=reports/203.0.113.25
-+ local configs_objects=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--203.0.113.25.list
-+ :
-+ [[ -d reports/203.0.113.25 ]]
-+ for ext in "${file_extensions[@]}"
-+ find reports/203.0.113.25 -type f -name '*.cfg'
-+ configs_targets --search=198.51.100.75 --source=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--198.51.100.75.list --target=targets/198.51.100.75.json --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--198.51.100.75.console --verbose
-+ for ext in "${file_extensions[@]}"
-+ find reports/203.0.113.25 -type f -name '*.conf'
-+ [[ ! -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--203.0.113.25.list ]]
-+ local target_config=targets/203.0.113.25.json
-+ local configs_targets__console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--203.0.113.25
-+ local job_pid=82802
-+ targets_jobs_pid+=("${job_pid}")
-+ targets_jobs2ips_mapping["${job_pid}"]=203.0.113.25
-+ ((  7 > 0  ))
++ targets_jobs2ips_mapping["${job_pid}"]=10.0.0.1
++ ((  1 > 0  ))
 + valid_targets_jobs_pid=()
 + local valid_targets_jobs_pid
 + for pid in "${targets_jobs_pid[@]}"
-+ kill -0 82687
-+ valid_targets_jobs_pid+=("${pid}")
-+ for pid in "${targets_jobs_pid[@]}"
-+ kill -0 82696
-+ valid_targets_jobs_pid+=("${pid}")
-+ for pid in "${targets_jobs_pid[@]}"
-+ configs_targets --search=203.0.113.25 --source=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--203.0.113.25.list --target=targets/203.0.113.25.json --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--203.0.113.25.console --verbose
-+ kill -0 82709
-+ valid_targets_jobs_pid+=("${pid}")
-+ for pid in "${targets_jobs_pid[@]}"
-+ kill -0 82727
-+ valid_targets_jobs_pid+=("${pid}")
-+ for pid in "${targets_jobs_pid[@]}"
-+ kill -0 82750
-+ valid_targets_jobs_pid+=("${pid}")
-+ for pid in "${targets_jobs_pid[@]}"
-+ kill -0 82776
-+ valid_targets_jobs_pid+=("${pid}")
-+ for pid in "${targets_jobs_pid[@]}"
-+ kill -0 82802
++ kill -0 1651
 + valid_targets_jobs_pid+=("${pid}")
 + targets_jobs_pid=("${valid_targets_jobs_pid[@]}")
 + sleep 0.1
-+ ((  7 > 0  ))
++ configs_targets --search=10.0.0.1 --source=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-targets--10.0.0.1.list --target=targets/10.0.0.1.json --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-targets--10.0.0.1.console --verbose
++ ((  1 > 0  ))
 + valid_targets_jobs_pid=()
 + local valid_targets_jobs_pid
 + for pid in "${targets_jobs_pid[@]}"
-+ kill -0 82687
-+ logger=192.168.0.100
-+ for pid in "${targets_jobs_pid[@]}"
-+ kill -0 82696
-+ valid_targets_jobs_pid+=("${pid}")
-+ for pid in "${targets_jobs_pid[@]}"
-+ kill -0 82709
-+ logger=192.168.1.11
-+ for pid in "${targets_jobs_pid[@]}"
-+ kill -0 82727
-+ valid_targets_jobs_pid+=("${pid}")
-+ for pid in "${targets_jobs_pid[@]}"
-+ kill -0 82750
-+ logger=192.168.100.100
-+ for pid in "${targets_jobs_pid[@]}"
-+ kill -0 82776
-+ valid_targets_jobs_pid+=("${pid}")
-+ for pid in "${targets_jobs_pid[@]}"
-+ kill -0 82802
++ kill -0 1651
 + valid_targets_jobs_pid+=("${pid}")
 + targets_jobs_pid=("${valid_targets_jobs_pid[@]}")
 + sleep 0.1
-+ ((  4 > 0  ))
++ ((  1 > 0  ))
 + valid_targets_jobs_pid=()
 + local valid_targets_jobs_pid
 + for pid in "${targets_jobs_pid[@]}"
-+ kill -0 82696
-+ logger=192.168.1.10
-+ for pid in "${targets_jobs_pid[@]}"
-+ kill -0 82727
-+ logger=192.168.2.12
-+ for pid in "${targets_jobs_pid[@]}"
-+ kill -0 82776
-+ logger=198.51.100.75
-+ for pid in "${targets_jobs_pid[@]}"
-+ kill -0 82802
-+ logger=203.0.113.25
++ kill -0 1651
++ logger=10.0.0.1
 + targets_jobs_pid=("${valid_targets_jobs_pid[@]}")
 + sleep 0.1
 + ((  0 > 0  ))
 + [[ true == true ]]
-+ message 'Completed background jobs for matched IPs (7):'
-+ [[ -n Completed background jobs for matched IPs (7): ]]
-+ local 'message=Completed background jobs for matched IPs (7):'
-+ echo -e 'Completed background jobs for matched IPs (7):'
++ message 'Completed background jobs for matched IPs (1):'
++ [[ -n Completed background jobs for matched IPs (1): ]]
++ local 'message=Completed background jobs for matched IPs (1):'
++ echo -e 'Completed background jobs for matched IPs (1):'
 + message -------------------------------------
 + [[ -n ------------------------------------- ]]
 + local message=-------------------------------------
@@ -202,28 +61,10 @@
 + [[ -n ------------------------------------- ]]
 + local message=-------------------------------------
 + echo -e -------------------------------------
++ for pid in "${!targets_jobs2ips_mapping[@]}"
++ ip_address=10.0.0.1
 + cat -n
-+ for pid in "${!targets_jobs2ips_mapping[@]}"
-+ ip_address=192.168.1.10
-+ printf '%-6s | %-15s\n' 82696 192.168.1.10
-+ for pid in "${!targets_jobs2ips_mapping[@]}"
-+ ip_address=192.168.100.100
-+ printf '%-6s | %-15s\n' 82750 192.168.100.100
-+ for pid in "${!targets_jobs2ips_mapping[@]}"
-+ ip_address=192.168.0.100
-+ printf '%-6s | %-15s\n' 82687 192.168.0.100
-+ for pid in "${!targets_jobs2ips_mapping[@]}"
-+ ip_address=192.168.1.11
-+ printf '%-6s | %-15s\n' 82709 192.168.1.11
-+ for pid in "${!targets_jobs2ips_mapping[@]}"
-+ ip_address=198.51.100.75
-+ printf '%-6s | %-15s\n' 82776 198.51.100.75
-+ for pid in "${!targets_jobs2ips_mapping[@]}"
-+ ip_address=203.0.113.25
-+ printf '%-6s | %-15s\n' 82802 203.0.113.25
-+ for pid in "${!targets_jobs2ips_mapping[@]}"
-+ ip_address=192.168.2.12
-+ printf '%-6s | %-15s\n' 82727 192.168.2.12
++ printf '%-6s | %-15s\n' 1651 10.0.0.1
 + newline
 + local count=1
 + (( i = 0 ))
@@ -232,147 +73,17 @@
 + (( i++ ))
 + (( i < count ))
 + for pid in "${!targets_jobs2ips_mapping[@]}"
-+ ip_address=192.168.1.10
-+ target_config=targets/192.168.1.10.json
-+ [[ -s targets/192.168.1.10.json ]]
-+ [[ -f targets/192.168.1.10.json ]]
-+ message 'Completed Configuration Targets (IP): targets/192.168.1.10.json'
-+ [[ -n Completed Configuration Targets (IP): targets/192.168.1.10.json ]]
-+ local 'message=Completed Configuration Targets (IP): targets/192.168.1.10.json'
-+ echo -e 'Completed Configuration Targets (IP): targets/192.168.1.10.json'
-+ jq -r . targets/192.168.1.10.json
-+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-+ (( i++ ))
-+ (( i < count ))
-+ for pid in "${!targets_jobs2ips_mapping[@]}"
-+ ip_address=192.168.100.100
-+ target_config=targets/192.168.100.100.json
-+ [[ -s targets/192.168.100.100.json ]]
-+ [[ -f targets/192.168.100.100.json ]]
-+ message 'Completed Configuration Targets (IP): targets/192.168.100.100.json'
-+ [[ -n Completed Configuration Targets (IP): targets/192.168.100.100.json ]]
-+ local 'message=Completed Configuration Targets (IP): targets/192.168.100.100.json'
-+ echo -e 'Completed Configuration Targets (IP): targets/192.168.100.100.json'
-+ jq -r . targets/192.168.100.100.json
-+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-+ (( i++ ))
-+ (( i < count ))
-+ for pid in "${!targets_jobs2ips_mapping[@]}"
-+ ip_address=192.168.0.100
-+ target_config=targets/192.168.0.100.json
-+ [[ -s targets/192.168.0.100.json ]]
-+ [[ -f targets/192.168.0.100.json ]]
-+ message 'Completed Configuration Targets (IP): targets/192.168.0.100.json'
-+ [[ -n Completed Configuration Targets (IP): targets/192.168.0.100.json ]]
-+ local 'message=Completed Configuration Targets (IP): targets/192.168.0.100.json'
-+ echo -e 'Completed Configuration Targets (IP): targets/192.168.0.100.json'
-+ jq -r . targets/192.168.0.100.json
-+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-+ (( i++ ))
-+ (( i < count ))
-+ for pid in "${!targets_jobs2ips_mapping[@]}"
-+ ip_address=192.168.1.11
-+ target_config=targets/192.168.1.11.json
-+ [[ -s targets/192.168.1.11.json ]]
-+ [[ -f targets/192.168.1.11.json ]]
-+ message 'Completed Configuration Targets (IP): targets/192.168.1.11.json'
-+ [[ -n Completed Configuration Targets (IP): targets/192.168.1.11.json ]]
-+ local 'message=Completed Configuration Targets (IP): targets/192.168.1.11.json'
-+ echo -e 'Completed Configuration Targets (IP): targets/192.168.1.11.json'
-+ jq -r . targets/192.168.1.11.json
-+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-+ (( i++ ))
-+ (( i < count ))
-+ for pid in "${!targets_jobs2ips_mapping[@]}"
-+ ip_address=198.51.100.75
-+ target_config=targets/198.51.100.75.json
-+ [[ -s targets/198.51.100.75.json ]]
-+ [[ -f targets/198.51.100.75.json ]]
-+ message 'Completed Configuration Targets (IP): targets/198.51.100.75.json'
-+ [[ -n Completed Configuration Targets (IP): targets/198.51.100.75.json ]]
-+ local 'message=Completed Configuration Targets (IP): targets/198.51.100.75.json'
-+ echo -e 'Completed Configuration Targets (IP): targets/198.51.100.75.json'
-+ jq -r . targets/198.51.100.75.json
-+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-+ (( i++ ))
-+ (( i < count ))
-+ for pid in "${!targets_jobs2ips_mapping[@]}"
-+ ip_address=203.0.113.25
-+ target_config=targets/203.0.113.25.json
-+ [[ -s targets/203.0.113.25.json ]]
-+ [[ -f targets/203.0.113.25.json ]]
-+ message 'Completed Configuration Targets (IP): targets/203.0.113.25.json'
-+ [[ -n Completed Configuration Targets (IP): targets/203.0.113.25.json ]]
-+ local 'message=Completed Configuration Targets (IP): targets/203.0.113.25.json'
-+ echo -e 'Completed Configuration Targets (IP): targets/203.0.113.25.json'
-+ jq -r . targets/203.0.113.25.json
-+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-+ (( i++ ))
-+ (( i < count ))
-+ for pid in "${!targets_jobs2ips_mapping[@]}"
-+ ip_address=192.168.2.12
-+ target_config=targets/192.168.2.12.json
-+ [[ -s targets/192.168.2.12.json ]]
-+ [[ -f targets/192.168.2.12.json ]]
-+ message 'Completed Configuration Targets (IP): targets/192.168.2.12.json'
-+ [[ -n Completed Configuration Targets (IP): targets/192.168.2.12.json ]]
-+ local 'message=Completed Configuration Targets (IP): targets/192.168.2.12.json'
-+ echo -e 'Completed Configuration Targets (IP): targets/192.168.2.12.json'
-+ jq -r . targets/192.168.2.12.json
-+ newline
-+ local count=1
-+ (( i = 0 ))
-+ (( i < count ))
-+ echo
-+ (( i++ ))
-+ (( i < count ))
++ ip_address=10.0.0.1
++ target_config=targets/10.0.0.1.json
++ [[ -s targets/10.0.0.1.json ]]
++ [[ -f targets/10.0.0.1.json ]]
++ message 'Completed Configuration Targets (IP): targets/10.0.0.1.json'
++ [[ -n Completed Configuration Targets (IP): targets/10.0.0.1.json ]]
++ local 'message=Completed Configuration Targets (IP): targets/10.0.0.1.json'
++ echo -e 'Completed Configuration Targets (IP): targets/10.0.0.1.json'
++ jq -r . targets/10.0.0.1.json
 + return 0
- == \d\r\y\-\r\u\n ]]
-+ [[ search == \v\e\r\b\o\s\e ]]
-+ for xitem in "${@}"
-+ IFS==
-+ read -r key value
-+ [[ target =~ ^(search|p)$ ]]
-+ [[ target =~ ^(source|s)$ ]]
-+ [[ target =~ ^(target|t)$ ]]
-+ local target_config=targets/192.168.100.100.json
-+ [[ target =~ ^(logger|l)$ ]]
-+ [[ target == \d\e\b\u\g ]]
-+ [[ target == \d\r\y\-\r\u\n ]]
-+ [[ target == \v\e\r\b\o\s\e ]]
-+ for xitem in "${@}"
-+ IFS==
-+ read -r key value
-++ echo -e --source=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--198.51.100.75.list
-+ [[ verbose =~ ^(search|p)$ ]]
-+ [[ verbose =~ ^(source|s)$ ]]
-+ [[ verbose =~ ^(target|t)$ ]]
-++ sed -e '1s|^\(-\)\{1,\}||'
-+ [[ verbose =~ ^(logger|l)$ ]]
+logger|l)$ ]]
 + [[ verbose == \d\e\b\u\g ]]
 + [[ verbose == \d\r\y\-\r\u\n ]]
 + [[ verbose == \v\e\r\b\o\s\e ]]
@@ -382,309 +93,22 @@
 + [[ -z true ]]
 + [[ -z false ]]
 + [[ -z true ]]
-+ [[ -z /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.2.12.console ]]
-+ [[ -z /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.2.12.list ]]
-+ [[ ! -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.2.12.list ]]
++ [[ -z /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-targets--10.0.0.1.console ]]
++ [[ -z /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-targets--10.0.0.1.list ]]
++ [[ ! -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-targets--10.0.0.1.list ]]
 + site_device_map=()
 + declare -A site_device_map
 + local rel_path site device cfg_lines json_head json_spec
 + IFS=
 + read -r config_file
-+ [[ ! -f reports/192.168.2.12/misc/fw1.cfg ]]
-+ rel_path=misc/fw1.cfg
-+ site=misc
-+ device=fw1.cfg
-+ [[ ! -d reports/192.168.2.12/misc ]]
-+ json_head='{
-  "vendor": "cisco",
-  "model": "",
-  "version": "16.9",
-  "domain": "",
-  "hostname": "branch-isr-02"
-}'
-++ echo -e --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.100.100.console
-++ sed -e '1s|^\(-\)\{1,\}||'
-+ echo '{
-  "vendor": "cisco",
-  "model": "",
-  "version": "16.9",
-  "domain": "",
-  "hostname": "branch-isr-02"
-}'
-+ jq -e .
-++ wc -l
-++ tr -d ' '
-+ oIFS=' 	
-'
-+ for xitem in "${@}"
-+ IFS==
-+ read -r key value
-+ [[ source =~ ^(search|p)$ ]]
-+ [[ source =~ ^(source|s)$ ]]
-+ local source_config=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--198.51.100.75.list
-+ [[ source =~ ^(target|t)$ ]]
-+ [[ source =~ ^(logger|l)$ ]]
-+ [[ source == \d\e\b\u\g ]]
-+ [[ source == \d\r\y\-\r\u\n ]]
-+ [[ source == \v\e\r\b\o\s\e ]]
-+ for xitem in "${@}"
-+ IFS==
-+ read -r key value
-++ jq -n --arg file fw3.cfg --argjson lines 14 --arg path .objects/fw3.list --arg specs '{
-  "vendor": "cisco",
-  "model": "",
-  "version": "",
-  "domain": "",
-  "hostname": ""
-+ json_spec='{
-}' '{
-  "specs": {
-            specs: ($specs | fromjson),
-    "vendor": "cisco",
-            config: {
-    "model": "",
-              file: $file,
-    "version": "12.4",
-              lines: $lines,
-    "domain": "",
-              object: $path
-    "hostname": "access-sw1-west"
-            }
-  },
-          }'
-  "config": {
-    "file": "access-sw1-west.cfg",
-    "lines": 21,
-    "object": ".objects/access-sw1-west.list"
-  }
-}'
-+ site_device_map["${site}"]+='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "12.4",
-    "domain": "",
-    "hostname": "access-sw1-west"
-  },
-  "config": {
-    "file": "access-sw1-west.cfg",
-    "lines": 21,
-    "object": ".objects/access-sw1-west.list"
-  }
-}
-'
-+ IFS=
-+ read -r config_file
-+ [[ ! -f reports/192.168.0.100/cisco/campus-sw-access01.cfg ]]
-+ rel_path=cisco/campus-sw-access01.cfg
++ [[ ! -f reports/10.0.0.1/cisco/perimeter-fw1.cfg ]]
++ rel_path=cisco/perimeter-fw1.cfg
 + site=cisco
-+ [[ logger =~ ^(search|p)$ ]]
-+ device=campus-sw-access01.cfg
-+ [[ ! -d reports/192.168.0.100/cisco ]]
-+ [[ logger =~ ^(source|s)$ ]]
-+ [[ logger =~ ^(target|t)$ ]]
-++ echo -e --search=203.0.113.25
-+ [[ logger =~ ^(logger|l)$ ]]
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.100.100.console
-+ [[ logger == \d\e\b\u\g ]]
-+ [[ logger == \d\r\y\-\r\u\n ]]
-+ [[ logger == \v\e\r\b\o\s\e ]]
-+ for xitem in "${@}"
-+ IFS==
-+ read -r key value
-++ sed -e '1s|^\(-\)\{1,\}||'
-++ echo -e --target=targets/198.51.100.75.json
-++ sed -e '1s|^\(-\)\{1,\}||'
-+ cfg_lines=14
-++ wc -l
-++ awk '
-++ echo -e --verbose
-++ tr -d ' '
-          BEGIN { in_json=0; depth=0; }
-          {
-            if (!in_json && $0 ~ /^[[:space:]]*{/) in_json=1;
-            if (in_json) {
-              print;
-++ sed -e '1s|^\(-\)\{1,\}||'
-              depth += gsub(/{/, "{");
-              depth -= gsub(/}/, "}");
-              if (depth == 0) exit;
-            }
-          }
-        ' reports/192.168.2.12/misc/fw1.cfg
-+ [[ search =~ ^(search|p)$ ]]
-+ local search_pattern=203.0.113.25
-+ [[ search =~ ^(source|s)$ ]]
-+ [[ search =~ ^(target|t)$ ]]
-+ [[ search =~ ^(logger|l)$ ]]
-+ [[ search == \d\e\b\u\g ]]
-+ [[ search == \d\r\y\-\r\u\n ]]
-+ [[ search == \v\e\r\b\o\s\e ]]
-+ for xitem in "${@}"
-+ IFS==
-+ read -r key value
-+ [[ target =~ ^(search|p)$ ]]
-+ [[ target =~ ^(source|s)$ ]]
-+ [[ target =~ ^(target|t)$ ]]
-+ local target_config=targets/198.51.100.75.json
-+ [[ target =~ ^(logger|l)$ ]]
-+ [[ target == \d\e\b\u\g ]]
-+ [[ target == \d\r\y\-\r\u\n ]]
-+ [[ target == \v\e\r\b\o\s\e ]]
-+ for xitem in "${@}"
-+ IFS==
-+ read -r key value
-+ cfg_lines=17
-+ [[ verbose =~ ^(search|p)$ ]]
-+ [[ verbose =~ ^(source|s)$ ]]
-+ [[ verbose =~ ^(target|t)$ ]]
-+ json_head='{
-  "vendor": "cisco",
-+ [[ verbose =~ ^(logger|l)$ ]]
-  "model": "",
-  "version": "",
-+ [[ verbose == \d\e\b\u\g ]]
-  "domain": "",
-+ [[ verbose == \d\r\y\-\r\u\n ]]
-  "hostname": ""
-+ [[ verbose == \v\e\r\b\o\s\e ]]
-}'
-+ local verbose=true
-+ IFS=' 	
-'
-+ [[ -z true ]]
-+ [[ -z false ]]
-+ [[ -z true ]]
-+ [[ -z /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.100.100.console ]]
-+ [[ -z /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.100.100.list ]]
-+ [[ ! -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--192.168.100.100.list ]]
-+ site_device_map=()
-+ declare -A site_device_map
-+ local rel_path site device cfg_lines json_head json_spec
-+ IFS=
-++ echo -e --source=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--203.0.113.25.list
-+ read -r config_file
-+ [[ ! -f reports/192.168.100.100/cisco/dmz-fw2-backup.cfg ]]
-++ awk '
-+ rel_path=cisco/dmz-fw2-backup.cfg
-++ sed -e '1s|^\(-\)\{1,\}||'
-+ site=cisco
-          BEGIN { in_json=0; depth=0; }
-          {
-+ device=dmz-fw2-backup.cfg
-            if (!in_json && $0 ~ /^[[:space:]]*{/) in_json=1;
-            if (in_json) {
-              print;
-+ [[ ! -d reports/192.168.100.100/cisco ]]
-              depth += gsub(/{/, "{");
-              depth -= gsub(/}/, "}");
-              if (depth == 0) exit;
-            }
-          }
-        ' reports/192.168.0.100/cisco/campus-sw-access01.cfg
-+ echo '{
-  "vendor": "cisco",
-  "model": "",
-  "version": "",
-  "domain": "",
-  "hostname": ""
-}'
-+ jq -e .
-++ echo -e --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--198.51.100.75.console
-++ sed -e '1s|^\(-\)\{1,\}||'
++ device=perimeter-fw1.cfg
++ [[ ! -d reports/10.0.0.1/cisco ]]
 ++ wc -l
 ++ tr -d ' '
-++ jq -n --arg file branch-isr-02.cfg --argjson lines 16 --arg path .objects/branch-isr-02.list --arg specs '{
-  "vendor": "cisco",
-  "model": "",
-  "version": "16.9",
-  "domain": "",
-  "hostname": "branch-isr-02"
-}' '{
-            specs: ($specs | fromjson),
-            config: {
-              file: $file,
-              lines: $lines,
-              object: $path
-            }
-          }'
-+ [[ source =~ ^(search|p)$ ]]
-+ [[ source =~ ^(source|s)$ ]]
-+ local source_config=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--203.0.113.25.list
-+ [[ source =~ ^(target|t)$ ]]
-+ [[ source =~ ^(logger|l)$ ]]
-+ [[ source == \d\e\b\u\g ]]
-+ [[ source == \d\r\y\-\r\u\n ]]
-+ [[ source == \v\e\r\b\o\s\e ]]
-+ for xitem in "${@}"
-+ IFS==
-+ read -r key value
-+ json_head='{
-  "vendor": "cisco",
-  "model": "",
-  "version": "12.2",
-  "domain": "",
-  "hostname": "campus-sw-access01"
-}'
-+ [[ logger =~ ^(search|p)$ ]]
-+ [[ logger =~ ^(source|s)$ ]]
-+ [[ logger =~ ^(target|t)$ ]]
-+ echo '{
-+ [[ logger =~ ^(logger|l)$ ]]
-  "vendor": "cisco",
-  "model": "",
-  "version": "12.2",
-  "domain": "",
-  "hostname": "campus-sw-access01"
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--198.51.100.75.console
-}'
-+ [[ logger == \d\e\b\u\g ]]
-+ [[ logger == \d\r\y\-\r\u\n ]]
-+ [[ logger == \v\e\r\b\o\s\e ]]
-+ for xitem in "${@}"
-+ IFS==
-+ read -r key value
-+ jq -e .
-+ json_spec='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-++ echo -e --target=targets/203.0.113.25.json
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw3.cfg",
-    "lines": 14,
-    "object": ".objects/fw3.list"
-  }
-}'
-+ site_device_map["${site}"]+='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw3.cfg",
-    "lines": 14,
-    "object": ".objects/fw3.list"
-  }
-}
-'
-+ IFS=
-+ read -r config_file
-+ [[ ! -f reports/192.168.1.10/misc/fw1.cfg ]]
-+ cfg_lines=26
-+ rel_path=misc/fw1.cfg
-+ site=misc
-+ device=fw1.cfg
-++ sed -e '1s|^\(-\)\{1,\}||'
-+ [[ ! -d reports/192.168.1.10/misc ]]
-++ echo -e --verbose
++ cfg_lines=22
 ++ awk '
           BEGIN { in_json=0; depth=0; }
           {
@@ -696,248 +120,28 @@
               if (depth == 0) exit;
             }
           }
-        ' reports/192.168.100.100/cisco/dmz-fw2-backup.cfg
-++ sed -e '1s|^\(-\)\{1,\}||'
-++ wc -l
-++ tr -d ' '
-+ [[ target =~ ^(search|p)$ ]]
-+ [[ target =~ ^(source|s)$ ]]
-+ [[ target =~ ^(target|t)$ ]]
-+ local target_config=targets/203.0.113.25.json
-+ [[ target =~ ^(logger|l)$ ]]
-+ [[ target == \d\e\b\u\g ]]
-+ [[ target == \d\r\y\-\r\u\n ]]
-+ [[ target == \v\e\r\b\o\s\e ]]
-+ for xitem in "${@}"
-+ IFS==
-+ read -r key value
+        ' reports/10.0.0.1/cisco/perimeter-fw1.cfg
 + json_head='{
   "vendor": "cisco",
   "model": "ASA",
-  "version": "9.12(4)",
-  "domain": "global.dmz.example.net",
-  "hostname": "dmz-fw2-backup"
+  "version": "9.14(3)",
+  "domain": "edge.dc.example.com",
+  "hostname": "perimeter-fw1"
 }'
-+ [[ verbose =~ ^(search|p)$ ]]
-+ [[ verbose =~ ^(source|s)$ ]]
-+ [[ verbose =~ ^(target|t)$ ]]
-+ [[ verbose =~ ^(logger|l)$ ]]
-+ [[ verbose == \d\e\b\u\g ]]
-+ [[ verbose == \d\r\y\-\r\u\n ]]
-+ [[ verbose == \v\e\r\b\o\s\e ]]
-+ local verbose=true
-+ IFS=' 	
-'
-+ [[ -z true ]]
-+ [[ -z false ]]
-+ [[ -z true ]]
-+ [[ -z /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--198.51.100.75.console ]]
-+ [[ -z /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--198.51.100.75.list ]]
-+ [[ ! -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--198.51.100.75.list ]]
-+ site_device_map=()
-+ declare -A site_device_map
-+ local rel_path site device cfg_lines json_head json_spec
-+ IFS=
-+ read -r config_file
 + echo '{
   "vendor": "cisco",
   "model": "ASA",
-+ [[ ! -f reports/198.51.100.75/misc/fw1.cfg ]]
-  "version": "9.12(4)",
-  "domain": "global.dmz.example.net",
-  "hostname": "dmz-fw2-backup"
+  "version": "9.14(3)",
+  "domain": "edge.dc.example.com",
+  "hostname": "perimeter-fw1"
 }'
-+ rel_path=misc/fw1.cfg
-+ site=misc
-+ device=fw1.cfg
-+ [[ ! -d reports/198.51.100.75/misc ]]
-+ cfg_lines=13
 + jq -e .
-++ echo -e --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--203.0.113.25.console
-++ sed -e '1s|^\(-\)\{1,\}||'
-++ awk '
-          BEGIN { in_json=0; depth=0; }
-          {
-            if (!in_json && $0 ~ /^[[:space:]]*{/) in_json=1;
-            if (in_json) {
-              print;
-              depth += gsub(/{/, "{");
-              depth -= gsub(/}/, "}");
-              if (depth == 0) exit;
-            }
-          }
-        ' reports/192.168.1.10/misc/fw1.cfg
-++ wc -l
-++ tr -d ' '
-++ jq -n --arg file fw1.cfg --argjson lines 14 --arg path .objects/fw1.list --arg specs '{
-  "vendor": "cisco",
-  "model": "",
-  "version": "",
-  "domain": "",
-  "hostname": ""
-}' '{
-            specs: ($specs | fromjson),
-            config: {
-              file: $file,
-              lines: $lines,
-              object: $path
-            }
-          }'
-+ json_spec='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "16.9",
-    "domain": "",
-    "hostname": "branch-isr-02"
-  },
-  "config": {
-    "file": "branch-isr-02.cfg",
-    "lines": 16,
-    "object": ".objects/branch-isr-02.list"
-  }
-}'
-+ site_device_map["${site}"]+='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "16.9",
-    "domain": "",
-    "hostname": "branch-isr-02"
-  },
-  "config": {
-    "file": "branch-isr-02.cfg",
-    "lines": 16,
-    "object": ".objects/branch-isr-02.list"
-  }
-}
-'
-+ IFS=
-+ read -r config_file
-+ [[ logger =~ ^(search|p)$ ]]
-+ [[ ! -f reports/192.168.1.11/fortinet/fg-campus-core.cfg ]]
-+ rel_path=fortinet/fg-campus-core.cfg
-+ [[ logger =~ ^(source|s)$ ]]
-+ site=fortinet
-+ device=fg-campus-core.cfg
-+ [[ logger =~ ^(target|t)$ ]]
-+ [[ ! -d reports/192.168.1.11/fortinet ]]
-+ [[ logger =~ ^(logger|l)$ ]]
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--203.0.113.25.console
-+ [[ logger == \d\e\b\u\g ]]
-+ [[ logger == \d\r\y\-\r\u\n ]]
-+ [[ logger == \v\e\r\b\o\s\e ]]
-+ for xitem in "${@}"
-+ IFS==
-+ read -r key value
-+ json_head='{
-  "vendor": "cisco",
-  "model": "",
-  "version": "",
-  "domain": "",
-  "hostname": ""
-}'
-+ cfg_lines=17
-+ echo '{
-  "vendor": "cisco",
-  "model": "",
-  "version": "",
-  "domain": "",
-  "hostname": ""
-}'
-++ wc -l
-+ jq -e .
-++ echo -e --verbose
-++ awk '
-++ jq -n --arg file campus-sw-access01.cfg --argjson lines 17 --arg path .objects/campus-sw-access01.list --arg specs '{
-++ tr -d ' '
-          BEGIN { in_json=0; depth=0; }
-  "vendor": "cisco",
-          {
-  "model": "",
-            if (!in_json && $0 ~ /^[[:space:]]*{/) in_json=1;
-  "version": "12.2",
-            if (in_json) {
-++ sed -e '1s|^\(-\)\{1,\}||'
-  "domain": "",
-              print;
-  "hostname": "campus-sw-access01"
-              depth += gsub(/{/, "{");
-}' '{
-              depth -= gsub(/}/, "}");
-            specs: ($specs | fromjson),
-              if (depth == 0) exit;
-            config: {
-            }
-              file: $file,
-          }
-              lines: $lines,
-              object: $path
-        ' reports/198.51.100.75/misc/fw1.cfg
-            }
-          }'
-+ cfg_lines=18
-+ [[ verbose =~ ^(search|p)$ ]]
-+ json_head='{
-+ [[ verbose =~ ^(source|s)$ ]]
-  "vendor": "cisco",
-  "model": "",
-  "version": "",
-  "domain": "",
-  "hostname": ""
-+ [[ verbose =~ ^(target|t)$ ]]
-}'
-+ [[ verbose =~ ^(logger|l)$ ]]
-+ [[ verbose == \d\e\b\u\g ]]
-+ [[ verbose == \d\r\y\-\r\u\n ]]
-+ [[ verbose == \v\e\r\b\o\s\e ]]
-+ local verbose=true
-+ IFS=' 	
-'
-+ [[ -z true ]]
-+ [[ -z false ]]
-+ [[ -z true ]]
-+ [[ -z /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--203.0.113.25.console ]]
-+ [[ -z /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--203.0.113.25.list ]]
-+ [[ ! -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.qMCa7Z9KA2/configs-targets--203.0.113.25.list ]]
-+ site_device_map=()
-+ declare -A site_device_map
-+ local rel_path site device cfg_lines json_head json_spec
-+ IFS=
-+ read -r config_file
-+ [[ ! -f reports/203.0.113.25/misc/fw3.cfg ]]
-+ rel_path=misc/fw3.cfg
-+ site=misc
-+ device=fw3.cfg
-+ [[ ! -d reports/203.0.113.25/misc ]]
-+ echo '{
-  "vendor": "cisco",
-  "model": "",
-  "version": "",
-++ awk '
-  "domain": "",
-          BEGIN { in_json=0; depth=0; }
-  "hostname": ""
-          {
-}'
-            if (!in_json && $0 ~ /^[[:space:]]*{/) in_json=1;
-            if (in_json) {
-              print;
-              depth += gsub(/{/, "{");
-              depth -= gsub(/}/, "}");
-              if (depth == 0) exit;
-            }
-          }
-        ' reports/192.168.1.11/fortinet/fg-campus-core.cfg
-+ jq -e .
-++ wc -l
-++ tr -d ' '
-++ jq -n --arg file dmz-fw2-backup.cfg --argjson lines 26 --arg path .objects/dmz-fw2-backup.list --arg specs '{
+++ jq -n --arg file perimeter-fw1.cfg --argjson lines 22 --arg path .objects/perimeter-fw1.list --arg specs '{
   "vendor": "cisco",
   "model": "ASA",
-  "version": "9.12(4)",
-  "domain": "global.dmz.example.net",
-  "hostname": "dmz-fw2-backup"
+  "version": "9.14(3)",
+  "domain": "edge.dc.example.com",
+  "hostname": "perimeter-fw1"
 }' '{
             specs: ($specs | fromjson),
             config: {
@@ -946,389 +150,45 @@
               object: $path
             }
           }'
-+ json_head='{
-  "vendor": "fortinet",
-  "model": "FortiGate-200F",
-  "version": "",
-  "domain": "",
-+ json_spec='{
-  "specs": {
-  "hostname": "fg-campus-core"
-    "vendor": "cisco",
-}'
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw1.cfg",
-    "lines": 14,
-    "object": ".objects/fw1.list"
-  }
-}'
-+ site_device_map["${site}"]+='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw1.cfg",
-    "lines": 14,
-    "object": ".objects/fw1.list"
-  }
-}
-'
-+ IFS=
-+ read -r config_file
-+ [[ ! -f reports/192.168.2.12/cisco/branch-isr-02.cfg ]]
-+ rel_path=cisco/branch-isr-02.cfg
-+ site=cisco
-+ device=branch-isr-02.cfg
-+ [[ ! -d reports/192.168.2.12/cisco ]]
-+ echo '{
-  "vendor": "fortinet",
-  "model": "FortiGate-200F",
-  "version": "",
-  "domain": "",
-  "hostname": "fg-campus-core"
-}'
-+ jq -e .
-+ cfg_lines=13
-++ awk '
-          BEGIN { in_json=0; depth=0; }
-          {
-            if (!in_json && $0 ~ /^[[:space:]]*{/) in_json=1;
-            if (in_json) {
-              print;
-              depth += gsub(/{/, "{");
-              depth -= gsub(/}/, "}");
-++ wc -l
-              if (depth == 0) exit;
-            }
-          }
-        ' reports/203.0.113.25/misc/fw3.cfg
-++ tr -d ' '
 + json_spec='{
   "specs": {
     "vendor": "cisco",
-    "model": "",
-    "version": "12.2",
-    "domain": "",
-    "hostname": "campus-sw-access01"
-  },
-  "config": {
-    "file": "campus-sw-access01.cfg",
-    "lines": 17,
-    "object": ".objects/campus-sw-access01.list"
-  }
-}'
-+ site_device_map["${site}"]+='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "12.2",
-    "domain": "",
-    "hostname": "campus-sw-access01"
-  },
-  "config": {
-    "file": "campus-sw-access01.cfg",
-    "lines": 17,
-    "object": ".objects/campus-sw-access01.list"
-  }
-}
-'
-+ IFS=
-+ read -r config_file
-++ jq -n --arg file fw1.cfg --argjson lines 13 --arg path .objects/fw1.list --arg specs '{
-  "vendor": "cisco",
-  "model": "",
-  "version": "",
-  "domain": "",
-  "hostname": ""
-}' '{
-            specs: ($specs | fromjson),
-            config: {
-              file: $file,
-              lines: $lines,
-              object: $path
-            }
-          }'
-+ printf ' { "target": "%s", "locations": { ' 192.168.0.100
-+ first=true
-+ jq .
-+ json_head='{
-  "vendor": "cisco",
-  "model": "",
-  "version": "",
-  "domain": "",
-  "hostname": ""
-}'
-+ cfg_lines=20
-+ echo '{
-  "vendor": "cisco",
-  "model": "",
-  "version": "",
-  "domain": "",
-  "hostname": ""
-}'
-+ jq -e .
-++ awk '
-          BEGIN { in_json=0; depth=0; }
-          {
-            if (!in_json && $0 ~ /^[[:space:]]*{/) in_json=1;
-            if (in_json) {
-              print;
-              depth += gsub(/{/, "{");
-              depth -= gsub(/}/, "}");
-              if (depth == 0) exit;
-            }
-          }
-        ' reports/192.168.2.12/cisco/branch-isr-02.cfg
-++ printf '%s\n' cisco
-++ sort -u
-+ json_head='{
-  "vendor": "cisco",
-  "model": "",
-  "version": "16.9",
-+ json_spec='{
-  "specs": {
-    "vendor": "cisco",
-  "domain": "",
     "model": "ASA",
-  "hostname": "branch-isr-02"
-    "version": "9.12(4)",
-}'
-    "domain": "global.dmz.example.net",
-    "hostname": "dmz-fw2-backup"
+    "version": "9.14(3)",
+    "domain": "edge.dc.example.com",
+    "hostname": "perimeter-fw1"
   },
   "config": {
-    "file": "dmz-fw2-backup.cfg",
-++ jq -n --arg file fw1.cfg --argjson lines 17 --arg path .objects/fw1.list --arg specs '{
-  "vendor": "cisco",
-    "lines": 26,
-  "model": "",
-    "object": ".objects/dmz-fw2-backup.list"
-+ for site in $(printf '%s\n' "${!site_device_map[@]}" | sort -u)
+    "file": "perimeter-fw1.cfg",
+    "lines": 22,
+    "object": ".objects/perimeter-fw1.list"
   }
 }'
-  "version": "",
-  "domain": "",
-  "hostname": ""
-}' '{
-            specs: ($specs | fromjson),
-            config: {
-              file: $file,
-              lines: $lines,
-+ [[ -z {
-  "specs": {
 + site_device_map["${site}"]+='{
-    "vendor": "cisco",
   "specs": {
-    "model": "",
-              object: $path
     "vendor": "cisco",
-    "version": "12.4",
     "model": "ASA",
-            }
-    "version": "9.12(4)",
-    "domain": "",
-    "domain": "global.dmz.example.net",
-    "hostname": "access-sw1-west"
-  },
-          }'
-  "config": {
-    "hostname": "dmz-fw2-backup"
-    "file": "access-sw1-west.cfg",
-  },
-    "lines": 21,
-  "config": {
-    "object": ".objects/access-sw1-west.list"
-    "file": "dmz-fw2-backup.cfg",
-    "lines": 26,
-  }
-    "object": ".objects/dmz-fw2-backup.list"
-}
-  }
-{
-}
-  "specs": {
-'
-    "vendor": "cisco",
-    "model": "",
-    "version": "12.2",
-    "domain": "",
-    "hostname": "campus-sw-access01"
-+ IFS=
-  },
-+ read -r config_file
-  "config": {
-    "file": "campus-sw-access01.cfg",
-    "lines": 17,
-    "object": ".objects/campus-sw-access01.list"
-  }
-}
- ]]
-+ [[ ! -f reports/192.168.100.100/fortinet/fg-campus-core.cfg ]]
-+ true
-+ first=false
-+ rel_path=fortinet/fg-campus-core.cfg
-+ printf ' "%s": { "devices": ' cisco
-+ site=fortinet
-+ device=fg-campus-core.cfg
-+ [[ ! -d reports/192.168.100.100/fortinet ]]
-+ echo '{
-  "vendor": "cisco",
-  "model": "",
-  "version": "16.9",
-  "domain": "",
-  "hostname": "branch-isr-02"
-}'
-+ jq -e .
-+ print '{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "12.4",
-    "domain": "",
-    "hostname": "access-sw1-west"
+    "version": "9.14(3)",
+    "domain": "edge.dc.example.com",
+    "hostname": "perimeter-fw1"
   },
   "config": {
-    "file": "access-sw1-west.cfg",
-    "lines": 21,
-    "object": ".objects/access-sw1-west.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "12.2",
-    "domain": "",
-    "hostname": "campus-sw-access01"
-  },
-  "config": {
-    "file": "campus-sw-access01.cfg",
-    "lines": 17,
-    "object": ".objects/campus-sw-access01.list"
-  }
-}
-'
-+ jq -s .
-+ [[ -n {
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "12.4",
-    "domain": "",
-    "hostname": "access-sw1-west"
-  },
-  "config": {
-    "file": "access-sw1-west.cfg",
-    "lines": 21,
-    "object": ".objects/access-sw1-west.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "12.2",
-    "domain": "",
-    "hostname": "campus-sw-access01"
-  },
-  "config": {
-    "file": "campus-sw-access01.cfg",
-    "lines": 17,
-    "object": ".objects/campus-sw-access01.list"
-  }
-}
- ]]
-+ echo -en '{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "12.4",
-    "domain": "",
-++ wc -l
-    "hostname": "access-sw1-west"
-  },
-  "config": {
-    "file": "access-sw1-west.cfg",
-    "lines": 21,
-    "object": ".objects/access-sw1-west.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "12.2",
-    "domain": "",
-    "hostname": "campus-sw-access01"
-  },
-  "config": {
-    "file": "campus-sw-access01.cfg",
-    "lines": 17,
-    "object": ".objects/campus-sw-access01.list"
-  }
-}
-'
-++ tr -d ' '
-++ jq -n --arg file fg-campus-core.cfg --argjson lines 18 --arg path .objects/fg-campus-core.list --arg specs '{
-  "vendor": "fortinet",
-  "model": "FortiGate-200F",
-  "version": "",
-  "domain": "",
-  "hostname": "fg-campus-core"
-}' '{
-            specs: ($specs | fromjson),
-            config: {
-              file: $file,
-              lines: $lines,
-              object: $path
-            }
-          }'
-+ json_spec='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw1.cfg",
-    "lines": 13,
-    "object": ".objects/fw1.list"
-  }
-}'
-+ site_device_map["${site}"]+='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw1.cfg",
-    "lines": 13,
-+ cfg_lines=32
-    "object": ".objects/fw1.list"
+    "file": "perimeter-fw1.cfg",
+    "lines": 22,
+    "object": ".objects/perimeter-fw1.list"
   }
 }
 '
 + IFS=
 + read -r config_file
-+ [[ ! -f reports/192.168.1.10/fortinet/fg-branch-vpn-01.cfg ]]
++ [[ ! -f reports/10.0.0.1/fortinet/fg-branch-vpn-01.cfg ]]
 + rel_path=fortinet/fg-branch-vpn-01.cfg
 + site=fortinet
 + device=fg-branch-vpn-01.cfg
-+ [[ ! -d reports/192.168.1.10/fortinet ]]
++ [[ ! -d reports/10.0.0.1/fortinet ]]
+++ wc -l
+++ tr -d ' '
++ cfg_lines=26
 ++ awk '
           BEGIN { in_json=0; depth=0; }
           {
@@ -1340,140 +200,7 @@
               if (depth == 0) exit;
             }
           }
-        ' reports/192.168.100.100/fortinet/fg-campus-core.cfg
-++ wc -l
-++ tr -d ' '
-++ jq -n --arg file fw3.cfg --argjson lines 13 --arg path .objects/fw3.list --arg specs '{
-  "vendor": "cisco",
-  "model": "",
-  "version": "",
-  "domain": "",
-  "hostname": ""
-}' '{
-            specs: ($specs | fromjson),
-            config: {
-              file: $file,
-              lines: $lines,
-              object: $path
-            }
-          }'
-+ json_head='{
-  "vendor": "fortinet",
-  "model": "FortiGate-200F",
-  "version": "",
-  "domain": "",
-  "hostname": "fg-campus-core"
-}'
-+ cfg_lines=19
-+ echo '{
-  "vendor": "fortinet",
-  "model": "FortiGate-200F",
-  "version": "",
-  "domain": "",
-  "hostname": "fg-campus-core"
-}'
-+ jq -e .
-++ awk '
-          BEGIN { in_json=0; depth=0; }
-          {
-            if (!in_json && $0 ~ /^[[:space:]]*{/) in_json=1;
-            if (in_json) {
-              print;
-              depth += gsub(/{/, "{");
-              depth -= gsub(/}/, "}");
-              if (depth == 0) exit;
-            }
-          }
-+ printf ' } '
-        ' reports/192.168.1.10/fortinet/fg-branch-vpn-01.cfg
-+ printf ' } } '
-+ json_spec='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw1.cfg",
-    "lines": 17,
-    "object": ".objects/fw1.list"
-  }
-}'
-+ site_device_map["${site}"]+='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw1.cfg",
-    "lines": 17,
-    "object": ".objects/fw1.list"
-  }
-}
-'
-+ IFS=
-+ read -r config_file
-+ [[ ! -f reports/198.51.100.75/cisco/branch-isr-02.cfg ]]
-+ rel_path=cisco/branch-isr-02.cfg
-+ site=cisco
-+ device=branch-isr-02.cfg
-+ [[ ! -d reports/198.51.100.75/cisco ]]
-++ jq -n --arg file branch-isr-02.cfg --argjson lines 20 --arg path .objects/branch-isr-02.list --arg specs '{
-  "vendor": "cisco",
-  "model": "",
-  "version": "16.9",
-  "domain": "",
-+ json_spec='{
-  "specs": {
-  "hostname": "branch-isr-02"
-    "vendor": "fortinet",
-    "model": "FortiGate-200F",
-    "version": "",
-}' '{
-            specs: ($specs | fromjson),
-    "domain": "",
-            config: {
-    "hostname": "fg-campus-core"
-  },
-              file: $file,
-              lines: $lines,
-  "config": {
-              object: $path
-    "file": "fg-campus-core.cfg",
-            }
-    "lines": 18,
-          }'
-    "object": ".objects/fg-campus-core.list"
-  }
-}'
-+ return 0
-+ site_device_map["${site}"]+='{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-200F",
-    "version": "",
-    "domain": "",
-    "hostname": "fg-campus-core"
-  },
-  "config": {
-    "file": "fg-campus-core.cfg",
-    "lines": 18,
-    "object": ".objects/fg-campus-core.list"
-  }
-}
-'
-+ IFS=
-+ read -r config_file
-++ wc -l
-+ printf ' { "target": "%s", "locations": { ' 192.168.1.11
-+ first=true
-++ tr -d ' '
-+ jq .
+        ' reports/10.0.0.1/fortinet/fg-branch-vpn-01.cfg
 + json_head='{
   "vendor": "fortinet",
   "model": "FortiGate-60F",
@@ -1488,191 +215,60 @@
   "domain": "",
   "hostname": "fg-branch-vpn-01"
 }'
-++ printf '%s\n' fortinet cisco
 + jq -e .
-++ sort -u
-+ cfg_lines=20
-++ awk '
-          BEGIN { in_json=0; depth=0; }
-          {
-            if (!in_json && $0 ~ /^[[:space:]]*{/) in_json=1;
-            if (in_json) {
-              print;
-              depth += gsub(/{/, "{");
-              depth -= gsub(/}/, "}");
-              if (depth == 0) exit;
+++ jq -n --arg file fg-branch-vpn-01.cfg --argjson lines 26 --arg path .objects/fg-branch-vpn-01.list --arg specs '{
+  "vendor": "fortinet",
+  "model": "FortiGate-60F",
+  "version": "v7.2.5.F",
+  "domain": "",
+  "hostname": "fg-branch-vpn-01"
+}' '{
+            specs: ($specs | fromjson),
+            config: {
+              file: $file,
+              lines: $lines,
+              object: $path
             }
-          }
-        ' reports/198.51.100.75/cisco/branch-isr-02.cfg
-+ for site in $(printf '%s\n' "${!site_device_map[@]}" | sort -u)
-+ [[ -z {
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "16.9",
-    "domain": "",
-    "hostname": "branch-isr-02"
-  },
-  "config": {
-    "file": "branch-isr-02.cfg",
-    "lines": 16,
-    "object": ".objects/branch-isr-02.list"
-  }
-}
- ]]
-+ true
-+ first=false
-+ printf ' "%s": { "devices": ' cisco
+          }'
 + json_spec='{
   "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
+    "vendor": "fortinet",
+    "model": "FortiGate-60F",
+    "version": "v7.2.5.F",
     "domain": "",
-    "hostname": ""
+    "hostname": "fg-branch-vpn-01"
   },
   "config": {
-    "file": "fw3.cfg",
-    "lines": 13,
-    "object": ".objects/fw3.list"
+    "file": "fg-branch-vpn-01.cfg",
+    "lines": 26,
+    "object": ".objects/fg-branch-vpn-01.list"
   }
 }'
 + site_device_map["${site}"]+='{
   "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
+    "vendor": "fortinet",
+    "model": "FortiGate-60F",
+    "version": "v7.2.5.F",
     "domain": "",
-    "hostname": ""
+    "hostname": "fg-branch-vpn-01"
   },
   "config": {
-    "file": "fw3.cfg",
-    "lines": 13,
-    "object": ".objects/fw3.list"
+    "file": "fg-branch-vpn-01.cfg",
+    "lines": 26,
+    "object": ".objects/fg-branch-vpn-01.list"
   }
 }
 '
 + IFS=
 + read -r config_file
-+ [[ ! -f reports/203.0.113.25/misc/fw1.cfg ]]
-+ rel_path=misc/fw1.cfg
++ [[ ! -f reports/10.0.0.1/misc/switch3.conf ]]
++ rel_path=misc/switch3.conf
 + site=misc
-+ device=fw1.cfg
-+ [[ ! -d reports/203.0.113.25/misc ]]
-+ print '{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "16.9",
-    "domain": "",
-    "hostname": "branch-isr-02"
-  },
-  "config": {
-    "file": "branch-isr-02.cfg",
-    "lines": 16,
-    "object": ".objects/branch-isr-02.list"
-  }
-}
-'
-+ [[ -n {
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "16.9",
-    "domain": "",
-    "hostname": "branch-isr-02"
-  },
-  "config": {
-+ jq -s .
-    "file": "branch-isr-02.cfg",
-    "lines": 16,
-    "object": ".objects/branch-isr-02.list"
-  }
-}
- ]]
-+ echo -en '{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "16.9",
-    "domain": "",
-    "hostname": "branch-isr-02"
-  },
-  "config": {
-    "file": "branch-isr-02.cfg",
-    "lines": 16,
-    "object": ".objects/branch-isr-02.list"
-  }
-}
-'
++ device=switch3.conf
++ [[ ! -d reports/10.0.0.1/misc ]]
 ++ wc -l
 ++ tr -d ' '
-+ json_head='{
-  "vendor": "cisco",
-  "model": "",
-  "version": "16.9",
-  "domain": "",
-  "hostname": "branch-isr-02"
-}'
-++ jq -n --arg file fg-campus-core.cfg --argjson lines 32 --arg path .objects/fg-campus-core.list --arg specs '{
-  "vendor": "fortinet",
-  "model": "FortiGate-200F",
-  "version": "",
-+ echo '{
-  "domain": "",
-  "vendor": "cisco",
-  "hostname": "fg-campus-core"
-  "model": "",
-}' '{
-  "version": "16.9",
-            specs: ($specs | fromjson),
-  "domain": "",
-            config: {
-  "hostname": "branch-isr-02"
-              file: $file,
-}'
-              lines: $lines,
-              object: $path
-            }
-          }'
-+ jq -e .
-+ json_spec='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "16.9",
-    "domain": "",
-    "hostname": "branch-isr-02"
-  },
-  "config": {
-    "file": "branch-isr-02.cfg",
-    "lines": 20,
-    "object": ".objects/branch-isr-02.list"
-  }
-}'
-+ site_device_map["${site}"]+='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "16.9",
-    "domain": "",
-    "hostname": "branch-isr-02"
-  },
-  "config": {
-    "file": "branch-isr-02.cfg",
-    "lines": 20,
-    "object": ".objects/branch-isr-02.list"
-  }
-}
-'
-+ IFS=
-+ read -r config_file
-+ [[ ! -f reports/192.168.2.12/fortinet/fg-campus-core.cfg ]]
-+ rel_path=fortinet/fg-campus-core.cfg
-+ site=fortinet
-+ device=fg-campus-core.cfg
-+ [[ ! -d reports/192.168.2.12/fortinet ]]
-+ cfg_lines=17
++ cfg_lines=16
 ++ awk '
           BEGIN { in_json=0; depth=0; }
           {
@@ -1684,23 +280,7 @@
               if (depth == 0) exit;
             }
           }
-        ' reports/203.0.113.25/misc/fw1.cfg
-++ wc -l
-++ tr -d ' '
-++ jq -n --arg file fg-branch-vpn-01.cfg --argjson lines 19 --arg path .objects/fg-branch-vpn-01.list --arg specs '{
-  "vendor": "fortinet",
-  "model": "FortiGate-60F",
-  "version": "v7.2.5.F",
-  "domain": "",
-  "hostname": "fg-branch-vpn-01"
-}' '{
-            specs: ($specs | fromjson),
-            config: {
-              file: $file,
-              lines: $lines,
-              object: $path
-            }
-          }'
+        ' reports/10.0.0.1/misc/switch3.conf
 + json_head='{
   "vendor": "cisco",
   "model": "",
@@ -1708,7 +288,6 @@
   "domain": "",
   "hostname": ""
 }'
-+ cfg_lines=18
 + echo '{
   "vendor": "cisco",
   "model": "",
@@ -1717,136 +296,12 @@
   "hostname": ""
 }'
 + jq -e .
-++ awk '
-          BEGIN { in_json=0; depth=0; }
-          {
-            if (!in_json && $0 ~ /^[[:space:]]*{/) in_json=1;
-            if (in_json) {
-              print;
-              depth += gsub(/{/, "{");
-              depth -= gsub(/}/, "}");
-              if (depth == 0) exit;
-            }
-          }
-        ' reports/192.168.2.12/fortinet/fg-campus-core.cfg
-+ printf ' } '
-+ for site in $(printf '%s\n' "${!site_device_map[@]}" | sort -u)
-+ [[ -z {
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-200F",
-    "version": "",
-    "domain": "",
-    "hostname": "fg-campus-core"
-  },
-  "config": {
-    "file": "fg-campus-core.cfg",
-    "lines": 18,
-    "object": ".objects/fg-campus-core.list"
-  }
-}
- ]]
-+ false
-+ printf ,
-+ printf ' "%s": { "devices": ' fortinet
-+ print '{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-200F",
-    "version": "",
-    "domain": "",
-    "hostname": "fg-campus-core"
-  },
-  "config": {
-    "file": "fg-campus-core.cfg",
-    "lines": 18,
-    "object": ".objects/fg-campus-core.list"
-  }
-}
-'
-+ jq -s .
-+ [[ -n {
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-200F",
-    "version": "",
-    "domain": "",
-    "hostname": "fg-campus-core"
-  },
-  "config": {
-    "file": "fg-campus-core.cfg",
-    "lines": 18,
-    "object": ".objects/fg-campus-core.list"
-  }
-}
- ]]
-+ echo -en '{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-200F",
-    "version": "",
-    "domain": "",
-    "hostname": "fg-campus-core"
-  },
-  "config": {
-    "file": "fg-campus-core.cfg",
-    "lines": 18,
-    "object": ".objects/fg-campus-core.list"
-  }
-}
-'
-+ json_head='{
-  "vendor": "fortinet",
-  "model": "FortiGate-200F",
-  "version": "",
-  "domain": "",
-  "hostname": "fg-campus-core"
-}'
-+ echo '{
-  "vendor": "fortinet",
-  "model": "FortiGate-200F",
-  "version": "",
-  "domain": "",
-  "hostname": "fg-campus-core"
-}'
-+ jq -e .
-+ json_spec='{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-200F",
-    "version": "",
-    "domain": "",
-    "hostname": "fg-campus-core"
-  },
-  "config": {
-    "file": "fg-campus-core.cfg",
-    "lines": 32,
-    "object": ".objects/fg-campus-core.list"
-  }
-}'
-+ site_device_map["${site}"]+='{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-200F",
-    "version": "",
-    "domain": "",
-    "hostname": "fg-campus-core"
-  },
-  "config": {
-    "file": "fg-campus-core.cfg",
-    "lines": 32,
-    "object": ".objects/fg-campus-core.list"
-  }
-}
-'
-+ IFS=
-+ read -r config_file
-++ jq -n --arg file branch-isr-02.cfg --argjson lines 20 --arg path .objects/branch-isr-02.list --arg specs '{
+++ jq -n --arg file switch3.conf --argjson lines 16 --arg path .objects/switch3.conf.list --arg specs '{
   "vendor": "cisco",
   "model": "",
-  "version": "16.9",
+  "version": "",
   "domain": "",
-  "hostname": "branch-isr-02"
+  "hostname": ""
 }' '{
             specs: ($specs | fromjson),
             config: {
@@ -1855,132 +310,45 @@
               object: $path
             }
           }'
-+ printf ' { "target": "%s", "locations": { ' 192.168.100.100
-+ first=true
-+ jq .
-++ printf '%s\n' fortinet cisco
-++ sort -u
 + json_spec='{
   "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-60F",
-    "version": "v7.2.5.F",
+    "vendor": "cisco",
+    "model": "",
+    "version": "",
     "domain": "",
-    "hostname": "fg-branch-vpn-01"
+    "hostname": ""
   },
   "config": {
-    "file": "fg-branch-vpn-01.cfg",
-    "lines": 19,
-    "object": ".objects/fg-branch-vpn-01.list"
+    "file": "switch3.conf",
+    "lines": 16,
+    "object": ".objects/switch3.conf.list"
   }
 }'
 + site_device_map["${site}"]+='{
   "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-60F",
-    "version": "v7.2.5.F",
+    "vendor": "cisco",
+    "model": "",
+    "version": "",
     "domain": "",
-    "hostname": "fg-branch-vpn-01"
+    "hostname": ""
   },
   "config": {
-    "file": "fg-branch-vpn-01.cfg",
-    "lines": 19,
-    "object": ".objects/fg-branch-vpn-01.list"
+    "file": "switch3.conf",
+    "lines": 16,
+    "object": ".objects/switch3.conf.list"
   }
 }
 '
 + IFS=
 + read -r config_file
-+ [[ ! -f reports/192.168.1.10/misc/switch1.conf ]]
++ [[ ! -f reports/10.0.0.1/misc/switch1.conf ]]
 + rel_path=misc/switch1.conf
 + site=misc
 + device=switch1.conf
-+ [[ ! -d reports/192.168.1.10/misc ]]
-+ for site in $(printf '%s\n' "${!site_device_map[@]}" | sort -u)
++ [[ ! -d reports/10.0.0.1/misc ]]
 ++ wc -l
-+ [[ -z {
-  "specs": {
-    "vendor": "cisco",
-    "model": "ASA",
-    "version": "9.12(4)",
-    "domain": "global.dmz.example.net",
-    "hostname": "dmz-fw2-backup"
-  },
-  "config": {
-    "file": "dmz-fw2-backup.cfg",
-    "lines": 26,
-    "object": ".objects/dmz-fw2-backup.list"
-  }
-}
- ]]
-+ true
-+ first=false
-+ printf ' "%s": { "devices": ' cisco
 ++ tr -d ' '
-+ print '{
-  "specs": {
-    "vendor": "cisco",
-    "model": "ASA",
-    "version": "9.12(4)",
-    "domain": "global.dmz.example.net",
-    "hostname": "dmz-fw2-backup"
-  },
-  "config": {
-    "file": "dmz-fw2-backup.cfg",
-    "lines": 26,
-    "object": ".objects/dmz-fw2-backup.list"
-  }
-}
-'
-++ jq -n --arg file fw1.cfg --argjson lines 17 --arg path .objects/fw1.list --arg specs '{
-  "vendor": "cisco",
-  "model": "",
-  "version": "",
-  "domain": "",
-+ jq -s .
-+ [[ -n {
-  "specs": {
-  "hostname": ""
-    "vendor": "cisco",
-}' '{
-    "model": "ASA",
-            specs: ($specs | fromjson),
-    "version": "9.12(4)",
-            config: {
-    "domain": "global.dmz.example.net",
-              file: $file,
-    "hostname": "dmz-fw2-backup"
-  },
-  "config": {
-    "file": "dmz-fw2-backup.cfg",
-              lines: $lines,
-    "lines": 26,
-              object: $path
-            }
-          }'
-    "object": ".objects/dmz-fw2-backup.list"
-  }
-}
- ]]
-+ echo -en '{
-  "specs": {
-    "vendor": "cisco",
-    "model": "ASA",
-    "version": "9.12(4)",
-    "domain": "global.dmz.example.net",
-    "hostname": "dmz-fw2-backup"
-  },
-  "config": {
-    "file": "dmz-fw2-backup.cfg",
-    "lines": 26,
-    "object": ".objects/dmz-fw2-backup.list"
-  }
-}
-'
-+ printf ' } '
-+ printf ' } } '
-+ return 0
-+ cfg_lines=11
++ cfg_lines=13
 ++ awk '
           BEGIN { in_json=0; depth=0; }
           {
@@ -1992,59 +360,7 @@
               if (depth == 0) exit;
             }
           }
-        ' reports/192.168.1.10/misc/switch1.conf
-+ json_spec='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "16.9",
-    "domain": "",
-    "hostname": "branch-isr-02"
-  },
-  "config": {
-    "file": "branch-isr-02.cfg",
-    "lines": 20,
-    "object": ".objects/branch-isr-02.list"
-  }
-}'
-+ site_device_map["${site}"]+='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "16.9",
-    "domain": "",
-    "hostname": "branch-isr-02"
-  },
-  "config": {
-    "file": "branch-isr-02.cfg",
-    "lines": 20,
-    "object": ".objects/branch-isr-02.list"
-  }
-}
-'
-+ IFS=
-+ read -r config_file
-+ [[ ! -f reports/198.51.100.75/cisco/dmz-fw2-backup.cfg ]]
-+ rel_path=cisco/dmz-fw2-backup.cfg
-+ site=cisco
-+ device=dmz-fw2-backup.cfg
-+ [[ ! -d reports/198.51.100.75/cisco ]]
-++ jq -n --arg file fg-campus-core.cfg --argjson lines 18 --arg path .objects/fg-campus-core.list --arg specs '{
-  "vendor": "fortinet",
-  "model": "FortiGate-200F",
-  "version": "",
-  "domain": "",
-  "hostname": "fg-campus-core"
-}' '{
-            specs: ($specs | fromjson),
-            config: {
-              file: $file,
-              lines: $lines,
-              object: $path
-            }
-          }'
-++ wc -l
-++ tr -d ' '
+        ' reports/10.0.0.1/misc/switch1.conf
 + json_head='{
   "vendor": "cisco",
   "model": "",
@@ -2060,190 +376,7 @@
   "hostname": ""
 }'
 + jq -e .
-+ cfg_lines=17
-++ awk '
-          BEGIN { in_json=0; depth=0; }
-          {
-            if (!in_json && $0 ~ /^[[:space:]]*{/) in_json=1;
-            if (in_json) {
-              print;
-              depth += gsub(/{/, "{");
-              depth -= gsub(/}/, "}");
-              if (depth == 0) exit;
-            }
-          }
-        ' reports/198.51.100.75/cisco/dmz-fw2-backup.cfg
-+ json_spec='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw1.cfg",
-    "lines": 17,
-    "object": ".objects/fw1.list"
-  }
-}'
-+ site_device_map["${site}"]+='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-+ printf ' } '
-  },
-  "config": {
-    "file": "fw1.cfg",
-    "lines": 17,
-+ for site in $(printf '%s\n' "${!site_device_map[@]}" | sort -u)
-    "object": ".objects/fw1.list"
-  }
-}
-'
-+ [[ -z {
-  "specs": {
-    "vendor": "fortinet",
-+ IFS=
-    "model": "FortiGate-200F",
-+ read -r config_file
-    "version": "",
-    "domain": "",
-    "hostname": "fg-campus-core"
-  },
-  "config": {
-    "file": "fg-campus-core.cfg",
-    "lines": 32,
-+ [[ ! -f reports/203.0.113.25/cisco/perimeter-fw1.cfg ]]
-    "object": ".objects/fg-campus-core.list"
-  }
-}
- ]]
-+ rel_path=cisco/perimeter-fw1.cfg
-+ false
-+ site=cisco
-+ printf ,
-+ device=perimeter-fw1.cfg
-+ printf ' "%s": { "devices": ' fortinet
-+ [[ ! -d reports/203.0.113.25/cisco ]]
-+ print '{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-200F",
-    "version": "",
-    "domain": "",
-    "hostname": "fg-campus-core"
-  },
-  "config": {
-    "file": "fg-campus-core.cfg",
-    "lines": 32,
-    "object": ".objects/fg-campus-core.list"
-  }
-}
-'
-+ jq -s .
-+ [[ -n {
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-200F",
-    "version": "",
-    "domain": "",
-    "hostname": "fg-campus-core"
-  },
-  "config": {
-    "file": "fg-campus-core.cfg",
-    "lines": 32,
-    "object": ".objects/fg-campus-core.list"
-  }
-}
- ]]
-+ echo -en '{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-200F",
-    "version": "",
-    "domain": "",
-    "hostname": "fg-campus-core"
-  },
-  "config": {
-++ wc -l
-    "file": "fg-campus-core.cfg",
-    "lines": 32,
-    "object": ".objects/fg-campus-core.list"
-  }
-}
-'
-++ tr -d ' '
-+ json_head='{
-  "vendor": "cisco",
-  "model": "ASA",
-  "version": "9.12(4)",
-  "domain": "global.dmz.example.net",
-  "hostname": "dmz-fw2-backup"
-}'
-+ echo '{
-  "vendor": "cisco",
-  "model": "ASA",
-  "version": "9.12(4)",
-  "domain": "global.dmz.example.net",
-  "hostname": "dmz-fw2-backup"
-}'
-+ jq -e .
-+ cfg_lines=33
-+ json_spec='{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-200F",
-    "version": "",
-    "domain": "",
-    "hostname": "fg-campus-core"
-  },
-  "config": {
-    "file": "fg-campus-core.cfg",
-    "lines": 18,
-    "object": ".objects/fg-campus-core.list"
-  }
-}'
-+ site_device_map["${site}"]+='{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-200F",
-    "version": "",
-    "domain": "",
-    "hostname": "fg-campus-core"
-  },
-  "config": {
-    "file": "fg-campus-core.cfg",
-    "lines": 18,
-    "object": ".objects/fg-campus-core.list"
-  }
-}
-'
-+ IFS=
-+ read -r config_file
-+ [[ ! -f reports/192.168.2.12/fortinet/fg-branch-vpn-01.cfg ]]
-+ rel_path=fortinet/fg-branch-vpn-01.cfg
-+ site=fortinet
-+ device=fg-branch-vpn-01.cfg
-+ [[ ! -d reports/192.168.2.12/fortinet ]]
-++ awk '
-          BEGIN { in_json=0; depth=0; }
-          {
-            if (!in_json && $0 ~ /^[[:space:]]*{/) in_json=1;
-            if (in_json) {
-              print;
-              depth += gsub(/{/, "{");
-              depth -= gsub(/}/, "}");
-              if (depth == 0) exit;
-            }
-          }
-        ' reports/203.0.113.25/cisco/perimeter-fw1.cfg
-++ wc -l
-++ tr -d ' '
-++ jq -n --arg file switch1.conf --argjson lines 11 --arg path .objects/switch1.conf.list --arg specs '{
+++ jq -n --arg file switch1.conf --argjson lines 13 --arg path .objects/switch1.conf.list --arg specs '{
   "vendor": "cisco",
   "model": "",
   "version": "",
@@ -2257,66 +390,6 @@
               object: $path
             }
           }'
-+ json_head='{
-  "vendor": "cisco",
-  "model": "ASA",
-  "version": "9.14(3)",
-  "domain": "edge.dc.example.com",
-  "hostname": "perimeter-fw1"
-}'
-+ echo '{
-  "vendor": "cisco",
-  "model": "ASA",
-  "version": "9.14(3)",
-  "domain": "edge.dc.example.com",
-  "hostname": "perimeter-fw1"
-}'
-+ jq -e .
-+ cfg_lines=26
-++ awk '
-          BEGIN { in_json=0; depth=0; }
-          {
-            if (!in_json && $0 ~ /^[[:space:]]*{/) in_json=1;
-            if (in_json) {
-              print;
-              depth += gsub(/{/, "{");
-              depth -= gsub(/}/, "}");
-              if (depth == 0) exit;
-            }
-          }
-        ' reports/192.168.2.12/fortinet/fg-branch-vpn-01.cfg
-+ printf ' } '
-+ printf ' } } '
-+ return 0
-+ json_head='{
-  "vendor": "fortinet",
-  "model": "FortiGate-60F",
-  "version": "v7.2.5.F",
-  "domain": "",
-  "hostname": "fg-branch-vpn-01"
-}'
-+ echo '{
-  "vendor": "fortinet",
-  "model": "FortiGate-60F",
-  "version": "v7.2.5.F",
-  "domain": "",
-  "hostname": "fg-branch-vpn-01"
-}'
-++ jq -n --arg file dmz-fw2-backup.cfg --argjson lines 17 --arg path .objects/dmz-fw2-backup.list --arg specs '{
-  "vendor": "cisco",
-  "model": "ASA",
-  "version": "9.12(4)",
-  "domain": "global.dmz.example.net",
-  "hostname": "dmz-fw2-backup"
-+ jq -e .
-}' '{
-            specs: ($specs | fromjson),
-            config: {
-              file: $file,
-              lines: $lines,
-              object: $path
-            }
-          }'
 + json_spec='{
   "specs": {
     "vendor": "cisco",
@@ -2327,261 +400,11 @@
   },
   "config": {
     "file": "switch1.conf",
-    "lines": 11,
-    "object": ".objects/switch1.conf.list"
-  }
-}'
-+ site_device_map["${site}"]+='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "switch1.conf",
-    "lines": 11,
-    "object": ".objects/switch1.conf.list"
-  }
-}
-'
-+ IFS=
-+ read -r config_file
-+ printf ' { "target": "%s", "locations": { ' 192.168.1.10
-+ first=true
-+ jq .
-++ jq -n --arg file perimeter-fw1.cfg --argjson lines 33 --arg path .objects/perimeter-fw1.list --arg specs '{
-  "vendor": "cisco",
-  "model": "ASA",
-  "version": "9.14(3)",
-  "domain": "edge.dc.example.com",
-  "hostname": "perimeter-fw1"
-}' '{
-            specs: ($specs | fromjson),
-            config: {
-              file: $file,
-              lines: $lines,
-              object: $path
-            }
-          }'
-++ printf '%s\n' fortinet misc
-++ sort -u
-+ for site in $(printf '%s\n' "${!site_device_map[@]}" | sort -u)
-+ [[ -z {
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-60F",
-    "version": "v7.2.5.F",
-    "domain": "",
-    "hostname": "fg-branch-vpn-01"
-  },
-  "config": {
-    "file": "fg-branch-vpn-01.cfg",
-    "lines": 19,
-    "object": ".objects/fg-branch-vpn-01.list"
-  }
-}
- ]]
-+ true
-+ first=false
-+ printf ' "%s": { "devices": ' fortinet
-+ print '{
-  "specs": {
-+ json_spec='{
-  "specs": {
-    "vendor": "fortinet",
-    "vendor": "cisco",
-    "model": "FortiGate-60F",
-    "model": "ASA",
-    "version": "v7.2.5.F",
-    "version": "9.12(4)",
-    "domain": "",
-    "domain": "global.dmz.example.net",
-    "hostname": "fg-branch-vpn-01"
-    "hostname": "dmz-fw2-backup"
-  },
-  },
-  "config": {
-  "config": {
-    "file": "fg-branch-vpn-01.cfg",
-    "file": "dmz-fw2-backup.cfg",
-    "lines": 19,
-    "lines": 17,
-    "object": ".objects/fg-branch-vpn-01.list"
-    "object": ".objects/dmz-fw2-backup.list"
-  }
-  }
-}
-}'
-'
-+ jq -s .
-+ site_device_map["${site}"]+='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "ASA",
-    "version": "9.12(4)",
-    "domain": "global.dmz.example.net",
-    "hostname": "dmz-fw2-backup"
-  },
-  "config": {
-    "file": "dmz-fw2-backup.cfg",
-    "lines": 17,
-    "object": ".objects/dmz-fw2-backup.list"
-+ [[ -n {
-  "specs": {
-  }
-    "vendor": "fortinet",
-}
-    "model": "FortiGate-60F",
-'
-    "version": "v7.2.5.F",
-    "domain": "",
-    "hostname": "fg-branch-vpn-01"
-  },
-  "config": {
-    "file": "fg-branch-vpn-01.cfg",
-+ IFS=
-    "lines": 19,
-+ read -r config_file
-    "object": ".objects/fg-branch-vpn-01.list"
-  }
-}
- ]]
-+ [[ ! -f reports/198.51.100.75/fortinet/fg-branch-vpn-01.cfg ]]
-+ echo -en '{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-60F",
-    "version": "v7.2.5.F",
-+ rel_path=fortinet/fg-branch-vpn-01.cfg
-    "domain": "",
-    "hostname": "fg-branch-vpn-01"
-  },
-+ site=fortinet
-  "config": {
-    "file": "fg-branch-vpn-01.cfg",
-+ device=fg-branch-vpn-01.cfg
-    "lines": 19,
-    "object": ".objects/fg-branch-vpn-01.list"
-+ [[ ! -d reports/198.51.100.75/fortinet ]]
-  }
-}
-'
-++ jq -n --arg file fg-branch-vpn-01.cfg --argjson lines 26 --arg path .objects/fg-branch-vpn-01.list --arg specs '{
-  "vendor": "fortinet",
-  "model": "FortiGate-60F",
-  "version": "v7.2.5.F",
-  "domain": "",
-  "hostname": "fg-branch-vpn-01"
-}' '{
-            specs: ($specs | fromjson),
-            config: {
-              file: $file,
-              lines: $lines,
-              object: $path
-            }
-          }'
-++ wc -l
-++ tr -d ' '
-+ cfg_lines=26
-+ json_spec='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "ASA",
-    "version": "9.14(3)",
-    "domain": "edge.dc.example.com",
-    "hostname": "perimeter-fw1"
-  },
-  "config": {
-    "file": "perimeter-fw1.cfg",
-    "lines": 33,
-    "object": ".objects/perimeter-fw1.list"
-  }
-}'
-+ site_device_map["${site}"]+='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "ASA",
-    "version": "9.14(3)",
-    "domain": "edge.dc.example.com",
-    "hostname": "perimeter-fw1"
-  },
-  "config": {
-    "file": "perimeter-fw1.cfg",
-    "lines": 33,
-    "object": ".objects/perimeter-fw1.list"
-  }
-}
-'
-+ IFS=
-+ read -r config_file
-+ [[ ! -f reports/203.0.113.25/cisco/dmz-fw2-backup.cfg ]]
-+ rel_path=cisco/dmz-fw2-backup.cfg
-+ site=cisco
-+ device=dmz-fw2-backup.cfg
-+ [[ ! -d reports/203.0.113.25/cisco ]]
-++ awk '
-          BEGIN { in_json=0; depth=0; }
-          {
-            if (!in_json && $0 ~ /^[[:space:]]*{/) in_json=1;
-            if (in_json) {
-              print;
-              depth += gsub(/{/, "{");
-              depth -= gsub(/}/, "}");
-              if (depth == 0) exit;
-            }
-          }
-        ' reports/198.51.100.75/fortinet/fg-branch-vpn-01.cfg
-++ wc -l
-++ tr -d ' '
-+ json_head='{
-  "vendor": "fortinet",
-  "model": "FortiGate-60F",
-  "version": "v7.2.5.F",
-  "domain": "",
-  "hostname": "fg-branch-vpn-01"
-}'
-+ echo '{
-  "vendor": "fortinet",
-  "model": "FortiGate-60F",
-  "version": "v7.2.5.F",
-  "domain": "",
-  "hostname": "fg-branch-vpn-01"
-}'
-+ jq -e .
-+ cfg_lines=16
-+ printf ' } '
-+ for site in $(printf '%s\n' "${!site_device_map[@]}" | sort -u)
-+ [[ -z {
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw3.cfg",
-    "lines": 14,
-    "object": ".objects/fw3.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw1.cfg",
     "lines": 13,
-    "object": ".objects/fw1.list"
+    "object": ".objects/switch1.conf.list"
   }
-}
-{
+}'
++ site_device_map["${site}"]+='{
   "specs": {
     "vendor": "cisco",
     "model": "",
@@ -2591,714 +414,83 @@
   },
   "config": {
     "file": "switch1.conf",
-    "lines": 11,
+    "lines": 13,
     "object": ".objects/switch1.conf.list"
-  }
-}
- ]]
-+ false
-+ printf ,
-+ printf ' "%s": { "devices": ' misc
-++ awk '
-          BEGIN { in_json=0; depth=0; }
-          {
-            if (!in_json && $0 ~ /^[[:space:]]*{/) in_json=1;
-            if (in_json) {
-              print;
-              depth += gsub(/{/, "{");
-              depth -= gsub(/}/, "}");
-              if (depth == 0) exit;
-            }
-          }
-        ' reports/203.0.113.25/cisco/dmz-fw2-backup.cfg
-+ json_spec='{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-60F",
-    "version": "v7.2.5.F",
-    "domain": "",
-    "hostname": "fg-branch-vpn-01"
-  },
-  "config": {
-    "file": "fg-branch-vpn-01.cfg",
-    "lines": 26,
-    "object": ".objects/fg-branch-vpn-01.list"
-  }
-}'
-+ site_device_map["${site}"]+='{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-60F",
-    "version": "v7.2.5.F",
-    "domain": "",
-    "hostname": "fg-branch-vpn-01"
-  },
-  "config": {
-    "file": "fg-branch-vpn-01.cfg",
-    "lines": 26,
-    "object": ".objects/fg-branch-vpn-01.list"
   }
 }
 '
 + IFS=
 + read -r config_file
-+ print '{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw3.cfg",
-    "lines": 14,
-    "object": ".objects/fw3.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw1.cfg",
-    "lines": 13,
-    "object": ".objects/fw1.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-+ jq -s .
-  },
-  "config": {
-    "file": "switch1.conf",
-    "lines": 11,
-    "object": ".objects/switch1.conf.list"
-  }
-}
-'
-+ [[ -n {
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw3.cfg",
-    "lines": 14,
-    "object": ".objects/fw3.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw1.cfg",
-    "lines": 13,
-    "object": ".objects/fw1.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "switch1.conf",
-    "lines": 11,
-+ printf ' { "target": "%s", "locations": { ' 192.168.2.12
-    "object": ".objects/switch1.conf.list"
-  }
-}
- ]]
-+ first=true
-+ echo -en '{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw3.cfg",
-    "lines": 14,
-    "object": ".objects/fw3.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw1.cfg",
-    "lines": 13,
-    "object": ".objects/fw1.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "switch1.conf",
-    "lines": 11,
-    "object": ".objects/switch1.conf.list"
-  }
-}
-+ jq .
-'
-+ json_head='{
-++ printf '%s\n' fortinet misc cisco
-  "vendor": "cisco",
-  "model": "ASA",
-  "version": "9.12(4)",
-  "domain": "global.dmz.example.net",
-  "hostname": "dmz-fw2-backup"
-}'
-++ sort -u
-+ echo '{
-  "vendor": "cisco",
-  "model": "ASA",
-  "version": "9.12(4)",
-  "domain": "global.dmz.example.net",
-  "hostname": "dmz-fw2-backup"
-}'
-+ jq -e .
-+ for site in $(printf '%s\n' "${!site_device_map[@]}" | sort -u)
-+ [[ -z {
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "16.9",
-    "domain": "",
-    "hostname": "branch-isr-02"
-  },
-  "config": {
-    "file": "branch-isr-02.cfg",
-    "lines": 20,
-    "object": ".objects/branch-isr-02.list"
-  }
-}
- ]]
-+ true
-+ first=false
-+ printf ' "%s": { "devices": ' cisco
-+ print '{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "16.9",
-    "domain": "",
-    "hostname": "branch-isr-02"
-  },
-  "config": {
-    "file": "branch-isr-02.cfg",
-    "lines": 20,
-    "object": ".objects/branch-isr-02.list"
-  }
-}
-'
-+ jq -s .
-+ [[ -n {
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "16.9",
-    "domain": "",
-    "hostname": "branch-isr-02"
-  },
-  "config": {
-    "file": "branch-isr-02.cfg",
-    "lines": 20,
-    "object": ".objects/branch-isr-02.list"
-  }
-}
- ]]
-+ echo -en '{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "16.9",
-    "domain": "",
-    "hostname": "branch-isr-02"
-  },
-  "config": {
-    "file": "branch-isr-02.cfg",
-    "lines": 20,
-    "object": ".objects/branch-isr-02.list"
-  }
-}
-'
-++ jq -n --arg file fg-branch-vpn-01.cfg --argjson lines 26 --arg path .objects/fg-branch-vpn-01.list --arg specs '{
-  "vendor": "fortinet",
-  "model": "FortiGate-60F",
-  "version": "v7.2.5.F",
-  "domain": "",
-  "hostname": "fg-branch-vpn-01"
-}' '{
-            specs: ($specs | fromjson),
-            config: {
-              file: $file,
-              lines: $lines,
-              object: $path
-            }
-          }'
-+ printf ' } '
-+ printf ' } } '
-+ return 0
-++ jq -n --arg file dmz-fw2-backup.cfg --argjson lines 16 --arg path .objects/dmz-fw2-backup.list --arg specs '{
-  "vendor": "cisco",
-  "model": "ASA",
-  "version": "9.12(4)",
-  "domain": "global.dmz.example.net",
-  "hostname": "dmz-fw2-backup"
-}' '{
-            specs: ($specs | fromjson),
-            config: {
-              file: $file,
-              lines: $lines,
-              object: $path
-            }
-          }'
-+ printf ' } '
-+ for site in $(printf '%s\n' "${!site_device_map[@]}" | sort -u)
-+ [[ -z {
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-200F",
-    "version": "",
-    "domain": "",
-    "hostname": "fg-campus-core"
-  },
-  "config": {
-    "file": "fg-campus-core.cfg",
-    "lines": 18,
-    "object": ".objects/fg-campus-core.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-60F",
-    "version": "v7.2.5.F",
-    "domain": "",
-    "hostname": "fg-branch-vpn-01"
-  },
-  "config": {
-    "file": "fg-branch-vpn-01.cfg",
-    "lines": 26,
-    "object": ".objects/fg-branch-vpn-01.list"
-  }
-}
- ]]
-+ false
-+ printf ,
-+ printf ' "%s": { "devices": ' fortinet
-+ print '{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-200F",
-    "version": "",
-    "domain": "",
-    "hostname": "fg-campus-core"
-  },
-  "config": {
-    "file": "fg-campus-core.cfg",
-    "lines": 18,
-    "object": ".objects/fg-campus-core.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-60F",
-    "version": "v7.2.5.F",
-    "domain": "",
-    "hostname": "fg-branch-vpn-01"
-  },
-  "config": {
-    "file": "fg-branch-vpn-01.cfg",
-    "lines": 26,
-    "object": ".objects/fg-branch-vpn-01.list"
-  }
-}
-'
-+ jq -s .
-+ [[ -n {
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-200F",
-    "version": "",
-    "domain": "",
-    "hostname": "fg-campus-core"
-  },
-  "config": {
-    "file": "fg-campus-core.cfg",
-    "lines": 18,
-    "object": ".objects/fg-campus-core.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-60F",
-    "version": "v7.2.5.F",
-    "domain": "",
-    "hostname": "fg-branch-vpn-01"
-  },
-  "config": {
-    "file": "fg-branch-vpn-01.cfg",
-    "lines": 26,
-    "object": ".objects/fg-branch-vpn-01.list"
-  }
-}
- ]]
-+ echo -en '{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-200F",
-    "version": "",
-    "domain": "",
-    "hostname": "fg-campus-core"
-  },
-  "config": {
-    "file": "fg-campus-core.cfg",
-    "lines": 18,
-    "object": ".objects/fg-campus-core.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-60F",
-    "version": "v7.2.5.F",
-    "domain": "",
-    "hostname": "fg-branch-vpn-01"
-  },
-  "config": {
-    "file": "fg-branch-vpn-01.cfg",
-    "lines": 26,
-    "object": ".objects/fg-branch-vpn-01.list"
-  }
-}
-'
-+ json_spec='{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-60F",
-    "version": "v7.2.5.F",
-    "domain": "",
-    "hostname": "fg-branch-vpn-01"
-  },
-  "config": {
-    "file": "fg-branch-vpn-01.cfg",
-    "lines": 26,
-    "object": ".objects/fg-branch-vpn-01.list"
-  }
-}'
-+ site_device_map["${site}"]+='{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-60F",
-    "version": "v7.2.5.F",
-    "domain": "",
-    "hostname": "fg-branch-vpn-01"
-  },
-  "config": {
-    "file": "fg-branch-vpn-01.cfg",
-    "lines": 26,
-    "object": ".objects/fg-branch-vpn-01.list"
-  }
-}
-'
-+ IFS=
-+ read -r config_file
-+ printf ' { "target": "%s", "locations": { ' 198.51.100.75
++ printf ' { "target": "%s", "locations": { ' 10.0.0.1
 + first=true
 + jq .
 ++ printf '%s\n' fortinet misc cisco
 ++ sort -u
-+ json_spec='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "ASA",
-    "version": "9.12(4)",
-    "domain": "global.dmz.example.net",
-    "hostname": "dmz-fw2-backup"
-  },
-  "config": {
-    "file": "dmz-fw2-backup.cfg",
-    "lines": 16,
-    "object": ".objects/dmz-fw2-backup.list"
-  }
-}'
-+ site_device_map["${site}"]+='{
-  "specs": {
-    "vendor": "cisco",
-    "model": "ASA",
-    "version": "9.12(4)",
-    "domain": "global.dmz.example.net",
-    "hostname": "dmz-fw2-backup"
-  },
-  "config": {
-    "file": "dmz-fw2-backup.cfg",
-    "lines": 16,
-    "object": ".objects/dmz-fw2-backup.list"
-  }
-}
-'
-+ IFS=
-+ read -r config_file
-+ [[ ! -f reports/203.0.113.25/fortinet/fg-branch-vpn-01.cfg ]]
-+ rel_path=fortinet/fg-branch-vpn-01.cfg
-+ site=fortinet
-+ device=fg-branch-vpn-01.cfg
-+ [[ ! -d reports/203.0.113.25/fortinet ]]
 + for site in $(printf '%s\n' "${!site_device_map[@]}" | sort -u)
 + [[ -z {
   "specs": {
     "vendor": "cisco",
-    "model": "",
-    "version": "16.9",
-    "domain": "",
-    "hostname": "branch-isr-02"
-  },
-  "config": {
-    "file": "branch-isr-02.cfg",
-    "lines": 20,
-    "object": ".objects/branch-isr-02.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "cisco",
     "model": "ASA",
-    "version": "9.12(4)",
-    "domain": "global.dmz.example.net",
-    "hostname": "dmz-fw2-backup"
+    "version": "9.14(3)",
+    "domain": "edge.dc.example.com",
+    "hostname": "perimeter-fw1"
   },
   "config": {
-    "file": "dmz-fw2-backup.cfg",
-    "lines": 17,
-    "object": ".objects/dmz-fw2-backup.list"
+    "file": "perimeter-fw1.cfg",
+    "lines": 22,
+    "object": ".objects/perimeter-fw1.list"
   }
 }
  ]]
 + true
 + first=false
 + printf ' "%s": { "devices": ' cisco
-++ wc -l
 + print '{
   "specs": {
     "vendor": "cisco",
-    "model": "",
-    "version": "16.9",
-    "domain": "",
-    "hostname": "branch-isr-02"
-  },
-  "config": {
-    "file": "branch-isr-02.cfg",
-    "lines": 20,
-    "object": ".objects/branch-isr-02.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "cisco",
     "model": "ASA",
-    "version": "9.12(4)",
-    "domain": "global.dmz.example.net",
-    "hostname": "dmz-fw2-backup"
+    "version": "9.14(3)",
+    "domain": "edge.dc.example.com",
+    "hostname": "perimeter-fw1"
   },
   "config": {
-    "file": "dmz-fw2-backup.cfg",
-    "lines": 17,
-    "object": ".objects/dmz-fw2-backup.list"
+    "file": "perimeter-fw1.cfg",
+    "lines": 22,
+    "object": ".objects/perimeter-fw1.list"
   }
 }
 '
 + jq -s .
-++ tr -d ' '
 + [[ -n {
   "specs": {
     "vendor": "cisco",
-    "model": "",
-    "version": "16.9",
-    "domain": "",
-    "hostname": "branch-isr-02"
-  },
-  "config": {
-    "file": "branch-isr-02.cfg",
-    "lines": 20,
-    "object": ".objects/branch-isr-02.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "cisco",
     "model": "ASA",
-    "version": "9.12(4)",
-    "domain": "global.dmz.example.net",
-    "hostname": "dmz-fw2-backup"
+    "version": "9.14(3)",
+    "domain": "edge.dc.example.com",
+    "hostname": "perimeter-fw1"
   },
   "config": {
-    "file": "dmz-fw2-backup.cfg",
-    "lines": 17,
-    "object": ".objects/dmz-fw2-backup.list"
+    "file": "perimeter-fw1.cfg",
+    "lines": 22,
+    "object": ".objects/perimeter-fw1.list"
   }
 }
  ]]
 + echo -en '{
   "specs": {
     "vendor": "cisco",
-    "model": "",
-    "version": "16.9",
-    "domain": "",
-    "hostname": "branch-isr-02"
-  },
-  "config": {
-    "file": "branch-isr-02.cfg",
-    "lines": 20,
-    "object": ".objects/branch-isr-02.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "cisco",
     "model": "ASA",
-    "version": "9.12(4)",
-    "domain": "global.dmz.example.net",
-    "hostname": "dmz-fw2-backup"
+    "version": "9.14(3)",
+    "domain": "edge.dc.example.com",
+    "hostname": "perimeter-fw1"
   },
   "config": {
-    "file": "dmz-fw2-backup.cfg",
-    "lines": 17,
-    "object": ".objects/dmz-fw2-backup.list"
+    "file": "perimeter-fw1.cfg",
+    "lines": 22,
+    "object": ".objects/perimeter-fw1.list"
   }
 }
 '
-+ printf ' } '
-+ for site in $(printf '%s\n' "${!site_device_map[@]}" | sort -u)
-+ [[ -z {
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw1.cfg",
-    "lines": 14,
-    "object": ".objects/fw1.list"
-  }
-}
- ]]
-+ false
-+ printf ,
-+ printf ' "%s": { "devices": ' misc
-+ print '{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw1.cfg",
-    "lines": 14,
-    "object": ".objects/fw1.list"
-  }
-}
-'
-+ [[ -n {
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-+ jq -s .
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw1.cfg",
-    "lines": 14,
-    "object": ".objects/fw1.list"
-  }
-}
- ]]
-+ echo -en '{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw1.cfg",
-    "lines": 14,
-    "object": ".objects/fw1.list"
-  }
-}
-'
-+ cfg_lines=19
-++ awk '
-          BEGIN { in_json=0; depth=0; }
-          {
-            if (!in_json && $0 ~ /^[[:space:]]*{/) in_json=1;
-            if (in_json) {
-              print;
-              depth += gsub(/{/, "{");
-              depth -= gsub(/}/, "}");
-              if (depth == 0) exit;
-            }
-          }
-        ' reports/203.0.113.25/fortinet/fg-branch-vpn-01.cfg
-+ json_head='{
-  "vendor": "fortinet",
-  "model": "FortiGate-60F",
-  "version": "v7.2.5.F",
-  "domain": "",
-  "hostname": "fg-branch-vpn-01"
-}'
-+ echo '{
-  "vendor": "fortinet",
-  "model": "FortiGate-60F",
-  "version": "v7.2.5.F",
-  "domain": "",
-  "hostname": "fg-branch-vpn-01"
-}'
-+ jq -e .
 + printf ' } '
 + for site in $(printf '%s\n' "${!site_device_map[@]}" | sort -u)
 + [[ -z {
@@ -3334,6 +526,7 @@
   }
 }
 '
++ jq -s .
 + [[ -n {
   "specs": {
     "vendor": "fortinet",
@@ -3348,7 +541,6 @@
     "object": ".objects/fg-branch-vpn-01.list"
   }
 }
-+ jq -s .
  ]]
 + echo -en '{
   "specs": {
@@ -3366,23 +558,6 @@
 }
 '
 + printf ' } '
-+ printf ' } } '
-+ return 0
-++ jq -n --arg file fg-branch-vpn-01.cfg --argjson lines 19 --arg path .objects/fg-branch-vpn-01.list --arg specs '{
-  "vendor": "fortinet",
-  "model": "FortiGate-60F",
-  "version": "v7.2.5.F",
-  "domain": "",
-  "hostname": "fg-branch-vpn-01"
-}' '{
-            specs: ($specs | fromjson),
-            config: {
-              file: $file,
-              lines: $lines,
-              object: $path
-            }
-          }'
-+ printf ' } '
 + for site in $(printf '%s\n' "${!site_device_map[@]}" | sort -u)
 + [[ -z {
   "specs": {
@@ -3393,9 +568,23 @@
     "hostname": ""
   },
   "config": {
-    "file": "fw1.cfg",
-    "lines": 17,
-    "object": ".objects/fw1.list"
+    "file": "switch3.conf",
+    "lines": 16,
+    "object": ".objects/switch3.conf.list"
+  }
+}
+{
+  "specs": {
+    "vendor": "cisco",
+    "model": "",
+    "version": "",
+    "domain": "",
+    "hostname": ""
+  },
+  "config": {
+    "file": "switch1.conf",
+    "lines": 13,
+    "object": ".objects/switch1.conf.list"
   }
 }
  ]]
@@ -3411,13 +600,27 @@
     "hostname": ""
   },
   "config": {
-    "file": "fw1.cfg",
-    "lines": 17,
-    "object": ".objects/fw1.list"
+    "file": "switch3.conf",
+    "lines": 16,
+    "object": ".objects/switch3.conf.list"
   }
 }
-'
+{
+  "specs": {
+    "vendor": "cisco",
+    "model": "",
+    "version": "",
+    "domain": "",
+    "hostname": ""
+  },
+  "config": {
+    "file": "switch1.conf",
+    "lines": 13,
+    "object": ".objects/switch1.conf.list"
+  }
 + jq -s .
+}
+'
 + [[ -n {
   "specs": {
     "vendor": "cisco",
@@ -3427,9 +630,23 @@
     "hostname": ""
   },
   "config": {
-    "file": "fw1.cfg",
-    "lines": 17,
-    "object": ".objects/fw1.list"
+    "file": "switch3.conf",
+    "lines": 16,
+    "object": ".objects/switch3.conf.list"
+  }
+}
+{
+  "specs": {
+    "vendor": "cisco",
+    "model": "",
+    "version": "",
+    "domain": "",
+    "hostname": ""
+  },
+  "config": {
+    "file": "switch1.conf",
+    "lines": 13,
+    "object": ".objects/switch1.conf.list"
   }
 }
  ]]
@@ -3442,241 +659,12 @@
     "hostname": ""
   },
   "config": {
-    "file": "fw1.cfg",
-    "lines": 17,
-    "object": ".objects/fw1.list"
-  }
-}
-'
-+ json_spec='{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-60F",
-    "version": "v7.2.5.F",
-    "domain": "",
-    "hostname": "fg-branch-vpn-01"
-  },
-  "config": {
-    "file": "fg-branch-vpn-01.cfg",
-    "lines": 19,
-    "object": ".objects/fg-branch-vpn-01.list"
-  }
-}'
-+ site_device_map["${site}"]+='{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-60F",
-    "version": "v7.2.5.F",
-    "domain": "",
-    "hostname": "fg-branch-vpn-01"
-  },
-  "config": {
-    "file": "fg-branch-vpn-01.cfg",
-    "lines": 19,
-    "object": ".objects/fg-branch-vpn-01.list"
-  }
-}
-'
-+ IFS=
-+ read -r config_file
-+ printf ' { "target": "%s", "locations": { ' 203.0.113.25
-+ first=true
-+ jq .
-+ printf ' } '
-+ printf ' } } '
-++ printf '%s\n' fortinet misc cisco
-++ sort -u
-+ return 0
-+ for site in $(printf '%s\n' "${!site_device_map[@]}" | sort -u)
-+ [[ -z {
-  "specs": {
-    "vendor": "cisco",
-    "model": "ASA",
-    "version": "9.14(3)",
-    "domain": "edge.dc.example.com",
-    "hostname": "perimeter-fw1"
-  },
-  "config": {
-    "file": "perimeter-fw1.cfg",
-    "lines": 33,
-    "object": ".objects/perimeter-fw1.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "cisco",
-    "model": "ASA",
-    "version": "9.12(4)",
-    "domain": "global.dmz.example.net",
-    "hostname": "dmz-fw2-backup"
-  },
-  "config": {
-    "file": "dmz-fw2-backup.cfg",
+    "file": "switch3.conf",
     "lines": 16,
-    "object": ".objects/dmz-fw2-backup.list"
-  }
-}
- ]]
-+ true
-+ first=false
-+ printf ' "%s": { "devices": ' cisco
-+ print '{
-  "specs": {
-    "vendor": "cisco",
-    "model": "ASA",
-    "version": "9.14(3)",
-    "domain": "edge.dc.example.com",
-    "hostname": "perimeter-fw1"
-  },
-  "config": {
-    "file": "perimeter-fw1.cfg",
-    "lines": 33,
-    "object": ".objects/perimeter-fw1.list"
+    "object": ".objects/switch3.conf.list"
   }
 }
 {
-  "specs": {
-    "vendor": "cisco",
-    "model": "ASA",
-    "version": "9.12(4)",
-    "domain": "global.dmz.example.net",
-    "hostname": "dmz-fw2-backup"
-  },
-  "config": {
-    "file": "dmz-fw2-backup.cfg",
-    "lines": 16,
-    "object": ".objects/dmz-fw2-backup.list"
-  }
-}
-'
-+ jq -s .
-+ [[ -n {
-  "specs": {
-    "vendor": "cisco",
-    "model": "ASA",
-    "version": "9.14(3)",
-    "domain": "edge.dc.example.com",
-    "hostname": "perimeter-fw1"
-  },
-  "config": {
-    "file": "perimeter-fw1.cfg",
-    "lines": 33,
-    "object": ".objects/perimeter-fw1.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "cisco",
-    "model": "ASA",
-    "version": "9.12(4)",
-    "domain": "global.dmz.example.net",
-    "hostname": "dmz-fw2-backup"
-  },
-  "config": {
-    "file": "dmz-fw2-backup.cfg",
-    "lines": 16,
-    "object": ".objects/dmz-fw2-backup.list"
-  }
-}
- ]]
-+ echo -en '{
-  "specs": {
-    "vendor": "cisco",
-    "model": "ASA",
-    "version": "9.14(3)",
-    "domain": "edge.dc.example.com",
-    "hostname": "perimeter-fw1"
-  },
-  "config": {
-    "file": "perimeter-fw1.cfg",
-    "lines": 33,
-    "object": ".objects/perimeter-fw1.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "cisco",
-    "model": "ASA",
-    "version": "9.12(4)",
-    "domain": "global.dmz.example.net",
-    "hostname": "dmz-fw2-backup"
-  },
-  "config": {
-    "file": "dmz-fw2-backup.cfg",
-    "lines": 16,
-    "object": ".objects/dmz-fw2-backup.list"
-  }
-}
-'
-+ printf ' } '
-+ for site in $(printf '%s\n' "${!site_device_map[@]}" | sort -u)
-+ [[ -z {
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-60F",
-    "version": "v7.2.5.F",
-    "domain": "",
-    "hostname": "fg-branch-vpn-01"
-  },
-  "config": {
-    "file": "fg-branch-vpn-01.cfg",
-    "lines": 19,
-    "object": ".objects/fg-branch-vpn-01.list"
-  }
-}
- ]]
-+ false
-+ printf ,
-+ printf ' "%s": { "devices": ' fortinet
-+ print '{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-60F",
-    "version": "v7.2.5.F",
-    "domain": "",
-    "hostname": "fg-branch-vpn-01"
-  },
-  "config": {
-    "file": "fg-branch-vpn-01.cfg",
-    "lines": 19,
-    "object": ".objects/fg-branch-vpn-01.list"
-  }
-}
-'
-+ jq -s .
-+ [[ -n {
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-60F",
-    "version": "v7.2.5.F",
-    "domain": "",
-    "hostname": "fg-branch-vpn-01"
-  },
-  "config": {
-    "file": "fg-branch-vpn-01.cfg",
-    "lines": 19,
-    "object": ".objects/fg-branch-vpn-01.list"
-  }
-}
- ]]
-+ echo -en '{
-  "specs": {
-    "vendor": "fortinet",
-    "model": "FortiGate-60F",
-    "version": "v7.2.5.F",
-    "domain": "",
-    "hostname": "fg-branch-vpn-01"
-  },
-  "config": {
-    "file": "fg-branch-vpn-01.cfg",
-    "lines": 19,
-    "object": ".objects/fg-branch-vpn-01.list"
-  }
-}
-'
-+ printf ' } '
-+ for site in $(printf '%s\n' "${!site_device_map[@]}" | sort -u)
-+ [[ -z {
   "specs": {
     "vendor": "cisco",
     "model": "",
@@ -3685,114 +673,9 @@
     "hostname": ""
   },
   "config": {
-    "file": "fw3.cfg",
+    "file": "switch1.conf",
     "lines": 13,
-    "object": ".objects/fw3.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw1.cfg",
-    "lines": 17,
-    "object": ".objects/fw1.list"
-  }
-}
- ]]
-+ false
-+ printf ,
-+ printf ' "%s": { "devices": ' misc
-+ print '{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw3.cfg",
-    "lines": 13,
-    "object": ".objects/fw3.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw1.cfg",
-    "lines": 17,
-    "object": ".objects/fw1.list"
-  }
-}
-'
-+ jq -s .
-+ [[ -n {
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw3.cfg",
-    "lines": 13,
-    "object": ".objects/fw3.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw1.cfg",
-    "lines": 17,
-    "object": ".objects/fw1.list"
-  }
-}
- ]]
-+ echo -en '{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw3.cfg",
-    "lines": 13,
-    "object": ".objects/fw3.list"
-  }
-}
-{
-  "specs": {
-    "vendor": "cisco",
-    "model": "",
-    "version": "",
-    "domain": "",
-    "hostname": ""
-  },
-  "config": {
-    "file": "fw1.cfg",
-    "lines": 17,
-    "object": ".objects/fw1.list"
+    "object": ".objects/switch1.conf.list"
   }
 }
 '

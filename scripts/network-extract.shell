@@ -115,7 +115,10 @@ function serialize_objects () {
 
     ## Extract target IP address from path like: reports/10.0.2.3/cisco/...
     local search_pattern;
-    search_pattern="$( echo "${extract_location}" | cut -d'/' -f2 )";
+    search_pattern="$(
+      echo "${extract_location}" | \
+      cut -d'/' -f2
+    )";
 
     mkdir -p "${parent_dir}/.objects" || return 100;
 
@@ -181,14 +184,14 @@ function serialize_objects () {
                     }
 
                     # Add 'next' to block
-                    /^ next$/ {
+                    /^[[:space:]]*next$/ {
                       blk = blk divisor " " $0;
                       next;
                     }
 
                     # Finalize block at 'end'
-                    /^end$/ {
-                      blk = blk divisor " " $0;
+                    /^[[:space:]]*end$/ {
+                      blk = blk divisor $0;
                       if (blk != "" && !seen[blk]++) print blk;
                       blk = "";
                       next;
@@ -204,7 +207,18 @@ function serialize_objects () {
                     }
                   ' "${extract_location}";
         ;;
-        *)  warning "Unsupported platform: ${target_platform}" >&2
+        # *)  warning "Unsupported platform: ${target_platform}" >&2
+        *)
+            local warning_file="${console_location}/warnings.console";
+            {
+              newline;
+              message "Unsupported platform for extraction:";
+              message "  - IP Address  : ${search_pattern}";
+              message "  - Config File : ${extract_location}";
+              message "  - Platform    : ${target_platform:-unknown}";
+              newline;
+            } >> "${warning_file}";
+            # return 99;
         ;;
       esac;
 

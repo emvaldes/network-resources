@@ -1,0 +1,142 @@
+#!/usr/bin/env bash
+
+## -------------------------------------------------------------------------- ##
+## File: scripts/network-extract.shell
+##
+## Purpose:
+##   Extracts targeted configuration blocks from vendor-native network
+##   configuration files (e.g., Cisco, Fortinet) using platform-specific
+##   AWK reducers. Designed for use as a high-speed preprocessing engine.
+##
+## Overview:
+##   - Accepts a config file and a search pattern (IPs, names, etc).
+##   - Detects platform automatically (or accepts it via --platform).
+##   - Dispatches to: ./scripts/extract/<vendor>-configs.awk
+##   - Outputs reduced config to file (--extract) or to console (--console).
+##   - Fully traceable via verbose logs.
+##
+## Usage:
+##   bash ./scripts/network-extract.shell \
+##     --search=10.0.0.1 \
+##     --config=configs/fw-1.cfg \
+##     --extract=./tmp/fw1-reduced.cfg \
+##     [--platform=cisco|fortinet] \
+##     [--console] \
+##     [--verbose]
+##
+## Requirements:
+##   - Bash v4+, GNU awk, grep, sed
+##   - ./scripts/extract/<vendor>-configs.awk must exist
+##
+## Notes:
+##   - Never embed vendor-specific parsing logic in this script.
+##   - This script is called by network-configs.shell as a subroutine.
+##   - Designed for compatibility with JSON-ready parsing workflows.
+##
+## -------------------------------------------------------------------------- ##
+
+set -euo pipefail  ## Strict mode: exit on error, undefined var use, and pipeline failure
+# set -x;          ## Enable for execution tracing/debugging
+
+## POSIX locale standard
+export LC_ALL=C   ## Ensure consistent sorting and character handling (POSIX-compliant)
+
+# Create a secure, temporary working directory (auto-cleaned at script exit)
+export TMP_DIR="$( mktemp -d )";
+trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT;
+
+export nl="\n";
+
+#------------------------------------------------------------------------------#
+
+## Load common utility functions (logging, platform detection, etc.)
+source ./scripts/devops-resources.shell;
+
+## Load common or function-based helping modules
+source ./scripts/devops-helpers.shell;
+
+## -------------------------------------------------------------------------- ##
+## Function: network-extract :: serialize_objects ()
+##
+## Purpose:
+##   Transforms extracted configuration blocks into a serialized `.list` format
+##   containing only lines and blocks that reference the target IP(s).
+##
+## Overview:
+##   - Operates on a reduced `.cfg` file (output of vendor-specific AWK extraction).
+##   - Detects the platform (Cisco, Fortinet) and applies specialized collapsing rules.
+##   - Strips all metadata (e.g., JSON headers, version lines, hostnames) not tied to
+##     the actual IP match.
+##   - Collapses multi-line configuration blocks into compact one-liner strings,
+##     delimited by a unique encoding token to preserve boundaries.
+##   - Ensures the resulting `.list` file contains only relevant, minimal fragments
+##     to support downstream JSON building, grep-based queries, and visualization.
+##
+## Input:
+##   - ${extract_location}      → Full path to the extracted .cfg file for a single IP
+##   - ${target_platform}       → Detected platform name (e.g., "cisco", "fortinet")
+##   - ${divisor}               → Unique boundary token used to split and rejoin blocks
+##
+## Output:
+##   - Writes serialized content to:
+##       ${reports_location}/<ip-address>/<location>/.objects/<device>.list
+##   - If `--verbose` is enabled, prints the serialized file to the current log stream.
+##
+## Key Behavior:
+##   - **Cisco**: Skips JSON headers and non-matching metadata lines.
+##     Collapses contiguous configuration blocks into delimiter-separated one-liners.
+##   - **Fortinet**: Preserves structural blocks (e.g., `config ... end`) but
+##     collapses `edit ... next` into one-liners tagged with the IP.
+##     Also removes legacy metadata (e.g., `#hostname=`, `config-version=`).
+##
+## Notes:
+##   - This process guarantees that only IP-relevant lines are preserved.
+##   - Acts as a filtering and compression stage before any JSON post-processing.
+##   - Downstream deserialization is optional; one-liner `.list` files are already safe
+##     for grep, explode, and transform workflows.
+##
+## Example:
+##   Input:  ${reports_location}/203.0.113.25/misc/fw3.cfg
+##   Output: ${reports_location}/203.0.113.25/misc/.objects/fw3.list
+##
+## Dependencies:
+##   - Relies on AWK for efficient platform-aware collapsing.
+##   - Must be called after `extract_configs()` has produced the reduced .cfg file.
+## -------------------------------------------------------------------------- ##
+
+function serialize_objects () {
+## ... This function will contain the full serialization logic as described above
+}; alias serialize-object='serialize_objects';
+
+#------------------------------------------------------------------------------#
+
+function main () {
+## .. This is the main entrypoint for the network-extract script
+}; alias parse-cisco='main';
+
+#------------------------------------------------------------------------------#
+
+[[ -z "${script_name+x}" ]] && export script_name="${0}";
+
+export logs_location="logs";
+mkdir -p ${logs_location} 2>/dev/null || true;
+
+script_filename="${BASH_SOURCE[0]##*/}";
+script_filename="${script_filename%.*}";
+
+export network_extract__console="${console_location}/${script_filename}.console";
+touch "${network_extract__console}" || {
+  warning "Failed to create console log file: ${network_extract__console}";
+  network_extract__console="/dev/null";
+};
+
+#------------------------------------------------------------------------------#
+
+if [[ ${#@} -eq 0 || "${1,,}" =~ ^-*(h|help)$ ]]; then
+        main --help ;
+  else  main "${@}";
+        result=${?}; exit ${result};
+        ## newline; message "Done."; newline;
+fi;
+
+#------------------------------------------------------------------------------#

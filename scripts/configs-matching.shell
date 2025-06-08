@@ -117,7 +117,7 @@ function configs_matching () {
         if [[ -s "${target_config}" && -f "${target_config}" ]]; then
           message "Completed Configuration Targets (IP): ${target_config}";
           jq -r . "${target_config}" || warning "Invalid JSON: ${target_config}";
-          newline;
+          # newline;
         fi;
       done;
     } >> "${configs_matching__console}";

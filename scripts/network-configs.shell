@@ -558,13 +558,13 @@ function main () {
     ## Collecting all background-jobs console outputs
     {
       for pid in "${!extract_jobs2cfg_mapping[@]}"; do
-        logger="${extract_jobs2cfg_mapping[${pid}]}";
-        console="${TMP_DIR}/${logger}.console";
+        local logger="${extract_jobs2cfg_mapping[${pid}]}";
+        local console="${TMP_DIR}/${logger}.console";
         if [[ -s "${console}" && -f "${console}" ]]; then
           cat "${console}";
         fi;
       done;
-    } >> "${network_configs__console}";
+    } >> "${network_configs__console:-/dev/null}";
 
     #### -----------------------------------------------------------------------
     if [[ "${verbose}" == true ]]; then

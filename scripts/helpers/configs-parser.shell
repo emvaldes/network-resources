@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+
+## File: scripts/configs-parser.shell
+
+## Purpose: Consolidated extraction function per official execution plan.
+
+## Prevent re-sourcing and ensure one-time initialization
+if [[ -n "${__CONFIGS_PARSER_SOURCED:-}" ]]; then return 0; fi;
+readonly __CONFIGS_PARSER_SOURCED=1;
+
+## -------------------------------------------------------------------------- ##
+## Function: configs-parser :: configs_extract ()
+##
+## Purpose:
+##   Parses a given configuration file, extracts all objects containing a target IP,
+##   and writes structured per-object metadata into a JSON fragments file.
+##
+## Inputs:
+##   $1 = Full path to the configuration file
+##   $2 = Target IP address (used as search pattern)
+##   $3 = JSON fragments output file (collector for wrapped objects)
+##   $4 = Unused (was originally a named array output; logic now internalized)
+##
+## Workflow:
+##   - Reads and sanitizes the full config file (removes blank lines, comments, etc.)
+##   - Splits config into logical blocks (using `${divisor}` as the delimiter)
+##   - Restores the blocks into newline-separated format
+##   - Filters blocks containing the target IP
+##   - Writes matched config blocks to `${reports_location}/<ip>/<site>/<device>.<ext>`
+##   - Processes each matched block with `process_configs` to extract metadata
+##   - Wraps extracted objects under `{ site, device, objects[] }` structure
+##   - Appends each structured result to the final JSON fragment output file
+##
+## Output:
+##   - Structured per-config JSON entries written to $3
+##   - Raw matched blocks written to `${reports_location}/<ip>/<site>/<device>.<ext>`
+##
+## Notes:
+##   - Duplicate blocks are skipped via flat-string comparison.
+##   - Preserves traceability and grouping by site/device.
+##   - Designed to run synchronously per config file, called from `parse-configs`.
+## -------------------------------------------------------------------------- ##
+
+function configs_extract () {
+## ... This function will contain the full extraction logic as described above
+}; alias extract-configs='configs_extract';
+
+## -------------------------------------------------------------------------- ##
+## Function: configs-parser :: process_configs ()
+##
+## Purpose:
+##   Analyzes a single configuration block that matched a target IP.
+##   Extracts structured metadata and builds a normalized JSON object
+##   for inclusion in the per-config object set.
+##
+## Inputs:
+##   $1 = Target IP (used as match pattern)
+##   $2 = Full path to the source configuration file (for context only)
+##   $3 = Restored configuration block (newline-separated)
+##
+## Output:
+##   - Exports `target_object` as a JSON-formatted Bash variable for upstream collection
+##     (usually by `configs_extract()`).
+##
+## Structure of output JSON:
+##   {
+##     "object": "<first keyword>",
+##     "type": "<object type or false>",
+##     "partner": "<non-IP name from 'type'>",
+##     "description": "<first matched description or false>",
+##     "items": [ "<lines matching target IP>" ],
+##     "sets": { "<first-token>": count, ... },
+##     "group": "<classification label or 'Unclassified'>"
+##   }
+##
+## Behavior:
+##   - Sanitizes and parses the block into components.
+##   - Extracts lines relevant to the target IP (`items[]`).
+##   - Counts command keywords for `sets{}` mapping.
+##   - Parses descriptions, object names, and classifies the entry via matrix.
+##   - Avoids duplication or incorrect grouping by delegating output to caller.
+##
+## Notes:
+##   - Skips blocks with no IP match.
+##   - If classification is enabled, assigns the best-fit group from matrix.json.
+##   - Does not write to file directly — upstream function handles final wrapping.
+## -------------------------------------------------------------------------- ##
+
+function process_configs () {
+## ... This function will contain the full processing logic as described above
+}; alias process-configs='process_configs';
+
+#------------------------------------------------------------------------------#

@@ -1,0 +1,266 @@
+#!/usr/bin/env bash
+
+## File: scripts/devops-resources.shell
+
+## Purpose: Sharing common features across scripts.
+##          Utility library of shared shell functions and environment exports
+##    Note: Used by both parse-listings.shell and parse-configs.shell
+
+## Prevent re-sourcing and ensure one-time initialization
+if [[ -n "${__DEVOPS_RESOURCES_SOURCED:-}" ]]; then return 0; fi;
+declare -gr __DEVOPS_RESOURCES_SOURCED=1
+
+## Require Bash 4.0+ for associative array support (only runs once)
+if [[ "${BASH_VERSINFO[0]}" -lt 4 ]]; then
+  echo "Error: Bash 4.0 or newer is required. Current version: ${BASH_VERSINFO[*]}";
+  exit 1;
+fi;
+
+#------------------------------------------------------------------------------#
+
+function detect_vendor () {
+## ... Detects the vendor of the current system based on the OS type.
+}; alias detect-vendor='detect_vendor';
+
+#------------------------------------------------------------------------------#
+
+## Exit script with error message and exit code
+function exit_error () {
+## ... Ensure an error message is provided
+}; alias exit-error='exit_error';
+
+## -------------------------------------------------------------------------- ##
+## Function: list_file ()
+##
+## Purpose:
+##   Prints detailed file metadata in a human-readable format,
+##   adapted to work across macOS, Linux, and WSL environments.
+##
+## Input:
+##   $1 = Path to the file to inspect
+##
+## Behavior:
+##   - Skips if input is empty or the file does not exist.
+##   - Outputs:
+##       - Name and parent directory
+##       - Size, inode, block count
+##       - File permissions (mode), owner UID/GID
+##       - Timestamps: Access, Modify, Change
+##   - Uses `stat -f` on macOS and `stat --format` on Linux/WSL.
+##
+## Notes:
+##   - Only runs when `$debug` is set to true.
+##   - Output is portable but may vary slightly by platform.
+##   - Intended for internal diagnostics and trace logging.
+## -------------------------------------------------------------------------- ##
+
+function list_file () {
+## ... This function will contain the full file listing logic as described above
+}; alias list-file='list_file';
+
+#------------------------------------------------------------------------------#
+
+## Logging Utilities: Log Errors
+function log_error () {
+## ... Ensure an error message is provided
+}; alias log-error='log_error';
+
+#------------------------------------------------------------------------------#
+
+## Logging Utilities: Log Information (info)
+function log_info () {
+## ... Ensure an info message is provided
+}; alias log-info='log_info';
+
+#------------------------------------------------------------------------------#
+
+## Logging Utilities: Log Warnings
+function log_warn () {
+## ... Ensure a warning message is provided
+}; alias log-warn='log_warn';
+
+#------------------------------------------------------------------------------#
+
+## Output Utilities: Print an error message in consistent format
+function message () {
+## ... Ensure a message is provided
+}; alias print-message='message';
+
+#------------------------------------------------------------------------------#
+
+## Output Utilities: Print N newlines (default: 1)
+function newline () {
+## ... Ensure a count is provided, default to 1 if not
+}; alias print-newline='newline';
+
+## -------------------------------------------------------------------------- ##
+## Function: pause ()
+##
+## Purpose:
+##   Pauses script execution for a given number of seconds,
+##   with the ability to resume early by pressing the SPACE key.
+##
+## Input:
+##   $1 = Number of seconds to pause
+##
+## Behavior:
+##   - Displays a message indicating the sleep duration
+##   - Monitors for keyboard input in raw mode
+##   - If SPACE is pressed, resumes immediately
+##   - Otherwise sleeps in 1-second increments until duration expires
+##
+## Notes:
+##   - Uses `stty` to set non-blocking, silent terminal input
+##   - Restores terminal settings after use
+##   - Designed for use in interactive debug or staging modes
+## -------------------------------------------------------------------------- ##
+
+function pause () {
+## ... Ensure a sleep duration is provided
+}; alias pause='pause';
+
+#------------------------------------------------------------------------------#
+
+## Output Utilities: Print a message without newline unless specified
+function print () {
+## ... Ensure a message is provided
+}; alias print-line='print';
+
+## -------------------------------------------------------------------------- ##
+## Function: print_file ()
+##
+## Purpose:
+##   Displays the contents of a given file with optional formatting based on file type.
+##
+## Input:
+##   $1 = Path to the file to be printed
+##
+## Behavior:
+##   - Skips execution if:
+##       - No argument is provided
+##       - The target file does not exist
+##       - The `debug` flag is not enabled
+##   - Uses syntax-aware formatting:
+##       - For .json files → pretty-prints via `jq`
+##       - For .yaml/.yml files → pretty-prints via `yq`
+##       - For all others → raw `cat` output
+##   - Gracefully falls back to `cat` if `jq` or `yq` fails
+##
+## Notes:
+##   - Intended for debug visibility during execution
+##   - Adds a trailing newline after content for readability
+##   - Quietly handles errors if the file is malformed or the formatter fails
+## -------------------------------------------------------------------------- ##
+
+function print_file () {
+## ... Ensure a target file is provided
+}; alias print-file='print_file';
+
+## -------------------------------------------------------------------------- ##
+## Function: relative_configpath ()
+##
+## Purpose:
+##   Normalizes a full configuration file path by removing the configured base path prefix.
+##
+## Input:
+##   $1 = Full absolute or relative path to a config file
+##
+## Behavior:
+##   - Removes `${configs_dirpath}/` from the beginning of the path, if present
+##   - Returns the relative portion (e.g., `cisco/fw1.cfg`)
+##
+## Output:
+##   Prints the relative path to stdout
+##
+## Notes:
+##   - Uses trailing slash normalization to avoid double-slash issues
+##   - Used to extract `site` and `device` identifiers from matched config paths
+## -------------------------------------------------------------------------- ##
+
+function relative_configpath () {
+## ... Ensure a full path is provided
+}; alias relative-configpath='relative_configpath';
+
+#------------------------------------------------------------------------------#
+
+function system_metrics () {
+## ... Collects and displays system metrics such as uptime, load averages, CPU cores, memory, and disk usage.
+}; alias system-metrics='system_metrics';
+
+## -------------------------------------------------------------------------- ##
+## Function: validate_address ()
+##
+## Purpose:
+##   Validates and normalizes an IP address or CIDR block string stored in $target_address.
+##
+## Behavior:
+##   - Accepts standard IPv4 addresses (e.g., 192.168.1.10) and CIDR notation (e.g., 10.0.0.0/24)
+##   - Validates that each octet is within the range 0–255
+##   - If a CIDR is present, ensures it's a valid netmask (0–32)
+##   - Strips leading zeroes and whitespace from each segment
+##   - Reconstructs and updates $target_address with a normalized format
+##   - If CIDR is present and not /32, prompts user to confirm continuation
+##
+## Inputs:
+##   - Uses global: `target_address`
+##
+## Output:
+##   - Normalized IP is reassigned to `target_address` if valid
+##   - Returns:
+##       0 → valid IP or CIDR
+##       3 → invalid CIDR format
+##       4 → invalid IP segment
+##       5 → user aborted due to CIDR confirmation
+##       6 → invalid IP format
+##
+## Notes:
+##   - Silent on success unless `verbose` or `debug` is true
+##   - Uses `BASH_REMATCH` from regex to extract IP segments
+##   - Designed for use in scripts parsing and classifying network blocks
+## -------------------------------------------------------------------------- ##
+
+function validate_address () {
+## ... Ensure target_address is set
+}; alias validate-address='validate_address';
+
+#------------------------------------------------------------------------------#
+
+## Output Utilities: Print an error message in consistent format
+function warning () {
+## ... Ensure a message is provided
+}; alias warning-message='warning';
+
+#------------------------------------------------------------------------------#
+
+## POSIX locale standard
+export LC_ALL=C;
+export nl="\n";
+
+export default_addresses="ips.list";
+export default_devices="devices.list";
+export default_matrix="matrix.json";
+
+export cache_location=".cache";
+
+export logs_location="logs";
+mkdir -p ${logs_location} 2>/dev/null || true;
+
+export jobs_location="jobs";
+mkdir -p ${jobs_location} 2>/dev/null || true;
+
+export console_location="console";
+mkdir -p ${console_location} 2>/dev/null || true;
+
+export actions_logfile="${console_location}/run.console";
+touch "${actions_logfile}" 2>/dev/null || true;
+
+export targets_location="targets";
+export targets_logfile="${cache_location}/targets.jobs";
+
+export divisor="--$(
+  echo -n "$( basename "${BASH_SOURCE[0]}" )" | \
+  base64 | \
+  tr -dc 'a-zA-Z0-9'
+)--";  ## message "DEBUG: divisor = '${divisor}'";
+
+#------------------------------------------------------------------------------#

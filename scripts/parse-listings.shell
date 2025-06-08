@@ -29,11 +29,15 @@ trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT;
 
 #------------------------------------------------------------------------------#
 
-## devops-resources [ ... ]
-## configs-matching [ matching-configs -> generate_configslist ]
-## configs-manager  [ manage_configs -> parse_configs ]
-## configs-export   [ generate_csvoutput ]
-## configs-parser   [ configs_parser -> extract_configs -> process_configs ]
+## parse-listings.shell
+## devops-resources.shell [ ... ]
+## devops-helpers.shell   [ ... ]
+## network-configs.shell  [ main() ]
+## network-extract.shell  [ main() -> serialize_objects() ]
+## configs-matching.shell [ configs_matching() -> configs_targets() ]
+## configs-manager.shell  [ configs_manager() -> configs_parser() ]
+## configs-parser.shell   [ configs_extract() -> configs_obj2json ]
+## configs-export.shell   [ generate_csvoutput ]
 
 #------------------------------------------------------------------------------#
 
@@ -769,9 +773,11 @@ function main () {
     ## Collecting all background-jobs console outputs
     {
       for pid in "${!configs_jobs2ips_mapping[@]}"; do
-        ip_address="${configs_jobs2ips_mapping[${pid}]}"
-        job_log="${TMP_DIR}/${network_configs__logfile}--${ip_address}.console"
-        [[ -s "${job_log}" ]] && cat "${job_log}"
+        local ip_address="${configs_jobs2ips_mapping[${pid}]}"
+        local console="${TMP_DIR}/${network_configs__logfile}--${ip_address}.console"
+        if [[ -s "${console}" && -f "${console}" ]]; then
+          cat "${console}";
+        fi;
       done
     } >> "${network_configs__console}";
 
@@ -783,7 +789,7 @@ function main () {
       } >> "${actions_logfile:-/dev/null}";
     fi;
 
-#### Starting: Batch-Processing - Superset Loop --------------------------- ####
+    #### Starting: Batch-Processing - Superset Loop ----------------------- ####
 
     #### -----------------------------------------------------------------------
     ip_batch_size=10;  ## Adjust as needed for system capacity
@@ -867,7 +873,7 @@ function main () {
 
     done;
 
-#### Completed: Batch-Processing - Superset ------------------------------- ####
+    #### Completed: Batch-Processing - Superset ----------------------------- ####
 
     #### -----------------------------------------------------------------------
     if [[ "${verbose}" == true && -s "${output_csv}" ]]; then

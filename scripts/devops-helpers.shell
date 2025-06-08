@@ -45,8 +45,34 @@ fi;
 
 function parse_listings__helper () {
 
-    local script_name="${1}";
-    local mode="${2}";
+    ## tracking_process ${FUNCNAME} "${@}";
+    oIFS="${IFS}";
+
+    ## Process command-line arguments and map them to local variables
+    for xitem in "${@}"; do
+      IFS='=' read -r key value <<< "$(
+        echo -e "${xitem}" | sed -e '1s|^\(-\)\{1,\}||'
+      )"; #echo -e "\nxitem: '${xitem}'\nkey: '${key}'\t->\tvalue: '${value}'";
+
+      #### ---------------------------------------------------------------------
+      ## Match accepted arguments
+      [[ $key =~ ^(mode|m)$ ]] && local script_mode="${value}";
+      [[ $key =~ ^(script|s)$ ]] && local script_name="${value}";
+
+      #### ---------------------------------------------------------------------
+      ## Special options
+      [[ $key == "debug" ]] && local debug=true;
+      [[ $key == "dry-run" ]] && local dry_run=true;
+      [[ $key == "verbose" ]] && local verbose=true;
+
+    done; IFS="${oIFS}";
+
+    #### -----------------------------------------------------------------------
+    ## Set default values if not supplied
+    [[ -z ${debug:-} ]] && debug=false;
+    [[ -z ${dry_run:-} ]] && dry_run=false;
+    [[ -z ${verbose:-} ]] && verbose=false;
+
     local -a help_lines=();
     local indent="    ";
     local padding="$( printf '%*s' ${#script_name} ' ' )";
@@ -65,7 +91,7 @@ function parse_listings__helper () {
     help_lines+=( "  -v, --validate     Validating IP/CIDR Block addresses" );
 
     ## Script-Specific Options
-    case "${mode}" in
+    case "${script_mode}" in
       listings )
 
         help_lines+=( "  -b, --batch-size   Define a batch cycle-processing limit (configs set)" );
