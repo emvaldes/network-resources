@@ -25,6 +25,20 @@
         },
         {
           "object": "interface",
+          "type": "GigabitEthernet0/0",
+          "partner": false,
+          "description": "External Internet-facing Interface",
+          "items": [
+            "ip address 203.0.113.25 255.255.255.0"
+          ],
+          "others": [
+            "nameif outside",
+            "security-level 0"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "interface",
           "type": "GigabitEthernet0/1",
           "partner": false,
           "description": "Internal Network Interface",
@@ -35,6 +49,17 @@
             "nameif inside",
             "security-level 100"
           ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network",
+          "partner": "NAT-Edge",
+          "description": "Internet-bound IP NAT",
+          "items": [
+            "host 203.0.113.25"
+          ],
+          "others": [],
           "group": "Unclassified"
         }
       ]
@@ -57,6 +82,17 @@
           "description": "Main node at Stark Tower",
           "items": [
             "set subnet 10.0.0.1 255.255.255.255"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": "Public-Test",
+          "description": "Public NAT exposure for Red Skull trap",
+          "items": [
+            "set subnet 203.0.113.25 255.255.255.255"
           ],
           "others": [],
           "group": "Unclassified"

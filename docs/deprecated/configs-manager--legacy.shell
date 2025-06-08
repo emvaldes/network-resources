@@ -1,0 +1,711 @@
+#!/usr/bin/env bash
+
+## File: scripts/configs-manager.shell
+
+## Prevent re-sourcing and ensure one-time initialization
+if [[ -n "${__CONFIGS_MANAGE_SOURCED:-}" ]]; then return 0; fi;
+readonly __CONFIGS_MANAGE_SOURCED=1;
+
+## -------------------------------------------------------------------------- ##
+## Function: configs-manager :: configs_manager ()
+##
+## Purpose:
+##   Launches background parsing jobs for a batch of target IPs and monitors completion.
+##
+## Input:
+##   None (uses local array: ${batch_listing[@]})
+##
+## Behavior:
+##   - Spawns a background job for each IP in `batch_listing` using `configs_parser`.
+##   - Tracks each job’s PID and associates it with the corresponding IP.
+##   - Continuously monitors active jobs, filtering out completed ones.
+##   - Waits until all parsing jobs are done before exiting.
+##
+## Logging:
+##   - Logs job start metadata and PID-to-IP mapping to tracking log file.
+##   - Optionally logs job completion (currently commented out).
+##
+## Notes:
+##   - This function is always run synchronously — no nested async logic inside configs_parser.
+##   - Designed to be called once per config batch within inner loop.
+## -------------------------------------------------------------------------- ##
+
+function configs_manager () {
+
+    ## tracking_process ${FUNCNAME} "${@}";
+    oIFS="${IFS}";
+
+    ## Process command-line arguments and map them to local variables
+    for xitem in "${@}"; do
+
+      IFS='=' read -r key value <<< "$(
+        echo -e "${xitem}" | sed -e '1s|^\(-\)\{1,\}||'
+      )"; #echo -e "\nxitem: '${xitem}'\nkey: '${key}'\t->\tvalue: '${value}'";
+
+      #### ---------------------------------------------------------------------
+      ## Match accepted arguments
+      if [[ $key =~ ^(listing|l)$ ]]; then
+        IFS=' ' read -r -a batch_listing <<< "${value}";
+        if [[ "${verbose}" == true ]]; then
+          {
+            message "[DEBUG] Received ${#batch_listing[@]} IPs in batch_listing:";
+            for ip in "${batch_listing[@]}"; do
+              message " - ${ip}";
+            done;
+          } ## >> "${configs_manager__console:-/dev/null}";
+        fi;
+      fi;
+
+      #### ---------------------------------------------------------------------
+      ## Special options
+      [[ $key == "debug" ]] && export debug=true;
+      [[ $key == "dry-run" ]] && local dry_run=true;
+      [[ $key == "verbose" ]] && export verbose=true;
+
+    done; IFS="${oIFS}";
+
+    #### -----------------------------------------------------------------------
+    ## Set default values if not supplied
+    [[ -z ${debug:-} ]] && export debug=false;
+    [[ -z ${dry_run:-} ]] && dry_run=false;
+    [[ -z ${verbose:-} ]] && export verbose=false;
+
+    #### -----------------------------------------------------------------------
+    local configs_parser__script="configs-parser";
+
+    declare -a parser_jobs_pid=();          ## Array to hold the PIDs of background jobs
+    declare -A parser_jobs2ips_mapping=();  ## Associative array to map PIDs to IPs
+
+    ip_index=0;
+    local total_ips=${#batch_listing[@]};
+
+    #### -----------------------------------------------------------------------
+    mkdir -p "${jobs_location}" 2>/dev/null || true;
+
+    while (( ip_index < total_ips )); do
+
+      ip_address="${batch_listing[ip_index++]}";
+      padded_index="$(
+        printf "%0${#total_ips}d" "${ip_index}"
+      )";
+
+      local configs_parser__logger="${TMP_DIR}/${configs_parser__script}--${ip_address}";
+      : > "${configs_parser__logger}";
+
+      declare -a execute__configs_parser=(
+        configs_parser
+        --configs="${reports_location}/${ip_address}"
+        --index="${padded_index}"
+        --ip-addr="${ip_address}"
+        --logger="${configs_parser__logger}.console"
+        --matrix="${matrix_filename}"
+        --reports="${reports_location}"
+      );
+
+      [[ "${classify_targets}" == true ]] && execute__configs_parser+=( --classify );
+      [[ "${validate_address}" == true ]] && execute__configs_parser+=( --validate );
+
+      [[ "${verbose}" == true ]] && execute__configs_parser+=( --verbose );
+      [[ "${verbose}" == true ]] && execute__configs_parser+=( --debug );
+
+      #### -----------------------------------------------------------------------
+      ## Execute and propagate exit status
+      if [[ "${verbose}" == true ]]; then
+        {
+          message "Parsing Configs: [ ${ip_address} ]";
+          for parameter in "${execute__configs_parser[@]}"; do
+            message "\t\t${parameter}";
+          done;
+          newline;
+        } ## >> "${configs_manager__console:-/dev/null}";
+      fi;
+
+      (
+
+        local status=0;
+        local module_logfile="${jobs_location}/${configs_parser__script}/${ip_address}.job";
+
+        mkdir -p $( dirname "${module_logfile}" ) 2>/dev/null || true;
+        :> "${module_logfile}";  ## Clear the log file if it exists
+        "${execute__configs_parser[@]}" >> "${module_logfile:-/dev/null}" 2>&1;
+
+        if (( status != 0 )); then
+                {
+                  warning "Failed to process IP [ ${ip_address} ] configs :: exit ${status}";
+                } >> "${configs_manager__console:-/dev/null}";
+          else  {
+                  message "Parsed IP Address: [ ${ip_address} ] configs :: exit ${status}";
+                } >> "${configs_manager__console:-/dev/null}";
+        fi;
+
+      ) &
+
+      local job_pid=$!;
+      parser_jobs_pid+=( "${job_pid}" );
+      parser_jobs2ips_mapping["${ip_address}::${job_pid}"]="${ip_address}";
+
+    done;
+
+    #### -----------------------------------------------------------------------
+    ## Wait for all jobs to finish
+
+    # while (( ${#parser_jobs_pid[@]} > 0 )); do
+    #   local valid_parser_jobs_pid=();
+    #   for pid in "${parser_jobs_pid[@]}"; do
+    #     if ! kill -0 "${pid}" 2>/dev/null; then
+    #             ## Job finished — no action here
+    #             logger="${parser_jobs2ips_mapping[$pid]}";
+    #       else  valid_parser_jobs_pid+=( "${pid}" );
+    #     fi;
+    #   done;
+    #   parser_jobs_pid=( "${valid_parser_jobs_pid[@]}" );
+    #   sleep "${delaying_factor}";
+    # done;
+
+    while (( ${#parser_jobs_pid[@]} > 0 )); do
+      local valid_parser_jobs_pid=();
+      for pid in "${parser_jobs_pid[@]}"; do
+        if ! kill -0 "${pid}" 2>/dev/null; then
+                #### -------------------------------------------------------------------
+                ## Attempt to resolve IP from mapping using key suffix
+                logger="";
+                for key in "${!parser_jobs2ips_mapping[@]}"; do
+                  if [[ "$key" == *"::${pid}" ]]; then
+                    logger="${parser_jobs2ips_mapping[$key]}";
+                    [[ "${verbose}" == true ]] && {
+                      message "[DEBUG] Matched PID ${pid} to IP '${logger}' via key '${key}'";
+                    } >> "${configs_manager__console:-/dev/null}";
+                    break;
+                  fi;
+                done;
+                if [[ -z "${logger}" && "${verbose}" == true ]]; then
+                  message "[WARN] Could not resolve logger key for PID ${pid}";
+                fi;
+          else  valid_parser_jobs_pid+=( "${pid}" );
+        fi;
+      done;
+      parser_jobs_pid=( "${valid_parser_jobs_pid[@]}" );
+      sleep "${delaying_factor}";
+    done;
+
+    # #### -----------------------------------------------------------------------
+    # if [[ "${verbose}" == true ]]; then
+    #   {
+    #     newline;
+    #     message "Background Jobs -> Managed Configs:";
+    #     message "PID   | IP Address (${#parser_jobs2ips_mapping[@]})";
+    #     message "-------------------------";
+    #     for pid in "${!parser_jobs2ips_mapping[@]}"; do
+    #       printf "%-5s | %s\n" "${pid}" "${parser_jobs2ips_mapping[$pid]}";
+    #     done;
+    #     newline;
+    #   } ## >> "${configs_manager__console:-/dev/null}";
+    # fi;
+    #### -----------------------------------------------------------------------
+    if [[ "${verbose}" == true ]]; then
+      {
+        newline;
+        message "Background Jobs -> Managed Configs:";
+        message "PID             | IP Address ( ${#parser_jobs2ips_mapping[@]} total )";
+        message "----------------+---------------------------";
+        for key in "${!parser_jobs2ips_mapping[@]}"; do
+          ip_address="${parser_jobs2ips_mapping[${key}]}";
+          printf "%-15s | %s\n" "${key}" "${ip_address}";
+        done;
+        newline;
+      } ## >> "${configs_manager__console:-/dev/null}";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Collecting all background-jobs console outputs
+
+    # {
+    #   for pid in "${!parser_jobs2ips_mapping[@]}"; do
+    #     ip_address="${parser_jobs2ips_mapping[${pid}]}";
+    #     parser_config="${reports_location}/${ip_address}.json";
+    #     if [[ -s "${parser_config}" && -f "${parser_config}" ]]; then
+    #       message "Completed Background Jobs (Managed Configs): ${parser_config}";
+    #       jq -r . "${parser_config}" || warning "Invalid JSON: ${parser_config}";
+    #       newline;
+    #     fi;
+    #   done;
+    # } ## >> "${configs_manager__console}";
+    {
+      message "[DEBUG] Collecting outputs from parser_jobs2ips_mapping (${#parser_jobs2ips_mapping[@]} entries)";
+      for key in "${!parser_jobs2ips_mapping[@]}"; do
+        ip_address="${parser_jobs2ips_mapping[$key]}";
+        job_pid="${key##*::}";
+        parser_config="${reports_location}/${ip_address}.json";
+        if [[ -s "${parser_config}" && -f "${parser_config}" ]]; then
+                message "[OK] Completed job for ${ip_address} (PID: ${job_pid}) → ${parser_config}";
+                jq -r . "${parser_config}" || warning "Invalid JSON for ${ip_address}: ${parser_config}";
+          else  warning "[MISSING] No output found for ${ip_address} (PID: ${job_pid})";
+        fi;
+        newline;
+      done;
+    } >> "${configs_manager__console}";
+
+    return 0;
+}; alias configs-manager='configs_manager';
+
+## -------------------------------------------------------------------------- ##
+## Function: configs-manager :: configs_parser ()
+##
+## Purpose:
+##   Main entrypoint for per-IP parsing pipeline. Replaces `parse-configs.shell`.
+##   Drives the full parsing lifecycle from argument handling to report generation.
+##
+## Responsibilities:
+##   - Parses CLI arguments and applies defaults for configs, reports, and matrix
+##   - Extracts relevant config paths for a given target IP
+##   - Validates input files and structures
+##   - Applies grouping/classification (if enabled) via matrix matching
+##   - Executes `configs_extract()` to collect relevant config blocks
+##   - Deduplicates and merges structured JSON objects per IP
+##   - Stores final output under `${reports_location}/<ip>/<ip>.json`
+##
+## Input Parameters (as key=value args):
+##   - ip-addr      : IP address to process (required)
+##   - configs      : Path to configuration root folder (default: ./configs)
+##   - reports      : Path to write output JSON (default: ./reports)
+##   - matrix       : Translation matrix for classification (optional)
+##   - index        : Optional ID used for per-IP processing context
+##   - validate     : Enables IP format validation before proceeding
+##   - classify     : Enables matrix-based group classification
+##   - verbose/debug/dry-run/help/logs : Optional behavior toggles
+##
+## Output:
+##   - Structured per-IP JSON report at ${reports_location}/<ip>/<ip>.json
+##   - Temp fragments, logs, and debug traces under ${TMP_DIR}
+##
+## Notes:
+##   - Replaces standalone script `parse-configs.shell` with fully modular logic
+##   - Compatible with batch systems that expect this function to be run in parallel
+## -------------------------------------------------------------------------- ##
+
+function configs_parser () {
+
+    ## tracking_process ${FUNCNAME} "${@}";
+    oIFS="${IFS}";
+
+    ## Process command-line arguments and map them to local variables
+    for xitem in "${@}"; do
+
+      IFS='=' read -r key value <<< "$(
+        echo -e "${xitem}" | sed -e '1s|^\(-\)\{1,\}||'
+      )"; #echo -e "\nxitem: '${xitem}'\nkey: '${key}'\t->\tvalue: '${value}'";
+
+      #### ---------------------------------------------------------------------
+      ## Match accepted arguments
+      [[ $key =~ ^(configs|c)$ ]] && export configs_dirpath="${value}";
+      [[ $key =~ ^(index|n)$ ]] && local target_index="${value}";
+      [[ $key =~ ^(ip-addr|i)$ ]] && local target_address="${value}";
+      [[ $key =~ ^(logger|l)$ ]] && local target_logfile="${value}";
+      [[ $key =~ ^(matrix|m)$ ]] && local matrix_filename="${value}";
+      [[ $key =~ ^(reports|r)$ ]] && local reports_location="${value}";
+      [[ $key =~ ^(classify|g)$ ]] && export classify_targets=true;
+      [[ $key =~ ^(validate|v)$ ]] && local validate_address=true;
+
+      #### ---------------------------------------------------------------------
+      ## Special options
+      [[ $key == "debug" ]] && export debug=true;
+      [[ $key == "dry-run" ]] && local dry_run=true;
+      [[ $key == "verbose" ]] && export verbose=true;
+
+    done; IFS="${oIFS}";
+
+    #### -----------------------------------------------------------------------
+    ## Set default values if not supplied
+    [[ -z ${debug:-} ]] && export debug=false;
+    [[ -z ${dry_run:-} ]] && dry_run=false;
+    [[ -z ${verbose:-} ]] && export verbose=false;
+
+    #### -----------------------------------------------------------------------
+    if [[ -z "${target_logfile:-}" ]]; then
+      local target_logfile="${console_location}/configs-parser.console";
+      touch "${target_logfile}";
+    fi;
+    # touch "${target_logfile}";  ## Clear the log file if it exists
+
+    #### -----------------------------------------------------------------------
+    local configs_extract__logfile="${TMP_DIR}/configs-extract.log";
+    :> "${configs_extract__logfile}";
+
+    #### -----------------------------------------------------------------------
+    [[ -z ${matrix_filename:-} ]] && export matrix_filename="matrix.json";
+    if [[ ! -f "${matrix_filename}" ]]; then
+      if [[ "${verbose}" == true ]]; then
+        {
+          warning "Translation Matrix file '${matrix_filename}' was not found!";
+          newline;
+        } >> "${target_logfile:-/dev/null}";
+      fi;
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Enabling IP/CIDR Blocks Group Classification
+    [[ -z ${classify_targets:-} ]] && export classify_targets=false;
+
+    #### -----------------------------------------------------------------------
+    ## Processing Custom/Default the Translation-Matrix (source):
+    ## Load and validate translation matrix (used for grouping logic)
+
+    if [[ "${classify_targets}" == true ]]; then
+      if [[ ! -f "${matrix_filename}" ]]; then
+              if [[ "${verbose}" == true ]]; then
+                {
+                  warning "Project Source Matrix-Configs file not found: ${matrix_filename}";
+                  newline;
+                } >> "${target_logfile:-/dev/null}";
+              fi;
+              return 7;
+        elif  ! jq -e 'length > 0' "${matrix_filename}" &>/dev/null; then
+              if [[ "${verbose}" == true ]]; then
+                warning "Matrix file is missing, invalid, or empty: ${matrix_filename}";
+                newline;
+              fi;
+              return 8;
+        else  export matrix_configs="$(
+                cat "${matrix_filename}"
+              )";
+      fi;
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Load all source configs from target JSON
+    export configs_dirpath="${configs_dirpath:-configs}";
+
+    #### -----------------------------------------------------------------------
+    ## Custom/Default reports folder:
+    export reports_location="${reports_location:-reports}";
+    
+    #### -----------------------------------------------------------------------
+    ## Presetting Target-Index Marker
+    [[ -z ${target_index:-} ]] && target_index='';
+
+    #### -----------------------------------------------------------------------
+    ## Validating IP Addresses (Skipping?)
+    [[ -z ${validate_address:-} ]] && export validate_address=false;
+
+    local target_configlist_json="${targets_location}/${target_address}.json";
+
+    if [[ ! -f "${target_configlist_json}" ]]; then
+      if [[ "${verbose}" == true ]]; then
+        {
+          warning "Required config list not found: ${target_configlist_json}";
+        } >> "${target_logfile:-/dev/null}";
+      fi;
+      return 3;
+    fi;
+
+    if [[ "${verbose}" == true ]]; then
+      {
+        message "Loading target config list from: ${target_configlist_json}";
+      } >> "${target_logfile:-/dev/null}";
+    fi;
+
+    declare -ga source_configs=();
+    mapfile -t source_configs < <(
+      jq -r '
+        .locations | to_entries[] |
+        .key as $site |
+        .value.devices[] |
+        "\($site)/.objects/\(.config.file | split(".")[0]).list"
+      ' "${target_configlist_json}"
+    );
+
+    #### -----------------------------------------------------------------------
+    if [[ "${verbose}" == true ]]; then
+      {
+        message "Found ${#source_configs[@]} configurations:";
+        newline;
+        for config in "${source_configs[@]}"; do
+          message "  - ${config}";
+        done;
+        newline;
+      } >> "${target_logfile:-/dev/null}";
+    fi;
+
+    ## Target IP Address (required):
+    if [[ -z "${target_address:-}" ]]; then
+            [[ "${debug}" == true ]] && \
+              warning "No IP address provided.";
+            return 2;
+      else  target_address="$(
+              print "${target_address}" | \
+              sed -E 's/[[:space:]]+//g' | \
+              tr -d '\r'
+            )";
+            ## Validating Target-Address (IP/CIDR):
+            if [[ ${validate_address} == true ]]; then
+              validate_address;
+            fi;
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Parallel extraction using background jobs per .list config file
+
+    declare -ga extract_jobs_pid=();
+
+    declare -gA extract_jobs2files_mapping=();     # job_pid → fragment.json path
+    declare -gA extract_jobs2console_mapping=();   # job_pid → logger base path
+
+    local configs_extract__script="configs-extract";
+    local object_fragments="${TMP_DIR}/${target_address}/${configs_extract__script}--fragments.json";
+
+    for config_filename in "${source_configs[@]}"; do
+
+      local cfg_basename="$( basename "${config_filename}" )";
+      local object_fragments_per_file="${TMP_DIR}/${target_address}/fragments--${cfg_basename}--${RANDOM}.json";
+
+      local extract_location="${jobs_location}/${configs_extract__script}/${target_address}";
+      mkdir -p "${extract_location}";
+
+      local logging_filename="${cfg_basename%.*}";
+
+      local configs_extract__console="${console_location}/${configs_extract__script}.console";
+      local configs_extract__logger="${TMP_DIR}/${logging_filename}";
+
+      # message "Configs-Parser -> Configs-Extract (logger): ${configs_extract__logger}.console" \
+      # >> "${configs_extract__console:-/dev/null}";
+
+      (
+
+        configs_extract --config="${config_filename}" \
+                        --search="${target_address}" \
+                        --listing="${target_configlist_json}" \
+                        --output="${object_fragments_per_file}" \
+                        --logger="${configs_extract__logger}.console" \
+        >> "${extract_location}/${logging_filename}.log" 2>&1 ;
+
+      ) &
+
+      local job_pid=$!;
+      extract_jobs_pid+=( "${job_pid}" );
+
+      extract_jobs2files_mapping["${target_address}::${job_pid}"]="${object_fragments_per_file}";
+      extract_jobs2console_mapping["${target_address}::${job_pid}"]="${configs_extract__logger}";
+
+    done
+
+    #### -----------------------------------------------------------------------
+    ## Wait for all jobs to finish
+
+    # while (( ${#extract_jobs_pid[@]} > 0 )); do
+    #   local valid_extract_jobs_pid=();
+    #   for pid in "${extract_jobs_pid[@]}"; do
+    #     if ! kill -0 "${pid}" 2>/dev/null; then
+    #             ## Job finished — no action here
+    #             logger="${extract_jobs2files_mapping[$pid]}";
+    #       else  valid_extract_jobs_pid+=( "${pid}" )
+    #     fi;
+    #   done;
+    #   extract_jobs_pid=( "${valid_extract_jobs_pid[@]}" );
+    #   sleep "${delaying_factor}";
+    # done;
+
+    while (( ${#extract_jobs_pid[@]} > 0 )); do
+      local valid_extract_jobs_pid=();
+      for pid in "${extract_jobs_pid[@]}"; do
+        if ! kill -0 "${pid}" 2>/dev/null; then
+                ## Job finished — find associated file path from mapping
+                for key in "${!extract_jobs2files_mapping[@]}"; do
+                  [[ "${key}" == "${target_address}::${pid}" ]] || continue;
+                  logger="${extract_jobs2files_mapping[$key]}";
+                  break;
+                done;
+                ## You can optionally log or debug here using $logger
+          else  valid_extract_jobs_pid+=( "${pid}" );
+        fi;
+      done;
+      extract_jobs_pid=( "${valid_extract_jobs_pid[@]}" );
+      sleep "${delaying_factor}";
+    done;
+
+    #### -----------------------------------------------------------------------
+    ## Collect all background-job console outputs
+
+    # for pid in "${!extract_jobs2console_mapping[@]}"; do
+    #   console="${extract_jobs2console_mapping[${pid}]}.console";
+    #   [[ -s "${console}" && -f "${console}" ]] && cat "${console}";
+    #   rm -fv "${console}";
+    # done >> "${configs_extract__console:-/dev/null}";
+
+    message ">>> Listing Josb->Console Mapping (extract_jobs2console_mapping): ";
+    for key in "${!extract_jobs2console_mapping[@]}"; do
+      echo "${key} = ${extract_jobs2console_mapping[$key]}";
+    done;
+    for key in "${!extract_jobs2console_mapping[@]}"; do
+      [[ "${key}" == "${target_address}::"* ]] || continue
+      console="${extract_jobs2console_mapping[$key]}.console"
+      ls -al "${console}" && cat -n "${console}";
+      [[ -s "${console}" && -f "${console}" ]] && cat "${console}";
+      rm -fv "${console}";
+    done;
+
+    #### -----------------------------------------------------------------------
+    ## Merge all per-job fragments into unified ${object_fragments}
+    : > "${object_fragments}";
+
+    # for fragment in "${extract_jobs2files_mapping[@]}"; do
+    #   [[ -s "${fragment}" ]] && cat "${fragment}" >> "${object_fragments}";
+    #   rm -f "${fragment}" 2>/dev/null;
+    # done;
+
+    message ">>> Listing Jobs->Files (extract_jobs2files_mapping): ";
+    for key in "${!extract_jobs2files_mapping[@]}"; do
+      echo "${key} = ${extract_jobs2files_mapping[$key]}";
+    done;
+    for key in "${!extract_jobs2files_mapping[@]}"; do
+      [[ "${key}" == "${target_address}::"* ]] || continue;
+      fragment="${extract_jobs2files_mapping[${key}]}"
+      ls -al "${fragment}" && cat -n "${fragment}";
+      [[ -s "${fragment}" ]] && cat "${fragment}" >> "${object_fragments}";
+      rm -fv "${fragment}" 2>/dev/null;
+    done;
+
+    # ls -al "${object_fragments}";
+    # cat -n "${object_fragments}";
+
+    #### -----------------------------------------------------------------------
+    ## Insert diagnostic check here
+    if [[ -s "${object_fragments}" ]]; then
+      if [[ "${verbose}" == true ]]; then
+        {
+          newline;
+          message "Fragment Configuration file: [ ${object_fragments} ]";
+          # print_file "${object_fragments}";
+          jq -s -r '
+                .[] | "\(.site)/\(.device) → \( .objects | length ) objects"
+                ' "${object_fragments}";
+          newline;
+        } ## >> "${configs_extract__console:-/dev/null}";
+      fi;
+    fi;
+
+    # #### -----------------------------------------------------------------------
+    # if [[ "${verbose}" == true ]]; then
+    #   {
+    #     print_file "${configs_extract__console:-/dev/null}";
+    #   } >> "${target_logfile:-/dev/null}";
+    # fi;
+
+    #### -----------------------------------------------------------------------
+    ## Ensure batch output subdirectory exists
+    mkdir -p "${TMP_DIR}/${target_address}";
+
+    ## Create a temporary batch-specific output file for this IP
+    export json_outfile="${TMP_DIR}/${target_address}/${target_address}.json";
+
+    if [[ -s "${object_fragments}" ]]; then
+      {
+        jq  --raw-output \
+            --slurp \
+            --arg ipref "${targets_location}/${target_address}.json" \
+                        '
+                        sort_by( .site, .device ) | 
+                        group_by( .site + "/" + .device )[] as $group | 
+                        "- " + ( $group[0].site + "/" + $group[0].device ) + 
+                        " ( " + ( $group | length | tostring ) + " fragments ) -> " + $ipref, 
+                        ( 
+                          $group[].objects[]? | 
+                          "  • object: " + ( .object // "unknown" ) + 
+                          " ( type: " + ( .type // "n/a" ) + " )" 
+                        ) 
+                        ' "${object_fragments}";
+        newline;
+      } ## >> "${target_logfile:-/dev/null}";
+
+      jq  --slurp \
+          --arg target  "${target_address}" \
+                        '{
+                          target: $target,
+                          configs: (
+                            group_by( .site + "|" + .device ) | map({
+                              site: .[0].site,
+                              device: .[0].device,
+                              specs: .[0].specs,
+                              objects: ( map( .objects[]) | unique )
+                            })
+                          )
+                        }' "${object_fragments}" \
+      > "${json_outfile}";
+
+      # cat -n "${json_outfile}";
+
+      #### ---------------------------------------------------------------------
+      # if [[ "${verbose}" == true ]]; then
+      #   {
+      #     # print_file "${json_outfile}";
+      #     cat -n "${json_outfile}";
+      #     newline;
+      #   } ## >> "${target_logfile:-/dev/null}";
+      # fi;
+
+      #### ---------------------------------------------------------------------
+      ## Merge batch result into persistent output for this IP
+      tmp_merged="$( mktemp )";
+      local final_outfile="${reports_location}/${target_address}/${target_address}.json";
+      mkdir -p "$(
+        dirname "${final_outfile}"
+      )";
+
+      #### ---------------------------------------------------------------------
+      # Objective: Merge logic for per-IP JSON output.
+      # Ensures that if a config (by site/device) already exists, its `.objects` array
+      # is merged with the incoming batch and deduplicated based on composite fields
+      # (.type, .name, .object, .sets). This prevents bloating caused by re-appending
+      # identical blocks across batches or multiple runs.
+
+      local jq_merge_expr=$'{
+        target: .[0].target,
+        configs:
+          (
+            reduce .[].configs[] as $cfg (
+              [];
+              if any( .[]; .site == $cfg.site and .device == $cfg.device )
+                then map(
+                  if .site == $cfg.site and .device == $cfg.device
+                    then .objects = (
+                      ( .objects + $cfg.objects )
+                      | unique_by( .type, .name, .object, ( .sets | tostring ) )
+                    )
+                  else . end
+                )
+              else . + [ $cfg ] end
+            )
+            | sort_by(.site, .device)
+          )
+      }';
+
+      if [[ -f "${final_outfile}" ]]; then
+              jq --slurp "${jq_merge_expr}" \
+                         "${final_outfile}" \
+                         "${json_outfile}" \
+              > "${tmp_merged}";
+        else  jq --slurp "${jq_merge_expr}" \
+                         "${json_outfile}" \
+              > "${tmp_merged}";
+      fi;
+      mv "${tmp_merged}" "${final_outfile}" && \
+      rm -f "${json_outfile}";
+
+      if [[ "${verbose}" == true ]]; then
+        {
+          print "Merged [ targets/${target_address}.json ] → ${final_outfile}";
+          newline 2;
+        } >> "${target_logfile:-/dev/null}";
+      fi;
+
+    fi;
+
+    if [[ "${verbose}" == true ]]; then
+      {
+        print_file "${target_logfile:-/dev/null}";
+      } >> "${actions_logfile:-/dev/null}";
+    fi;
+
+    return 0;
+}; alias configs-parser='configs_parser';
+
+#------------------------------------------------------------------------------#

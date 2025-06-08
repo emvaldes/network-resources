@@ -29,14 +29,48 @@ trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT;
 
 #------------------------------------------------------------------------------#
 
-## parse-listings.shell
-## devops-resources.shell [ ... ]
-## devops-helpers.shell   [ ... ]
-## network-configs.shell  [ main() ]
-## network-extract.shell  [ main() -> serialize_objects() ]
-## configs-matching.shell [ configs_matching() -> configs_targets() ]
-## configs-manager.shell  [ configs_manager() -> configs_parser() ]
-## configs-parser.shell   [ configs_extract() -> configs_obj2json ]
+## parse-listings.shell   [
+##   source: devops-resources.shell
+##           devops-helpers
+##           configs-matching.shell -> configs-targets.shell
+##           configs-manager.shell -> configs-parser.shell -> configs-extract.shell -> configs-obj2json.shell
+##           configs-export.shell
+##   invoke: network-configs.shell
+##           configs-matching()
+##           configs-manager()
+##           configs-export()
+## ]
+
+## network-configs.shell  [
+##   source: devops-resources.shell
+##           devops-helpers
+##   invoke: network-extract.shell
+## ]
+
+## network-extract.shell  [
+##   source: devops-resources.shell
+##           devops-helpers
+##           configs-objects.shell
+##   invoke: ./extract/<vendor>-configs.awk
+## ]
+
+## configs-matching.shell [
+##   source: configs-targets.shell
+##   invoke: configs_matching() -> configs_targets()
+## ]
+
+## configs-manager.shell  [
+##   invoke: configs_manager() -> configs_parser()
+## ]
+
+## configs-parser.shell   [
+##   invoke: configs_parser() -> configs_extract()
+## ]
+
+## configs-extract.shell   [
+##   invoke: configs_extract() -> configs_obj2json()
+## ]
+
 ## configs-export.shell   [ generate_csvoutput ]
 
 #------------------------------------------------------------------------------#
@@ -73,7 +107,7 @@ source ./scripts/devops-helpers.shell;
 source ./scripts/configs-matching.shell;
 
 ## -------------------------------------------------------------------------- ##
-## File: scripts/tools-listings.shell
+## File: scripts/configs-manager.shell
 ##
 ## Role:
 ##   Provides the core logic for managing the execution of per-IP parsing jobs
@@ -119,44 +153,6 @@ source ./scripts/configs-manager.shell;
 ## -------------------------------------------------------------------------- ##
 
 source ./scripts/configs-export.shell;
-
-## -------------------------------------------------------------------------- ##
-## Function: configs_parser ()
-##
-## Purpose:
-##   Main entrypoint for per-IP parsing pipeline. Replaces `parse-configs.shell`.
-##   Drives the full parsing lifecycle from argument handling to report generation.
-##
-## Responsibilities:
-##   - Parses CLI arguments and applies defaults for configs, reports, and matrix
-##   - Extracts relevant config paths for a given target IP
-##   - Validates input files and structures
-##   - Applies grouping/classification (if enabled) via matrix matching
-##   - Executes `extract_configs()` to collect relevant config blocks
-##   - Deduplicates and merges structured JSON objects per IP
-##   - Stores final output under `${reports_location}/<ip-address>/<ip-address>.json`
-##
-## Input Parameters (as key=value args):
-##   - ip-addr      : IP address to process (required)
-##   - configs      : Path to configuration root folder (default: ./configs)
-##   - reports      : Path to write output JSON (default: ./reports)
-##   - matrix       : Translation matrix for classification (optional)
-##   - file-ext     : Comma-delimited list of config extensions (default: cfg,conf,cnf)
-##   - index        : Optional ID used for per-IP processing context
-##   - validate     : Enables IP format validation before proceeding
-##   - classify     : Enables matrix-based group classification
-##   - verbose/debug/dry-run/help/logs : Optional behavior toggles
-##
-## Output:
-##   - Structured per-IP JSON report at ${reports_location}/<ip-address>/<ip-address>.json
-##   - Temp fragments, logs, and debug traces under ${TMP_DIR}
-##
-## Notes:
-##   - Replaces standalone script `parse-configs.shell` with fully modular logic
-##   - Compatible with batch systems that expect this module to be run in parallel
-## -------------------------------------------------------------------------- ##
-
-source ./scripts/configs-parser.shell;
 
 #------------------------------------------------------------------------------#
 ## This module acts as the primary driver for the parsing pipeline. It:
@@ -835,12 +831,16 @@ function main () {
 
       #### -----------------------------------------------------------------
       local configs_matching__script="configs-matching";
+
       export configs_matching__console="${console_location}/${configs_matching__script}.console";
       touch "${configs_matching__console}";
 
+      export configs_matching__logger="${logs_location}/${configs_matching__script}/listing-batch${superset_index}.log";
+      mkdir -p "$(dirname "${configs_matching__logger}")";
+
       #### -----------------------------------------------------------------
       ## Advanced Background Jobs management workflow
-      configs_matching > "${logs_location}/${configs_matching__script}.log" 2>&1 ;
+      configs_matching > "${configs_matching__logger}" 2>&1;
 
       #### -----------------------------------------------------------------------
       if [[ "${verbose}" == true ]]; then
@@ -851,13 +851,17 @@ function main () {
       fi;
 
       #### -----------------------------------------------------------------
-       local configs_manager__script="configs-manager";
+      local configs_manager__script="configs-manager";
+
       export configs_manager__console="${console_location}/${configs_manager__script}.console";
       touch "${configs_manager__console}";
 
+      export configs_manager__logger="${logs_location}/${configs_manager__script}/listing-batch${superset_index}.log";
+      mkdir -p "$(dirname "${configs_manager__logger}")";
+
       #### -----------------------------------------------------------------
       ## Launch and monitor parallel config parsing jobs for matched IPs
-      configs_manager > "${logs_location}/${configs_manager__script}.log" 2>&1 ;
+      configs_manager --listing="${target_listing[*]}" > "${configs_manager__logger}" 2>&1;
 
       #### -----------------------------------------------------------------------
       if [[ "${verbose}" == true ]]; then

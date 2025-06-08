@@ -1,9 +1,98 @@
-Completed background jobs for matched IPs (1):
+Completed background jobs for matched IPs (2):
 -------------------------------------
  Index  | PID    | IP Address       |
 -------------------------------------
-     1	1651   | 10.0.0.1       
+     1	19343  | 203.0.113.25   
+     2	19334  | 10.0.0.1       
 
+Completed Configuration Targets (IP): targets/203.0.113.25.json
+{
+  "target": "203.0.113.25",
+  "locations": {
+    "cisco": {
+      "devices": [
+        {
+          "specs": {
+            "vendor": "cisco",
+            "model": "ASA",
+            "version": "9.14(3)",
+            "domain": "edge.dc.example.com",
+            "hostname": "perimeter-fw1"
+          },
+          "config": {
+            "file": "perimeter-fw1.cfg",
+            "lines": 33,
+            "object": ".objects/perimeter-fw1.list"
+          }
+        },
+        {
+          "specs": {
+            "vendor": "cisco",
+            "model": "ASA",
+            "version": "9.12(4)",
+            "domain": "global.dmz.example.net",
+            "hostname": "dmz-fw2-backup"
+          },
+          "config": {
+            "file": "dmz-fw2-backup.cfg",
+            "lines": 16,
+            "object": ".objects/dmz-fw2-backup.list"
+          }
+        }
+      ]
+    },
+    "fortinet": {
+      "devices": [
+        {
+          "specs": {
+            "vendor": "fortinet",
+            "model": "FortiGate-60F",
+            "version": "v7.2.5.F",
+            "domain": "",
+            "hostname": "fg-branch-vpn-01"
+          },
+          "config": {
+            "file": "fg-branch-vpn-01.cfg",
+            "lines": 19,
+            "object": ".objects/fg-branch-vpn-01.list"
+          }
+        }
+      ]
+    },
+    "misc": {
+      "devices": [
+        {
+          "specs": {
+            "vendor": "cisco",
+            "model": "",
+            "version": "",
+            "domain": "",
+            "hostname": ""
+          },
+          "config": {
+            "file": "fw3.cfg",
+            "lines": 13,
+            "object": ".objects/fw3.list"
+          }
+        },
+        {
+          "specs": {
+            "vendor": "cisco",
+            "model": "",
+            "version": "",
+            "domain": "",
+            "hostname": ""
+          },
+          "config": {
+            "file": "fw1.cfg",
+            "lines": 17,
+            "object": ".objects/fw1.list"
+          }
+        }
+      ]
+    }
+  }
+}
 Completed Configuration Targets (IP): targets/10.0.0.1.json
 {
   "target": "10.0.0.1",
@@ -57,7 +146,7 @@ Completed Configuration Targets (IP): targets/10.0.0.1.json
           "config": {
             "file": "switch3.conf",
             "lines": 16,
-            "object": ".objects/switch3.conf.list"
+            "object": ".objects/switch3.list"
           }
         },
         {
@@ -71,7 +160,7 @@ Completed Configuration Targets (IP): targets/10.0.0.1.json
           "config": {
             "file": "switch1.conf",
             "lines": 13,
-            "object": ".objects/switch1.conf.list"
+            "object": ".objects/switch1.list"
           }
         }
       ]

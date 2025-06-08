@@ -7,8 +7,8 @@
 ##    Note: Used by both parse-listings.shell and parse-configs.shell
 
 ## Prevent re-sourcing and ensure one-time initialization
-if [[ -n "${__DEVOPS_RESOURCES_SOURCED:-}" ]]; then return 0; fi;
-declare -gr __DEVOPS_RESOURCES_SOURCED=1
+if [[ -n "${__DEVOPS_RESOURCES__:-}" ]]; then return 0; fi;
+declare -gr __DEVOPS_RESOURCES__=1
 
 ## Require Bash 4.0+ for associative array support (only runs once)
 if [[ "${BASH_VERSINFO[0]}" -lt 4 ]]; then

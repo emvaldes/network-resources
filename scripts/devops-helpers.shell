@@ -1,16 +1,14 @@
 #!/usr/bin/env bash
 
-## -------------------------------------------------------------------------- ##
 ## File: scripts/devops-helpers.shell
-##
+
 ## Purpose: Sharing common features across scripts.
 ##          Utility library of shared shell functions and environment exports
 ##    Note: Used by both parse-listings.shell and parse-configs.shell
-## -------------------------------------------------------------------------- ##
 
 ## Prevent re-sourcing and ensure one-time initialization
-if [[ -n "${__DEVOPS_HELPERS_SOURCED:-}" ]]; then return 0; fi;
-readonly __DEVOPS_HELPERS_SOURCED=1;
+if [[ -n "${__DEVOPS_HELPERS__:-}" ]]; then exit 0; fi;
+readonly __DEVOPS_HELPERS__=1;
 
 ## Require Bash 4.0+ for associative array support (only runs once)
 if [[ "${BASH_VERSINFO[0]}" -lt 4 ]]; then
@@ -19,7 +17,7 @@ if [[ "${BASH_VERSINFO[0]}" -lt 4 ]]; then
 fi;
 
 ## -------------------------------------------------------------------------- ##
-## Function: display_help ()
+## Function: parse_listings__helper ()
 ##
 ## Purpose:
 ##   Displays contextual usage instructions and supported command-line options

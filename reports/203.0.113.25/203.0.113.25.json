@@ -1,0 +1,217 @@
+{
+  "target": "203.0.113.25",
+  "configs": [
+    {
+      "site": "cisco",
+      "device": "dmz-fw2-backup",
+      "specs": {
+        "vendor": "cisco",
+        "model": "ASA",
+        "version": "9.12(4)",
+        "domain": "global.dmz.example.net",
+        "hostname": "dmz-fw2-backup"
+      },
+      "objects": [
+        {
+          "object": "object",
+          "type": "network",
+          "partner": "Sentinel-NAT",
+          "description": "Corporate NAT edge",
+          "items": [
+            "host 203.0.113.25"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
+      "device": "perimeter-fw1",
+      "specs": {
+        "vendor": "cisco",
+        "model": "ASA",
+        "version": "9.14(3)",
+        "domain": "edge.dc.example.com",
+        "hostname": "perimeter-fw1"
+      },
+      "objects": [
+        {
+          "object": "object",
+          "type": "network",
+          "partner": "Stark-Tower",
+          "description": "Core services gateway",
+          "items": [
+            "host 10.0.0.1"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/0",
+          "partner": false,
+          "description": "External Internet-facing Interface",
+          "items": [
+            "ip address 203.0.113.25 255.255.255.0"
+          ],
+          "others": [
+            "nameif outside",
+            "security-level 0"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/1",
+          "partner": false,
+          "description": "Internal Network Interface",
+          "items": [
+            "ip address 10.0.0.1 255.255.255.0"
+          ],
+          "others": [
+            "nameif inside",
+            "security-level 100"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network",
+          "partner": "NAT-Edge",
+          "description": "Internet-bound IP NAT",
+          "items": [
+            "host 203.0.113.25"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Panther-Edge",
+          "description": "Internet-facing proxy systems",
+          "items": [
+            "network-object host 203.0.113.25"
+          ],
+          "others": [
+            "network-object host 172.16.0.5"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Avengers-DMZ",
+          "description": "Public access layer",
+          "items": [
+            "network-object host 203.0.113.25"
+          ],
+          "others": [
+            "network-object host 192.0.2.50",
+            "network-object 192.168.2.0 255.255.255.0"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "fortinet",
+      "device": "fg-branch-vpn-01",
+      "specs": {
+        "vendor": "fortinet",
+        "model": "FortiGate-60F",
+        "version": "v7.2.5.F",
+        "domain": "",
+        "hostname": "fg-branch-vpn-01"
+      },
+      "objects": [
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": "IronMan-HQ",
+          "description": "Main node at Stark Tower",
+          "items": [
+            "set subnet 10.0.0.1 255.255.255.255"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": "Public-Test",
+          "description": "Public NAT exposure for Red Skull trap",
+          "items": [
+            "set subnet 203.0.113.25 255.255.255.255"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "fw1",
+      "specs": {
+        "vendor": "cisco",
+        "model": "",
+        "version": "",
+        "domain": "",
+        "hostname": ""
+      },
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Krypton-Cloud",
+          "description": "Cloud-facing external nodes",
+          "items": [
+            "network-object host 203.0.113.25"
+          ],
+          "others": [
+            "network-object host 198.51.100.75"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network",
+          "partner": "Krypton-Gateway",
+          "description": "Secure NAT boundary for cloud access",
+          "items": [
+            "host 203.0.113.25"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "fw3",
+      "specs": {
+        "vendor": "cisco",
+        "model": "",
+        "version": "",
+        "domain": "",
+        "hostname": ""
+      },
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Panther-Edge",
+          "description": "Internet-facing proxy systems",
+          "items": [
+            "network-object host 203.0.113.25"
+          ],
+          "others": [
+            "network-object host 172.16.0.5"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    }
+  ]
+}

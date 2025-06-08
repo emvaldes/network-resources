@@ -1,0 +1,601 @@
+#!/usr/bin/env bash
+
+## File: scripts/configs-parser.shell
+
+## Purpose: Consolidated extraction function per official execution plan.
+
+## Prevent re-sourcing and ensure one-time initialization
+if [[ -n "${__CONFIGS_PARSER_SOURCED:-}" ]]; then return 0; fi;
+readonly __CONFIGS_PARSER_SOURCED=1;
+
+## -------------------------------------------------------------------------- ##
+## Function: configs-parser :: configs_extract ()
+##
+## Purpose:
+##   Parses a given configuration file, extracts all objects containing a target IP,
+##   and writes structured per-object metadata into a JSON fragments file.
+##
+## Inputs:
+##   $1 = Full path to the configuration file
+##   $2 = Target IP address (used as search pattern)
+##   $3 = JSON fragments output file (collector for wrapped objects)
+##   $4 = Unused (was originally a named array output; logic now internalized)
+##
+## Workflow:
+##   - Reads and sanitizes the full config file (removes blank lines, comments, etc.)
+##   - Splits config into logical blocks (using `${divisor}` as the delimiter)
+##   - Restores the blocks into newline-separated format
+##   - Filters blocks containing the target IP
+##   - Writes matched config blocks to `${reports_location}/<ip-address>/<device_location>/<device-config>.<file-extension>`
+##   - Processes each matched block with `configs_obj2json` to extract metadata
+##   - Wraps extracted objects under `{ device_location, device_config, objects[] }` structure
+##   - Appends each structured result to the final JSON fragment output file
+##
+## Output:
+##   - Structured per-config JSON entries written to $3
+##   - Raw matched blocks written to `${reports_location}/<ip-address>/<device-config>/<device-config>.<file-extension>`
+##
+## Notes:
+##   - Duplicate blocks are skipped via flat-string comparison.
+##   - Preserves traceability and grouping by device-location/device-config.
+##   - Designed to run synchronously per config file, called from `parse-configs`.
+## -------------------------------------------------------------------------- ##
+
+function configs_extract () {
+
+    ## tracking_process ${FUNCNAME} "${@}";
+    oIFS="${IFS}";
+
+    ## Process command-line arguments and map them to local variables
+    for xitem in "${@}"; do
+
+      IFS='=' read -r key value <<< "$(
+        echo -e "${xitem}" | sed -e '1s|^\(-\)\{1,\}||'
+      )"; #echo -e "\nxitem: '${xitem}'\nkey: '${key}'\t->\tvalue: '${value}'";
+
+      #### ---------------------------------------------------------------------
+      ## Match accepted arguments
+      [[ $key =~ ^(config|c)$ ]] && export config_filename="${value}";
+      [[ $key =~ ^(search|s)$ ]] && local target_pattern="${value}";
+      [[ $key =~ ^(listing|g)$ ]] && local target_listing="${value}";
+      [[ $key =~ ^(output|o)$ ]] && local json_output="${value}";
+      [[ $key =~ ^(logger|l)$ ]] && local target_console="${value}";
+
+      #### ---------------------------------------------------------------------
+      ## Special options
+      [[ $key == "debug" ]] && export debug=true;
+      [[ $key == "dry-run" ]] && local dry_run=true;
+      [[ $key == "verbose" ]] && export verbose=true;
+
+    done; IFS="${oIFS}";
+
+    #### -----------------------------------------------------------------------
+    ## Set default values if not supplied
+    [[ -z ${debug:-} ]] && export debug=false;
+    [[ -z ${dry_run:-} ]] && dry_run=false;
+    [[ -z ${verbose:-} ]] && export verbose=false;
+
+    #### -----------------------------------------------------------------------
+    if [[ -z "${target_console:-}" ]]; then
+      local target_console="${TMP_DIR:-/tmp}/configs_extract--${ip_addr}.log";
+      touch "${target_console}";
+    fi;
+    # touch "${target_console}";  ## Clear the log file if it exists
+
+    local target_console="${console_location}/configs-extract.console";
+    # message "Configs-Obj2JSON (logger): ${target_console}" >> "${target_console}";
+
+    #### -----------------------------------------------------------------------
+    local target_object="${TMP_DIR}/$(
+      basename "${config_filename}"
+    ).objects";
+    :> "${target_object}";
+
+    #### -----------------------------------------------------------------------
+    ## Full file ingestion and normalization
+    mapfile -t imported_content < <(
+      sed '/^\s*$/d' "${reports_location}/${target_pattern}/${config_filename}"
+    );
+
+    message "Divisor: [${divisor}]" | cat -vet;
+    if [[ "${verbose}" == true ]]; then
+      {
+        message "Imported Configuration(s): ";
+        newline;
+        for object in "${imported_content[@]}"; do
+          message "${object}";
+        done | cat -n;
+        # newline;
+      } >> "${target_console:-/dev/null}";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    local configs_obj2json__script="configs-obj2json";
+
+    local obj2json_location="${jobs_location}/${configs_obj2json__script}/${target_pattern}";
+    mkdir -p "${obj2json_location}";
+
+    local cfg_basename="$( basename "${config_filename}" )";
+    local logging_filename="${cfg_basename%.*}";
+
+    #### -----------------------------------------------------------------------
+    ## Reconstruct Fortinet blocks: split each config...end block with multiple edits
+    local -a expanded_content=();
+    for block in "${imported_content[@]}"; do
+      if [[
+                  "${block}" =~ ^config[[:space:]] && \
+                  "${block}" =~ $'\n'edit[[:space:]]
+                ]]; then
+              ## Preserve original header and footer
+              local header="$(
+                      sed -nE '/^config[[:space:]]/p' <<< "${block}"
+                    )";
+              local footer="$(
+                      sed -nE '/^end[[:space:]]*$/p' <<< "${block}"
+                    )";
+              ## Split into sub-blocks per edit...next
+              local IFS=;
+              while read -r sub; do
+                [[ -z "${sub//[[:space:]]/}" ]] && continue
+                expanded_content+=( "${header}"$'\n'"${sub}"$'\n'"${footer}" );
+              done < <(
+                awk '/^[[:space:]]*edit /, /^[[:space:]]*next/ { print }' <<< "${block}" | \
+                awk -v RS='next' '{ gsub(/\n+$/, "", $0); print $0 "\nnext" }'
+              );
+        else  expanded_content+=( "${block}" );
+      fi;
+    done;
+
+    ## Replace imported_content with reconstructed array
+    imported_content=("${expanded_content[@]}")
+
+    #### -----------------------------------------------------------------------
+    ## Deserializing imported_content:
+    for serialized_object in "${imported_content[@]}"; do
+
+      # #### -----------------------------------------------------------------------
+      # if [[ "${verbose}" == true ]]; then
+      #   {
+      #     newline;
+      #     message "Serialized Line: ${serialized_object}";
+      #   } >> "${target_console:-/dev/null}";
+      # fi;
+
+      local rel_path="${config_filename#${reports_location}/${target_address}/}";  ## e.g., cisco/perimeter-fw1.cfg
+      local device_location="${rel_path%%/*}";   ## -> location
+      local device_filename="${rel_path##*/}";   ## -> device
+
+      ## Construct output path: ${reports_location}/<ip-address>/<location>/<device>.<ext>
+      local objects_dir="${reports_location}/${target_address}/${device_location}";
+      local objects_file="${objects_dir}/${device_filename}";
+
+      local configs_obj2json__console="${TMP_DIR}/${configs_obj2json__script}";
+            configs_obj2json__console+="--${target_address}--${device_location}--${device_filename%.*}.console";
+
+      local configs_obj2json__logger="${TMP_DIR}/${logging_filename}";
+
+      configs_obj2json --search="${target_pattern}" \
+                       --source="${serialized_object}" \
+                       --target="${target_object}" \
+                       --logger="${configs_obj2json__console}" \
+      >> "${obj2json_location}/${logging_filename}.log" 2>&1 ;
+
+      #### -----------------------------------------------------------------------
+      ## Append structured config object to fragments file (now final collector)
+      if [[ -s "${target_object}" ]]; then
+
+        # wrapped_block="$(
+        #   cat "${target_object}" | \
+        #   jq --slurp \
+        #     --arg site "${config_filename%%/*}" \
+        #     --arg device "$( basename -s .list "${rel_path##*/}" )" \
+        #     '{
+        #       site: ( $site | gsub( "^.*/"; "" ) ),
+        #       device: $device,
+        #       objects: .
+        #     }'
+        # )";
+
+        local companion_config=( "${reports_location}/${target_address}/${device_location}/${device_filename%.*}."* );
+        ## Extract and validate embedded JSON header
+        local specs_block="$(
+          awk '
+                BEGIN { in_json = 0 }
+                /^[[:space:]]*{/ { in_json = 1 }
+                in_json { print }
+                /^[[:space:]]*}/ { exit }
+              ' "${companion_config}" | jq '.'
+        )"
+
+        wrapped_block="$(
+          jq --slurp \
+            --arg site "${config_filename%%/*}" \
+            --arg device "$(
+                basename -s .list "${rel_path##*/}"
+              )" \
+            --argjson specs "${specs_block}" \
+            '{
+              site: ( $site | gsub("^.*/"; "") ),
+              specs: $specs,
+              device: $device,
+              objects: .
+            }' "${target_object}"
+        )";
+
+        #### -----------------------------------------------------------------------
+        if [[ "${verbose}" == true ]]; then
+          {
+            if ! jq -e . <<< "${wrapped_block}" >/dev/null 2>&1; then
+              warning "[configs_extract] Invalid JSON block — skipping:";
+              print "${wrapped_block}" | jq . 2>&1 | head -n 10;
+              continue;
+            fi;
+          } >> "${target_console:-/dev/null}";
+        fi;
+
+        mkdir -p "$( dirname "${json_output}" )";
+        ## Append to collector file
+        # print "${wrapped_block}" >> "${json_output}";
+        printf '%s\n' "${wrapped_block}" >> "${json_output}";
+
+      fi;
+
+    done;
+
+    #### -----------------------------------------------------------------------
+    ## Merge per-object console logs into one unified log for this IP
+
+    local configs_obj2json__console="${console_location}/configs-obj2json.console";
+    local search_pattern="${TMP_DIR}/${configs_obj2json__script}--${target_address}"--*.console;
+    :> "${configs_obj2json__console}";
+
+    for obj_console in ${search_pattern}; do
+      if [[ -f "${obj_console}" ]]; then
+        cat "${obj_console}" >> "${configs_obj2json__console}";
+      fi;
+    done;
+
+    cp -v "${configs_obj2json__console}" \
+          "${console_location}/${configs_obj2json__script}.console";
+
+    #### -----------------------------------------------------------------------
+    if [[ "${verbose}" == true ]]; then
+      {
+        print_file "${configs_obj2json__console:-/dev/null}";
+      } >> "${target_console:-/dev/null}";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    if [[ "${verbose}" == true ]]; then
+      {
+        print_file "${json_output}";
+      } >> "${target_console:-/dev/null}";
+    fi;
+
+    return 0;
+}; alias extract-configs='configs_extract';
+
+## -------------------------------------------------------------------------- ##
+## Function: configs-parser :: configs_obj2json ()
+##
+## Purpose:
+##   Analyzes a single configuration block that matched a target IP.
+##   Extracts structured metadata and builds a normalized JSON object
+##   for inclusion in the per-config object set.
+##
+## Inputs:
+##   $1 = Target IP (used as match pattern)
+##   $2 = Full path to the source configuration file (for context only)
+##   $3 = Restored configuration block (newline-separated)
+##
+## Output:
+##   - Exports `target_object` as a JSON-formatted Bash variable for upstream collection
+##     (usually by `configs_extract()`).
+##
+## Structure of output JSON:
+##   {
+##     "object": "<first keyword>",
+##     "type": "<object type or false>",
+##     "partner": "<non-IP name from 'type'>",
+##     "description": "<first matched description or false>",
+##     "items": [ "<lines matching target IP>" ],
+##     "sets": { "<first-token>": count, ... },
+##     "group": "<classification label or 'Unclassified'>"
+##   }
+##
+## Behavior:
+##   - Sanitizes and parses the block into components.
+##   - Extracts lines relevant to the target IP (`items[]`).
+##   - Counts command keywords for `sets{}` mapping.
+##   - Parses descriptions, object names, and classifies the entry via matrix.
+##   - Avoids duplication or incorrect grouping by delegating output to caller.
+##
+## Notes:
+##   - Skips blocks with no IP match.
+##   - If classification is enabled, assigns the best-fit group from matrix.json.
+##   - Does not write to file directly — upstream function handles final wrapping.
+## -------------------------------------------------------------------------- ##
+
+function configs_obj2json () {
+
+    ## tracking_process ${FUNCNAME} "${@}";
+    oIFS="${IFS}";
+
+    ## Process command-line arguments and map them to local variables
+    for xitem in "${@}"; do
+
+      IFS='=' read -r key value <<< "$(
+        echo -e "${xitem}" | sed -e '1s|^\(-\)\{1,\}||'
+      )"; #echo -e "\nxitem: '${xitem}'\nkey: '${key}'\t->\tvalue: '${value}'";
+
+      #### ---------------------------------------------------------------------
+      ## Match accepted arguments
+      [[ $key =~ ^(search|s)$ ]] && local target_pattern="${value}";
+      [[ $key =~ ^(source|o)$ ]] && local source_object="${value}";
+      [[ $key =~ ^(target|t)$ ]] && local target_object="${value}";
+      [[ $key =~ ^(logger|l)$ ]] && local target_console="${value}";
+
+      #### ---------------------------------------------------------------------
+      ## Special options
+      [[ $key == "debug" ]] && export debug=true;
+      [[ $key == "dry-run" ]] && local dry_run=true;
+      [[ $key == "verbose" ]] && export verbose=true;
+
+    done; IFS="${oIFS}";
+
+    #### -----------------------------------------------------------------------
+    ## Set default values if not supplied
+    [[ -z ${debug:-} ]] && export debug=false;
+    [[ -z ${dry_run:-} ]] && dry_run=false;
+    [[ -z ${verbose:-} ]] && export verbose=false;
+
+    #### -----------------------------------------------------------------------
+    # if [[ -z "${target_console:-}" ]]; then
+    #   local target_console="${TMP_DIR:-/tmp}/configs-obj2json--${ip_addr}.log";
+    #   touch "${target_console}";
+    # fi;
+
+    local target_console="${console_location}/configs-obj2json.console";
+    # message "Configs-Obj2JSON (logger): ${target_console}" >> "${target_console}";
+
+    # mapfile -t restored_block < <(
+    #   perl -pe 's/'"${divisor}"'/\n/g' <<< "${source_object}"
+    # );
+    mapfile -t restored_block < <(
+      printf '%s\n' "${source_object//${divisor}/$'\n'}"
+    );
+
+    #### -----------------------------------------------------------------------
+    ## Extract object line (first non-empty line)
+    local object_header="${restored_block[0]}";
+
+    #### -----------------------------------------------------------------------
+    ## Parse object, type and partner values
+    local object_keyword type_value partner_value;
+    read -a header_tokens <<< "${object_header}";
+
+    object_keyword="${header_tokens[0]}"
+
+    if [[ "${object_keyword}" == "config" ]]; then
+            ## Fortinet: everything after 'config' is type
+            type_value="$(
+              printf '%s ' "${header_tokens[@]:1}" | sed 's/[[:space:]]*$//'
+            )";
+            partner_value="${partner_value:-false}"
+      elif  (( ${#header_tokens[@]} == 3 )); then
+            ## Cisco: 3-part object
+            type_value="${header_tokens[1]}";
+            partner_value="${header_tokens[2]}";
+      elif  (( ${#header_tokens[@]} > 3 )); then
+            ## Cisco: multi-word type, no partner
+            type_value="$(
+              printf '%s ' "${header_tokens[@]:1}" | sed 's/[[:space:]]*$//'
+            )";
+            partner_value="false";
+      else  type_value="${header_tokens[1]:-false}";
+            partner_value="false";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Extract object members and description/comment lines separately
+    local -a data_sets=();
+    local description_value="false";
+
+    for line in "${restored_block[@]}"; do
+
+      ## Remove leading/trailing whitespace
+      local trimmed="$(
+        sed -E 's/^[[:space:]]*//;s/[[:space:]]*$//' <<< "${line}"
+      )";
+
+      ## Skip empty lines
+      if [[ -z "${trimmed}" ]]; then continue; fi;
+
+      ## Cisco: Capture 'description' (Cisco)
+      if [[ "${trimmed,,}" =~ ^description[[:space:]] ]]; then
+        description_value="$(
+          sed -E 's/^description[[:space:]]+//' <<< "${trimmed}"
+        )";
+        continue;
+      fi;
+
+      ## Fortinet: Capture 'edit "<name>"' and excludes it from the data_sets
+      if [[ "${trimmed,,}" =~ ^edit[[:space:]]+\".+\" ]]; then
+        partner_value="$(
+          sed -E 's/^edit[[:space:]]+"(.+)"$/\1/' <<< "${trimmed}"
+        )";
+        continue;
+      fi;
+
+      ## Fortinet: Capture 'set comment'
+      if [[ "${trimmed,,}" =~ ^set[[:space:]]+comment[[:space:]] ]]; then
+        description_value="$(
+          sed -E 's/^set[[:space:]]+comment[[:space:]]+//' <<< "${trimmed}" | \
+          sed -E 's/^"(.*)"$/\1/'
+        )";
+        continue;
+      fi;
+
+      ## Fortinet: Skipping elements like ('next' and 'end') lines
+      if [[
+            "${trimmed,,}" == "next" || \
+            "${trimmed,,}" == "end"
+          ]]; then
+        continue;
+      fi;
+
+      data_sets+=( "${trimmed}" );
+    done
+
+    # Remove object header from the data set
+    if [[ "${data_sets[0]}" == "${object_header}" ]]; then
+      data_sets=( "${data_sets[@]:1}" );
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Split data_sets[] into IP-matching items[] and everything else as others[]
+    local -a items=();
+    local -a others=();
+
+    for line in "${data_sets[@]}"; do
+      if grep -Eq "(^|[^0-9.])${target_pattern//./\\.}([^0-9.]|$)" <<< "${line}"; then
+              items+=( "$(
+                sed -E 's/^[[:space:]]+//;s/[[:space:]]+$//' <<< "${line}"
+              )" );
+        else  others+=( "$(
+                sed -E 's/^[[:space:]]+//;s/[[:space:]]+$//' <<< "${line}"
+              )" );
+      fi;
+    done;
+
+    local items_json="$(
+      printf '%s\n' "${items[@]}" | \
+      jq -R . | \
+      jq --slurp .
+    )";
+
+    local others_json="$(
+      printf '%s\n' "${others[@]}" | \
+      sed '/^[[:space:]]*$/d' | \
+      jq -R . | \
+      jq --slurp .
+    )";
+
+    #### -----------------------------------------------------------------------
+    ## Determine group from matrix (if enabled)
+    local group_value="Unclassified";
+
+    if [[ "${classify_targets:-false}" == true ]]; then
+
+      local object_key;
+      object_key="$(
+        awk '{print $NF}' <<< "${type_value}" | \
+        sed -E 's/[[:punct:]]*$//'
+      )";
+
+      group_value="$(
+        jq -r --arg key "${object_key}" \
+                        'map( select( .match[]? | contains( $key ) ) ) | .[0].group' \
+        <<< "${matrix_configs}"
+      )";
+
+      if [[ -z "${group_value}" || "${group_value}" == "null" ]]; then
+        group_value="$(
+          jq -r --arg desc "${description_value}" 'map( select( .match[]? == $desc ) ) | .[0].group' \
+          <<< "${matrix_configs}"
+        )";
+      fi;
+
+      if [[ -z "${group_value}" || "${group_value}" == "null" ]]; then
+        group_value="Unclassified";
+      fi;
+
+    fi;
+
+    ## -------------------------------------------------------------------------- ##
+    ## Purpose: `target_object` holds the final structured JSON representation
+    ##          of a single matched configuration block.
+    ##
+    ## Notes:
+    ## - It contains all extracted metadata: object type, description, items, sets, data, group.
+    ## - It is intended to be collected by `configs_extract()`, NOT written here.
+    ## - This variable must be exported only after it's been properly constructed.
+    ## - Centralizing the output logic in `configs_extract()` enables proper
+    ##   grouping per config file, preserves structure, and prevents flattening.
+    ##
+    ## Why this matters:
+    ## - Writing here would prematurely dump output without associating it to
+    ##   a config file — breaking the required `{ config, objects[] }` structure.
+    ## - We need `configs_extract()` to be the only function writing grouped output.
+    ## -------------------------------------------------------------------------- ##
+
+    #### -----------------------------------------------------------------------
+    local target_json="$(
+      jq -n \
+        --arg object "${object_keyword}" \
+        --arg type "${type_value}" \
+        --arg partner "${partner_value}" \
+        --arg description "${description_value}" \
+        --argjson items "${items_json}" \
+        --argjson others "${others_json}" \
+        --arg group "${group_value}" \
+        '{
+          object: $object,
+          type: ( $type // false ),
+          partner: ( $partner | select(. != "" and . != "null" and . != "false") // false ),
+          description: ( $description | select(. != "" and . != "null" and . != "false") // false ),
+          items: $items,
+          others: $others,
+          group: $group
+        }'
+    )";
+
+    # #### -----------------------------------------------------------------------
+    # ## Safely write JSON to file early to avoid stream issues
+    # if [[ -n "${target_json}" && -w "$( dirname "${target_object}" )" ]]; then
+    #   message "Everything is looking good";
+    #   print "${target_json}" | jq -c . > "${target_object}" || {
+    #     warning "Failed to write JSON to ${target_object}" >> "${target_console}";
+    #   };
+    # fi;
+
+    #### -----------------------------------------------------------------------
+    if [[ "${verbose}" == true ]]; then
+      {
+        newline;
+        for object in "${restored_block[@]}"; do
+          message "${object}";
+        done;
+        # newline;
+        # message "object      : ${object_keyword}";
+        # message "type        : ${type_value:-null}";
+        # message "partner     : ${partner_value:-null}";
+        # message "description : ${description_value:-null}";
+        # newline;
+        # message "Object Sets:";
+        # newline;
+        # for e in "${data_sets[@]}"; do
+        #   message "${e}";
+        # done | cat -n;
+        # newline;
+        # message "Items (JSON): ${items_json}";
+        # newline;
+        # message "Other (JSON): ${others_json}";
+        # newline;
+        # message "Group: ${group_value}";
+        newline;
+        message "JSON Object (output):";
+        jq -r . <<< "${target_json}";
+      } >> "${target_console:-/dev/null}";
+    fi;
+
+    if [[ -n "${target_json}" ]]; then
+      jq -r . <<< "${target_json}" >> "${target_object}"
+      # ls -al "$( dirname "${target_object}" )";
+      cat -n "${target_object}";
+    fi
+
+    return 0
+}; alias configs-obj2json='configs_obj2json';
+
+#------------------------------------------------------------------------------#

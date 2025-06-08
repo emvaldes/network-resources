@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+## File: scripts/network-configs.shell
+
+## Prevent re-sourcing and ensure one-time initialization
+if [[ -n "${__NETWORK_CONFIGS__:-}" ]]; then exit 0; fi;
+readonly __NETWORK_CONFIGS__=1;
+
 ## -------------------------------------------------------------------------- ##
 ## File: scripts/network-configs.shell
 ##

@@ -55,13 +55,13 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-parser--10.0.0.1.console
+++ echo -e --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/configs-parser--10.0.0.1.console
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ logger =~ ^(configs|c)$ ]]
 + [[ logger =~ ^(index|n)$ ]]
 + [[ logger =~ ^(ip-addr|i)$ ]]
 + [[ logger =~ ^(logger|l)$ ]]
-+ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-parser--10.0.0.1.console
++ local target_logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/configs-parser--10.0.0.1.console
 + [[ logger =~ ^(matrix|m)$ ]]
 + [[ logger =~ ^(reports|r)$ ]]
 + [[ logger =~ ^(classify|g)$ ]]
@@ -162,8 +162,8 @@
 + [[ -z true ]]
 + [[ -z false ]]
 + [[ -z true ]]
-+ [[ -z /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-parser--10.0.0.1.console ]]
-+ local configs_extract__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-extract.log
++ [[ -z /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/configs-parser--10.0.0.1.console ]]
++ local configs_extract__logfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/configs-extract.log
 + :
 + [[ -z matrix.json ]]
 + [[ ! -f matrix.json ]]
@@ -261,6 +261,7 @@
 + [[ -n Loading target config list from: targets/10.0.0.1.json ]]
 + local 'message=Loading target config list from: targets/10.0.0.1.json'
 + echo -e 'Loading target config list from: targets/10.0.0.1.json'
+Loading target config list from: targets/10.0.0.1.json
 + source_configs=()
 + declare -ga source_configs
 + mapfile -t source_configs
@@ -275,11 +276,13 @@
 + [[ -n Found 4 configurations: ]]
 + local 'message=Found 4 configurations:'
 + echo -e 'Found 4 configurations:'
+Found 4 configurations:
 + newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
 + echo
+
 + (( i++ ))
 + (( i < count ))
 + for config in "${source_configs[@]}"
@@ -287,26 +290,31 @@
 + [[ -n   - cisco/.objects/perimeter-fw1.list ]]
 + local 'message=  - cisco/.objects/perimeter-fw1.list'
 + echo -e '  - cisco/.objects/perimeter-fw1.list'
+  - cisco/.objects/perimeter-fw1.list
 + for config in "${source_configs[@]}"
 + message '  - fortinet/.objects/fg-branch-vpn-01.list'
 + [[ -n   - fortinet/.objects/fg-branch-vpn-01.list ]]
 + local 'message=  - fortinet/.objects/fg-branch-vpn-01.list'
 + echo -e '  - fortinet/.objects/fg-branch-vpn-01.list'
+  - fortinet/.objects/fg-branch-vpn-01.list
 + for config in "${source_configs[@]}"
 + message '  - misc/.objects/switch3.list'
 + [[ -n   - misc/.objects/switch3.list ]]
 + local 'message=  - misc/.objects/switch3.list'
 + echo -e '  - misc/.objects/switch3.list'
+  - misc/.objects/switch3.list
 + for config in "${source_configs[@]}"
 + message '  - misc/.objects/switch1.list'
 + [[ -n   - misc/.objects/switch1.list ]]
 + local 'message=  - misc/.objects/switch1.list'
 + echo -e '  - misc/.objects/switch1.list'
+  - misc/.objects/switch1.list
 + newline
 + local count=1
 + (( i = 0 ))
 + (( i < count ))
 + echo
+
 + (( i++ ))
 + (( i < count ))
 + [[ -z 10.0.0.1 ]]
@@ -324,78 +332,79 @@
 + extract_jobs2console_mapping=()
 + declare -gA extract_jobs2console_mapping
 + local configs_extract__script=configs-extract
-+ export object_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-extract--fragments.json
-+ object_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-extract--fragments.json
++ local object_fragments=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/configs-extract--fragments.json
+++ dirname /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/configs-extract--fragments.json
++ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1
 + for config_filename in "${source_configs[@]}"
 ++ basename cisco/.objects/perimeter-fw1.list
 + local cfg_basename=perimeter-fw1.list
-+ local object_fragments_per_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--perimeter-fw1.list--26206.json
++ local object_fragments_per_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--perimeter-fw1.list--8761.json
 + local extract_location=jobs/configs-extract/10.0.0.1
 + mkdir -p jobs/configs-extract/10.0.0.1
 + local logging_filename=perimeter-fw1
 + local configs_extract__console=console/configs-extract.console
-+ local configs_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/perimeter-fw1
-+ local job_pid=1756
++ local configs_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/perimeter-fw1
++ local job_pid=19553
 + extract_jobs_pid+=("${job_pid}")
-+ extract_jobs2files_mapping["${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--perimeter-fw1.list--26206.json
-+ extract_jobs2console_mapping["${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/perimeter-fw1
++ extract_jobs2files_mapping["${target_address}::${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--perimeter-fw1.list--8761.json
++ extract_jobs2console_mapping["${target_address}::${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/perimeter-fw1
 + for config_filename in "${source_configs[@]}"
-+ configs_extract --config=cisco/.objects/perimeter-fw1.list --search=10.0.0.1 --listing=targets/10.0.0.1.json --output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--perimeter-fw1.list--26206.json --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/perimeter-fw1.console
++ configs_extract --config=cisco/.objects/perimeter-fw1.list --search=10.0.0.1 --listing=targets/10.0.0.1.json --output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--perimeter-fw1.list--8761.json --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/perimeter-fw1.console
 ++ basename fortinet/.objects/fg-branch-vpn-01.list
 + local cfg_basename=fg-branch-vpn-01.list
-+ local object_fragments_per_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--fg-branch-vpn-01.list--6364.json
++ local object_fragments_per_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--fg-branch-vpn-01.list--14690.json
 + local extract_location=jobs/configs-extract/10.0.0.1
 + mkdir -p jobs/configs-extract/10.0.0.1
 + local logging_filename=fg-branch-vpn-01
 + local configs_extract__console=console/configs-extract.console
-+ local configs_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/fg-branch-vpn-01
-+ local job_pid=1763
++ local configs_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/fg-branch-vpn-01
++ local job_pid=19565
 + extract_jobs_pid+=("${job_pid}")
-+ extract_jobs2files_mapping["${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--fg-branch-vpn-01.list--6364.json
-+ extract_jobs2console_mapping["${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/fg-branch-vpn-01
++ extract_jobs2files_mapping["${target_address}::${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--fg-branch-vpn-01.list--14690.json
++ extract_jobs2console_mapping["${target_address}::${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/fg-branch-vpn-01
 + for config_filename in "${source_configs[@]}"
-+ configs_extract --config=fortinet/.objects/fg-branch-vpn-01.list --search=10.0.0.1 --listing=targets/10.0.0.1.json --output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--fg-branch-vpn-01.list--6364.json --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/fg-branch-vpn-01.console
++ configs_extract --config=fortinet/.objects/fg-branch-vpn-01.list --search=10.0.0.1 --listing=targets/10.0.0.1.json --output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--fg-branch-vpn-01.list--14690.json --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/fg-branch-vpn-01.console
 ++ basename misc/.objects/switch3.list
 + local cfg_basename=switch3.list
-+ local object_fragments_per_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--switch3.list--8336.json
++ local object_fragments_per_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch3.list--13816.json
 + local extract_location=jobs/configs-extract/10.0.0.1
 + mkdir -p jobs/configs-extract/10.0.0.1
 + local logging_filename=switch3
 + local configs_extract__console=console/configs-extract.console
-+ local configs_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/switch3
-+ local job_pid=1776
++ local configs_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/switch3
++ local job_pid=19586
 + extract_jobs_pid+=("${job_pid}")
-+ extract_jobs2files_mapping["${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--switch3.list--8336.json
-+ extract_jobs2console_mapping["${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/switch3
++ extract_jobs2files_mapping["${target_address}::${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch3.list--13816.json
++ extract_jobs2console_mapping["${target_address}::${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/switch3
 + for config_filename in "${source_configs[@]}"
-+ configs_extract --config=misc/.objects/switch3.list --search=10.0.0.1 --listing=targets/10.0.0.1.json --output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--switch3.list--8336.json --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/switch3.console
++ configs_extract --config=misc/.objects/switch3.list --search=10.0.0.1 --listing=targets/10.0.0.1.json --output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch3.list--13816.json --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/switch3.console
 ++ basename misc/.objects/switch1.list
 + local cfg_basename=switch1.list
-+ local object_fragments_per_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--switch1.list--29956.json
++ local object_fragments_per_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch1.list--22163.json
 + local extract_location=jobs/configs-extract/10.0.0.1
 + mkdir -p jobs/configs-extract/10.0.0.1
 + local logging_filename=switch1
 + local configs_extract__console=console/configs-extract.console
-+ local configs_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/switch1
-+ local job_pid=1790
++ local configs_extract__logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/switch1
++ local job_pid=19615
 + extract_jobs_pid+=("${job_pid}")
-+ extract_jobs2files_mapping["${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--switch1.list--29956.json
-+ extract_jobs2console_mapping["${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/switch1
++ extract_jobs2files_mapping["${target_address}::${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch1.list--22163.json
++ extract_jobs2console_mapping["${target_address}::${job_pid}"]=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/switch1
 + ((  4 > 0  ))
 + valid_extract_jobs_pid=()
 + local valid_extract_jobs_pid
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 1756
++ kill -0 19553
++ configs_extract --config=misc/.objects/switch1.list --search=10.0.0.1 --listing=targets/10.0.0.1.json --output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch1.list--22163.json --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/switch1.console
 + valid_extract_jobs_pid+=("${pid}")
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 1763
-+ valid_extract_jobs_pid+=("${pid}")
-+ configs_extract --config=misc/.objects/switch1.list --search=10.0.0.1 --listing=targets/10.0.0.1.json --output=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--switch1.list--29956.json --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/switch1.console
-+ for pid in "${extract_jobs_pid[@]}"
-+ kill -0 1776
++ kill -0 19565
 + valid_extract_jobs_pid+=("${pid}")
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 1790
++ kill -0 19586
++ valid_extract_jobs_pid+=("${pid}")
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 19615
 + valid_extract_jobs_pid+=("${pid}")
 + extract_jobs_pid=("${valid_extract_jobs_pid[@]}")
 + sleep 0.1
@@ -403,33 +412,16 @@
 + valid_extract_jobs_pid=()
 + local valid_extract_jobs_pid
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 1756
++ kill -0 19553
 + valid_extract_jobs_pid+=("${pid}")
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 1763
++ kill -0 19565
 + valid_extract_jobs_pid+=("${pid}")
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 1776
++ kill -0 19586
 + valid_extract_jobs_pid+=("${pid}")
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 1790
-+ valid_extract_jobs_pid+=("${pid}")
-+ extract_jobs_pid=("${valid_extract_jobs_pid[@]}")
-+ sleep 0.1
-+ ((  4 > 0  ))
-+ valid_extract_jobs_pid=()
-+ local valid_extract_jobs_pid
-+ for pid in "${extract_jobs_pid[@]}"
-+ kill -0 1756
-+ valid_extract_jobs_pid+=("${pid}")
-+ for pid in "${extract_jobs_pid[@]}"
-+ kill -0 1763
-+ valid_extract_jobs_pid+=("${pid}")
-+ for pid in "${extract_jobs_pid[@]}"
-+ kill -0 1776
-+ valid_extract_jobs_pid+=("${pid}")
-+ for pid in "${extract_jobs_pid[@]}"
-+ kill -0 1790
++ kill -0 19615
 + valid_extract_jobs_pid+=("${pid}")
 + extract_jobs_pid=("${valid_extract_jobs_pid[@]}")
 + sleep 0.1
@@ -437,74 +429,294 @@
 + valid_extract_jobs_pid=()
 + local valid_extract_jobs_pid
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 1756
++ kill -0 19553
 + valid_extract_jobs_pid+=("${pid}")
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 1763
-+ logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--fg-branch-vpn-01.list--6364.json
-+ for pid in "${extract_jobs_pid[@]}"
-+ kill -0 1776
++ kill -0 19565
 + valid_extract_jobs_pid+=("${pid}")
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 1790
-+ logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--switch1.list--29956.json
++ kill -0 19586
++ valid_extract_jobs_pid+=("${pid}")
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 19615
++ valid_extract_jobs_pid+=("${pid}")
++ extract_jobs_pid=("${valid_extract_jobs_pid[@]}")
++ sleep 0.1
++ ((  4 > 0  ))
++ valid_extract_jobs_pid=()
++ local valid_extract_jobs_pid
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 19553
++ valid_extract_jobs_pid+=("${pid}")
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 19565
++ for key in "${!extract_jobs2files_mapping[@]}"
++ [[ 10.0.0.1::19586 == \1\0\.\0\.\0\.\1\:\:\1\9\5\6\5 ]]
++ continue
++ for key in "${!extract_jobs2files_mapping[@]}"
++ [[ 10.0.0.1::19553 == \1\0\.\0\.\0\.\1\:\:\1\9\5\6\5 ]]
++ continue
++ for key in "${!extract_jobs2files_mapping[@]}"
++ [[ 10.0.0.1::19565 == \1\0\.\0\.\0\.\1\:\:\1\9\5\6\5 ]]
++ logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--fg-branch-vpn-01.list--14690.json
++ break
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 19586
++ valid_extract_jobs_pid+=("${pid}")
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 19615
++ for key in "${!extract_jobs2files_mapping[@]}"
++ [[ 10.0.0.1::19586 == \1\0\.\0\.\0\.\1\:\:\1\9\6\1\5 ]]
++ continue
++ for key in "${!extract_jobs2files_mapping[@]}"
++ [[ 10.0.0.1::19553 == \1\0\.\0\.\0\.\1\:\:\1\9\6\1\5 ]]
++ continue
++ for key in "${!extract_jobs2files_mapping[@]}"
++ [[ 10.0.0.1::19565 == \1\0\.\0\.\0\.\1\:\:\1\9\6\1\5 ]]
++ continue
++ for key in "${!extract_jobs2files_mapping[@]}"
++ [[ 10.0.0.1::19615 == \1\0\.\0\.\0\.\1\:\:\1\9\6\1\5 ]]
++ logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch1.list--22163.json
++ break
 + extract_jobs_pid=("${valid_extract_jobs_pid[@]}")
 + sleep 0.1
 + ((  2 > 0  ))
 + valid_extract_jobs_pid=()
 + local valid_extract_jobs_pid
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 1756
++ kill -0 19553
 + valid_extract_jobs_pid+=("${pid}")
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 1776
-+ logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--switch3.list--8336.json
++ kill -0 19586
++ valid_extract_jobs_pid+=("${pid}")
 + extract_jobs_pid=("${valid_extract_jobs_pid[@]}")
 + sleep 0.1
-+ ((  1 > 0  ))
++ ((  2 > 0  ))
 + valid_extract_jobs_pid=()
 + local valid_extract_jobs_pid
 + for pid in "${extract_jobs_pid[@]}"
-+ kill -0 1756
-+ logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--perimeter-fw1.list--26206.json
++ kill -0 19553
++ for key in "${!extract_jobs2files_mapping[@]}"
++ [[ 10.0.0.1::19586 == \1\0\.\0\.\0\.\1\:\:\1\9\5\5\3 ]]
++ continue
++ for key in "${!extract_jobs2files_mapping[@]}"
++ [[ 10.0.0.1::19553 == \1\0\.\0\.\0\.\1\:\:\1\9\5\5\3 ]]
++ logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--perimeter-fw1.list--8761.json
++ break
++ for pid in "${extract_jobs_pid[@]}"
++ kill -0 19586
++ for key in "${!extract_jobs2files_mapping[@]}"
++ [[ 10.0.0.1::19586 == \1\0\.\0\.\0\.\1\:\:\1\9\5\8\6 ]]
++ logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch3.list--13816.json
++ break
 + extract_jobs_pid=("${valid_extract_jobs_pid[@]}")
 + sleep 0.1
 + ((  0 > 0  ))
-+ for pid in "${!extract_jobs2console_mapping[@]}"
-+ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/fg-branch-vpn-01.console
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/fg-branch-vpn-01.console ]]
-+ rm -fv /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/fg-branch-vpn-01.console
-+ for pid in "${!extract_jobs2console_mapping[@]}"
-+ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/switch1.console
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/switch1.console ]]
-+ rm -fv /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/switch1.console
-+ for pid in "${!extract_jobs2console_mapping[@]}"
-+ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/perimeter-fw1.console
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/perimeter-fw1.console ]]
-+ rm -fv /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/perimeter-fw1.console
-+ for pid in "${!extract_jobs2console_mapping[@]}"
-+ console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/switch3.console
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/switch3.console ]]
-+ rm -fv /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/switch3.console
-+ for fragment in "${extract_jobs2files_mapping[@]}"
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--fg-branch-vpn-01.list--6364.json ]]
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--fg-branch-vpn-01.list--6364.json
-+ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--fg-branch-vpn-01.list--6364.json
-+ for fragment in "${extract_jobs2files_mapping[@]}"
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--switch1.list--29956.json ]]
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--switch1.list--29956.json
-+ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--switch1.list--29956.json
-+ for fragment in "${extract_jobs2files_mapping[@]}"
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--perimeter-fw1.list--26206.json ]]
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--perimeter-fw1.list--26206.json
-+ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--perimeter-fw1.list--26206.json
-+ for fragment in "${extract_jobs2files_mapping[@]}"
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--switch3.list--8336.json ]]
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--switch3.list--8336.json
-+ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/fragments--switch3.list--8336.json
-+ ls -al /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-extract--fragments.json
--rw-r--r--  1 emvaldes  staff  3533 Jun  8 00:06 /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-extract--fragments.json
-+ cat -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-extract--fragments.json
++ :
++ message '>>> Listing Jobs->Files (extract_jobs2files_mapping): '
++ [[ -n >>> Listing Jobs->Files (extract_jobs2files_mapping):  ]]
++ local 'message=>>> Listing Jobs->Files (extract_jobs2files_mapping): '
++ echo -e '>>> Listing Jobs->Files (extract_jobs2files_mapping): '
+>>> Listing Jobs->Files (extract_jobs2files_mapping): 
++ for key in "${!extract_jobs2files_mapping[@]}"
++ echo '10.0.0.1::19586 = /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch3.list--13816.json'
+10.0.0.1::19586 = /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch3.list--13816.json
++ for key in "${!extract_jobs2files_mapping[@]}"
++ echo '10.0.0.1::19553 = /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--perimeter-fw1.list--8761.json'
+10.0.0.1::19553 = /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--perimeter-fw1.list--8761.json
++ for key in "${!extract_jobs2files_mapping[@]}"
++ echo '10.0.0.1::19565 = /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--fg-branch-vpn-01.list--14690.json'
+10.0.0.1::19565 = /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--fg-branch-vpn-01.list--14690.json
++ for key in "${!extract_jobs2files_mapping[@]}"
++ echo '10.0.0.1::19615 = /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch1.list--22163.json'
+10.0.0.1::19615 = /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch1.list--22163.json
++ for key in "${!extract_jobs2files_mapping[@]}"
++ [[ 10.0.0.1::19586 == \1\0\.\0\.\0\.\1\:\:* ]]
++ fragment=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch3.list--13816.json
++ ls -al /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch3.list--13816.json
+-rw-r--r--  1 emvaldes  staff  1167 Jun  8 15:27 /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch3.list--13816.json
++ cat -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch3.list--13816.json
+     1	{
+     2	  "site": "misc",
+     3	  "specs": {
+     4	    "vendor": "cisco",
+     5	    "model": "",
+     6	    "version": "",
+     7	    "domain": "",
+     8	    "hostname": ""
+     9	  },
+    10	  "device": "switch3",
+    11	  "objects": [
+    12	    {
+    13	      "object": "interface",
+    14	      "type": "Vlan1",
+    15	      "partner": false,
+    16	      "description": false,
+    17	      "items": [
+    18	        "ip address 10.0.0.1 255.255.255.0"
+    19	      ],
+    20	      "others": [],
+    21	      "group": "Business-Unit-Networks"
+    22	    }
+    23	  ]
+    24	}
+    25	{
+    26	  "site": "misc",
+    27	  "specs": {
+    28	    "vendor": "cisco",
+    29	    "model": "",
+    30	    "version": "",
+    31	    "domain": "",
+    32	    "hostname": ""
+    33	  },
+    34	  "device": "switch3",
+    35	  "objects": [
+    36	    {
+    37	      "object": "interface",
+    38	      "type": "Vlan1",
+    39	      "partner": false,
+    40	      "description": false,
+    41	      "items": [
+    42	        "ip address 10.0.0.1 255.255.255.0"
+    43	      ],
+    44	      "others": [],
+    45	      "group": "Business-Unit-Networks"
+    46	    },
+    47	    {
+    48	      "object": "object-group",
+    49	      "type": "network",
+    50	      "partner": "Spider-Net",
+    51	      "description": "Web access switches",
+    52	      "items": [
+    53	        "network-object host 10.0.0.1"
+    54	      ],
+    55	      "others": [
+    56	        "network-object 192.168.12.0 255.255.255.0"
+    57	      ],
+    58	      "group": "Unclassified"
+    59	    }
+    60	  ]
+    61	}
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch3.list--13816.json ]]
++ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch3.list--13816.json
++ for key in "${!extract_jobs2files_mapping[@]}"
++ [[ 10.0.0.1::19553 == \1\0\.\0\.\0\.\1\:\:* ]]
++ fragment=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--perimeter-fw1.list--8761.json
++ ls -al /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--perimeter-fw1.list--8761.json
+-rw-r--r--  1 emvaldes  staff  2295 Jun  8 15:27 /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--perimeter-fw1.list--8761.json
++ cat -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--perimeter-fw1.list--8761.json
+     1	{
+     2	  "site": "cisco",
+     3	  "specs": {
+     4	    "vendor": "cisco",
+     5	    "model": "ASA",
+     6	    "version": "9.14(3)",
+     7	    "domain": "edge.dc.example.com",
+     8	    "hostname": "perimeter-fw1"
+     9	  },
+    10	  "device": "perimeter-fw1",
+    11	  "objects": [
+    12	    {
+    13	      "object": "interface",
+    14	      "type": "GigabitEthernet0/1",
+    15	      "partner": false,
+    16	      "description": "Internal Network Interface",
+    17	      "items": [
+    18	        "ip address 10.0.0.1 255.255.255.0"
+    19	      ],
+    20	      "others": [
+    21	        "nameif inside",
+    22	        "security-level 100"
+    23	      ],
+    24	      "group": "Unclassified"
+    25	    },
+    26	    {
+    27	      "object": "interface",
+    28	      "type": "GigabitEthernet0/0",
+    29	      "partner": false,
+    30	      "description": "External Internet-facing Interface",
+    31	      "items": [
+    32	        "ip address 203.0.113.25 255.255.255.0"
+    33	      ],
+    34	      "others": [
+    35	        "nameif outside",
+    36	        "security-level 0"
+    37	      ],
+    38	      "group": "Unclassified"
+    39	    }
+    40	  ]
+    41	}
+    42	{
+    43	  "site": "cisco",
+    44	  "specs": {
+    45	    "vendor": "cisco",
+    46	    "model": "ASA",
+    47	    "version": "9.14(3)",
+    48	    "domain": "edge.dc.example.com",
+    49	    "hostname": "perimeter-fw1"
+    50	  },
+    51	  "device": "perimeter-fw1",
+    52	  "objects": [
+    53	    {
+    54	      "object": "interface",
+    55	      "type": "GigabitEthernet0/1",
+    56	      "partner": false,
+    57	      "description": "Internal Network Interface",
+    58	      "items": [
+    59	        "ip address 10.0.0.1 255.255.255.0"
+    60	      ],
+    61	      "others": [
+    62	        "nameif inside",
+    63	        "security-level 100"
+    64	      ],
+    65	      "group": "Unclassified"
+    66	    },
+    67	    {
+    68	      "object": "interface",
+    69	      "type": "GigabitEthernet0/0",
+    70	      "partner": false,
+    71	      "description": "External Internet-facing Interface",
+    72	      "items": [
+    73	        "ip address 203.0.113.25 255.255.255.0"
+    74	      ],
+    75	      "others": [
+    76	        "nameif outside",
+    77	        "security-level 0"
+    78	      ],
+    79	      "group": "Unclassified"
+    80	    },
+    81	    {
+    82	      "object": "object",
+    83	      "type": "network",
+    84	      "partner": "Stark-Tower",
+    85	      "description": "Core services gateway",
+    86	      "items": [
+    87	        "host 10.0.0.1"
+    88	      ],
+    89	      "others": [],
+    90	      "group": "Unclassified"
+    91	    },
+    92	    {
+    93	      "object": "object",
+    94	      "type": "network",
+    95	      "partner": "NAT-Edge",
+    96	      "description": "Internet-bound IP NAT",
+    97	      "items": [
+    98	        "host 203.0.113.25"
+    99	      ],
+   100	      "others": [],
+   101	      "group": "Unclassified"
+   102	    }
+   103	  ]
+   104	}
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--perimeter-fw1.list--8761.json ]]
++ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--perimeter-fw1.list--8761.json
++ for key in "${!extract_jobs2files_mapping[@]}"
++ [[ 10.0.0.1::19565 == \1\0\.\0\.\0\.\1\:\:* ]]
++ fragment=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--fg-branch-vpn-01.list--14690.json
++ ls -al /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--fg-branch-vpn-01.list--14690.json
+-rw-r--r--  1 emvaldes  staff  799 Jun  8 15:27 /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--fg-branch-vpn-01.list--14690.json
++ cat -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--fg-branch-vpn-01.list--14690.json
      1	{
      2	  "site": "fortinet",
      3	  "specs": {
@@ -526,162 +738,57 @@
     19	      ],
     20	      "others": [],
     21	      "group": "Unclassified"
-    22	    }
-    23	  ]
-    24	}
-    25	{
-    26	  "site": "misc",
-    27	  "specs": {
-    28	    "vendor": "cisco",
-    29	    "model": "",
-    30	    "version": "",
-    31	    "domain": "",
-    32	    "hostname": ""
-    33	  },
-    34	  "device": "switch1",
-    35	  "objects": [
-    36	    {
-    37	      "object": "object-group",
-    38	      "type": "network",
-    39	      "partner": "Avengers-Office",
-    40	      "description": "VLAN access layer",
-    41	      "items": [
-    42	        "network-object host 10.0.0.1"
-    43	      ],
-    44	      "others": [
-    45	        "network-object 192.168.12.0 255.255.255.0"
-    46	      ],
-    47	      "group": "Unclassified"
-    48	    }
-    49	  ]
-    50	}
-    51	{
-    52	  "site": "cisco",
-    53	  "specs": {
-    54	    "vendor": "cisco",
-    55	    "model": "ASA",
-    56	    "version": "9.14(3)",
-    57	    "domain": "edge.dc.example.com",
-    58	    "hostname": "perimeter-fw1"
-    59	  },
-    60	  "device": "perimeter-fw1",
-    61	  "objects": [
-    62	    {
-    63	      "object": "interface",
-    64	      "type": "GigabitEthernet0/1",
-    65	      "partner": false,
-    66	      "description": "Internal Network Interface",
-    67	      "items": [
-    68	        "ip address 10.0.0.1 255.255.255.0"
-    69	      ],
-    70	      "others": [
-    71	        "nameif inside",
-    72	        "security-level 100"
-    73	      ],
-    74	      "group": "Unclassified"
-    75	    }
-    76	  ]
-    77	}
-    78	{
-    79	  "site": "cisco",
-    80	  "specs": {
-    81	    "vendor": "cisco",
-    82	    "model": "ASA",
-    83	    "version": "9.14(3)",
-    84	    "domain": "edge.dc.example.com",
-    85	    "hostname": "perimeter-fw1"
-    86	  },
-    87	  "device": "perimeter-fw1",
-    88	  "objects": [
-    89	    {
-    90	      "object": "interface",
-    91	      "type": "GigabitEthernet0/1",
-    92	      "partner": false,
-    93	      "description": "Internal Network Interface",
-    94	      "items": [
-    95	        "ip address 10.0.0.1 255.255.255.0"
-    96	      ],
-    97	      "others": [
-    98	        "nameif inside",
-    99	        "security-level 100"
-   100	      ],
-   101	      "group": "Unclassified"
-   102	    },
-   103	    {
-   104	      "object": "object",
-   105	      "type": "network",
-   106	      "partner": "Stark-Tower",
-   107	      "description": "Core services gateway",
-   108	      "items": [
-   109	        "host 10.0.0.1"
-   110	      ],
-   111	      "others": [],
-   112	      "group": "Unclassified"
-   113	    }
-   114	  ]
-   115	}
-   116	{
-   117	  "site": "misc",
-   118	  "specs": {
-   119	    "vendor": "cisco",
-   120	    "model": "",
-   121	    "version": "",
-   122	    "domain": "",
-   123	    "hostname": ""
-   124	  },
-   125	  "device": "switch3",
-   126	  "objects": [
-   127	    {
-   128	      "object": "interface",
-   129	      "type": "Vlan1",
-   130	      "partner": false,
-   131	      "description": false,
-   132	      "items": [
-   133	        "ip address 10.0.0.1 255.255.255.0"
-   134	      ],
-   135	      "others": [],
-   136	      "group": "Business-Unit-Networks"
-   137	    }
-   138	  ]
-   139	}
-   140	{
-   141	  "site": "misc",
-   142	  "specs": {
-   143	    "vendor": "cisco",
-   144	    "model": "",
-   145	    "version": "",
-   146	    "domain": "",
-   147	    "hostname": ""
-   148	  },
-   149	  "device": "switch3",
-   150	  "objects": [
-   151	    {
-   152	      "object": "interface",
-   153	      "type": "Vlan1",
-   154	      "partner": false,
-   155	      "description": false,
-   156	      "items": [
-   157	        "ip address 10.0.0.1 255.255.255.0"
-   158	      ],
-   159	      "others": [],
-   160	      "group": "Business-Unit-Networks"
-   161	    },
-   162	    {
-   163	      "object": "object-group",
-   164	      "type": "network",
-   165	      "partner": "Spider-Net",
-   166	      "description": "Web access switches",
-   167	      "items": [
-   168	        "network-object host 10.0.0.1"
-   169	      ],
-   170	      "others": [
-   171	        "network-object 192.168.12.0 255.255.255.0"
-   172	      ],
-   173	      "group": "Unclassified"
-   174	    }
-   175	  ]
-   176	}
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-extract--fragments.json ]]
+    22	    },
+    23	    {
+    24	      "object": "config",
+    25	      "type": "firewall address",
+    26	      "partner": "Public-Test",
+    27	      "description": "Public NAT exposure for Red Skull trap",
+    28	      "items": [
+    29	        "set subnet 203.0.113.25 255.255.255.255"
+    30	      ],
+    31	      "others": [],
+    32	      "group": "Unclassified"
+    33	    }
+    34	  ]
+    35	}
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--fg-branch-vpn-01.list--14690.json ]]
++ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--fg-branch-vpn-01.list--14690.json
++ for key in "${!extract_jobs2files_mapping[@]}"
++ [[ 10.0.0.1::19615 == \1\0\.\0\.\0\.\1\:\:* ]]
++ fragment=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch1.list--22163.json
++ ls -al /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch1.list--22163.json
+-rw-r--r--  1 emvaldes  staff  499 Jun  8 15:27 /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch1.list--22163.json
++ cat -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch1.list--22163.json
+     1	{
+     2	  "site": "misc",
+     3	  "specs": {
+     4	    "vendor": "cisco",
+     5	    "model": "",
+     6	    "version": "",
+     7	    "domain": "",
+     8	    "hostname": ""
+     9	  },
+    10	  "device": "switch1",
+    11	  "objects": [
+    12	    {
+    13	      "object": "object-group",
+    14	      "type": "network",
+    15	      "partner": "Avengers-Office",
+    16	      "description": "VLAN access layer",
+    17	      "items": [
+    18	        "network-object host 10.0.0.1"
+    19	      ],
+    20	      "others": [
+    21	        "network-object 192.168.12.0 255.255.255.0"
+    22	      ],
+    23	      "group": "Unclassified"
+    24	    }
+    25	  ]
+    26	}
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch1.list--22163.json ]]
++ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/fragments--switch1.list--22163.json
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/configs-extract--fragments.json ]]
 + [[ true == true ]]
 + newline
 + local count=1
@@ -691,20 +798,20 @@
 
 + (( i++ ))
 + (( i < count ))
-+ message 'Fragment Configuration file: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-extract--fragments.json ]'
-+ [[ -n Fragment Configuration file: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-extract--fragments.json ] ]]
-+ local 'message=Fragment Configuration file: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-extract--fragments.json ]'
-+ echo -e 'Fragment Configuration file: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-extract--fragments.json ]'
-Fragment Configuration file: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-extract--fragments.json ]
++ message 'Fragment Configuration file: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/configs-extract--fragments.json ]'
++ [[ -n Fragment Configuration file: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/configs-extract--fragments.json ] ]]
++ local 'message=Fragment Configuration file: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/configs-extract--fragments.json ]'
++ echo -e 'Fragment Configuration file: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/configs-extract--fragments.json ]'
+Fragment Configuration file: [ /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/configs-extract--fragments.json ]
 + jq -s -r '
                 .[] | "\(.site)/\(.device) → \( .objects | length ) objects"
-                ' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-extract--fragments.json
-fortinet/fg-branch-vpn-01 → 1 objects
-misc/switch1 → 1 objects
-cisco/perimeter-fw1 → 1 objects
-cisco/perimeter-fw1 → 2 objects
+                ' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/configs-extract--fragments.json
 misc/switch3 → 1 objects
 misc/switch3 → 2 objects
+cisco/perimeter-fw1 → 2 objects
+cisco/perimeter-fw1 → 4 objects
+fortinet/fg-branch-vpn-01 → 2 objects
+misc/switch1 → 1 objects
 + newline
 + local count=1
 + (( i = 0 ))
@@ -713,10 +820,10 @@ misc/switch3 → 2 objects
 
 + (( i++ ))
 + (( i < count ))
-+ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1
-+ export json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/10.0.0.1.json
-+ json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/10.0.0.1.json
-+ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-extract--fragments.json ]]
++ mkdir -p /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1
++ export json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/10.0.0.1.json
++ json_outfile=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/10.0.0.1.json
++ [[ -s /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/configs-extract--fragments.json ]]
 + jq --raw-output --slurp --arg ipref targets/10.0.0.1.json '
                         sort_by( .site, .device ) | 
                         group_by( .site + "/" + .device )[] as $group | 
@@ -727,12 +834,16 @@ misc/switch3 → 2 objects
                           "  • object: " + ( .object // "unknown" ) + 
                           " ( type: " + ( .type // "n/a" ) + " )" 
                         ) 
-                        ' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-extract--fragments.json
+                        ' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/configs-extract--fragments.json
 - cisco/perimeter-fw1 ( 2 fragments ) -> targets/10.0.0.1.json
   • object: interface ( type: GigabitEthernet0/1 )
+  • object: interface ( type: GigabitEthernet0/0 )
   • object: interface ( type: GigabitEthernet0/1 )
+  • object: interface ( type: GigabitEthernet0/0 )
+  • object: object ( type: network )
   • object: object ( type: network )
 - fortinet/fg-branch-vpn-01 ( 1 fragments ) -> targets/10.0.0.1.json
+  • object: config ( type: firewall address )
   • object: config ( type: firewall address )
 - misc/switch1 ( 1 fragments ) -> targets/10.0.0.1.json
   • object: object-group ( type: network )
@@ -758,9 +869,9 @@ misc/switch3 → 2 objects
                               objects: ( map( .objects[]) | unique )
                             })
                           )
-                        }' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-extract--fragments.json
+                        }' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/configs-extract--fragments.json
 ++ mktemp
-+ tmp_merged=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.W13GMvQLBk
++ tmp_merged=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.9Hlrm3NN5f
 + local final_outfile=reports/10.0.0.1/10.0.0.1.json
 ++ dirname reports/10.0.0.1/10.0.0.1.json
 + mkdir -p reports/10.0.0.1
@@ -804,28 +915,28 @@ misc/switch3 → 2 objects
             )
             | sort_by(.site, .device)
           )
-      }' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/10.0.0.1.json
-+ mv /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.W13GMvQLBk reports/10.0.0.1/10.0.0.1.json
-+ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/10.0.0.1/10.0.0.1.json
+      }' /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/10.0.0.1.json
++ mv /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.9Hlrm3NN5f reports/10.0.0.1/10.0.0.1.json
++ rm -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/10.0.0.1/10.0.0.1.json
 + [[ true == true ]]
 + print 'Merged [ targets/10.0.0.1.json ] → reports/10.0.0.1/10.0.0.1.json'
 + [[ -n Merged [ targets/10.0.0.1.json ] → reports/10.0.0.1/10.0.0.1.json ]]
 + echo -en 'Merged [ targets/10.0.0.1.json ] → reports/10.0.0.1/10.0.0.1.json'
-+ newline 2
+Merged [ targets/10.0.0.1.json ] → reports/10.0.0.1/10.0.0.1.json+ newline 2
 + local count=2
 + (( i = 0 ))
 + (( i < count ))
 + echo
+
 + (( i++ ))
 + (( i < count ))
 + echo
+
 + (( i++ ))
 + (( i < count ))
 + [[ true == true ]]
-+ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-parser--10.0.0.1.console
-+ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-parser--10.0.0.1.console ]]
-+ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-parser--10.0.0.1.console
-+ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-parser--10.0.0.1.console ]]
-+ case "${target_file}" in
-+ cat /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.z4fH2RWwOh/configs-parser--10.0.0.1.console
++ print_file /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/configs-parser--10.0.0.1.console
++ [[ -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/configs-parser--10.0.0.1.console ]]
++ local target_file=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/configs-parser--10.0.0.1.console
++ [[ -f /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.Z8K565yDD2/configs-parser--10.0.0.1.console ]]
 + return 0

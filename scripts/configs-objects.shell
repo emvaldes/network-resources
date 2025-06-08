@@ -1,0 +1,198 @@
+#!/usr/bin/env bash
+
+## File: scripts/configs-objects.shell
+
+## Prevent re-sourcing and ensure one-time initialization
+if [[ -n "${__CONFIGS_OBJECTS__:-}" ]]; then exit 0; fi;
+readonly __CONFIGS_OBJECTS__=1;
+
+## -------------------------------------------------------------------------- ##
+## Function: network-extract.shell :: main() -> configs_objects ()
+##
+## Purpose:
+##   Transforms extracted configuration blocks into a serialized `.list` format
+##   containing only lines and blocks that reference the target IP(s).
+##
+## Overview:
+##   - Operates on a reduced `.cfg` file (output of vendor-specific AWK extraction).
+##   - Detects the platform (Cisco, Fortinet) and applies specialized collapsing rules.
+##   - Strips all metadata (e.g., JSON headers, version lines, hostnames) not tied to
+##     the actual IP match.
+##   - Collapses multi-line configuration blocks into compact one-liner strings,
+##     delimited by a unique encoding token to preserve boundaries.
+##   - Ensures the resulting `.list` file contains only relevant, minimal fragments
+##     to support downstream JSON building, grep-based queries, and visualization.
+##
+## Input:
+##   - ${extract_location}      → Full path to the extracted .cfg file for a single IP
+##   - ${target_platform}       → Detected platform name (e.g., "cisco", "fortinet")
+##   - ${divisor}               → Unique boundary token used to split and rejoin blocks
+##
+## Output:
+##   - Writes serialized content to:
+##       ${reports_location}/<ip-address>/<location>/.objects/<device>.list
+##   - If `--verbose` is enabled, prints the serialized file to the current log stream.
+##
+## Key Behavior:
+##   - **Cisco**: Skips JSON headers and non-matching metadata lines.
+##     Collapses contiguous configuration blocks into delimiter-separated one-liners.
+##   - **Fortinet**: Preserves structural blocks (e.g., `config ... end`) but
+##     collapses `edit ... next` into one-liners tagged with the IP.
+##     Also removes legacy metadata (e.g., `#hostname=`, `config-version=`).
+##
+## Notes:
+##   - This process guarantees that only IP-relevant lines are preserved.
+##   - Acts as a filtering and compression stage before any JSON post-processing.
+##   - Downstream deserialization is optional; one-liner `.list` files are already safe
+##     for grep, explode, and transform workflows.
+##
+## Example:
+##   Input:  ${reports_location}/203.0.113.25/misc/fw3.cfg
+##   Output: ${reports_location}/203.0.113.25/misc/.objects/fw3.list
+##
+## Dependencies:
+##   - Relies on AWK for efficient platform-aware collapsing.
+##   - Must be called after `extract_configs()` has produced the reduced .cfg file.
+## -------------------------------------------------------------------------- ##
+
+function configs_objects () {
+
+    local parent_dir="$(
+            dirname "${extract_location}"
+          )";
+    local object_path="${parent_dir}/.objects/$(
+            basename "${extract_location%.*}"
+          ).list";
+
+    ## Extract target IP address from path like: reports/10.0.2.3/cisco/...
+    local search_pattern;
+    search_pattern="$(
+      echo "${extract_location}" | \
+      cut -d'/' -f2
+    )";
+
+    mkdir -p "${parent_dir}/.objects" || return 100;
+
+    {
+      case "${target_platform}" in
+
+        cisco)  awk -v divisor="${divisor}" '
+                  BEGIN {
+                    in_json_header = 0;
+                    blk = "";
+                  }
+                  /^[[:space:]]*$/ { next }
+                  /^{$/ { in_json_header = 1; next }
+                  /^}$/ {
+                    if (in_json_header == 1) {
+                      in_json_header = 0;
+                      next;
+                    }
+                  }
+                  (in_json_header == 1) { next }
+                  /^[^[:space:]]/ {
+                    if (blk != "" && !seen[blk]++) print blk "\n";
+                    blk = $0;
+                    next;
+                  }
+                  {
+                    blk = blk divisor " " $0;
+                  }
+                  END {
+                    if (blk != "" && !seen[blk]++) print blk "\n";
+                  }
+                ' "${extract_location}";
+        ;;
+
+        fortinet) awk -v divisor="${divisor}" '
+                    BEGIN {
+                      blk = "";
+                      in_json_header = 0;
+                    }
+
+                    # Skip blank lines
+                    /^[[:space:]]*$/ { next }
+
+                    # Skip JSON preamble
+                    /^{$/            { in_json_header = 1; next }
+                    /^}$/            { if (in_json_header) { in_json_header = 0; next } }
+                    (in_json_header == 1) { next }
+
+                    # Skip platform metadata
+                    /^#(hostname|model|config-version)=/ { next }
+
+                    # Start of a new block
+                    /^config / {
+                      if (blk != "") print blk;
+                      blk = $0;
+                      next;
+                    }
+
+                    # Add 'edit' line to current block
+                    /^ edit / {
+                      blk = blk divisor " " $0;
+                      next;
+                    }
+
+                    # Add 'next' to block
+                    /^[[:space:]]*next$/ {
+                      blk = blk divisor " " $0;
+                      next;
+                    }
+
+                    # Finalize block at 'end'
+                    /^[[:space:]]*end$/ {
+                      blk = blk divisor $0;
+                      if (blk != "" && !seen[blk]++) print blk;
+                      blk = "";
+                      next;
+                    }
+
+                    # Accumulate middle lines
+                    {
+                      blk = blk divisor " " $0;
+                    }
+
+                    END {
+                      # No need for final print — all blocks end with 'end'
+                    }
+                  ' "${extract_location}";
+        ;;
+        # *)  warning "Unsupported platform: ${target_platform}" >&2
+        *)
+            local warning_file="${console_location}/warnings.console";
+            {
+              newline;
+              message "Unsupported platform for extraction:";
+              message "  - IP Address  : ${search_pattern}";
+              message "  - Config File : ${extract_location}";
+              message "  - Platform    : ${target_platform:-unknown}";
+              newline;
+            } >> "${warning_file}";
+            # return 99;
+        ;;
+      esac;
+
+    } | grep -F "${search_pattern}" | sed '/^[[:space:]]*$/d' > "${object_path}";
+
+    ## Check if the serialization was successful
+    result=$?;
+    if [[ ${result} -ne 0 ]]; then
+      warning "Failed to serialize objects from: ${extract_location}";
+      return 1;
+    fi;
+
+    if [[ "${verbose}" == true ]]; then
+      {
+        message "Serialized objects to: ${object_path}";
+        newline;
+        print_file "${object_path}" | cat -n;
+        newline;
+      } >> "${target_logfile:-/dev/null}";
+    fi;
+
+    return 0;
+}; alias serialize-object='configs_objects';
+
+#------------------------------------------------------------------------------#
+
