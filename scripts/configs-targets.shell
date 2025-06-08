@@ -99,7 +99,9 @@ function configs_targets () {
 
       ## Validate vendor/site folder name
       if [[ ! -d "${reports_location}/${search_pattern}/${site}" ]]; then
-        warning "Unexpected vendor/site folder: '${site}' in '${config_file}'" >> "${target_logfile}";
+        {
+          warning "Unexpected vendor/site folder: '${site}' in '${config_file}'";
+        } ## >> "${target_logfile}";
         continue;
       fi;
 
@@ -125,7 +127,9 @@ function configs_targets () {
       )";
 
       if ! echo "${json_head}" | jq -e . >/dev/null 2>&1; then
-        warning "Malformed JSON header in: ${config_file}" >> "${target_logfile}";
+        {
+          warning "Malformed JSON header in: ${config_file}";
+        } ## >> "${target_logfile}";
         continue;
       fi;
 
@@ -176,7 +180,7 @@ function configs_targets () {
     #   {
     #     print_file "${target_config}" | jq -r .;
     #     newline;
-    #   } >> "${target_logfile:-/dev/null}";
+    #   } ## >> "${target_logfile:-/dev/null}";
     # fi;
 
     return 0;

@@ -11,20 +11,21 @@ readonly __CONFIGS_EXPORT__=1;
 ##
 ## Purpose:
 ##   Converts structured per-IP JSON reports into a single unified CSV file.
-##   Extracts relevant fields from each matching config object using `jq`.
+##   Extracts all defined fields dynamically from each matching config object.
 ##
 ## Input:
 ##   None (operates on all *.json files under ${reports_location}/<ip>/<ip>.json)
 ##
 ## Output:
-##   Generates sorted CSV at ${output_csv}, with columns:
-##     target, site, device, object, type, items, partner, description, group
+##   Generates sorted CSV at ${output_csv}, with columns in fixed order:
+##     target, site, device, vendor, model, version, domain, hostname,
+##     object, type, items_0, partner, description, group
 ##
 ## Method:
-##   - Uses jq to extract rows per object in each config.
+##   - Defines field→expression mapping in a single array.
+##   - Builds CSV header and jq transformation dynamically from mapping.
 ##   - Applies fallback values (e.g., "none") for missing fields.
 ##   - Sorts output by: target, site, device, object.
-##   - Header is inserted manually; rows appended below.
 ##
 ## Notes:
 ##   - Uses a temporary file to build unsorted content before final sort.
@@ -33,7 +34,7 @@ readonly __CONFIGS_EXPORT__=1;
 
 function generate_csvoutput () {
 
-    local tmp_csv="$( mktemp )";  ## Temporary file for accumulating unsorted CSV rows
+    local temporary_output="$( mktemp )";  ## Temporary file for accumulating unsorted CSV rows
 
     ## Ensure JSON directory exists and contains files
     if [[ ! -d "${reports_location}" ]]; then
@@ -41,62 +42,78 @@ function generate_csvoutput () {
       return 10;
     fi;
 
+    ## Define field mappings in fixed order (header=jq_expr)
+    ## Each entry maps a CSV column name to a jq expression
+    ## - All expressions are expanded with // fallback unless already specified
+    ## - Preserves strict order in both CSV header and output
+
+    local -a output_structure=(
+      'target=$target'
+      'site=.site'
+      'device=.device'
+      'vendor=.specs.vendor'
+      'model=.specs.model'
+      'version=.specs.version'
+      'domain=.specs.domain'
+      'hostname=.specs.hostname'
+      'object=$obj.object'
+      'type=$obj.type'
+      'items_0=$obj.items[0]'
+      'partner=$obj.partner'
+      'description=$obj.description'
+      'group=$obj.group'
+    );
+
+    ## Build CSV header and jq transformation dynamically
+    local csv_header="";
+    local parameters="";
+
+    for item in "${output_structure[@]}"; do
+      local index="${item%%=*}";
+      local value="${item#*=}";
+      csv_header+="${index},";
+      [[ "$value" =~ '//' ]] || value="${value} // \"none\"";
+      parameters+="${value}, ";
+    done;
+
+    ## Trim trailing delimiters from header and expression list
+    csv_header="${csv_header%,}";
+    parameters="${parameters%, }";
+
+    ## Process all per-IP JSON files in ./reports/<ip>/<ip>.json
     find "${reports_location}" \
-         -type f \
-         -name '*.json' \
-         -mindepth 2 \
-         -maxdepth 2 | \
+      -mindepth 2 -maxdepth 2 \
+      -type f -name '*.json' | \
     sort | \
     while read -r json; do
-        message "Processing ${json}" >&2;
+      message "Processing ${json}" >&2;
 
-        ## Description: jq streaming transformation – filter composition with variable binding and object iteration.
-        ## - Uses variable binding with `as` (e.g., `.target as $target`)
-        ## - Composes filters with `|` to drill into arrays and nested structures
-        ## - Constructs arrays using `[ ... ]` to represent each CSV row
-        ## - Formats final output as CSV with `@csv`
+      ## Generate jq transformation block per file
+      ## - Binds .target into $target
+      ## - Iterates over each config and object entry
+      ## - Extracts only defined fields into a CSV row
 
-        ## Objective: Generate a CSV from structured JSON files using jq.
-        ## - Binds the top-level "target" field once for reuse in each row.
-        ## - Iterates over each "config" entry, then over each "object" inside it.
-        ## - Extracts key fields: target, site, device, object, type, first matching line (items[0]), description, and group.
-        ## - Outputs each row as a properly quoted CSV line using `@csv`.
-        ## - Final output is sorted by target, site, device, and object for readability.
+      local json2csv_transformation="
+        .target as \$target
+        | .configs[]
+        | select( .objects != null and ( .objects | type == \"array\" and length > 0 ) )
+        | .objects[] as \$obj
+        | [ ${parameters} ]
+        | @csv
+      ";
 
-        json2csv_transformation='.target as $target
-                    | .configs[]
-                    | select( .objects != null and ( .objects | type == "array" and length > 0 ) )
-                    | .objects[] as $obj
-                    | [
-                        $target,
-                        ( .site // "none" ),
-                        ( .device // "none" ),
-                        ( $obj.object // "none" ),
-                        ( $obj.type // "none" ),
-                        ( $obj.items[0] // "none" ),
-                        ( $obj.partner // "none" ),
-                        ( $obj.description // "none" ),
-                        ( $obj.group // "none" )
-                      ]
-                    | @csv';
-
-        ## Apply the jq transformation defined above to each JSON file:
-        ## - Uses -e to exit with failure status if the filter fails (ensures robustness)
-        ## - Uses -r to output raw strings instead of JSON-encoded strings
-        ## - Applies the `json2csv_transformation` filter to the current JSON file
-        ## - Appends each generated CSV row to the temporary output file
-
-        jq -e -r "${json2csv_transformation}" "${json}" >> "${tmp_csv}" \
-        || message "[WARN] Failed CSV append for ${json}" >&2;
+      ## Execute jq and append to CSV buffer
+      jq --exit-status --raw-output "${json2csv_transformation}" "${json}" \
+      >> "${temporary_output}" || \
+      message "[WARN] Failed CSV append for ${json}" >&2;
 
     done;
 
-    ## Sort the CSV (preserve header)
+    ## Finalize sorted CSV with header and ordered data rows
     {
-      message "target,site,device,object,type,items,partner,description,group";
-      sort -t',' -k1,1 -k2,2 -k3,3 -k4,4 "${tmp_csv}";
-    } > "${output_csv}" && \
-    rm -f "${tmp_csv}";
+      echo "${csv_header}";
+      sort -t',' -k1,1 -k2,2 -k3,3 -k4,4 "${temporary_output}";
+    } > "${output_csv}" && rm -f "${temporary_output}";
 
     return 0;
 }; alias generate-csvoutput='generate_csvoutput';
