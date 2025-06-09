@@ -908,7 +908,8 @@ function main () {
               $(( ( elapsed % 3600 ) / 60 )) \
               $(( elapsed % 60 ));
       newline;
-    } >> "${actions_logfile:-/dev/null}";
+    } > "${project_status}" 2>/dev/null;
+    cat "${project_status}" >> "${actions_logfile:-/dev/null}";
 
     return 0;
 }; alias parse-listings='main';
@@ -941,6 +942,9 @@ mkdir -p ${targets_location} 2>/dev/null || true;
 
 ## Flush content of all files under ./logs without deleting them
 [[ -d "${logs_location}" ]] && find "${logs_location}" -type f -exec truncate -s 0 {} +
+
+# Purging completion marker file.
+rm -v "${project_status}" 2>/dev/null;
 
 #------------------------------------------------------------------------------#
 

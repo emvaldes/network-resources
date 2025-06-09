@@ -171,14 +171,27 @@ function configs_parser () {
     fi;
 
     declare -ga source_configs=();
+    # mapfile -t source_configs < <(
+    #   jq -r '
+    #     .locations | to_entries[] |
+    #     .key as $site |
+    #     .value.devices[] |
+    #     "\($site)/.objects/\(.config.file | split(".")[0]).list"
+    #   ' "${target_configlist_json}"
+    # );
+
     mapfile -t source_configs < <(
-      jq -r '
-        .locations | to_entries[] |
-        .key as $site |
-        .value.devices[] |
-        "\($site)/.objects/\(.config.file | split(".")[0]).list"
+      jq -r --arg reports "${reports_location}" '
+        .target as $ip
+        | .locations
+        | to_entries[]
+        | .key as $site
+        | .value.devices[]
+        | "\($reports)/\($ip)/\($site)/\(.config.object)"
       ' "${target_configlist_json}"
     );
+
+    # printf '→ %s\n' "${source_configs[@]}" >&2;
 
     #### -----------------------------------------------------------------------
     if [[ "${verbose}" == true ]]; then
@@ -221,6 +234,8 @@ function configs_parser () {
     mkdir -p $( dirname "${object_fragments}" );
 
     for config_filename in "${source_configs[@]}"; do
+
+      ## message "Config Filename: ${config_filename}";
 
       local cfg_basename="$( basename "${config_filename}" )";
       local object_fragments_per_file="${TMP_DIR}/${target_address}/fragments--${cfg_basename}--${RANDOM}.json";

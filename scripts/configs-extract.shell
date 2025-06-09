@@ -97,12 +97,12 @@ function configs_extract () {
     #### -----------------------------------------------------------------------
     ## Full file ingestion and normalization
 
-    mapfile -t imported_content < <(
-      sed '/^\s*$/d' "${reports_location}/${target_pattern}/${config_filename}"
-    );
     # mapfile -t imported_content < <(
-    #   sed '/^\s*$/d' "${config_filename}"
+    #   sed '/^\s*$/d' "${reports_location}/${target_pattern}/${config_filename}"
     # );
+    mapfile -t imported_content < <(
+      sed '/^\s*$/d' "${config_filename}"
+    );
 
     message "Divisor: [${divisor}]" | cat -vet;
     if [[ "${verbose}" == true ]]; then
@@ -216,7 +216,7 @@ function configs_extract () {
 
         wrapped_block="$(
           jq --slurp \
-            --arg site "${config_filename%%/*}" \
+            --arg site "${rel_path%%/*}" \
             --arg device "$(
                 basename -s .list "${rel_path##*/}"
               )" \

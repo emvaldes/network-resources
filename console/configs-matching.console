@@ -2,35 +2,35 @@ Completed background jobs for matched IPs (10):
 -------------------------------------
  Index  | PID    | IP Address       |
 -------------------------------------
-     1	97925  | 172.16.0.5     
-     2	98033  | 192.0.2.50     
-     3	98064  | 192.168.0.1    
-     4	97883  | 10.0.2.3       
-     5	97861  | 10.0.0.1       
-     6	98003  | 172.31.255.254 
-     7	97902  | 10.10.10.10    
-     8	97950  | 172.16.1.6     
-     9	97870  | 10.0.1.2       
-    10	97976  | 172.18.1.20    
+     1	79093  | 10.0.1.2       
+     2	79232  | 172.31.255.254 
+     3	79200  | 172.18.1.20    
+     4	79289  | 192.168.0.1    
+     5	79084  | 10.0.0.1       
+     6	79176  | 172.16.1.6     
+     7	79106  | 10.0.2.3       
+     8	79124  | 10.10.10.10    
+     9	79148  | 172.16.0.5     
+    10	79260  | 192.0.2.50     
 
-Completed Configuration Targets (IP): targets/172.16.0.5.json
+Completed Configuration Targets (IP): targets/10.0.1.2.json
 {
-  "target": "172.16.0.5",
+  "target": "10.0.1.2",
   "locations": {
-    "cisco": {
+    "fortinet": {
       "devices": [
         {
           "specs": {
-            "vendor": "cisco",
-            "model": "ASA",
-            "version": "9.14(3)",
-            "domain": "edge.dc.example.com",
-            "hostname": "perimeter-fw1"
+            "vendor": "fortinet",
+            "model": "FortiGate-60F",
+            "version": "v7.2.5.F",
+            "domain": "",
+            "hostname": "fg-branch-vpn-01"
           },
           "config": {
-            "file": "perimeter-fw1.cfg",
-            "lines": 21,
-            "object": ".objects/perimeter-fw1.list"
+            "file": "fg-branch-vpn-01.cfg",
+            "lines": 19,
+            "object": ".objects/fg-branch-vpn-01.list"
           }
         }
       ]
@@ -46,47 +46,75 @@ Completed Configuration Targets (IP): targets/172.16.0.5.json
             "hostname": ""
           },
           "config": {
-            "file": "fw3.cfg",
-            "lines": 17,
-            "object": ".objects/fw3.list"
+            "file": "switch1.conf",
+            "lines": 11,
+            "object": ".objects/switch1.list"
           }
         }
       ]
     }
   }
 }
-Completed Configuration Targets (IP): targets/192.0.2.50.json
+Completed Configuration Targets (IP): targets/172.31.255.254.json
 {
-  "target": "192.0.2.50",
+  "target": "172.31.255.254",
+  "locations": {
+    "misc": {
+      "devices": [
+        {
+          "specs": {
+            "vendor": "cisco",
+            "model": "",
+            "version": "",
+            "domain": "",
+            "hostname": ""
+          },
+          "config": {
+            "file": "switch1.conf",
+            "lines": 11,
+            "object": ".objects/switch1.list"
+          }
+        }
+      ]
+    }
+  }
+}
+Completed Configuration Targets (IP): targets/172.18.1.20.json
+{
+  "target": "172.18.1.20",
   "locations": {
     "cisco": {
       "devices": [
         {
           "specs": {
             "vendor": "cisco",
-            "model": "ASA",
-            "version": "9.14(3)",
-            "domain": "edge.dc.example.com",
-            "hostname": "perimeter-fw1"
+            "model": "",
+            "version": "16.9",
+            "domain": "",
+            "hostname": "branch-isr-02"
           },
           "config": {
-            "file": "perimeter-fw1.cfg",
-            "lines": 18,
-            "object": ".objects/perimeter-fw1.list"
+            "file": "branch-isr-02.cfg",
+            "lines": 16,
+            "object": ".objects/branch-isr-02.list"
           }
-        },
+        }
+      ]
+    },
+    "misc": {
+      "devices": [
         {
           "specs": {
             "vendor": "cisco",
-            "model": "ASA",
-            "version": "9.12(4)",
-            "domain": "global.dmz.example.net",
-            "hostname": "dmz-fw2-backup"
+            "model": "",
+            "version": "",
+            "domain": "",
+            "hostname": ""
           },
           "config": {
-            "file": "dmz-fw2-backup.cfg",
-            "lines": 16,
-            "object": ".objects/dmz-fw2-backup.list"
+            "file": "fw1.cfg",
+            "lines": 13,
+            "object": ".objects/fw1.list"
           }
         }
       ]
@@ -143,62 +171,6 @@ Completed Configuration Targets (IP): targets/192.168.0.1.json
             "file": "fg-branch-vpn-01.cfg",
             "lines": 19,
             "object": ".objects/fg-branch-vpn-01.list"
-          }
-        }
-      ]
-    }
-  }
-}
-Completed Configuration Targets (IP): targets/10.0.2.3.json
-{
-  "target": "10.0.2.3",
-  "locations": {
-    "cisco": {
-      "devices": [
-        {
-          "specs": {
-            "vendor": "cisco",
-            "model": "",
-            "version": "16.9",
-            "domain": "",
-            "hostname": "branch-isr-02"
-          },
-          "config": {
-            "file": "branch-isr-02.cfg",
-            "lines": 19,
-            "object": ".objects/branch-isr-02.list"
-          }
-        }
-      ]
-    },
-    "misc": {
-      "devices": [
-        {
-          "specs": {
-            "vendor": "cisco",
-            "model": "",
-            "version": "",
-            "domain": "",
-            "hostname": ""
-          },
-          "config": {
-            "file": "fw3.cfg",
-            "lines": 18,
-            "object": ".objects/fw3.list"
-          }
-        },
-        {
-          "specs": {
-            "vendor": "cisco",
-            "model": "",
-            "version": "",
-            "domain": "",
-            "hostname": ""
-          },
-          "config": {
-            "file": "fw1.cfg",
-            "lines": 18,
-            "object": ".objects/fw1.list"
           }
         }
       ]
@@ -279,10 +251,46 @@ Completed Configuration Targets (IP): targets/10.0.0.1.json
     }
   }
 }
-Completed Configuration Targets (IP): targets/172.31.255.254.json
+Completed Configuration Targets (IP): targets/172.16.1.6.json
 {
-  "target": "172.31.255.254",
+  "target": "172.16.1.6",
   "locations": {
+    "cisco": {
+      "devices": [
+        {
+          "specs": {
+            "vendor": "cisco",
+            "model": "",
+            "version": "16.9",
+            "domain": "",
+            "hostname": "branch-isr-02"
+          },
+          "config": {
+            "file": "branch-isr-02.cfg",
+            "lines": 19,
+            "object": ".objects/branch-isr-02.list"
+          }
+        }
+      ]
+    },
+    "fortinet": {
+      "devices": [
+        {
+          "specs": {
+            "vendor": "fortinet",
+            "model": "FortiGate-200F",
+            "version": "",
+            "domain": "",
+            "hostname": "fg-campus-core"
+          },
+          "config": {
+            "file": "fg-campus-core.cfg",
+            "lines": 18,
+            "object": ".objects/fg-campus-core.list"
+          }
+        }
+      ]
+    },
     "misc": {
       "devices": [
         {
@@ -294,9 +302,65 @@ Completed Configuration Targets (IP): targets/172.31.255.254.json
             "hostname": ""
           },
           "config": {
-            "file": "switch1.conf",
+            "file": "switch3.conf",
             "lines": 11,
-            "object": ".objects/switch1.list"
+            "object": ".objects/switch3.list"
+          }
+        }
+      ]
+    }
+  }
+}
+Completed Configuration Targets (IP): targets/10.0.2.3.json
+{
+  "target": "10.0.2.3",
+  "locations": {
+    "cisco": {
+      "devices": [
+        {
+          "specs": {
+            "vendor": "cisco",
+            "model": "",
+            "version": "16.9",
+            "domain": "",
+            "hostname": "branch-isr-02"
+          },
+          "config": {
+            "file": "branch-isr-02.cfg",
+            "lines": 19,
+            "object": ".objects/branch-isr-02.list"
+          }
+        }
+      ]
+    },
+    "misc": {
+      "devices": [
+        {
+          "specs": {
+            "vendor": "cisco",
+            "model": "",
+            "version": "",
+            "domain": "",
+            "hostname": ""
+          },
+          "config": {
+            "file": "fw3.cfg",
+            "lines": 18,
+            "object": ".objects/fw3.list"
+          }
+        },
+        {
+          "specs": {
+            "vendor": "cisco",
+            "model": "",
+            "version": "",
+            "domain": "",
+            "hostname": ""
+          },
+          "config": {
+            "file": "fw1.cfg",
+            "lines": 18,
+            "object": ".objects/fw1.list"
           }
         }
       ]
@@ -405,9 +469,101 @@ Completed Configuration Targets (IP): targets/10.10.10.10.json
     }
   }
 }
-Completed Configuration Targets (IP): targets/172.16.1.6.json
+Completed Configuration Targets (IP): targets/172.16.0.5.json
 {
-  "target": "172.16.1.6",
+  "target": "172.16.0.5",
+  "locations": {
+    "cisco": {
+      "devices": [
+        {
+          "specs": {
+            "vendor": "cisco",
+            "model": "ASA",
+            "version": "9.14(3)",
+            "domain": "edge.dc.example.com",
+            "hostname": "perimeter-fw1"
+          },
+          "config": {
+            "file": "perimeter-fw1.cfg",
+            "lines": 21,
+            "object": ".objects/perimeter-fw1.list"
+          }
+        }
+      ]
+    },
+    "misc": {
+      "devices": [
+        {
+          "specs": {
+            "vendor": "cisco",
+            "model": "",
+            "version": "",
+            "domain": "",
+            "hostname": ""
+          },
+          "config": {
+            "file": "fw3.cfg",
+            "lines": 17,
+            "object": ".objects/fw3.list"
+          }
+        }
+      ]
+    }
+  }
+}
+Completed Configuration Targets (IP): targets/192.0.2.50.json
+{
+  "target": "192.0.2.50",
+  "locations": {
+    "cisco": {
+      "devices": [
+        {
+          "specs": {
+            "vendor": "cisco",
+            "model": "ASA",
+            "version": "9.14(3)",
+            "domain": "edge.dc.example.com",
+            "hostname": "perimeter-fw1"
+          },
+          "config": {
+            "file": "perimeter-fw1.cfg",
+            "lines": 18,
+            "object": ".objects/perimeter-fw1.list"
+          }
+        },
+        {
+          "specs": {
+            "vendor": "cisco",
+            "model": "ASA",
+            "version": "9.12(4)",
+            "domain": "global.dmz.example.net",
+            "hostname": "dmz-fw2-backup"
+          },
+          "config": {
+            "file": "dmz-fw2-backup.cfg",
+            "lines": 16,
+            "object": ".objects/dmz-fw2-backup.list"
+          }
+        }
+      ]
+    }
+  }
+}
+Completed background jobs for matched IPs (7):
+-------------------------------------
+ Index  | PID    | IP Address       |
+-------------------------------------
+     1	83728  | 198.51.100.75  
+     2	83682  | 192.168.2.12   
+     3	83663  | 192.168.1.11   
+     4	83704  | 192.168.100.100
+     5	83649  | 192.168.1.10   
+     6	83640  | 192.168.0.100  
+     7	83754  | 203.0.113.25   
+
+Completed Configuration Targets (IP): targets/198.51.100.75.json
+{
+  "target": "198.51.100.75",
   "locations": {
     "cisco": {
       "devices": [
@@ -421,7 +577,155 @@ Completed Configuration Targets (IP): targets/172.16.1.6.json
           },
           "config": {
             "file": "branch-isr-02.cfg",
-            "lines": 19,
+            "lines": 20,
+            "object": ".objects/branch-isr-02.list"
+          }
+        },
+        {
+          "specs": {
+            "vendor": "cisco",
+            "model": "ASA",
+            "version": "9.12(4)",
+            "domain": "global.dmz.example.net",
+            "hostname": "dmz-fw2-backup"
+          },
+          "config": {
+            "file": "dmz-fw2-backup.cfg",
+            "lines": 17,
+            "object": ".objects/dmz-fw2-backup.list"
+          }
+        }
+      ]
+    },
+    "fortinet": {
+      "devices": [
+        {
+          "specs": {
+            "vendor": "fortinet",
+            "model": "FortiGate-60F",
+            "version": "v7.2.5.F",
+            "domain": "",
+            "hostname": "fg-branch-vpn-01"
+          },
+          "config": {
+            "file": "fg-branch-vpn-01.cfg",
+            "lines": 26,
+            "object": ".objects/fg-branch-vpn-01.list"
+          }
+        }
+      ]
+    },
+    "misc": {
+      "devices": [
+        {
+          "specs": {
+            "vendor": "cisco",
+            "model": "",
+            "version": "",
+            "domain": "",
+            "hostname": ""
+          },
+          "config": {
+            "file": "fw1.cfg",
+            "lines": 17,
+            "object": ".objects/fw1.list"
+          }
+        }
+      ]
+    }
+  }
+}
+Completed Configuration Targets (IP): targets/192.168.2.12.json
+{
+  "target": "192.168.2.12",
+  "locations": {
+    "cisco": {
+      "devices": [
+        {
+          "specs": {
+            "vendor": "cisco",
+            "model": "",
+            "version": "16.9",
+            "domain": "",
+            "hostname": "branch-isr-02"
+          },
+          "config": {
+            "file": "branch-isr-02.cfg",
+            "lines": 20,
+            "object": ".objects/branch-isr-02.list"
+          }
+        }
+      ]
+    },
+    "fortinet": {
+      "devices": [
+        {
+          "specs": {
+            "vendor": "fortinet",
+            "model": "FortiGate-200F",
+            "version": "",
+            "domain": "",
+            "hostname": "fg-campus-core"
+          },
+          "config": {
+            "file": "fg-campus-core.cfg",
+            "lines": 18,
+            "object": ".objects/fg-campus-core.list"
+          }
+        },
+        {
+          "specs": {
+            "vendor": "fortinet",
+            "model": "FortiGate-60F",
+            "version": "v7.2.5.F",
+            "domain": "",
+            "hostname": "fg-branch-vpn-01"
+          },
+          "config": {
+            "file": "fg-branch-vpn-01.cfg",
+            "lines": 26,
+            "object": ".objects/fg-branch-vpn-01.list"
+          }
+        }
+      ]
+    },
+    "misc": {
+      "devices": [
+        {
+          "specs": {
+            "vendor": "cisco",
+            "model": "",
+            "version": "",
+            "domain": "",
+            "hostname": ""
+          },
+          "config": {
+            "file": "fw1.cfg",
+            "lines": 14,
+            "object": ".objects/fw1.list"
+          }
+        }
+      ]
+    }
+  }
+}
+Completed Configuration Targets (IP): targets/192.168.1.11.json
+{
+  "target": "192.168.1.11",
+  "locations": {
+    "cisco": {
+      "devices": [
+        {
+          "specs": {
+            "vendor": "cisco",
+            "model": "",
+            "version": "16.9",
+            "domain": "",
+            "hostname": "branch-isr-02"
+          },
+          "config": {
+            "file": "branch-isr-02.cfg",
+            "lines": 16,
             "object": ".objects/branch-isr-02.list"
           }
         }
@@ -444,30 +748,54 @@ Completed Configuration Targets (IP): targets/172.16.1.6.json
           }
         }
       ]
-    },
-    "misc": {
+    }
+  }
+}
+Completed Configuration Targets (IP): targets/192.168.100.100.json
+{
+  "target": "192.168.100.100",
+  "locations": {
+    "cisco": {
       "devices": [
         {
           "specs": {
             "vendor": "cisco",
-            "model": "",
-            "version": "",
-            "domain": "",
-            "hostname": ""
+            "model": "ASA",
+            "version": "9.12(4)",
+            "domain": "global.dmz.example.net",
+            "hostname": "dmz-fw2-backup"
           },
           "config": {
-            "file": "switch3.conf",
-            "lines": 11,
-            "object": ".objects/switch3.list"
+            "file": "dmz-fw2-backup.cfg",
+            "lines": 26,
+            "object": ".objects/dmz-fw2-backup.list"
+          }
+        }
+      ]
+    },
+    "fortinet": {
+      "devices": [
+        {
+          "specs": {
+            "vendor": "fortinet",
+            "model": "FortiGate-200F",
+            "version": "",
+            "domain": "",
+            "hostname": "fg-campus-core"
+          },
+          "config": {
+            "file": "fg-campus-core.cfg",
+            "lines": 32,
+            "object": ".objects/fg-campus-core.list"
           }
         }
       ]
     }
   }
 }
-Completed Configuration Targets (IP): targets/10.0.1.2.json
+Completed Configuration Targets (IP): targets/192.168.1.10.json
 {
-  "target": "10.0.1.2",
+  "target": "192.168.1.10",
   "locations": {
     "fortinet": {
       "devices": [
@@ -498,39 +826,11 @@ Completed Configuration Targets (IP): targets/10.0.1.2.json
             "hostname": ""
           },
           "config": {
-            "file": "switch1.conf",
-            "lines": 11,
-            "object": ".objects/switch1.list"
+            "file": "fw3.cfg",
+            "lines": 14,
+            "object": ".objects/fw3.list"
           }
-        }
-      ]
-    }
-  }
-}
-Completed Configuration Targets (IP): targets/172.18.1.20.json
-{
-  "target": "172.18.1.20",
-  "locations": {
-    "cisco": {
-      "devices": [
-        {
-          "specs": {
-            "vendor": "cisco",
-            "model": "",
-            "version": "16.9",
-            "domain": "",
-            "hostname": "branch-isr-02"
-          },
-          "config": {
-            "file": "branch-isr-02.cfg",
-            "lines": 16,
-            "object": ".objects/branch-isr-02.list"
-          }
-        }
-      ]
-    },
-    "misc": {
-      "devices": [
+        },
         {
           "specs": {
             "vendor": "cisco",
@@ -544,23 +844,63 @@ Completed Configuration Targets (IP): targets/172.18.1.20.json
             "lines": 13,
             "object": ".objects/fw1.list"
           }
+        },
+        {
+          "specs": {
+            "vendor": "cisco",
+            "model": "",
+            "version": "",
+            "domain": "",
+            "hostname": ""
+          },
+          "config": {
+            "file": "switch1.conf",
+            "lines": 11,
+            "object": ".objects/switch1.list"
+          }
         }
       ]
     }
   }
 }
-Completed background jobs for matched IPs (7):
--------------------------------------
- Index  | PID    | IP Address       |
--------------------------------------
-     1	2886   | 203.0.113.25   
-     2	2769   | 192.168.0.100  
-     3	2859   | 198.51.100.75  
-     4	2793   | 192.168.1.11   
-     5	2778   | 192.168.1.10   
-     6	2836   | 192.168.100.100
-     7	2814   | 192.168.2.12   
-
+Completed Configuration Targets (IP): targets/192.168.0.100.json
+{
+  "target": "192.168.0.100",
+  "locations": {
+    "cisco": {
+      "devices": [
+        {
+          "specs": {
+            "vendor": "cisco",
+            "model": "",
+            "version": "12.4",
+            "domain": "",
+            "hostname": "access-sw1-west"
+          },
+          "config": {
+            "file": "access-sw1-west.cfg",
+            "lines": 21,
+            "object": ".objects/access-sw1-west.list"
+          }
+        },
+        {
+          "specs": {
+            "vendor": "cisco",
+            "model": "",
+            "version": "12.2",
+            "domain": "",
+            "hostname": "campus-sw-access01"
+          },
+          "config": {
+            "file": "campus-sw-access01.cfg",
+            "lines": 17,
+            "object": ".objects/campus-sw-access01.list"
+          }
+        }
+      ]
+    }
+  }
+}
 Completed Configuration Targets (IP): targets/203.0.113.25.json
 {
   "target": "203.0.113.25",
@@ -642,346 +982,6 @@ Completed Configuration Targets (IP): targets/203.0.113.25.json
           "config": {
             "file": "fw1.cfg",
             "lines": 17,
-            "object": ".objects/fw1.list"
-          }
-        }
-      ]
-    }
-  }
-}
-Completed Configuration Targets (IP): targets/192.168.0.100.json
-{
-  "target": "192.168.0.100",
-  "locations": {
-    "cisco": {
-      "devices": [
-        {
-          "specs": {
-            "vendor": "cisco",
-            "model": "",
-            "version": "12.4",
-            "domain": "",
-            "hostname": "access-sw1-west"
-          },
-          "config": {
-            "file": "access-sw1-west.cfg",
-            "lines": 21,
-            "object": ".objects/access-sw1-west.list"
-          }
-        },
-        {
-          "specs": {
-            "vendor": "cisco",
-            "model": "",
-            "version": "12.2",
-            "domain": "",
-            "hostname": "campus-sw-access01"
-          },
-          "config": {
-            "file": "campus-sw-access01.cfg",
-            "lines": 17,
-            "object": ".objects/campus-sw-access01.list"
-          }
-        }
-      ]
-    }
-  }
-}
-Completed Configuration Targets (IP): targets/198.51.100.75.json
-{
-  "target": "198.51.100.75",
-  "locations": {
-    "cisco": {
-      "devices": [
-        {
-          "specs": {
-            "vendor": "cisco",
-            "model": "",
-            "version": "16.9",
-            "domain": "",
-            "hostname": "branch-isr-02"
-          },
-          "config": {
-            "file": "branch-isr-02.cfg",
-            "lines": 20,
-            "object": ".objects/branch-isr-02.list"
-          }
-        },
-        {
-          "specs": {
-            "vendor": "cisco",
-            "model": "ASA",
-            "version": "9.12(4)",
-            "domain": "global.dmz.example.net",
-            "hostname": "dmz-fw2-backup"
-          },
-          "config": {
-            "file": "dmz-fw2-backup.cfg",
-            "lines": 17,
-            "object": ".objects/dmz-fw2-backup.list"
-          }
-        }
-      ]
-    },
-    "fortinet": {
-      "devices": [
-        {
-          "specs": {
-            "vendor": "fortinet",
-            "model": "FortiGate-60F",
-            "version": "v7.2.5.F",
-            "domain": "",
-            "hostname": "fg-branch-vpn-01"
-          },
-          "config": {
-            "file": "fg-branch-vpn-01.cfg",
-            "lines": 26,
-            "object": ".objects/fg-branch-vpn-01.list"
-          }
-        }
-      ]
-    },
-    "misc": {
-      "devices": [
-        {
-          "specs": {
-            "vendor": "cisco",
-            "model": "",
-            "version": "",
-            "domain": "",
-            "hostname": ""
-          },
-          "config": {
-            "file": "fw1.cfg",
-            "lines": 17,
-            "object": ".objects/fw1.list"
-          }
-        }
-      ]
-    }
-  }
-}
-Completed Configuration Targets (IP): targets/192.168.1.11.json
-{
-  "target": "192.168.1.11",
-  "locations": {
-    "cisco": {
-      "devices": [
-        {
-          "specs": {
-            "vendor": "cisco",
-            "model": "",
-            "version": "16.9",
-            "domain": "",
-            "hostname": "branch-isr-02"
-          },
-          "config": {
-            "file": "branch-isr-02.cfg",
-            "lines": 16,
-            "object": ".objects/branch-isr-02.list"
-          }
-        }
-      ]
-    },
-    "fortinet": {
-      "devices": [
-        {
-          "specs": {
-            "vendor": "fortinet",
-            "model": "FortiGate-200F",
-            "version": "",
-            "domain": "",
-            "hostname": "fg-campus-core"
-          },
-          "config": {
-            "file": "fg-campus-core.cfg",
-            "lines": 18,
-            "object": ".objects/fg-campus-core.list"
-          }
-        }
-      ]
-    }
-  }
-}
-Completed Configuration Targets (IP): targets/192.168.1.10.json
-{
-  "target": "192.168.1.10",
-  "locations": {
-    "fortinet": {
-      "devices": [
-        {
-          "specs": {
-            "vendor": "fortinet",
-            "model": "FortiGate-60F",
-            "version": "v7.2.5.F",
-            "domain": "",
-            "hostname": "fg-branch-vpn-01"
-          },
-          "config": {
-            "file": "fg-branch-vpn-01.cfg",
-            "lines": 19,
-            "object": ".objects/fg-branch-vpn-01.list"
-          }
-        }
-      ]
-    },
-    "misc": {
-      "devices": [
-        {
-          "specs": {
-            "vendor": "cisco",
-            "model": "",
-            "version": "",
-            "domain": "",
-            "hostname": ""
-          },
-          "config": {
-            "file": "fw3.cfg",
-            "lines": 14,
-            "object": ".objects/fw3.list"
-          }
-        },
-        {
-          "specs": {
-            "vendor": "cisco",
-            "model": "",
-            "version": "",
-            "domain": "",
-            "hostname": ""
-          },
-          "config": {
-            "file": "fw1.cfg",
-            "lines": 13,
-            "object": ".objects/fw1.list"
-          }
-        },
-        {
-          "specs": {
-            "vendor": "cisco",
-            "model": "",
-            "version": "",
-            "domain": "",
-            "hostname": ""
-          },
-          "config": {
-            "file": "switch1.conf",
-            "lines": 11,
-            "object": ".objects/switch1.list"
-          }
-        }
-      ]
-    }
-  }
-}
-Completed Configuration Targets (IP): targets/192.168.100.100.json
-{
-  "target": "192.168.100.100",
-  "locations": {
-    "cisco": {
-      "devices": [
-        {
-          "specs": {
-            "vendor": "cisco",
-            "model": "ASA",
-            "version": "9.12(4)",
-            "domain": "global.dmz.example.net",
-            "hostname": "dmz-fw2-backup"
-          },
-          "config": {
-            "file": "dmz-fw2-backup.cfg",
-            "lines": 26,
-            "object": ".objects/dmz-fw2-backup.list"
-          }
-        }
-      ]
-    },
-    "fortinet": {
-      "devices": [
-        {
-          "specs": {
-            "vendor": "fortinet",
-            "model": "FortiGate-200F",
-            "version": "",
-            "domain": "",
-            "hostname": "fg-campus-core"
-          },
-          "config": {
-            "file": "fg-campus-core.cfg",
-            "lines": 32,
-            "object": ".objects/fg-campus-core.list"
-          }
-        }
-      ]
-    }
-  }
-}
-Completed Configuration Targets (IP): targets/192.168.2.12.json
-{
-  "target": "192.168.2.12",
-  "locations": {
-    "cisco": {
-      "devices": [
-        {
-          "specs": {
-            "vendor": "cisco",
-            "model": "",
-            "version": "16.9",
-            "domain": "",
-            "hostname": "branch-isr-02"
-          },
-          "config": {
-            "file": "branch-isr-02.cfg",
-            "lines": 20,
-            "object": ".objects/branch-isr-02.list"
-          }
-        }
-      ]
-    },
-    "fortinet": {
-      "devices": [
-        {
-          "specs": {
-            "vendor": "fortinet",
-            "model": "FortiGate-200F",
-            "version": "",
-            "domain": "",
-            "hostname": "fg-campus-core"
-          },
-          "config": {
-            "file": "fg-campus-core.cfg",
-            "lines": 18,
-            "object": ".objects/fg-campus-core.list"
-          }
-        },
-        {
-          "specs": {
-            "vendor": "fortinet",
-            "model": "FortiGate-60F",
-            "version": "v7.2.5.F",
-            "domain": "",
-            "hostname": "fg-branch-vpn-01"
-          },
-          "config": {
-            "file": "fg-branch-vpn-01.cfg",
-            "lines": 26,
-            "object": ".objects/fg-branch-vpn-01.list"
-          }
-        }
-      ]
-    },
-    "misc": {
-      "devices": [
-        {
-          "specs": {
-            "vendor": "cisco",
-            "model": "",
-            "version": "",
-            "domain": "",
-            "hostname": ""
-          },
-          "config": {
-            "file": "fw1.cfg",
-            "lines": 14,
             "object": ".objects/fw1.list"
           }
         }
