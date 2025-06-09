@@ -22,6 +22,32 @@
           ],
           "others": [],
           "group": "Unclassified"
+        },
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/1",
+          "partner": false,
+          "description": "Inside LAN segment",
+          "items": [
+            "ip address 192.168.100.100 255.255.255.0"
+          ],
+          "others": [
+            "nameif inside"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/2",
+          "partner": false,
+          "description": "Outbound Internet NAT interface",
+          "items": [
+            "ip address 198.51.100.75 255.255.255.0"
+          ],
+          "others": [
+            "nameif outside"
+          ],
+          "group": "Unclassified"
         }
       ]
     },
@@ -37,17 +63,6 @@
       },
       "objects": [
         {
-          "object": "object",
-          "type": "network",
-          "partner": "Stark-Tower",
-          "description": "Core services gateway",
-          "items": [
-            "host 10.0.0.1"
-          ],
-          "others": [],
-          "group": "Unclassified"
-        },
-        {
           "object": "interface",
           "type": "GigabitEthernet0/0",
           "partner": false,
@@ -58,20 +73,6 @@
           "others": [
             "nameif outside",
             "security-level 0"
-          ],
-          "group": "Unclassified"
-        },
-        {
-          "object": "interface",
-          "type": "GigabitEthernet0/1",
-          "partner": false,
-          "description": "Internal Network Interface",
-          "items": [
-            "ip address 10.0.0.1 255.255.255.0"
-          ],
-          "others": [
-            "nameif inside",
-            "security-level 100"
           ],
           "group": "Unclassified"
         },
@@ -128,13 +129,15 @@
       "objects": [
         {
           "object": "config",
-          "type": "firewall address",
-          "partner": "IronMan-HQ",
-          "description": "Main node at Stark Tower",
+          "type": "system interface",
+          "partner": "internal",
+          "description": false,
           "items": [
-            "set subnet 10.0.0.1 255.255.255.255"
+            "set ip 192.168.2.12 255.255.255.0"
           ],
-          "others": [],
+          "others": [
+            "set alias \"User LAN\""
+          ],
           "group": "Unclassified"
         },
         {
@@ -144,6 +147,17 @@
           "description": "Public NAT exposure for Red Skull trap",
           "items": [
             "set subnet 203.0.113.25 255.255.255.255"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": "Panther-Vault",
+          "description": "Wakandan data store",
+          "items": [
+            "set subnet 192.168.1.10 255.255.255.255"
           ],
           "others": [],
           "group": "Unclassified"
@@ -167,11 +181,49 @@
           "partner": "Krypton-Cloud",
           "description": "Cloud-facing external nodes",
           "items": [
+            "network-object host 198.51.100.75"
+          ],
+          "others": [
+            "network-object host 203.0.113.25"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Krypton-Cloud",
+          "description": "Cloud-facing external nodes",
+          "items": [
             "network-object host 203.0.113.25"
           ],
           "others": [
             "network-object host 198.51.100.75"
           ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Metropolis-Internal",
+          "description": "Core internal LAN for application clusters",
+          "items": [
+            "network-object host 192.168.2.12"
+          ],
+          "others": [
+            "network-object host 10.0.2.3",
+            "network-object 192.168.2.0 255.255.255.0"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network",
+          "partner": "External-Failover",
+          "description": "Secondary outbound route for edge",
+          "items": [
+            "host 198.51.100.75"
+          ],
+          "others": [],
           "group": "Unclassified"
         },
         {
@@ -183,6 +235,19 @@
             "host 203.0.113.25"
           ],
           "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Fortress-Wireless",
+          "description": "Secure wireless access layer",
+          "items": [
+            "network-object host 192.168.1.10"
+          ],
+          "others": [
+            "network-object host 172.18.1.20"
+          ],
           "group": "Unclassified"
         }
       ]
@@ -208,6 +273,20 @@
           ],
           "others": [
             "network-object host 172.16.0.5"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Wakanda-Core",
+          "description": "National Core Routing Zone",
+          "items": [
+            "network-object host 192.168.1.10"
+          ],
+          "others": [
+            "network-object host 10.0.2.3",
+            "network-object 10.0.0.0 255.255.255.0"
           ],
           "group": "Unclassified"
         }

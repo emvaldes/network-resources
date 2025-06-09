@@ -448,6 +448,7 @@ function configs_parser () {
           )
       }';
 
+      #### -----------------------------------------------------------------------
       if [[ -f "${final_outfile}" ]]; then
               jq --slurp "${jq_merge_expr}" \
                          "${final_outfile}" \
@@ -460,6 +461,10 @@ function configs_parser () {
       mv "${tmp_merged}" "${final_outfile}" && \
       rm -f "${json_outfile}";
 
+      #### -----------------------------------------------------------------------
+      configs_export --config="${final_outfile}" --target="${output_csv}";
+
+      #### -----------------------------------------------------------------------
       if [[ "${verbose}" == true ]]; then
         {
           print "Merged [ targets/${target_address}.json ] → ${final_outfile}";
@@ -469,6 +474,7 @@ function configs_parser () {
 
     fi;
 
+    #### -----------------------------------------------------------------------
     if [[ "${verbose}" == true ]]; then
       {
         print_file "${target_logfile:-/dev/null}";

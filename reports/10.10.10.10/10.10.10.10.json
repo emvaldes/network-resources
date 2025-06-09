@@ -1,0 +1,333 @@
+{
+  "target": "10.10.10.10",
+  "configs": [
+    {
+      "site": "cisco",
+      "device": "access-sw1-west",
+      "specs": {
+        "vendor": "cisco",
+        "model": "",
+        "version": "12.4",
+        "domain": "",
+        "hostname": "access-sw1-west"
+      },
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Mutant-WiFi",
+          "description": "Controlled guest devices",
+          "items": [
+            "network-object host 10.10.10.10"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "interface",
+          "type": "Vlan1",
+          "partner": false,
+          "description": "Management Interface",
+          "items": [
+            "ip address 192.168.0.1 255.255.255.0"
+          ],
+          "others": [],
+          "group": "Business-Unit-Networks"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "MGMT-ACCESS",
+          "description": "Management objects",
+          "items": [
+            "network-object host 10.10.10.10"
+          ],
+          "others": [
+            "network-object host 192.168.0.1",
+            "network-object host 192.168.0.100"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "MGMT-ACCESS",
+          "description": "Management objects",
+          "items": [
+            "network-object host 192.168.0.1"
+          ],
+          "others": [
+            "network-object host 192.168.0.100",
+            "network-object host 10.10.10.10"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
+      "device": "campus-sw-access01",
+      "specs": {
+        "vendor": "cisco",
+        "model": "",
+        "version": "12.2",
+        "domain": "",
+        "hostname": "campus-sw-access01"
+      },
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Floor-Networks",
+          "description": "End-user and service devices",
+          "items": [
+            "network-object host 10.10.10.10"
+          ],
+          "others": [
+            "network-object host 192.168.0.1",
+            "network-object host 192.168.0.100"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "interface",
+          "type": "Vlan1",
+          "partner": false,
+          "description": "Switch Mgmt",
+          "items": [
+            "ip address 192.168.0.1 255.255.255.0"
+          ],
+          "others": [],
+          "group": "Business-Unit-Networks"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
+      "device": "dmz-fw2-backup",
+      "specs": {
+        "vendor": "cisco",
+        "model": "ASA",
+        "version": "9.12(4)",
+        "domain": "global.dmz.example.net",
+        "hostname": "dmz-fw2-backup"
+      },
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Watchtower-DMZ",
+          "description": "Global secure relay",
+          "items": [
+            "network-object host 192.0.2.50"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network",
+          "partner": "Shield-WiFi-Alias",
+          "description": "Guest NAT",
+          "items": [
+            "host 10.10.10.10"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/0",
+          "partner": false,
+          "description": "Guest access interface",
+          "items": [
+            "ip address 10.10.10.10 255.255.255.0"
+          ],
+          "others": [
+            "nameif guest"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Sector-Wireless",
+          "description": "Staff WiFi clients",
+          "items": [
+            "network-object host 10.10.10.10"
+          ],
+          "others": [
+            "network-object host 192.168.100.100"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "fortinet",
+      "device": "fg-campus-core",
+      "specs": {
+        "vendor": "fortinet",
+        "model": "FortiGate-200F",
+        "version": "",
+        "domain": "",
+        "hostname": "fg-campus-core"
+      },
+      "objects": [
+        {
+          "object": "config",
+          "type": "system interface",
+          "partner": "core",
+          "description": false,
+          "items": [
+            "set ip 10.10.10.10 255.255.255.0"
+          ],
+          "others": [
+            "set alias \"Campus Core Transit\""
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": "Hawkeye-Nest",
+          "description": "Remote sniper node",
+          "items": [
+            "set subnet 172.16.1.6 255.255.255.255"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": "Shield-WiFi",
+          "description": "Wireless AP Gateway",
+          "items": [
+            "set subnet 10.10.10.10 255.255.255.255"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "fortinet",
+      "device": "fg-testing-config",
+      "specs": {
+        "vendor": "fortinet",
+        "model": "FortiGate-60F",
+        "version": "v7.2.5.F",
+        "domain": "",
+        "hostname": "fg-branch-vpn-01"
+      },
+      "objects": [
+        {
+          "object": "config",
+          "type": "firewall policy",
+          "partner": false,
+          "description": false,
+          "items": [
+            "set srcaddr \"10.10.10.10\""
+          ],
+          "others": [
+            "edit 13",
+            "set name \"Remote NAT\"",
+            "set srcintf \"dmz\"",
+            "set dstintf \"wan1\"",
+            "set dstaddr \"203.0.113.10\"",
+            "set action accept",
+            "set logtraffic all"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "fw3",
+      "specs": {
+        "vendor": "cisco",
+        "model": "",
+        "version": "",
+        "domain": "",
+        "hostname": ""
+      },
+      "objects": [
+        {
+          "object": "object",
+          "type": "network",
+          "partner": "Shield-WiFi-Alias",
+          "description": "Guest NAT",
+          "items": [
+            "host 10.10.10.10"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network",
+          "partner": "Edge-Terminal",
+          "description": "Internet firewall handoff",
+          "items": [
+            "host 172.16.0.5"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Panther-Edge",
+          "description": "Internet-facing proxy systems",
+          "items": [
+            "network-object host 172.16.0.5"
+          ],
+          "others": [
+            "network-object host 203.0.113.25"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Wakanda-Core",
+          "description": "National Core Routing Zone",
+          "items": [
+            "network-object host 10.0.2.3"
+          ],
+          "others": [
+            "network-object host 192.168.1.10",
+            "network-object 10.0.0.0 255.255.255.0"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network",
+          "partner": "Panther-Gateway",
+          "description": "Secure outbound concentrator",
+          "items": [
+            "host 10.0.2.3"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Shield-WiFi",
+          "description": "Shield-controlled wireless network",
+          "items": [
+            "network-object host 10.10.10.10"
+          ],
+          "others": [
+            "network-object 192.168.100.0 255.255.255.0"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    }
+  ]
+}

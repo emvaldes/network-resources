@@ -1,0 +1,70 @@
+{
+  "target": "192.168.0.100",
+  "configs": [
+    {
+      "site": "cisco",
+      "device": "access-sw1-west",
+      "specs": {
+        "vendor": "cisco",
+        "model": "",
+        "version": "12.4",
+        "domain": "",
+        "hostname": "access-sw1-west"
+      },
+      "objects": [
+        {
+          "object": "interface",
+          "type": "Vlan100",
+          "partner": false,
+          "description": "Guest VLAN Gateway",
+          "items": [
+            "ip address 192.168.0.100 255.255.255.0"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "MGMT-ACCESS",
+          "description": "Management objects",
+          "items": [
+            "network-object host 192.168.0.100"
+          ],
+          "others": [
+            "network-object host 192.168.0.1",
+            "network-object host 10.10.10.10"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
+      "device": "campus-sw-access01",
+      "specs": {
+        "vendor": "cisco",
+        "model": "",
+        "version": "12.2",
+        "domain": "",
+        "hostname": "campus-sw-access01"
+      },
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Floor-Networks",
+          "description": "End-user and service devices",
+          "items": [
+            "network-object host 192.168.0.100"
+          ],
+          "others": [
+            "network-object host 192.168.0.1",
+            "network-object host 10.10.10.10"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    }
+  ]
+}

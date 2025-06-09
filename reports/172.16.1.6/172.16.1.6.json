@@ -1,0 +1,147 @@
+{
+  "target": "172.16.1.6",
+  "configs": [
+    {
+      "site": "cisco",
+      "device": "branch-isr-02",
+      "specs": {
+        "vendor": "cisco",
+        "model": "",
+        "version": "16.9",
+        "domain": "",
+        "hostname": "branch-isr-02"
+      },
+      "objects": [
+        {
+          "object": "object",
+          "type": "network",
+          "partner": "BlackWidow-Core",
+          "description": "Branch router uplink NAT",
+          "items": [
+            "host 172.16.1.6"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/0/2",
+          "partner": false,
+          "description": "Dev VLAN",
+          "items": [
+            "ip address 10.0.2.3 255.255.255.0"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/0/0",
+          "partner": false,
+          "description": "ISP uplink",
+          "items": [
+            "ip address 172.16.1.6 255.255.255.0"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Lantern-DMZ",
+          "description": "Protected but public-facing zone",
+          "items": [
+            "network-object host 172.18.1.20"
+          ],
+          "others": [
+            "network-object host 192.168.1.11"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network",
+          "partner": "Panther-Gateway",
+          "description": "Secure outbound concentrator",
+          "items": [
+            "host 10.0.2.3"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "fortinet",
+      "device": "fg-campus-core",
+      "specs": {
+        "vendor": "fortinet",
+        "model": "FortiGate-200F",
+        "version": "",
+        "domain": "",
+        "hostname": "fg-campus-core"
+      },
+      "objects": [
+        {
+          "object": "config",
+          "type": "system interface",
+          "partner": "core",
+          "description": false,
+          "items": [
+            "set ip 10.10.10.10 255.255.255.0"
+          ],
+          "others": [
+            "set alias \"Campus Core Transit\""
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": "Hawkeye-Nest",
+          "description": "Remote sniper node",
+          "items": [
+            "set subnet 172.16.1.6 255.255.255.255"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "switch3",
+      "specs": {
+        "vendor": "cisco",
+        "model": "",
+        "version": "",
+        "domain": "",
+        "hostname": ""
+      },
+      "objects": [
+        {
+          "object": "interface",
+          "type": "Vlan1",
+          "partner": false,
+          "description": false,
+          "items": [
+            "ip address 10.0.0.1 255.255.255.0"
+          ],
+          "others": [],
+          "group": "Business-Unit-Networks"
+        },
+        {
+          "object": "interface",
+          "type": "Vlan2",
+          "partner": false,
+          "description": false,
+          "items": [
+            "ip address 172.16.1.6 255.255.255.0"
+          ],
+          "others": [],
+          "group": "Business-Unit-Networks"
+        }
+      ]
+    }
+  ]
+}

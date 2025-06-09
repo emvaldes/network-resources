@@ -1,0 +1,300 @@
+{
+  "target": "198.51.100.75",
+  "configs": [
+    {
+      "site": "cisco",
+      "device": "branch-isr-02",
+      "specs": {
+        "vendor": "cisco",
+        "model": "",
+        "version": "16.9",
+        "domain": "",
+        "hostname": "branch-isr-02"
+      },
+      "objects": [
+        {
+          "object": "object",
+          "type": "network",
+          "partner": "Hydra-Link",
+          "description": "Branch NAT egress",
+          "items": [
+            "host 198.51.100.75"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Lantern-DMZ",
+          "description": "Protected but public-facing zone",
+          "items": [
+            "network-object host 192.168.1.11"
+          ],
+          "others": [
+            "network-object host 172.18.1.20"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Hydra-Edge",
+          "description": "Remote site uplink",
+          "items": [
+            "network-object host 192.168.2.12"
+          ],
+          "others": [
+            "network-object host 198.51.100.75"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Hydra-Edge",
+          "description": "Remote site uplink",
+          "items": [
+            "network-object host 198.51.100.75"
+          ],
+          "others": [
+            "network-object host 192.168.2.12"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/0/1",
+          "partner": false,
+          "description": "Workstation LAN",
+          "items": [
+            "ip address 192.168.2.12 255.255.255.0"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "cisco",
+      "device": "dmz-fw2-backup",
+      "specs": {
+        "vendor": "cisco",
+        "model": "ASA",
+        "version": "9.12(4)",
+        "domain": "global.dmz.example.net",
+        "hostname": "dmz-fw2-backup"
+      },
+      "objects": [
+        {
+          "object": "object",
+          "type": "network",
+          "partner": "Sentinel-NAT",
+          "description": "Corporate NAT edge",
+          "items": [
+            "host 203.0.113.25"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/1",
+          "partner": false,
+          "description": "Inside LAN segment",
+          "items": [
+            "ip address 192.168.100.100 255.255.255.0"
+          ],
+          "others": [
+            "nameif inside"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/2",
+          "partner": false,
+          "description": "Outbound Internet NAT interface",
+          "items": [
+            "ip address 198.51.100.75 255.255.255.0"
+          ],
+          "others": [
+            "nameif outside"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "fortinet",
+      "device": "fg-branch-vpn-01",
+      "specs": {
+        "vendor": "fortinet",
+        "model": "FortiGate-60F",
+        "version": "v7.2.5.F",
+        "domain": "",
+        "hostname": "fg-branch-vpn-01"
+      },
+      "objects": [
+        {
+          "object": "config",
+          "type": "system interface",
+          "partner": "internal",
+          "description": false,
+          "items": [
+            "set ip 192.168.2.12 255.255.255.0"
+          ],
+          "others": [
+            "set alias \"User LAN\""
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "config",
+          "type": "system interface",
+          "partner": "wan1",
+          "description": false,
+          "items": [
+            "set ip 198.51.100.75 255.255.255.0"
+          ],
+          "others": [
+            "set alias \"Branch ISP\""
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": "Branch-Public",
+          "description": "Branch NAT",
+          "items": [
+            "set subnet 198.51.100.75 255.255.255.255"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": "Branch-Gateway",
+          "description": "Primary LAN gateway",
+          "items": [
+            "set subnet 192.168.2.12 255.255.255.255"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": "Public-Test",
+          "description": "Public NAT exposure for Red Skull trap",
+          "items": [
+            "set subnet 203.0.113.25 255.255.255.255"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": "Panther-Vault",
+          "description": "Wakandan data store",
+          "items": [
+            "set subnet 192.168.1.10 255.255.255.255"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "fw1",
+      "specs": {
+        "vendor": "cisco",
+        "model": "",
+        "version": "",
+        "domain": "",
+        "hostname": ""
+      },
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Krypton-Cloud",
+          "description": "Cloud-facing external nodes",
+          "items": [
+            "network-object host 198.51.100.75"
+          ],
+          "others": [
+            "network-object host 203.0.113.25"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Krypton-Cloud",
+          "description": "Cloud-facing external nodes",
+          "items": [
+            "network-object host 203.0.113.25"
+          ],
+          "others": [
+            "network-object host 198.51.100.75"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Metropolis-Internal",
+          "description": "Core internal LAN for application clusters",
+          "items": [
+            "network-object host 192.168.2.12"
+          ],
+          "others": [
+            "network-object host 10.0.2.3",
+            "network-object 192.168.2.0 255.255.255.0"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network",
+          "partner": "External-Failover",
+          "description": "Secondary outbound route for edge",
+          "items": [
+            "host 198.51.100.75"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network",
+          "partner": "Krypton-Gateway",
+          "description": "Secure NAT boundary for cloud access",
+          "items": [
+            "host 203.0.113.25"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Fortress-Wireless",
+          "description": "Secure wireless access layer",
+          "items": [
+            "network-object host 192.168.1.10"
+          ],
+          "others": [
+            "network-object host 172.18.1.20"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    }
+  ]
+}

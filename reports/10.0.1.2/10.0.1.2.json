@@ -1,0 +1,64 @@
+{
+  "target": "10.0.1.2",
+  "configs": [
+    {
+      "site": "fortinet",
+      "device": "fg-branch-vpn-01",
+      "specs": {
+        "vendor": "fortinet",
+        "model": "FortiGate-60F",
+        "version": "v7.2.5.F",
+        "domain": "",
+        "hostname": "fg-branch-vpn-01"
+      },
+      "objects": [
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": "Spidey-Sandbox",
+          "description": "QA node in Peter's Lab",
+          "items": [
+            "set subnet 10.0.1.2 255.255.255.255"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "switch1",
+      "specs": {
+        "vendor": "cisco",
+        "model": "",
+        "version": "",
+        "domain": "",
+        "hostname": ""
+      },
+      "objects": [
+        {
+          "object": "interface",
+          "type": "Vlan1",
+          "partner": false,
+          "description": false,
+          "items": [
+            "ip address 172.31.255.254 255.255.255.0"
+          ],
+          "others": [],
+          "group": "Business-Unit-Networks"
+        },
+        {
+          "object": "interface",
+          "type": "Vlan10",
+          "partner": false,
+          "description": false,
+          "items": [
+            "ip address 10.0.1.2 255.255.255.0"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        }
+      ]
+    }
+  ]
+}
