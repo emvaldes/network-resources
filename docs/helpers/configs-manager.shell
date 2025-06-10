@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+## File: scripts/configs-manager.shell
+
+## Prevent re-sourcing and ensure one-time initialization
+if [[ -n "${__CONFIGS_MANAGE_SOURCED:-}" ]]; then return 0; fi;
+readonly __CONFIGS_MANAGE_SOURCED=1;
+
+## -------------------------------------------------------------------------- ##
+## Function: configs-manager :: configs_manager ()
+##
+## Purpose:
+##   Launches background parsing jobs for a batch of target IPs and monitors completion.
+##
+## Input:
+##   None (uses global array: ${target_listing[@]})
+##
+## Behavior:
+##   - Spawns a background job for each IP in `target_listing` using `configs_parser`.
+##   - Tracks each job’s PID and associates it with the corresponding IP.
+##   - Continuously monitors active jobs, filtering out completed ones.
+##   - Waits until all parsing jobs are done before exiting.
+##
+## Logging:
+##   - Logs job start metadata and PID-to-IP mapping to tracking log file.
+##   - Optionally logs job completion (currently commented out).
+##
+## Notes:
+##   - This function is always run synchronously — no nested async logic inside configs_parser.
+##   - Designed to be called once per config batch within inner loop.
+## -------------------------------------------------------------------------- ##
+
+function configs_manager () {
+## ... This function will contain the full job management logic as described above
+}; alias configs-manager='configs_manager';
+
+## -------------------------------------------------------------------------- ##
+## Function: configs-manager :: configs_parser ()
+##
+## Purpose:
+##   Main entrypoint for per-IP parsing pipeline. Replaces `parse-configs.shell`.
+##   Drives the full parsing lifecycle from argument handling to report generation.
+##
+## Responsibilities:
+##   - Parses CLI arguments and applies defaults for configs, reports, and matrix
+##   - Extracts relevant config paths for a given target IP
+##   - Validates input files and structures
+##   - Applies grouping/classification (if enabled) via matrix matching
+##   - Executes `configs_extract()` to collect relevant config blocks
+##   - Deduplicates and merges structured JSON objects per IP
+##   - Stores final output under `${reports_location}/<ip>/<ip>.json`
+##
+## Input Parameters (as key=value args):
+##   - ip-addr      : IP address to process (required)
+##   - configs      : Path to configuration root folder (default: ./configs)
+##   - reports      : Path to write output JSON (default: ./reports)
+##   - matrix       : Translation matrix for classification (optional)
+##   - file-ext     : Comma-delimited list of config extensions (default: cfg,conf,cnf)
+##   - index        : Optional ID used for per-IP processing context
+##   - validate     : Enables IP format validation before proceeding
+##   - classify     : Enables matrix-based group classification
+##   - verbose/debug/dry-run/help/logs : Optional behavior toggles
+##
+## Output:
+##   - Structured per-IP JSON report at ${reports_location}/<ip>/<ip>.json
+##   - Temp fragments, logs, and debug traces under ${TMP_DIR}
+##
+## Notes:
+##   - Replaces standalone script `parse-configs.shell` with fully modular logic
+##   - Compatible with batch systems that expect this function to be run in parallel
+## -------------------------------------------------------------------------- ##
+
+function configs_parser () {
+## ... This function will contain the full parsing logic as described above
+}; alias configs-parser='configs_parser';
+
+#------------------------------------------------------------------------------#

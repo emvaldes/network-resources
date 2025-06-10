@@ -1,0 +1,149 @@
+{
+  "target": "192.168.100.100",
+  "configs": [
+    {
+      "site": "cisco",
+      "device": "dmz-fw2-backup",
+      "specs": {
+        "vendor": "cisco",
+        "model": "ASA",
+        "version": "9.12(4)",
+        "domain": "global.dmz.example.net",
+        "hostname": "dmz-fw2-backup"
+      },
+      "objects": [
+        {
+          "object": "object",
+          "type": "network",
+          "partner": "Titan-WLAN-Host",
+          "description": "Backup inside NAT IP",
+          "items": [
+            "host 192.168.100.100"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network",
+          "partner": "Sentinel-NAT",
+          "description": "Corporate NAT edge",
+          "items": [
+            "host 203.0.113.25"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/1",
+          "partner": false,
+          "description": "Inside LAN segment",
+          "items": [
+            "ip address 192.168.100.100 255.255.255.0"
+          ],
+          "others": [
+            "nameif inside"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/2",
+          "partner": false,
+          "description": "Outbound Internet NAT interface",
+          "items": [
+            "ip address 198.51.100.75 255.255.255.0"
+          ],
+          "others": [
+            "nameif outside"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Sector-Wireless",
+          "description": "Staff WiFi clients",
+          "items": [
+            "network-object host 192.168.100.100"
+          ],
+          "others": [
+            "network-object host 10.10.10.10"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "fortinet",
+      "device": "fg-campus-core",
+      "specs": {
+        "vendor": "fortinet",
+        "model": "FortiGate-200F",
+        "version": "",
+        "domain": "",
+        "hostname": "fg-campus-core"
+      },
+      "objects": [
+        {
+          "object": "config",
+          "type": "system interface",
+          "partner": "wifi",
+          "description": false,
+          "items": [
+            "set ip 192.168.100.100 255.255.255.0"
+          ],
+          "others": [
+            "set alias \"Wireless VLAN\""
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": "Cap-HQ",
+          "description": "Captain America’s secure endpoint",
+          "items": [
+            "set subnet 192.168.1.11 255.255.255.255"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": "Titan-WLAN-Host",
+          "description": "Guest WiFi node",
+          "items": [
+            "set subnet 192.168.100.100 255.255.255.255"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": "Vision-Link",
+          "description": "Vision’s quantum channel",
+          "items": [
+            "set subnet 192.168.2.12 255.255.255.255"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": "Wanda-Field",
+          "description": "Wanda’s chaos relay",
+          "items": [
+            "set subnet 192.168.100.100 255.255.255.255"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        }
+      ]
+    }
+  ]
+}

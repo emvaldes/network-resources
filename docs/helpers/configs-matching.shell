@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+
+## File: scripts/configs-matching.shell
+
+## Prevent re-sourcing and ensure one-time initialization
+if [[ -n "${__CONFIGS_MATCHING_SOURCED:-}" ]]; then return 0; fi;
+readonly __CONFIGS_MATCHING_SOURCED=1;
+
+## -------------------------------------------------------------------------- ##
+## Function: configs-matching :: configs_matching ()
+##
+## Purpose:
+##   Filters target IPs to only those that have matching reduced config files,
+##   then launches parallel `configs_targets` jobs to build structured summaries.
+##
+## Inputs:
+##   $1 = optional path to the config list file (defaults to ${configs_list_cache})
+##
+## Behavior:
+##   - Scans per-IP `${reports_location}/<ip-address>/` folders for presence of reduced config files.
+##   - Filters out IPs without any matching config files.
+##   - Builds a temporary per-IP list of reduced config files.
+##   - Spawns background jobs (one per IP) to call `configs_targets()`,
+##     which assembles the JSON summary with metadata and `.list` references.
+##
+## Outputs:
+##   - Writes: `./targets/<ip-adress>.json` for each IP, structured by site/vendor/device.
+##   - Logs mappings and execution status for traceability.
+##
+## Notes:
+##   - Tracks background job completion using:
+##       targets_jobs2ips_mapping[pid] → ip-adress
+##   - Summary logs are written to ${TMP_DIR}/configs-targets.logs
+## -------------------------------------------------------------------------- ##
+
+function configs_matching () {
+## ... This function will contain the full matching logic as described above
+}; alias configs-matching='configs_matching';
+
+## -------------------------------------------------------------------------- ##
+## Function: configs-matching :: configs_targets ()
+##
+## Purpose:
+##   Builds a detailed, structured JSON object per IP address by reading
+##   pre-extracted configuration files from the reports directory.
+##
+##   For each matching config, it extracts the embedded metadata header,
+##   calculates the line count, and constructs a JSON entry that includes:
+##     - the source filename
+##     - the line count
+##     - the path to the serialized .list object file
+##     - the full specs header (vendor, model, version, domain, hostname)
+##
+##   All devices are grouped by site (e.g. "cisco", "fortinet", "misc"),
+##   and the final JSON is written as:
+##
+##     {
+##       "target": "<ip-address>",
+##       "locations": {
+##         "site": {
+##           "devices": [ ... ]
+##         }
+##       }
+##     }
+##
+## Inputs:
+##   $1 = target IP address (e.g. 10.0.0.1)
+##   $2 = output JSON file (e.g. ${reports_location}/10.0.0.1/10.0.0.1.json)
+##   $3 = optional: list of extracted config files (default: ${configs_list_cache})
+##   $4 = optional: log file to write malformed header errors (default: TMP_DIR)
+##
+## Output:
+##   Writes structured JSON to $2 with grouped device entries per site.
+##   Logs parsing errors (if any) to $4.
+## -------------------------------------------------------------------------- ##
+
+function configs_targets () {
+## ... This function will contain the full target processing logic as described above
+}; alias configs-targets='configs_targets';
+
+#------------------------------------------------------------------------------#

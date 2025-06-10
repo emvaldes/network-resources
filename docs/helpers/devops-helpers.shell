@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+## -------------------------------------------------------------------------- ##
+## File: scripts/devops-helpers.shell
+##
+## Purpose: Sharing common features across scripts.
+##          Utility library of shared shell functions and environment exports
+##    Note: Used by both parse-listings.shell and parse-configs.shell
+## -------------------------------------------------------------------------- ##
+
+## Prevent re-sourcing and ensure one-time initialization
+if [[ -n "${__DEVOPS_HELPERS_SOURCED:-}" ]]; then return 0; fi;
+readonly __DEVOPS_HELPERS_SOURCED=1;
+
+## Require Bash 4.0+ for associative array support (only runs once)
+if [[ "${BASH_VERSINFO[0]}" -lt 4 ]]; then
+  echo "Error: Bash 4.0 or newer is required. Current version: ${BASH_VERSINFO[*]}";
+  exit 1;
+fi;
+
+## -------------------------------------------------------------------------- ##
+## Function: display_help ()
+##
+## Purpose:
+##   Displays contextual usage instructions and supported command-line options
+##   based on the operational mode of the script (either `listings` or `configs`).
+##
+## Inputs:
+##   $1 = Name of the script (used in help display and examples)
+##   $2 = Mode of operation: one of `listings` or `configs`
+##
+## Behavior:
+##   - Prints usage banner and available CLI options.
+##   - Outputs mode-specific flags and examples:
+##       - `listings` → shows options for IP batching and config directories
+##       - `configs`  → shows options for single-IP parsing workflows
+##   - Categorizes flags into Shared Options, Examples, and Additional Flags.
+##   - Adds consistent left-padding and alignment for readability.
+##
+## Notes:
+##   - Does not rely on `getopts`; statically prints descriptions for known arguments.
+##   - Intended for invocation via `--help` flag from main script entrypoints.
+##   - Adds trailing newline for terminal cleanliness.
+## -------------------------------------------------------------------------- ##
+
+function parse_listings__helper () {
+## ... This function will contain the full help display logic as described above
+}; alias parse-listings--helper='parse_listings__helper'
+
+#------------------------------------------------------------------------------#
+
+function netowrk_configs__helper () {
+## ... This function will contain the full help display logic as described above
+}; alias network-configs--helper='network_configs__helper';
+
+#------------------------------------------------------------------------------#
+
+function network_extract__helper () {
+## ... This function will contain the full help display logic as described above
+}; alias network-extract--helper='network_extract__helper';
+
+#------------------------------------------------------------------------------#

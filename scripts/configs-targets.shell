@@ -1,0 +1,189 @@
+#!/usr/bin/env bash
+
+## File: scripts/configs-targets.shell
+
+## Prevent re-sourcing and ensure one-time initialization
+if [[ -n "${__CONFIGS_TARGETS__:-}" ]]; then exit 0; fi;
+readonly __CONFIGS_TARGETS__=1;
+
+## -------------------------------------------------------------------------- ##
+## Function: configs_targets ()
+##
+## Purpose:
+##   Builds a detailed, structured JSON object per IP address by reading
+##   pre-extracted configuration files from the reports directory.
+##
+##   For each matching config, it extracts the embedded metadata header,
+##   calculates the line count, and constructs a JSON entry that includes:
+##     - the source filename
+##     - the line count
+##     - the path to the serialized .list object file
+##     - the full specs header (vendor, model, version, domain, hostname)
+##
+##   All devices are grouped by site (e.g. "cisco", "fortinet", "misc"),
+##   and the final JSON is written as:
+##
+##     {
+##       "target": "<ip-address>",
+##       "locations": {
+##         "site": {
+##           "devices": [ ... ]
+##         }
+##       }
+##     }
+##
+## Inputs:
+##   $1 = target IP address (e.g. 10.0.0.1)
+##   $2 = output JSON file (e.g. ${reports_location}/10.0.0.1/10.0.0.1.json)
+##   $3 = optional: list of extracted config files (default: ${configs_list_cache})
+##   $4 = optional: log file to write malformed header errors (default: TMP_DIR)
+##
+## Output:
+##   Writes structured JSON to $2 with grouped device entries per site.
+##   Logs parsing errors (if any) to $4.
+## -------------------------------------------------------------------------- ##
+
+function configs_targets () {
+
+    ## tracking_process ${FUNCNAME} "${@}";
+    oIFS="${IFS}";
+
+    ## Process command-line arguments and map them to local variables
+    for xitem in "${@}"; do
+      IFS='=' read -r key value <<< "$(
+        echo -e "${xitem}" | sed -e '1s|^\(-\)\{1,\}||'
+      )"; #echo -e "\nxitem: '${xitem}'\nkey: '${key}'\t->\tvalue: '${value}'";
+
+      #### ---------------------------------------------------------------------
+      ## Match accepted arguments
+      [[ $key =~ ^(search|p)$ ]] && local search_pattern="${value}";
+      [[ $key =~ ^(source|s)$ ]] && local source_config="${value}";
+      [[ $key =~ ^(target|t)$ ]] && local target_config="${value}";
+      [[ $key =~ ^(logger|l)$ ]] && local target_logfile="${value}";
+
+      #### ---------------------------------------------------------------------
+      ## Special options
+      [[ $key == "debug" ]] && local debug=true;
+      [[ $key == "dry-run" ]] && local dry_run=true;
+      [[ $key == "verbose" ]] && local verbose=true;
+
+    done; IFS="${oIFS}";
+
+    #### -----------------------------------------------------------------------
+    ## Set default values if not supplied
+    [[ -z ${debug:-} ]] && debug=false;
+    [[ -z ${dry_run:-} ]] && dry_run=false;
+    [[ -z ${verbose:-} ]] && verbose=false;
+
+    #### -----------------------------------------------------------------------
+    if [[ -z "${target_logfile:-}" ]]; then
+      local target_logfile="${console_location}/configs-targets.console";
+      touch "${target_logfile}";
+    fi;
+    # touch "${target_logfile}";  ## Clear the log file if it exists
+
+    #### -----------------------------------------------------------------------
+    [[ -z   "${source_config:-}" ]] && local source_config="${configs_list_cache}";
+    [[ ! -s "${source_config}" ]] && return 1;
+
+    declare -A site_device_map=();
+    local rel_path site device cfg_lines json_head json_spec;
+
+    while IFS= read -r config_file; do
+
+      [[ ! -f "${config_file}" ]] && continue;
+
+      rel_path="${config_file#${reports_location}/${search_pattern}/}";
+      site="${rel_path%%/*}";
+      device="${rel_path##*/}";
+
+      ## Validate vendor/site folder name
+      if [[ ! -d "${reports_location}/${search_pattern}/${site}" ]]; then
+        {
+          warning "Unexpected vendor/site folder: '${site}' in '${config_file}'";
+        } ## >> "${target_logfile}";
+        continue;
+      fi;
+
+      cfg_lines="$(
+        wc -l < "${config_file}" | \
+        tr -d ' '
+      )";
+
+      #### -----------------------------------------------------------------------
+      json_head="$(
+        awk '
+          BEGIN { in_json=0; depth=0; }
+          {
+            if (!in_json && $0 ~ /^[[:space:]]*{/) in_json=1;
+            if (in_json) {
+              print;
+              depth += gsub(/{/, "{");
+              depth -= gsub(/}/, "}");
+              if (depth == 0) exit;
+            }
+          }
+        ' "${config_file}"
+      )";
+
+      if ! echo "${json_head}" | jq -e . >/dev/null 2>&1; then
+        {
+          warning "Malformed JSON header in: ${config_file}";
+        } ## >> "${target_logfile}";
+        continue;
+      fi;
+
+      #### -----------------------------------------------------------------------
+      json_spec="$(
+        jq -n \
+          --arg file "${device}" \
+          --argjson lines "${cfg_lines}" \
+          --arg path ".objects/${device%.*}.list" \
+          --arg specs "${json_head}" \
+          '{
+            specs: ($specs | fromjson),
+            config: {
+              file: $file,
+              lines: $lines,
+              object: $path
+            }
+          }'
+      )";
+
+      site_device_map["${site}"]+="${json_spec}"$'\n';
+
+    done < "${source_config}";
+
+    {
+
+      printf ' { "target": "%s", "locations": { ' "${search_pattern}";
+      first=true;
+
+      for site in $(
+        printf '%s\n' "${!site_device_map[@]}" | sort -u
+      ); do
+
+        [[ -z "${site_device_map[${site}]:-}" ]] && continue;
+        ${first} && first=false || printf ',';
+
+        printf ' "%s": { "devices": ' "${site}";
+        print  "${site_device_map[${site}]}" | jq -s '.';
+        printf ' } ';
+
+      done;
+      printf ' } } ';
+
+    } | jq . > "${target_config}";
+
+    # #### -----------------------------------------------------------------------
+    # if [[ "${verbose}" == true ]]; then
+    #   {
+    #     print_file "${target_config}" | jq -r .;
+    #     newline;
+    #   } ## >> "${target_logfile:-/dev/null}";
+    # fi;
+
+    return 0;
+}; alias configs-targets='configs_targets';
+
+#------------------------------------------------------------------------------#

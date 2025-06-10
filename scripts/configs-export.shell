@@ -1,0 +1,213 @@
+#!/usr/bin/env bash
+
+## File: scripts/configs-export.shell
+
+## Prevent re-sourcing and ensure one-time initialization
+if [[ -n "${__CONFIGS_EXPORT__:-}" ]]; then exit 0; fi;
+readonly __CONFIGS_EXPORT__=1;
+
+## -------------------------------------------------------------------------- ##
+## Function: configs-export :: generate-csvoutput ()
+##
+## Purpose:
+##   Converts structured per-IP JSON reports into a single unified CSV file.
+##   Extracts all defined fields dynamically from each matching config object.
+##
+## Input:
+##   None (operates on all *.json files under ${reports_location}/<ip>/<ip>.json)
+##
+## Output:
+##   Generates sorted CSV at ${output_csv}, with columns in fixed order:
+##     target, site, device, vendor, model, version, domain, hostname,
+##     object, type, items_0, partner, description, group
+##
+## Method:
+##   - Defines field→expression mapping in a single array.
+##   - Builds CSV header and jq transformation dynamically from mapping.
+##   - Applies fallback values (e.g., "none") for missing fields.
+##   - Sorts output by: target, site, device, object.
+##
+## Notes:
+##   - Uses a temporary file to build unsorted content before final sort.
+##   - Logs each processed JSON file to stderr for traceability.
+## -------------------------------------------------------------------------- ##
+
+function configs_export () {
+
+    ## tracking_process ${FUNCNAME} "${@}";
+    oIFS="${IFS}";
+
+    ## Process command-line arguments and map them to local variables
+    for xitem in "${@}"; do
+
+      IFS='=' read -r key value <<< "$(
+        echo -e "${xitem}" | sed -e '1s|^\(-\)\{1,\}||'
+      )"; #echo -e "\nxitem: '${xitem}'\nkey: '${key}'\t->\tvalue: '${value}'";
+
+      #### ---------------------------------------------------------------------
+      ## Match accepted arguments
+      [[ $key =~ ^(initialize|i)$ ]] && local initialize=true;
+      [[ $key =~ ^(sort|s)$ ]] && local request_action="sort";
+      [[ $key =~ ^(target|t)$ ]] && local reports_filename="${value}";
+
+      if [[ $key =~ ^(config|c)$ ]]; then
+        if [[ -e "${value}" ]]; then
+                if [[ "$(basename -- "${value}")" =~ \.json$ ]]; then
+                        message "Listing Configuration File: ${value}";
+                        declare -a source_config=( "${value}" );
+                        cat "${source_config[*]}" >/dev/null 2>&1;
+                  elif  [[ -d "${value}" ]]; then
+                        message "Listing Configurations location [ ${value} ]: ";
+                        mapfile -t source_config < <(
+                            find "${value}" \
+                            -mindepth 2 -maxdepth 2 \
+                            -type f -name '*.json' | \
+                          sort -u 2>/dev/null
+                        );
+                  else  warning "Invalid --config path: '${value}' is not a JSON file or directory.";
+                        return 1;
+                fi;
+          else  warning "Invalid --config path: '${value}' does not exist.";
+                return 2;
+        fi;
+        local request_action="append";
+      fi;
+
+      #### ---------------------------------------------------------------------
+      ## Special options
+      [[ $key == "help" ]] && local script_helper=true;
+      [[ $key == "debug" ]] && local debug=true;
+      [[ $key == "dry-run" ]] && local dry_run=true;
+      [[ $key == "verbose" ]] && local verbose=true;
+
+    done; IFS="${oIFS}";
+
+    #### -----------------------------------------------------------------------
+    ## Set custom values if not supplied
+    [[ -z ${initialize:-} ]] && local initialize=false;
+    [[ -z ${request_action:-} ]] && local request_action="default";
+    [[ -z ${reports_filename:-} ]] && local reports_filename=false;
+    [[ -z ${source_config:-} ]] && declare -a source_config=();
+
+    #### -----------------------------------------------------------------------
+    ## Custom/Default reports folder:
+    if [[ "${reports_filename}" != false ]]; then
+            local reports_location=$(
+              dirname "${reports_filename}"
+            );
+            ## Ensure reports folder is clean before starting
+            mkdir -p "${reports_location}";
+      else  warning "Reports filename is invalid.";
+            return 1;
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Set default values if not supplied
+    [[ -z ${debug:-} ]] && debug=false;
+    [[ -z ${dry_run:-} ]] && dry_run=false;
+    [[ -z ${verbose:-} ]] && verbose=false;
+
+    #### -----------------------------------------------------------------------
+    ## Display usage help if requested
+    [[ -z ${script_helper:-} ]] && script_helper=false;
+    if [[ ${script_helper:-} == true ]]; then
+      export_configs__helper;
+      exit 0;
+    fi;
+
+    local temporary_output="$( mktemp )";  ## Temporary file for accumulating unsorted CSV rows
+
+    ## Define field mappings in fixed order (header=jq_expr)
+    ## Each entry maps a CSV column name to a jq expression
+    ## - All expressions are expanded with // fallback unless already specified
+    ## - Preserves strict order in both CSV header and output
+
+    local -a output_structure=(
+      'target=$target'
+      'site=.site'
+      'device=.device'
+      'vendor=.specs.vendor'
+      'model=.specs.model'
+      'version=.specs.version'
+      'domain=.specs.domain'
+      'hostname=.specs.hostname'
+      'object=$obj.object'
+      'type=$obj.type'
+      'items=$obj.items[0]'
+      'partner=$obj.partner'
+      'description=$obj.description'
+      'group=$obj.group'
+    );
+
+    ## Build CSV header and jq transformation dynamically
+    local csv_header="";
+    local parameters="";
+
+    for item in "${output_structure[@]}"; do
+      local index="${item%%=*}";
+      local value="${item#*=}";
+      csv_header+="${index},";
+      [[ "$value" =~ '//' ]] || value="${value} // \"none\"";
+      parameters+="${value}, ";
+    done;
+    parameters="${parameters%, }";
+
+    if [[ "${initialize}" == true ]]; then
+            ## Trim trailing delimiters from header and expression list
+            csv_header="${csv_header%,}";
+            parameters="${parameters%, }";
+            message "${csv_header}" > "${reports_filename}";
+            return 0;
+      else  message "Skipping Initialization";
+    fi;
+
+    if [[ "${#source_config[@]}" -gt 0 ]]; then
+
+      printf '%s\n' "${source_config[@]}" | \
+      while read -r json; do
+        message "Processing ${json}" >&2;
+
+        ## Generate jq transformation block per file
+        ## - Binds .target into $target
+        ## - Iterates over each config and object entry
+        ## - Extracts only defined fields into a CSV row
+
+        local json2csv_transformation="
+          .target as \$target
+          | .configs[]
+          | select( .objects != null and ( .objects | type == \"array\" and length > 0 ) )
+          | .objects[] as \$obj
+          | select( (try (\$obj.items | join(\" \") | contains(\$target)) catch false) )
+          | [ ${parameters} ]
+          | @csv
+        ";
+
+        ## Execute jq and append to CSV buffer
+        jq --exit-status --raw-output "${json2csv_transformation}" "${json}" \
+        >> "${reports_filename}" || \
+        message "[WARN] Failed CSV append for ${json}" >&2;
+
+      done;
+
+      return 0;
+    fi;
+
+    ## Finalize sorted CSV with header and ordered data rows
+    if [[ "${request_action}" == "sort" ]]; then
+      if [[ -s "${reports_location}" ]]; then
+              temporary_output="${TMP_DIR}/${reports_location}";
+              message "Sorting existing report: ${reports_location}";
+              {
+                echo "${csv_header}";
+                sort -t',' -k1,1 -k2,2 -k3,3 -k4,4 "${reports_location}";
+              } > "${temporary_output}"
+              mv "${temporary_output}" "${reports_location}";
+        else  warning "Report file '${reports_location}' is empty or missing.";
+              # return 3;
+      fi;
+      return 0;
+    fi;
+
+    return 0;
+}; alias export-configs='export_configs';
+#------------------------------------------------------------------------------#

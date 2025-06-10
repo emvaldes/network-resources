@@ -1,0 +1,133 @@
+#!/usr/bin/env bash
+
+## File: scripts/configs-matching.shell
+
+## Prevent re-sourcing and ensure one-time initialization
+if [[ -n "${__CONFIGS_MATCHING__:-}" ]]; then exit 0; fi;
+readonly __CONFIGS_MATCHING__=1;
+
+#------------------------------------------------------------------------------#
+
+## Load configurations targets module
+source ./scripts/configs-targets.shell
+
+## -------------------------------------------------------------------------- ##
+## Function: configs_matching ()
+##
+## Purpose:
+##   Filters target IPs to only those that have matching reduced config files,
+##   then launches parallel `configs_targets` jobs to build structured summaries.
+##
+## Inputs:
+##   $1 = optional path to the config list file (defaults to ${configs_list_cache})
+##
+## Behavior:
+##   - Scans per-IP `${reports_location}/<ip-address>/` folders for presence of reduced config files.
+##   - Filters out IPs without any matching config files.
+##   - Builds a temporary per-IP list of reduced config files.
+##   - Spawns background jobs (one per IP) to call `configs_targets()`,
+##     which assembles the JSON summary with metadata and `.list` references.
+##
+## Outputs:
+##   - Writes: `./targets/<ip-adress>.json` for each IP, structured by site/vendor/device.
+##   - Logs mappings and execution status for traceability.
+##
+## Notes:
+##   - Tracks background job completion using:
+##       targets_jobs2ips_mapping[pid] → ip-adress
+##   - Summary logs are written to ${TMP_DIR}/configs-targets.logs
+## -------------------------------------------------------------------------- ##
+
+function configs_matching () {
+
+    #### -----------------------------------------------------------------------
+    local configs_matching__script="configs-matching";
+
+    declare -ga targets_jobs_pid=();          ## Array to hold background job PIDs
+    declare -gA targets_jobs2ips_mapping=();  ## Map PID to IP address
+
+    #### -----------------------------------------------------------------------
+    ## Iterate over IPs in target_listing
+    for ip_address in "${target_listing[@]}"; do
+
+      local report_path="${reports_location}/${ip_address}";
+      local configs_objects="${TMP_DIR}/configs-targets--${ip_address}.list";
+      : > "${configs_objects}";
+
+      if [[ -d "${report_path}" ]]; then
+        for ext in "${file_extensions[@]}"; do
+          find "${report_path}" -type f -name "*.${ext}" >> "${configs_objects}";
+        done;
+      fi;
+
+      ## If no configs were found, skip this IP
+      [[ ! -s "${configs_objects}" ]] && continue;
+
+      local target_config="${targets_location}/${ip_address}.json";
+      local configs_targets__console="${TMP_DIR}/configs-targets--${ip_address}"
+
+      (
+
+        configs_targets --search="${ip_address}" \
+                        --source="${configs_objects}" \
+                        --target="${target_config}" \
+                        --logger="${configs_targets__console}.console" \
+                        --verbose \
+        >> "${configs_matching__logger:-${logs_location}/${configs_matching__script}.log}" 2>&1 ;
+
+      ) &
+
+      local job_pid=$!;
+      targets_jobs_pid+=( "${job_pid}" );
+      targets_jobs2ips_mapping["${job_pid}"]="${ip_address}";
+
+    done;
+
+    #### -----------------------------------------------------------------------
+    ## Wait for all jobs to finish
+    while (( ${#targets_jobs_pid[@]} > 0 )); do
+      local valid_targets_jobs_pid=();
+      for pid in "${targets_jobs_pid[@]}"; do
+        if ! kill -0 "${pid}" 2>/dev/null; then
+                ## Job finished — no action here
+                logger="${targets_jobs2ips_mapping[$pid]}";
+          else  valid_targets_jobs_pid+=( "${pid}" );
+        fi;
+      done;
+      targets_jobs_pid=( "${valid_targets_jobs_pid[@]}" );
+      sleep "${delaying_factor}";
+    done;
+
+    #### -----------------------------------------------------------------------
+    if [[ "${verbose}" == true ]]; then
+      {
+        message "Completed background jobs for matched IPs (${#targets_jobs2ips_mapping[@]}):";
+        message "-------------------------------------";
+        message " Index  | PID    | IP Address       |";
+        message "-------------------------------------";
+        for pid in "${!targets_jobs2ips_mapping[@]}"; do
+          ip_address="${targets_jobs2ips_mapping[${pid}]}";
+          printf "%-6s | %-15s\n" "${pid}" "${ip_address}";
+        done | cat -n;
+        newline;
+      } >> "${configs_matching__console:-/dev/null}";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Collecting all background-jobs console outputs
+    {
+      for pid in "${!targets_jobs2ips_mapping[@]}"; do
+        ip_address="${targets_jobs2ips_mapping[${pid}]}";
+        target_config="${targets_location}/${ip_address}.json";
+        if [[ -s "${target_config}" && -f "${target_config}" ]]; then
+          message "Completed Configuration Targets (IP): ${target_config}";
+          jq -r . "${target_config}" || warning "Invalid JSON: ${target_config}";
+          # newline;
+        fi;
+      done;
+    } >> "${configs_matching__console}";
+
+    return 0;
+}; alias configs-matching='configs_matching';
+
+#------------------------------------------------------------------------------#

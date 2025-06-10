@@ -3,8 +3,26 @@
   "configs": [
     {
       "site": "cisco",
-      "device": "access-sw1-west.cfg",
+      "device": "access-sw1-west",
+      "specs": {
+        "vendor": "cisco",
+        "model": "",
+        "version": "12.4",
+        "domain": "",
+        "hostname": "access-sw1-west"
+      },
       "objects": [
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Mutant-WiFi",
+          "description": "Controlled guest devices",
+          "items": [
+            "network-object host 10.10.10.10"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
         {
           "object": "interface",
           "type": "Vlan1",
@@ -13,30 +31,78 @@
           "items": [
             "ip address 192.168.0.1 255.255.255.0"
           ],
-          "sets": {
-            "ip": 1
-          },
+          "others": [],
           "group": "Business-Unit-Networks"
         },
         {
           "object": "object-group",
-          "type": "network MGMT-ACCESS",
+          "type": "network",
+          "partner": "MGMT-ACCESS",
+          "description": "Management objects",
+          "items": [
+            "network-object host 10.10.10.10"
+          ],
+          "others": [
+            "network-object host 192.168.0.1",
+            "network-object host 192.168.0.100"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
           "partner": "MGMT-ACCESS",
           "description": "Management objects",
           "items": [
             "network-object host 192.168.0.1"
           ],
-          "sets": {
-            "network-object": 3
-          },
+          "others": [
+            "network-object host 192.168.0.100",
+            "network-object host 10.10.10.10"
+          ],
           "group": "Unclassified"
         }
       ]
     },
     {
       "site": "cisco",
-      "device": "campus-sw-access01.cfg",
+      "device": "campus-sw-access01",
+      "specs": {
+        "vendor": "cisco",
+        "model": "",
+        "version": "12.2",
+        "domain": "",
+        "hostname": "campus-sw-access01"
+      },
       "objects": [
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Floor-Networks",
+          "description": "End-user and service devices",
+          "items": [
+            "network-object host 10.10.10.10"
+          ],
+          "others": [
+            "network-object host 192.168.0.1",
+            "network-object host 192.168.0.100"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Floor-Networks",
+          "description": "End-user and service devices",
+          "items": [
+            "network-object host 192.168.0.1"
+          ],
+          "others": [
+            "network-object host 192.168.0.100",
+            "network-object host 10.10.10.10"
+          ],
+          "group": "Unclassified"
+        },
         {
           "object": "interface",
           "type": "Vlan1",
@@ -45,22 +111,53 @@
           "items": [
             "ip address 192.168.0.1 255.255.255.0"
           ],
-          "sets": {
-            "ip": 1
-          },
+          "others": [],
           "group": "Business-Unit-Networks"
+        }
+      ]
+    },
+    {
+      "site": "fortinet",
+      "device": "fg-branch-vpn-01",
+      "specs": {
+        "vendor": "fortinet",
+        "model": "FortiGate-60F",
+        "version": "v7.2.5.F",
+        "domain": "",
+        "hostname": "fg-branch-vpn-01"
+      },
+      "objects": [
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": "Guardians-Relay",
+          "description": "Backup uplink for Milano crew",
+          "items": [
+            "set subnet 192.168.0.1 255.255.255.255"
+          ],
+          "others": [],
+          "group": "Unclassified"
         },
         {
-          "object": "object-group",
-          "type": "network Floor-Networks",
-          "partner": "Floor-Networks",
-          "description": "End-user and service devices",
+          "object": "config",
+          "type": "firewall address",
+          "partner": "IronMan-HQ",
+          "description": "Main node at Stark Tower",
           "items": [
-            "network-object host 192.168.0.1"
+            "set subnet 10.0.0.1 255.255.255.255"
           ],
-          "sets": {
-            "network-object": 3
-          },
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "config",
+          "type": "firewall address",
+          "partner": "Spidey-Sandbox",
+          "description": "QA node in Peter's Lab",
+          "items": [
+            "set subnet 10.0.1.2 255.255.255.255"
+          ],
+          "others": [],
           "group": "Unclassified"
         }
       ]

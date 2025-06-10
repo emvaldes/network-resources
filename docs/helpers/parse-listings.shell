@@ -1,0 +1,208 @@
+#!/usr/bin/env bash
+
+## File: scripts/parse-listings.shell
+
+## Purpose: Parse a set of IP addresses against a directory of configuration files
+##          and produce detailed per-IP reports in JSON and CSV format.
+## Requirements: Bash v4+ and GNU utilities (jq, find, grep, sed, etc.)
+
+## nohup bash ./scripts/parse-listings.shell \
+##            --configs=configs \
+##            --classify \
+##            --ips-list=ips.list \
+##            --sites='cisco,fortinet,misc' \
+##            --devices=devices.list \
+##            --verbose \
+##            --debug \
+##            --logs \
+## > ./run.log 2>&1 &
+
+set -euo pipefail  ## Strict mode: exit on error, undefined var use, and pipeline failure
+set -x;          ## Enable for execution tracing/debugging
+
+## POSIX locale standard
+export LC_ALL=C   ## Ensure consistent sorting and character handling (POSIX-compliant)
+
+# Create a secure, temporary working directory (auto-cleaned at script exit)
+export TMP_DIR="$( mktemp -d )";
+trap '[[ -d "${TMP_DIR}" ]] && rm -rf "${TMP_DIR}"' EXIT;
+
+#------------------------------------------------------------------------------#
+
+## devops-resources [ ... ]
+## configs-matching [ matching-configs -> generate_configslist ]
+## configs-manager  [ manage_configs -> parse_configs ]
+## configs-export   [ generate_csvoutput ]
+## configs-parser   [ configs_parser -> extract_configs -> process_configs ]
+
+#------------------------------------------------------------------------------#
+
+## Load common utility functions (logging, platform detection, etc.)
+source ./scripts/devops-resources.shell;
+
+## Load common or function-based helping modules
+source ./scripts/devops-helpers.shell;
+
+## -------------------------------------------------------------------------- ##
+## File: scripts/configs-matching.shell
+##
+## Role:
+##   This module defines the functions `matching_configs()` and `generate_configslist()`
+##   which are responsible for filtering and processing IP-to-config matches.
+##
+## Responsibilities:
+##   - `matching_configs()`:
+##       Filters the full IP list to only those that match the given configuration files.
+##       Spawns background jobs (via `generate_configslist`) to create per-IP summaries.
+##
+##   - `generate_configslist()`:
+##       Builds a JSON summary for each matched IP, capturing site, device, line count,
+##       and match frequency for each config file.
+##
+## Integration:
+##   - Used as part of the parsing pipeline to reduce large config datasets
+##     into targeted, structured summaries for downstream analysis.
+##   - Consumes global vars like `target_listing`, `source_addresses`, and
+##     `configs_list_cache`, which must be populated by the orchestrator script.
+## -------------------------------------------------------------------------- ##
+
+source ./scripts/configs-matching.shell;
+
+## -------------------------------------------------------------------------- ##
+## File: scripts/tools-listings.shell
+##
+## Role:
+##   Provides the core logic for managing the execution of per-IP parsing jobs
+##   during the configuration analysis process.
+##
+## Responsibilities:
+##   - `manage_configs()`:
+##       Iterates through all target IPs, launches `parse-configs.shell` jobs
+##       in parallel, and tracks their completion using PID mapping.
+##
+##   - `parse_configs()`:
+##       Assembles and executes the parsing command for each IP, dynamically
+##       appending CLI flags. Captures job logs and ensures safe error handling.
+##
+## Integration:
+##   - This module is sourced by the orchestrator to handle inner-loop execution.
+##   - Requires upstream population of variables such as `target_listing`,
+##     `file_extensions`, `configs_dirpath`, `matrix_filename`, etc.
+##   - Ensures synchronous management of asynchronous tasks for accurate reporting.
+## -------------------------------------------------------------------------- ##
+
+source ./scripts/configs-manager.shell;
+
+## -------------------------------------------------------------------------- ##
+## File: scripts/configs-export.shell
+##
+## Role:
+##   Converts structured per-IP JSON reports into a consolidated, sortable CSV
+##   to support downstream analysis, visualization, or reporting.
+##
+## Responsibilities:
+##   - `generate_csvoutput()`:
+##       - Traverses `${reports_location}` to locate all `<ip>/<ip>.json` files.
+##       - Extracts relevant fields (`target`, `site`, `device`, `object`, etc.)
+##         from each config entry using a `jq` transformation.
+##       - Builds a CSV with consistent column headers and sorted content.
+##
+## Integration:
+##   - Assumes all JSON input files conform to the output structure of
+##     `parse-configs.shell` / `extract_configs()` pipeline.
+##   - Depends on `${reports_location}` being populated and `${output_csv}` defined.
+##   - Called near the end of the parsing pipeline for reporting/export.
+## -------------------------------------------------------------------------- ##
+
+source ./scripts/configs-export.shell;
+
+## -------------------------------------------------------------------------- ##
+## Function: configs_parser ()
+##
+## Purpose:
+##   Main entrypoint for per-IP parsing pipeline. Replaces `parse-configs.shell`.
+##   Drives the full parsing lifecycle from argument handling to report generation.
+##
+## Responsibilities:
+##   - Parses CLI arguments and applies defaults for configs, reports, and matrix
+##   - Extracts relevant config paths for a given target IP
+##   - Validates input files and structures
+##   - Applies grouping/classification (if enabled) via matrix matching
+##   - Executes `extract_configs()` to collect relevant config blocks
+##   - Deduplicates and merges structured JSON objects per IP
+##   - Stores final output under `${reports_location}/<ip-address>/<ip-address>.json`
+##
+## Input Parameters (as key=value args):
+##   - ip-addr      : IP address to process (required)
+##   - configs      : Path to configuration root folder (default: ./configs)
+##   - reports      : Path to write output JSON (default: ./reports)
+##   - matrix       : Translation matrix for classification (optional)
+##   - file-ext     : Comma-delimited list of config extensions (default: cfg,conf,cnf)
+##   - index        : Optional ID used for per-IP processing context
+##   - validate     : Enables IP format validation before proceeding
+##   - classify     : Enables matrix-based group classification
+##   - verbose/debug/dry-run/help/logs : Optional behavior toggles
+##
+## Output:
+##   - Structured per-IP JSON report at ${reports_location}/<ip-address>/<ip-address>.json
+##   - Temp fragments, logs, and debug traces under ${TMP_DIR}
+##
+## Notes:
+##   - Replaces standalone script `parse-configs.shell` with fully modular logic
+##   - Compatible with batch systems that expect this module to be run in parallel
+## -------------------------------------------------------------------------- ##
+
+source ./scripts/configs-parser.shell;
+
+#------------------------------------------------------------------------------#
+## This module acts as the primary driver for the parsing pipeline. It:
+##   - Processes CLI arguments and sets defaults
+##   - Validates required input files
+##   - Loads site/device/IP filters if provided
+##   - Initializes environment variables and folders
+##   - Performs outer batching of IPs and inner batching of configs
+##   - For each IP/config pair, spawns background jobs to generate reports
+
+function main () {
+## ... This function will contain the full main logic as described above
+}; alias parse-listings='main';
+
+#------------------------------------------------------------------------------#
+
+[[ -z "${script_name+x}" ]] && script_name="${0}";
+
+script_filename="${BASH_SOURCE[0]##*/}";
+script_filename="${script_filename%.*}";
+
+#------------------------------------------------------------------------------#
+
+if [[ "${actions_logfile:-}" != "$(readlink -f /proc/$$/fd/1)" ]]; then
+  : > "${actions_logfile}";
+fi;
+
+rm -rf ${cache_location};
+mkdir -p ${cache_location} 2>/dev/null || true;
+
+[[ ! -d ${logs_location} ]] && \
+  mkdir -p ${logs_location} 2>/dev/null || true;
+find ${logs_location} -type f ! -name "${script_filename}.log" -delete 2>/dev/null;
+
+rm -rf ${jobs_location};
+mkdir -p ${jobs_location} 2>/dev/null || true;
+
+rm -rf ${targets_location} 2>/dev/null;
+mkdir -p ${targets_location} 2>/dev/null || true;
+
+## Flush content of all files under ./logs without deleting them
+[[ -d "${logs_location}" ]] && find "${logs_location}" -type f -exec truncate -s 0 {} +
+
+#------------------------------------------------------------------------------#
+
+if [[ ${#@} -eq 0 || "${1,,}" =~ ^-*(h|help)$ ]]; then
+        main --help ;
+  else  main "${@}";
+        result=${?}; exit ${result};
+        ## newline; message "Done."; newline;
+fi;
+
+#------------------------------------------------------------------------------#

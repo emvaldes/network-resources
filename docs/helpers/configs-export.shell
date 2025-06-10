@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+## File: scripts/configs-export.shell
+
+## Prevent re-sourcing and ensure one-time initialization
+if [[ -n "${__CONFIGS_EXPORT_SOURCED:-}" ]]; then return 0; fi;
+readonly __CONFIGS_EXPORT_SOURCED=1;
+
+## -------------------------------------------------------------------------- ##
+## Function: configs-export :: generate-csvoutput ()
+##
+## Purpose:
+##   Converts structured per-IP JSON reports into a single unified CSV file.
+##   Extracts relevant fields from each matching config object using `jq`.
+##
+## Input:
+##   None (operates on all *.json files under ${reports_location}/<ip>/<ip>.json)
+##
+## Output:
+##   Generates sorted CSV at ${output_csv}, with columns:
+##     target, site, device, object, type, items, partner, description, group
+##
+## Method:
+##   - Uses jq to extract rows per object in each config.
+##   - Applies fallback values (e.g., "none") for missing fields.
+##   - Sorts output by: target, site, device, object.
+##   - Header is inserted manually; rows appended below.
+##
+## Notes:
+##   - Uses a temporary file to build unsorted content before final sort.
+##   - Logs each processed JSON file to stderr for traceability.
+## -------------------------------------------------------------------------- ##
+
+function generate_csvoutput () {
+## ... This function will contain the full CSV generation logic as described above
+}; alias generate-csvoutput='generate_csvoutput';
+
+#------------------------------------------------------------------------------#

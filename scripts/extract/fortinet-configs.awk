@@ -45,6 +45,7 @@ BEGIN {
   vendor = "fortinet";
   model = "";
   version = "";
+  domain = "";
   hostname = "";
 
 }
@@ -170,6 +171,7 @@ END {
   printf("  \"vendor\": \"%s\",\n", vendor);
   printf("  \"model\": \"%s\",\n", model);
   printf("  \"version\": \"%s\",\n", version);
+  printf("  \"domain\": \"%s\",\n", domain);
   printf("  \"hostname\": \"%s\"\n", hostname);
   printf("}\n\n");
 

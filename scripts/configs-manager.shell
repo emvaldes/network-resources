@@ -1,0 +1,290 @@
+#!/usr/bin/env bash
+
+## File: scripts/configs-manager.shell
+
+## Prevent re-sourcing and ensure one-time initialization
+if [[ -n "${__CONFIGS_MANAGER__:-}" ]]; then exit 0; fi;
+readonly __CONFIGS_MANAGER__=1;
+
+## -------------------------------------------------------------------------- ##
+## Function: configs_parser ()
+##
+## Purpose:
+##   Main entrypoint for per-IP parsing pipeline. Replaces `parse-configs.shell`.
+##   Drives the full parsing lifecycle from argument handling to report generation.
+##
+## Responsibilities:
+##   - Parses CLI arguments and applies defaults for configs, reports, and matrix
+##   - Extracts relevant config paths for a given target IP
+##   - Validates input files and structures
+##   - Applies grouping/classification (if enabled) via matrix matching
+##   - Executes `extract_configs()` to collect relevant config blocks
+##   - Deduplicates and merges structured JSON objects per IP
+##   - Stores final output under `${reports_location}/<ip-address>/<ip-address>.json`
+##
+## Input Parameters (as key=value args):
+##   - ip-addr      : IP address to process (required)
+##   - configs      : Path to configuration root folder (default: ./configs)
+##   - reports      : Path to write output JSON (default: ./reports)
+##   - matrix       : Translation matrix for classification (optional)
+##   - file-ext     : Comma-delimited list of config extensions (default: cfg,conf,cnf)
+##   - index        : Optional ID used for per-IP processing context
+##   - validate     : Enables IP format validation before proceeding
+##   - classify     : Enables matrix-based group classification
+##   - verbose/debug/dry-run/help/logs : Optional behavior toggles
+##
+## Output:
+##   - Structured per-IP JSON report at ${reports_location}/<ip-address>/<ip-address>.json
+##   - Temp fragments, logs, and debug traces under ${TMP_DIR}
+##
+## Notes:
+##   - Replaces standalone script `parse-configs.shell` with fully modular logic
+##   - Compatible with batch systems that expect this module to be run in parallel
+## -------------------------------------------------------------------------- ##
+
+## Load configurations parser module
+source ./scripts/configs-parser.shell
+
+## -------------------------------------------------------------------------- ##
+## Function: configs_manager ()
+##
+## Purpose:
+##   Launches background parsing jobs for a batch of target IPs and monitors completion.
+##
+## Input:
+##   None (uses local array: ${batch_listing[@]})
+##
+## Behavior:
+##   - Spawns a background job for each IP in `batch_listing` using `configs_parser`.
+##   - Tracks each job’s PID and associates it with the corresponding IP.
+##   - Continuously monitors active jobs, filtering out completed ones.
+##   - Waits until all parsing jobs are done before exiting.
+##
+## Logging:
+##   - Logs job start metadata and PID-to-IP mapping to tracking log file.
+##   - Optionally logs job completion (currently commented out).
+##
+## Notes:
+##   - This function is always run synchronously — no nested async logic inside configs_parser.
+##   - Designed to be called once per config batch within inner loop.
+## -------------------------------------------------------------------------- ##
+
+function configs_manager () {
+
+    ## tracking_process ${FUNCNAME} "${@}";
+    oIFS="${IFS}";
+
+    ## Process command-line arguments and map them to local variables
+    for xitem in "${@}"; do
+
+      IFS='=' read -r key value <<< "$(
+        echo -e "${xitem}" | sed -e '1s|^\(-\)\{1,\}||'
+      )"; #echo -e "\nxitem: '${xitem}'\nkey: '${key}'\t->\tvalue: '${value}'";
+
+      #### ---------------------------------------------------------------------
+      ## Match accepted arguments
+      if [[ $key =~ ^(listing|l)$ ]]; then
+        IFS=' ' read -r -a batch_listing <<< "${value}";
+        if [[ "${verbose}" == true ]]; then
+          {
+            message "[DEBUG] Received ${#batch_listing[@]} IPs in batch_listing:";
+            for ip in "${batch_listing[@]}"; do
+              message " - ${ip}";
+            done;
+          } ## >> "${configs_manager__console:-/dev/null}";
+        fi;
+      fi;
+
+      #### ---------------------------------------------------------------------
+      ## Special options
+      [[ $key == "debug" ]] && export debug=true;
+      [[ $key == "dry-run" ]] && local dry_run=true;
+      [[ $key == "verbose" ]] && export verbose=true;
+
+    done; IFS="${oIFS}";
+
+    #### -----------------------------------------------------------------------
+    ## Set default values if not supplied
+    [[ -z ${debug:-} ]] && export debug=false;
+    [[ -z ${dry_run:-} ]] && dry_run=false;
+    [[ -z ${verbose:-} ]] && export verbose=false;
+
+    #### -----------------------------------------------------------------------
+    local configs_parser__script="configs-parser";
+
+    declare -a parser_jobs_pid=();          ## Array to hold the PIDs of background jobs
+    declare -A parser_jobs2ips_mapping=();  ## Associative array to map PIDs to IPs
+
+    ip_index=0;
+    local total_ips=${#batch_listing[@]};
+
+    #### -----------------------------------------------------------------------
+    mkdir -p "${jobs_location}" 2>/dev/null || true;
+
+    while (( ip_index < total_ips )); do
+
+      ip_address="${batch_listing[ip_index++]}";
+      padded_index="$(
+        printf "%0${#total_ips}d" "${ip_index}"
+      )";
+
+      local configs_parser__logger="${TMP_DIR}/${configs_parser__script}--${ip_address}";
+      : > "${configs_parser__logger}";
+
+      declare -a execute__configs_parser=(
+        configs_parser
+        --configs="${reports_location}/${ip_address}"
+        --index="${padded_index}"
+        --ip-addr="${ip_address}"
+        --logger="${configs_parser__logger}.console"
+        --matrix="${matrix_filename}"
+        --reports="${reports_location}"
+      );
+
+      [[ "${classify_targets}" == true ]] && execute__configs_parser+=( --classify );
+      [[ "${validate_address}" == true ]] && execute__configs_parser+=( --validate );
+
+      [[ "${verbose}" == true ]] && execute__configs_parser+=( --verbose );
+      [[ "${verbose}" == true ]] && execute__configs_parser+=( --debug );
+
+      #### -----------------------------------------------------------------------
+      ## Execute and propagate exit status
+      if [[ "${verbose}" == true ]]; then
+        {
+          message "Parsing Configs: [ ${ip_address} ]";
+          for parameter in "${execute__configs_parser[@]}"; do
+            message "\t\t${parameter}";
+          done;
+          newline;
+        } ## >> "${configs_manager__console:-/dev/null}";
+      fi;
+
+      (
+
+        local status=0;
+        local module_logfile="${jobs_location}/${configs_parser__script}/${ip_address}.job";
+
+        mkdir -p $( dirname "${module_logfile}" ) 2>/dev/null || true;
+        :> "${module_logfile}";  ## Clear the log file if it exists
+        "${execute__configs_parser[@]}" >> "${module_logfile:-/dev/null}" 2>&1;
+
+        if (( status != 0 )); then
+                {
+                  warning "Failed to process IP [ ${ip_address} ] configs :: exit ${status}";
+                } >> "${configs_manager__console:-/dev/null}";
+          else  {
+                  message "Parsed IP Address: [ ${ip_address} ] configs :: exit ${status}";
+                } >> "${configs_manager__console:-/dev/null}";
+        fi;
+
+      ) &
+
+      local job_pid=$!;
+      parser_jobs_pid+=( "${job_pid}" );
+      parser_jobs2ips_mapping["${ip_address}::${job_pid}"]="${ip_address}";
+
+    done;
+
+    #### -----------------------------------------------------------------------
+    ## Wait for all jobs to finish
+
+    # while (( ${#parser_jobs_pid[@]} > 0 )); do
+    #   local valid_parser_jobs_pid=();
+    #   for pid in "${parser_jobs_pid[@]}"; do
+    #     if ! kill -0 "${pid}" 2>/dev/null; then
+    #             ## Job finished — no action here
+    #             logger="${parser_jobs2ips_mapping[$pid]}";
+    #       else  valid_parser_jobs_pid+=( "${pid}" );
+    #     fi;
+    #   done;
+    #   parser_jobs_pid=( "${valid_parser_jobs_pid[@]}" );
+    #   sleep "${delaying_factor}";
+    # done;
+
+    while (( ${#parser_jobs_pid[@]} > 0 )); do
+      local valid_parser_jobs_pid=();
+      for pid in "${parser_jobs_pid[@]}"; do
+        if ! kill -0 "${pid}" 2>/dev/null; then
+                #### -------------------------------------------------------------------
+                ## Attempt to resolve IP from mapping using key suffix
+                logger="";
+                for key in "${!parser_jobs2ips_mapping[@]}"; do
+                  if [[ "$key" == *"::${pid}" ]]; then
+                    logger="${parser_jobs2ips_mapping[$key]}";
+                    [[ "${verbose}" == true ]] && {
+                      message "[DEBUG] Matched PID ${pid} to IP '${logger}' via key '${key}'";
+                    } >> "${configs_manager__console:-/dev/null}";
+                    break;
+                  fi;
+                done;
+                if [[ -z "${logger}" && "${verbose}" == true ]]; then
+                  message "[WARN] Could not resolve logger key for PID ${pid}";
+                fi;
+          else  valid_parser_jobs_pid+=( "${pid}" );
+        fi;
+      done;
+      parser_jobs_pid=( "${valid_parser_jobs_pid[@]}" );
+      sleep "${delaying_factor}";
+    done;
+
+    # #### -----------------------------------------------------------------------
+    # if [[ "${verbose}" == true ]]; then
+    #   {
+    #     newline;
+    #     message "Background Jobs -> Managed Configs:";
+    #     message "PID   | IP Address (${#parser_jobs2ips_mapping[@]})";
+    #     message "-------------------------";
+    #     for pid in "${!parser_jobs2ips_mapping[@]}"; do
+    #       printf "%-5s | %s\n" "${pid}" "${parser_jobs2ips_mapping[$pid]}";
+    #     done;
+    #     newline;
+    #   } ## >> "${configs_manager__console:-/dev/null}";
+    # fi;
+    #### -----------------------------------------------------------------------
+    if [[ "${verbose}" == true ]]; then
+      {
+        newline;
+        message "Background Jobs -> Managed Configs:";
+        message "PID             | IP Address ( ${#parser_jobs2ips_mapping[@]} total )";
+        message "----------------+---------------------------";
+        for key in "${!parser_jobs2ips_mapping[@]}"; do
+          ip_address="${parser_jobs2ips_mapping[${key}]}";
+          printf "%-15s | %s\n" "${key}" "${ip_address}";
+        done;
+        newline;
+      } ## >> "${configs_manager__console:-/dev/null}";
+    fi;
+
+    #### -----------------------------------------------------------------------
+    ## Collecting all background-jobs console outputs
+
+    # {
+    #   for pid in "${!parser_jobs2ips_mapping[@]}"; do
+    #     ip_address="${parser_jobs2ips_mapping[${pid}]}";
+    #     parser_config="${reports_location}/${ip_address}.json";
+    #     if [[ -s "${parser_config}" && -f "${parser_config}" ]]; then
+    #       message "Completed Background Jobs (Managed Configs): ${parser_config}";
+    #       jq -r . "${parser_config}" || warning "Invalid JSON: ${parser_config}";
+    #       newline;
+    #     fi;
+    #   done;
+    # } ## >> "${configs_manager__console}";
+    {
+      message "[DEBUG] Collecting outputs from parser_jobs2ips_mapping (${#parser_jobs2ips_mapping[@]} entries)";
+      for key in "${!parser_jobs2ips_mapping[@]}"; do
+        ip_address="${parser_jobs2ips_mapping[$key]}";
+        job_pid="${key##*::}";
+        parser_config="${reports_location}/${ip_address}.json";
+        if [[ -s "${parser_config}" && -f "${parser_config}" ]]; then
+                message "[OK] Completed job for ${ip_address} (PID: ${job_pid}) → ${parser_config}";
+                jq -r . "${parser_config}" || warning "Invalid JSON for ${ip_address}: ${parser_config}";
+          else  warning "[MISSING] No output found for ${ip_address} (PID: ${job_pid})";
+        fi;
+        newline;
+      done;
+    } >> "${configs_manager__console}";
+
+    return 0;
+}; alias configs-manager='configs_manager';
+
+#------------------------------------------------------------------------------#

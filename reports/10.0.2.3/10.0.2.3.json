@@ -3,8 +3,26 @@
   "configs": [
     {
       "site": "cisco",
-      "device": "branch-isr-02.cfg",
+      "device": "branch-isr-02",
+      "specs": {
+        "vendor": "cisco",
+        "model": "",
+        "version": "16.9",
+        "domain": "",
+        "hostname": "branch-isr-02"
+      },
       "objects": [
+        {
+          "object": "object",
+          "type": "network",
+          "partner": "BlackWidow-Core",
+          "description": "Branch router uplink NAT",
+          "items": [
+            "host 172.16.1.6"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
         {
           "object": "interface",
           "type": "GigabitEthernet0/0/2",
@@ -13,22 +31,168 @@
           "items": [
             "ip address 10.0.2.3 255.255.255.0"
           ],
-          "sets": {
-            "ip": 1
-          },
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/0/0",
+          "partner": false,
+          "description": "ISP uplink",
+          "items": [
+            "ip address 172.16.1.6 255.255.255.0"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Lantern-DMZ",
+          "description": "Protected but public-facing zone",
+          "items": [
+            "network-object host 172.18.1.20"
+          ],
+          "others": [
+            "network-object host 192.168.1.11"
+          ],
           "group": "Unclassified"
         },
         {
           "object": "object",
-          "type": "network Panther-Gateway",
+          "type": "network",
           "partner": "Panther-Gateway",
           "description": "Secure outbound concentrator",
           "items": [
             "host 10.0.2.3"
           ],
-          "sets": {
-            "host": 1
-          },
+          "others": [],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "fw1",
+      "specs": {
+        "vendor": "cisco",
+        "model": "",
+        "version": "",
+        "domain": "",
+        "hostname": ""
+      },
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Metropolis-Internal",
+          "description": "Core internal LAN for application clusters",
+          "items": [
+            "network-object host 10.0.2.3"
+          ],
+          "others": [
+            "network-object 192.168.2.0 255.255.255.0",
+            "network-object host 192.168.2.12"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network",
+          "partner": "Kent-Server",
+          "description": "Internal mail & identity services",
+          "items": [
+            "host 10.0.2.3"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Fortress-Wireless",
+          "description": "Secure wireless access layer",
+          "items": [
+            "network-object host 172.18.1.20"
+          ],
+          "others": [
+            "network-object host 192.168.1.10"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "fw3",
+      "specs": {
+        "vendor": "cisco",
+        "model": "",
+        "version": "",
+        "domain": "",
+        "hostname": ""
+      },
+      "objects": [
+        {
+          "object": "object",
+          "type": "network",
+          "partner": "Edge-Terminal",
+          "description": "Internet firewall handoff",
+          "items": [
+            "host 172.16.0.5"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Panther-Edge",
+          "description": "Internet-facing proxy systems",
+          "items": [
+            "network-object host 172.16.0.5"
+          ],
+          "others": [
+            "network-object host 203.0.113.25"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Wakanda-Core",
+          "description": "National Core Routing Zone",
+          "items": [
+            "network-object host 10.0.2.3"
+          ],
+          "others": [
+            "network-object host 192.168.1.10",
+            "network-object 10.0.0.0 255.255.255.0"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object",
+          "type": "network",
+          "partner": "Panther-Gateway",
+          "description": "Secure outbound concentrator",
+          "items": [
+            "host 10.0.2.3"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Shield-WiFi",
+          "description": "Shield-controlled wireless network",
+          "items": [
+            "network-object host 10.10.10.10"
+          ],
+          "others": [
+            "network-object 192.168.100.0 255.255.255.0"
+          ],
           "group": "Unclassified"
         }
       ]

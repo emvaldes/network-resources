@@ -3,19 +3,88 @@
   "configs": [
     {
       "site": "cisco",
-      "device": "branch-isr-02.cfg",
+      "device": "branch-isr-02",
+      "specs": {
+        "vendor": "cisco",
+        "model": "",
+        "version": "16.9",
+        "domain": "",
+        "hostname": "branch-isr-02"
+      },
       "objects": [
         {
+          "object": "interface",
+          "type": "GigabitEthernet0/0/2",
+          "partner": false,
+          "description": "Dev VLAN",
+          "items": [
+            "ip address 10.0.2.3 255.255.255.0"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
+          "object": "interface",
+          "type": "GigabitEthernet0/0/0",
+          "partner": false,
+          "description": "ISP uplink",
+          "items": [
+            "ip address 172.16.1.6 255.255.255.0"
+          ],
+          "others": [],
+          "group": "Unclassified"
+        },
+        {
           "object": "object-group",
-          "type": "network Lantern-DMZ",
+          "type": "network",
           "partner": "Lantern-DMZ",
           "description": "Protected but public-facing zone",
           "items": [
             "network-object host 172.18.1.20"
           ],
-          "sets": {
-            "network-object": 2
-          },
+          "others": [
+            "network-object host 192.168.1.11"
+          ],
+          "group": "Unclassified"
+        }
+      ]
+    },
+    {
+      "site": "misc",
+      "device": "fw1",
+      "specs": {
+        "vendor": "cisco",
+        "model": "",
+        "version": "",
+        "domain": "",
+        "hostname": ""
+      },
+      "objects": [
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Metropolis-Internal",
+          "description": "Core internal LAN for application clusters",
+          "items": [
+            "network-object host 10.0.2.3"
+          ],
+          "others": [
+            "network-object 192.168.2.0 255.255.255.0",
+            "network-object host 192.168.2.12"
+          ],
+          "group": "Unclassified"
+        },
+        {
+          "object": "object-group",
+          "type": "network",
+          "partner": "Fortress-Wireless",
+          "description": "Secure wireless access layer",
+          "items": [
+            "network-object host 172.18.1.20"
+          ],
+          "others": [
+            "network-object host 192.168.1.10"
+          ],
           "group": "Unclassified"
         }
       ]
