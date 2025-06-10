@@ -194,16 +194,17 @@ function configs_export () {
 
     ## Finalize sorted CSV with header and ordered data rows
     if [[ "${request_action}" == "sort" ]]; then
-      if [[ -s "${reports_location}" ]]; then
-              temporary_output="${TMP_DIR}/${reports_location}";
-              message "Sorting existing report: ${reports_location}";
+      if [[ -s "${output_csv}" ]]; then
+              temporary_output="${TMP_DIR}/${output_csv}";
+              mkdir -p "$( dirname "${temporary_output}" )";
+              :> "${temporary_output}";
+              message "Sorting existing report: ${output_csv}";
               {
                 echo "${csv_header}";
-                sort -t',' -k1,1 -k2,2 -k3,3 -k4,4 "${reports_location}";
+                tail -n +2 "${output_csv}" | sort -t',' -k1,1 -k2,2 -k3,3 -k4,4;
               } > "${temporary_output}"
-              mv "${temporary_output}" "${reports_location}";
-        else  warning "Report file '${reports_location}' is empty or missing.";
-              # return 3;
+               mv "${temporary_output}" "${output_csv}";
+        else  warning "Report file '${output_csv}' is empty or missing.";
       fi;
       return 0;
     fi;
