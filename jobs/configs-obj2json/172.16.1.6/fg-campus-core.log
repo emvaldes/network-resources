@@ -29,12 +29,12 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --target=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.X0CG1HZyIo/fg-campus-core.list.objects
+++ echo -e --target=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.thUdFZFM2F/fg-campus-core.list.objects
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ target =~ ^(search|s)$ ]]
 + [[ target =~ ^(source|o)$ ]]
 + [[ target =~ ^(target|t)$ ]]
-+ local target_object=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.X0CG1HZyIo/fg-campus-core.list.objects
++ local target_object=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.thUdFZFM2F/fg-campus-core.list.objects
 + [[ target =~ ^(logger|l)$ ]]
 + [[ target == \d\e\b\u\g ]]
 + [[ target == \d\r\y\-\r\u\n ]]
@@ -42,13 +42,13 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.X0CG1HZyIo/configs-obj2json--172.16.1.6--fortinet--fg-campus-core.console
+++ echo -e --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.thUdFZFM2F/configs-obj2json--172.16.1.6--fortinet--fg-campus-core.console
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ logger =~ ^(search|s)$ ]]
 + [[ logger =~ ^(source|o)$ ]]
 + [[ logger =~ ^(target|t)$ ]]
 + [[ logger =~ ^(logger|l)$ ]]
-+ local target_console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.X0CG1HZyIo/configs-obj2json--172.16.1.6--fortinet--fg-campus-core.console
++ local target_console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.thUdFZFM2F/configs-obj2json--172.16.1.6--fortinet--fg-campus-core.console
 + [[ logger == \d\e\b\u\g ]]
 + [[ logger == \d\r\y\-\r\u\n ]]
 + [[ logger == \v\e\r\b\o\s\e ]]
@@ -256,16 +256,29 @@ end'
   "group": "Unclassified"
 } ]]
 + jq -r .
-+ cat -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.X0CG1HZyIo/fg-campus-core.list.objects
++ cat -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.thUdFZFM2F/fg-campus-core.list.objects
      1	{
      2	  "object": "config",
-     3	  "type": "firewall address",
-     4	  "partner": "Hawkeye-Nest",
-     5	  "description": "Remote sniper node",
+     3	  "type": "system interface",
+     4	  "partner": "core",
+     5	  "description": false,
      6	  "items": [
-     7	    "set subnet 172.16.1.6 255.255.255.255"
+     7	    "set ip 10.10.10.10 255.255.255.0"
      8	  ],
-     9	  "others": [],
-    10	  "group": "Unclassified"
-    11	}
+     9	  "others": [
+    10	    "set alias \"Campus Core Transit\""
+    11	  ],
+    12	  "group": "Unclassified"
+    13	}
+    14	{
+    15	  "object": "config",
+    16	  "type": "firewall address",
+    17	  "partner": "Hawkeye-Nest",
+    18	  "description": "Remote sniper node",
+    19	  "items": [
+    20	    "set subnet 172.16.1.6 255.255.255.255"
+    21	  ],
+    22	  "others": [],
+    23	  "group": "Unclassified"
+    24	}
 + return 0

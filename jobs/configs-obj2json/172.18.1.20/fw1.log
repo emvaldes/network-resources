@@ -29,12 +29,12 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --target=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.X0CG1HZyIo/fw1.list.objects
+++ echo -e --target=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.thUdFZFM2F/fw1.list.objects
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ target =~ ^(search|s)$ ]]
 + [[ target =~ ^(source|o)$ ]]
 + [[ target =~ ^(target|t)$ ]]
-+ local target_object=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.X0CG1HZyIo/fw1.list.objects
++ local target_object=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.thUdFZFM2F/fw1.list.objects
 + [[ target =~ ^(logger|l)$ ]]
 + [[ target == \d\e\b\u\g ]]
 + [[ target == \d\r\y\-\r\u\n ]]
@@ -42,13 +42,13 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.X0CG1HZyIo/configs-obj2json--172.18.1.20--misc--fw1.console
+++ echo -e --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.thUdFZFM2F/configs-obj2json--172.18.1.20--misc--fw1.console
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ logger =~ ^(search|s)$ ]]
 + [[ logger =~ ^(source|o)$ ]]
 + [[ logger =~ ^(target|t)$ ]]
 + [[ logger =~ ^(logger|l)$ ]]
-+ local target_console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.X0CG1HZyIo/configs-obj2json--172.18.1.20--misc--fw1.console
++ local target_console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.thUdFZFM2F/configs-obj2json--172.18.1.20--misc--fw1.console
 + [[ logger == \d\e\b\u\g ]]
 + [[ logger == \d\r\y\-\r\u\n ]]
 + [[ logger == \v\e\r\b\o\s\e ]]
@@ -234,7 +234,7 @@
   "group": "Unclassified"
 } ]]
 + jq -r .
-+ cat -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.X0CG1HZyIo/fw1.list.objects
++ cat -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.thUdFZFM2F/fw1.list.objects
      1	{
      2	  "object": "object-group",
      3	  "type": "network",
@@ -248,4 +248,18 @@
     11	  ],
     12	  "group": "Unclassified"
     13	}
+    14	{
+    15	  "object": "object-group",
+    16	  "type": "network",
+    17	  "partner": "Metropolis-Internal",
+    18	  "description": "Core internal LAN for application clusters",
+    19	  "items": [
+    20	    "network-object host 10.0.2.3"
+    21	  ],
+    22	  "others": [
+    23	    "network-object 192.168.2.0 255.255.255.0",
+    24	    "network-object host 192.168.2.12"
+    25	  ],
+    26	  "group": "Unclassified"
+    27	}
 + return 0

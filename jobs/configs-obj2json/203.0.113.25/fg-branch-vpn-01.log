@@ -29,12 +29,12 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --target=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.X0CG1HZyIo/fg-branch-vpn-01.list.objects
+++ echo -e --target=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.thUdFZFM2F/fg-branch-vpn-01.list.objects
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ target =~ ^(search|s)$ ]]
 + [[ target =~ ^(source|o)$ ]]
 + [[ target =~ ^(target|t)$ ]]
-+ local target_object=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.X0CG1HZyIo/fg-branch-vpn-01.list.objects
++ local target_object=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.thUdFZFM2F/fg-branch-vpn-01.list.objects
 + [[ target =~ ^(logger|l)$ ]]
 + [[ target == \d\e\b\u\g ]]
 + [[ target == \d\r\y\-\r\u\n ]]
@@ -42,13 +42,13 @@
 + for xitem in "${@}"
 + IFS==
 + read -r key value
-++ echo -e --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.X0CG1HZyIo/configs-obj2json--203.0.113.25--fortinet--fg-branch-vpn-01.console
+++ echo -e --logger=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.thUdFZFM2F/configs-obj2json--203.0.113.25--fortinet--fg-branch-vpn-01.console
 ++ sed -e '1s|^\(-\)\{1,\}||'
 + [[ logger =~ ^(search|s)$ ]]
 + [[ logger =~ ^(source|o)$ ]]
 + [[ logger =~ ^(target|t)$ ]]
 + [[ logger =~ ^(logger|l)$ ]]
-+ local target_console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.X0CG1HZyIo/configs-obj2json--203.0.113.25--fortinet--fg-branch-vpn-01.console
++ local target_console=/var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.thUdFZFM2F/configs-obj2json--203.0.113.25--fortinet--fg-branch-vpn-01.console
 + [[ logger == \d\e\b\u\g ]]
 + [[ logger == \d\r\y\-\r\u\n ]]
 + [[ logger == \v\e\r\b\o\s\e ]]
@@ -256,7 +256,7 @@ end'
   "group": "Unclassified"
 } ]]
 + jq -r .
-+ cat -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.X0CG1HZyIo/fg-branch-vpn-01.list.objects
++ cat -n /var/folders/vp/4k9xy96d7zx8lhmgrr4khsj80000gn/T/tmp.thUdFZFM2F/fg-branch-vpn-01.list.objects
      1	{
      2	  "object": "config",
      3	  "type": "firewall address",
@@ -283,13 +283,26 @@ end'
     24	}
     25	{
     26	  "object": "config",
-    27	  "type": "firewall address",
-    28	  "partner": "Public-Test",
-    29	  "description": "Public NAT exposure for Red Skull trap",
+    27	  "type": "system interface",
+    28	  "partner": "wan1",
+    29	  "description": false,
     30	  "items": [
-    31	    "set subnet 203.0.113.25 255.255.255.255"
+    31	    "set ip 198.51.100.75 255.255.255.0"
     32	  ],
-    33	  "others": [],
-    34	  "group": "Unclassified"
-    35	}
+    33	  "others": [
+    34	    "set alias \"Branch ISP\""
+    35	  ],
+    36	  "group": "Unclassified"
+    37	}
+    38	{
+    39	  "object": "config",
+    40	  "type": "firewall address",
+    41	  "partner": "Public-Test",
+    42	  "description": "Public NAT exposure for Red Skull trap",
+    43	  "items": [
+    44	    "set subnet 203.0.113.25 255.255.255.255"
+    45	  ],
+    46	  "others": [],
+    47	  "group": "Unclassified"
+    48	}
 + return 0

@@ -133,7 +133,7 @@ function configs_export () {
       'hostname=.specs.hostname'
       'object=$obj.object'
       'type=$obj.type'
-      'items_0=$obj.items[0]'
+      'items=$obj.items[0]'
       'partner=$obj.partner'
       'description=$obj.description'
       'group=$obj.group'
@@ -194,14 +194,15 @@ function configs_export () {
 
     ## Finalize sorted CSV with header and ordered data rows
     if [[ "${request_action}" == "sort" ]]; then
-      if [[ -s "${reports_filepath}" ]]; then
-              temporary_output="${TMP_DIR}/${reports_filepath}";
-              message "Sorting existing report: ${reports_filepath}";
+      if [[ -s "${reports_location}" ]]; then
+              temporary_output="${TMP_DIR}/${reports_location}";
+              message "Sorting existing report: ${reports_location}";
               {
                 echo "${csv_header}";
-                sort -t',' -k1,1 -k2,2 -k3,3 -k4,4 "${reports_filepath}";
-              } > "${temporary_output}" > "${reports_filepath}";
-        else  warning "Report file '${reports_filepath}' is empty or missing.";
+                sort -t',' -k1,1 -k2,2 -k3,3 -k4,4 "${reports_location}";
+              } > "${temporary_output}"
+              mv "${temporary_output}" "${reports_location}";
+        else  warning "Report file '${reports_location}' is empty or missing.";
               # return 3;
       fi;
       return 0;
